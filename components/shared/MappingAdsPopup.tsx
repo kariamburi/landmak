@@ -55,7 +55,7 @@ type CardProps = {
   onClose: () => void;
 };
 const MappingAdsPopup = ({ id, title, price, imageUrls, propertyarea, onClose}: CardProps) => {
-  
+  const [MapType, setMapType] = useState("satellite");
   const [center, setCenter] = useState<any>(defaultCenter);
   const [markerPosition, setMarkerPosition] = useState(defaultCenter);
   const [selectedPoints, setSelectedPoints] = useState<{ lat: number; lng: number }[]>([]);
@@ -268,13 +268,19 @@ const MappingAdsPopup = ({ id, title, price, imageUrls, propertyarea, onClose}: 
   }}
   onLoad={(map) => {
     mapRef.current = map;
+    map.addListener("maptypeid_changed", () => {
+      const newMapType = map.getMapTypeId();
+      console.log("Map Type Changed to:", newMapType);
+      setMapType(newMapType ?? "satellite");
+     
+    });
   }}
   options={{
     zoomControl: true, // Enable zoom controls
     mapTypeControl: true, // Enable map type switch
     streetViewControl: true, // Enable Street View control
     fullscreenControl: true, // Enable Fullscreen button
-    mapTypeId: "satellite", // Set default to Satellite mode
+    mapTypeId: MapType, // Set default to Satellite mode
   }}
 >
  {/* Show marker if propertyarea.shapes is empty 

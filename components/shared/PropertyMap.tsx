@@ -80,7 +80,7 @@ type CollectionProps = {
 export default function PropertyMap({queryObject, lat, lng, handleCategory, handleOpenPlan, handleOpenSell, onClose, handleAdEdit, handleAdView}:CollectionProps) {
   const [showSidebar, setShowSidebar] = useState(false);
   const [center, setCenter] = useState(defaultCenter);
-  // const [markerPosition, setMarkerPosition] = useState(defaultCenter);
+   const [MapType, setMapType] = useState("satellite");
    const [latitude, setLatitude] = useState("");
    const [longitude, setLongitude] = useState("");
    const [polygonPath, setPolygonPath] = useState<any[]>([]);
@@ -670,10 +670,23 @@ const handlePostLocation = (lat: string,lng:string) => {
             mapTypeControl: true, // Enable map type switch
             streetViewControl: true, // Enable Street View control
             fullscreenControl: true, // Enable Fullscreen button
-            mapTypeId: "satellite", // Set default to Satellite mode
+            mapTypeId: MapType, // Set default to Satellite mode
           }}
         onLoad={(map) => {
             mapRef.current = map;
+             // Listen for map type changes
+    map.addListener("maptypeid_changed", () => {
+      const newMapType = map.getMapTypeId();
+      console.log("Map Type Changed to:", newMapType);
+      setMapType(newMapType ?? "satellite");
+      // Handle the event (e.g., update state, show a message, etc.)
+   //   if (newMapType === "roadmap") {
+//console.log("Switched to Map View");
+       
+     // } else if (newMapType === "satellite") {
+    //    console.log("Switched to Satellite View");
+    //  }
+    });
           }}
       >
         {/* Draggable Marker */}

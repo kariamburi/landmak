@@ -64,20 +64,12 @@ const MappingAds = ({ id, title, price, imageUrls, propertyarea }: CardProps) =>
  { path: { lat: number; lng: number }[]; color: string; width: number; label: string }[]
 >([]);
 const [shapes, setShapes] = useState<any[]>([]);
- 
- 
- 
  const [polygonPath, setPolygonPath] = useState<any[]>(propertyarea.polygonPath || []);
-
-   const [area, setArea] = useState<number | null>(propertyarea.area || null);
- // const [center, setCenter] = useState({ lat: Number(lat), lng: Number(lng) });
- 
-  //const [polygonPath, setPolygonPath] = useState<any[]>([]);
+  const [area, setArea] = useState<number | null>(propertyarea.area || null);
   const [selectedPoints, setSelectedPoints] = useState<{ lat: number; lng: number }[]>([]);
-  //const [area, setArea] = useState<number | null>(null);
   const [distance, setDistance] = useState<string | null>(null);
   const [showAmenities, setShowAmenities] = useState(false);
-  //const [amenityType, setAmenityType] = useState<string | null>(null);
+  const [MapType, setMapType] = useState("satellite");
   const [amenities, setAmenities] = useState<any[]>([]);
   const [streetViewVisible, setStreetViewVisible] = useState(false);
   const [directions, setDirections] = useState<google.maps.DirectionsResult | null>(null);
@@ -435,13 +427,19 @@ useEffect(() => {
   }}
   onLoad={(map) => {
     mapRef.current = map;
+    map.addListener("maptypeid_changed", () => {
+      const newMapType = map.getMapTypeId();
+      console.log("Map Type Changed to:", newMapType);
+      setMapType(newMapType ?? "satellite");
+     
+    });
   }}
   options={{
     zoomControl: true, // Enable zoom controls
     mapTypeControl: true, // Enable map type switch
     streetViewControl: true, // Enable Street View control
     fullscreenControl: true, // Enable Fullscreen button
-    mapTypeId: "satellite", // Set default to Satellite mode
+    mapTypeId: MapType, // Set default to Satellite mode
   }}
 >
 {propertyarea.shapes.length === 0 && <Marker
