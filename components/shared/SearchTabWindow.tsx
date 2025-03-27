@@ -56,7 +56,7 @@ if (!isOpen) return null;
         <div
           className={`flex flex-col items-center transition-all duration-300`}
         >
-          <div className="w-full dark:bg-[#2D3236] rounded-xl bg-white p-1 shadow-lg">
+          <div className="w-full dark:bg-[#2D3236] rounded-xl bg-white">
           
             <ScrollArea className="h-[80vh] w-full p-2">
               
@@ -135,7 +135,7 @@ if (!isOpen) return null;
       </div>
       {hoveredCategory && (
         <div
-          className={`absolute w-full z-10 p-1 dark:bg-[#222528] bg-gray-100 shadow-lg transition-all duration-300"
+          className={`absolute w-full z-10 p-0 dark:bg-[#222528] bg-white transition-all duration-300"
           }`}
     
         >
@@ -147,7 +147,7 @@ if (!isOpen) return null;
           </Button>
         </div>
         </div>
-        <div className="w-full dark:bg-[#2D3236] rounded-xl bg-white p-1 shadow-lg">
+        <div className="w-full dark:bg-[#2D3236] rounded-xl bg-white">
          
           <ScrollArea className="h-[80vh] w-full p-2">
             {subcategoryList
