@@ -11,7 +11,7 @@ const usersOnline = new Map(); // Store online users in memory
 
 // Configure Web Push Notifications
 webpush.setVapidDetails(
-  'mailto:support@pocketshop.co.ke',
+  'mailto:support@landmark.co.ke',
   process.env.NEXT_PUBLIC_VAPID_PUBLIC_KEY || "BKaY45_ET0wP-5svvi6Nm9emh7Ubhz2l1tToqa9dxwaNpFxIQ0oZmr9Dz3LqAmKCFehDXb7NfyYkAZKRtmN7-XU",
   process.env.NEXT_PUBLIC_VAPID_PRIVATE_KEY || "rTxv6alyd0gtQELN9wKoBC6OICIo-1A48pFC-Zgi9F0"
 );
@@ -22,7 +22,7 @@ const app = express();
 // Allow requests from frontend
 app.use(cors({
   origin: (origin, callback) => {
-    const allowedOrigins = ["http://localhost:3000", "https://pocketshop.co.ke"];
+    const allowedOrigins = ["http://localhost:3000", "https://landmark.co.ke"];
     if (!origin || allowedOrigins.includes(origin)) {
       callback(null, true);
     } else {
@@ -78,7 +78,7 @@ const adSchema = new mongoose.Schema({
   createdAt: { type: Date, default: Date.now },
 });
 
-const Ad = mongoose.model('Ad', adSchema);
+const Ad = mongoose.model('DynamicAd', adSchema);
 
 const BusinesshoursSchema = new mongoose.Schema({
   openHour: { type: String, required: true },
@@ -161,7 +161,7 @@ async function checkExpiredSubscriptions() {
 
         await Ad.updateMany(
           { organizer: subscription.buyer },
-          { priority: 1, plan: '65fa7d3fb20de072ea107223' }
+          { priority: 1, plan: '677a7b97d24cd2414b1260b7' }
         );
 
         console.log(`Updated ads for buyer: ${subscription.buyer}`);

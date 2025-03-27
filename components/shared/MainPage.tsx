@@ -63,6 +63,7 @@ import PopupSettings from "./PopupSettings";
 import BottomNavigation from "./BottomNavigation";
 import PopupPerfomance from "./PopupPerfomance";
 import { useToast } from "../ui/use-toast";
+import SearchTabWindow from "./SearchTabWindow";
 type CollectionProps = {
   limit: number;
   userId: string;
@@ -125,6 +126,8 @@ const MainPage = ({
  const [isOpenShop, setIsOpenShop] = useState(false);
  const [isOpenSettings, setIsOpenSettings] = useState(false);
  const [isOpenPerfomance, setIsOpenPerfomance] = useState(false);
+ const [isOpenSearchTab, setIsOpenSearchTab] = useState(false);
+ const [CategorySelect, setCategorySelect] = useState('');
  const { toast } = useToast()
  
   const router = useRouter();
@@ -150,7 +153,7 @@ const MainPage = ({
   useEffect(() => {
     const params = new URLSearchParams(window.location.search);
     const Ad = params.get("Ad");
-    const Profile = params.get("Profile");
+     const Profile = params.get("Profile");
     if (Ad) {
       setadId(Ad);
       setIsOpenAdView(true);
@@ -162,7 +165,7 @@ const MainPage = ({
       setIsOpenShop(true);
     } else {
       setIsOpenShop(false);
-    }
+   }
   }, []);
 
 
@@ -202,7 +205,15 @@ const MainPage = ({
     setChatOpen(!isChatOpen);
   };
  
-
+  const handleOpenSearchTab = (value:string) => {
+    handleClose()
+    setCategorySelect(value);
+    setIsOpenSearchTab(true);
+   
+  };
+  const handleCloseSearchTab = () => {
+    setIsOpenSearchTab(false);
+  };
   const handleClosePerfomance = () => {
     const params = new URLSearchParams(window.location.search);
     const Profile = params.get("Profile");
@@ -1098,7 +1109,7 @@ const handleCloseAdView = () => {
                      onClose={handleClose} 
                      handleOpenSell={handleOpenSell}
                      handleOpenChat={handleOpenChat}
-                     handleCategory={handleCategory} 
+                     handleOpenSearchTab={handleOpenSearchTab} 
                     />
                   </div>
                 </footer>
@@ -1109,7 +1120,8 @@ const handleCloseAdView = () => {
       handleOpenPerfomance={handleOpenPerfomance}
       handleOpenSettings={handleOpenSettings} 
       handleAdEdit={handleAdEdit} 
-      handleCategory={handleCategory}/>
+      handleCategory={handleCategory}
+      handleOpenSearchTab={handleOpenSearchTab}/>
 
       <PopupShop isOpen={isOpenShop} handleOpenReview={handleOpenReview} onClose={handleCloseShop} userId={userId} shopId={shopId} userName={userName} userImage={userImage} queryObject={newqueryObject} handleOpenSell={handleOpenSell} handleAdView={handleAdView} handleAdEdit={handleAdEdit} handleOpenAbout={handleOpenAbout} handleOpenTerms={handleOpenTerms} handleOpenPrivacy={handleOpenPrivacy} handleOpenSafety={handleOpenSafety} handleOpenBook={handleOpenBook} handleOpenPlan={handleOpenPlan} handleOpenChat={handleOpenChat} handleOpenChatId={handleOpenChatId} handleOpenSettings={handleOpenSettings} 
       handleOpenShop={handleOpenShop}
@@ -1163,7 +1175,7 @@ const handleCloseAdView = () => {
       <PopupChat isOpen={isOpenChat} onClose={handleCloseChat} handleOpenChatId={handleOpenChatId} userId={userId} handleOpenSell={handleOpenSell} handleOpenAbout={handleOpenAbout} handleOpenTerms={handleOpenTerms} handleOpenPrivacy={handleOpenPrivacy} handleOpenSafety={handleOpenSafety} handleOpenBook={handleOpenBook} handleOpenPlan={handleOpenPlan} userImage={userImage} userName={userName} handleOpenChat={handleOpenChat} handleOpenSettings={handleOpenSettings} handleCategory={handleCategory} handleOpenReview={handleOpenReview}
       handleOpenPerfomance={handleOpenPerfomance}
       handleOpenShop={handleOpenShop}
-      handlePay={handlePay}/>
+      handlePay={handlePay} handleOpenSearchTab={handleOpenSearchTab}/>
 
       <PopupChatId isOpen={isOpenChatId} onClose={handleCloseChatId} recipientUid={recipientUid} userId={userId} handleOpenSell={handleOpenSell} handleOpenAbout={handleOpenAbout} handleOpenTerms={handleOpenTerms} handleOpenPrivacy={handleOpenPrivacy} handleOpenSafety={handleOpenSafety} handleOpenBook={handleOpenBook} handleOpenPlan={handleOpenPlan} userImage={userImage} userName={userName} handleOpenChat={handleOpenChat} handleOpenShop={handleOpenShop} handleOpenChatId={handleOpenChatId}
       handleOpenPerfomance={handleOpenPerfomance}
@@ -1215,7 +1227,13 @@ const handleCloseAdView = () => {
       handleOpenPerfomance={handleOpenPerfomance}
       handleOpenSettings={handleOpenSettings} 
      />
-  
+  <SearchTabWindow 
+      isOpen={isOpenSearchTab} 
+      handleSubCategory={handleSubCategory} 
+      onClose={handleCloseSearchTab} 
+      categoryList={categoryList}
+      subcategoryList={subcategoryList} 
+      category={CategorySelect}/>
       </div>
   );
 };

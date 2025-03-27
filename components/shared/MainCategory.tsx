@@ -119,6 +119,7 @@ type CollectionProps = {
   handleOpenSettings: () => void;
   handleOpenShop: (shopId:string) => void;
   handleCategory: (value:string) => void;
+  handleOpenSearchTab: (value:string) => void;
 }
 const MainCategory = ({
   userId,
@@ -144,6 +145,7 @@ const MainCategory = ({
   handleOpenSettings,
   handleOpenShop,
   handleCategory,
+  handleOpenSearchTab,
 
 }: // user,
 
@@ -414,7 +416,7 @@ CollectionProps) => {
       {showSidebar && (
         <div className="flex flex-col space-y-4 h-full">
            <div className="w-full p-0 mt-4">
-                    <CategoryFilterSearch  handleFilter={handleResetFilter}/>
+                    <CategoryFilterSearch  categoryList={categoryList} handleFilter={handleResetFilter}/>
             </div>
           
           {/* Categories Section */}
@@ -1029,7 +1031,7 @@ CollectionProps) => {
            onClose={onClose} 
           handleOpenSell={handleOpenSell}
           handleOpenChat={handleOpenChat}
-          handleCategory={handleCategory} 
+          handleOpenSearchTab={handleOpenSearchTab} 
                                />
           </div>
         </footer>

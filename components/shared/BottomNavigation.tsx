@@ -18,10 +18,10 @@ type navprop = {
   onClose: () => void;
   handleOpenSell: () => void;
   handleOpenChat: () => void;
-  handleCategory: (value:string) => void;
+  handleOpenSearchTab: (value:string) => void;
 
 };
-const BottomNavigation = ({ userId, popup, handleCategory, handleOpenSell, handleOpenChat, onClose }: navprop) => {
+const BottomNavigation = ({ userId, popup, handleOpenSearchTab, handleOpenSell, handleOpenChat, onClose }: navprop) => {
   const router = useRouter();
   const pathname = usePathname();
  
@@ -68,7 +68,7 @@ const BottomNavigation = ({ userId, popup, handleCategory, handleOpenSell, handl
 
         <div
           onClick={() => {
-            handleCategory('Property');
+            handleOpenSearchTab('Property');
            // if (
 //pathname !==
 //`/category?category=Vehicle&subcategory=${encodeURIComponent(

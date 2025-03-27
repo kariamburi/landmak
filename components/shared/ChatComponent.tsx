@@ -39,12 +39,13 @@ interface AdsProps {
   handleOpenChatId: (value:string) => void;
   handleOpenReview: (value:string) => void;
   handleCategory: (value:string) => void;
+  handleOpenSearchTab: (value:string) => void;
   handleOpenShop: (shopId:string) => void;
   handleOpenPerfomance: () => void;
   handlePay: (id:string) => void;
 }
 
-const ChatComponent =  ({senderId,senderName,senderImage,user,onClose, handlePay, handleOpenShop,
+const ChatComponent =  ({senderId,senderName,senderImage,user,onClose, handlePay,handleOpenSearchTab, handleOpenShop,
   handleOpenPerfomance, handleCategory,handleOpenSettings,handleOpenReview,handleOpenChat,handleOpenChatId, handleOpenBook, handleOpenSell, handleOpenPlan, handleOpenAbout,handleOpenTerms,handleOpenPrivacy,handleOpenSafety}:AdsProps) => {
  
   const recipientUid = senderId;
@@ -136,7 +137,7 @@ const ChatComponent =  ({senderId,senderName,senderImage,user,onClose, handlePay
           onClose={onClose} 
           handleOpenSell={handleOpenSell}
           handleOpenChat={handleOpenChat}
-          handleCategory={handleCategory} />
+          handleOpenSearchTab={handleOpenSearchTab} />
         </div>
       </footer>
     </div>

@@ -45,13 +45,14 @@ interface WindowProps {
   handleOpenShop: (shopId:string) => void;
   handleOpenPerfomance: () => void;
   handlePay: (id:string) => void;
+  handleOpenSearchTab: (value:string) => void;
   userImage: string;
   userId: string;
   userName: string;
 }
 
 const PopupChat = ({ isOpen, userId,userName,userImage, onClose,
-  handleOpenShop,handlePay,
+  handleOpenShop,handlePay,handleOpenSearchTab,
   handleOpenPerfomance, handleOpenSettings, handleOpenReview, handleCategory, handleOpenChat,handleOpenChatId, handleOpenBook,handleOpenPlan, handleOpenSell, handleOpenAbout,handleOpenTerms,handleOpenPrivacy,handleOpenSafety }: WindowProps) => {
   const [user, setuser] = useState<any>([]);
   const [loading, setLoading] = useState<boolean>(true);
@@ -102,7 +103,7 @@ const PopupChat = ({ isOpen, userId,userName,userImage, onClose,
                            onClose={onClose} 
                            handleOpenSell={handleOpenSell}
                            handleOpenChat={handleOpenChat}
-                           handleCategory={handleCategory} />
+                           handleOpenSearchTab={handleOpenSearchTab} />
                          </div>
                        </footer>
                  </div>
@@ -129,6 +130,7 @@ const PopupChat = ({ isOpen, userId,userName,userImage, onClose,
               handleOpenShop={handleOpenShop} 
               handleOpenPerfomance={handleOpenPerfomance}
               handlePay={handlePay}
+              handleOpenSearchTab={handleOpenSearchTab}
               />)}
      
         <Toaster />

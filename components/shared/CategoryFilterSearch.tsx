@@ -17,20 +17,21 @@ import TextField from "@mui/material/TextField";
 import SearchOutlinedIcon from "@mui/icons-material/SearchOutlined";
 import ArrowForwardIosIcon from "@mui/icons-material/ArrowForwardIos";
 import Image from "next/image";
-const CategoryFilterSearch = ({ handleFilter }: { handleFilter: (value :any) => void }) => {
+const CategoryFilterSearch = ({ handleFilter, categoryList }: {categoryList:any, handleFilter: (value :any) => void }) => {
   const [categories, setCategories] = useState<ICategory[]>([]);
   const [category, setCategory] = useState("");
   const router = useRouter();
   const searchParams = useSearchParams();
 
   useEffect(() => {
-    const getCategories = async () => {
-      const categoryList = await getAllCategories();
+    setCategories(categoryList as ICategory[]);
+    //const getCategories = async () => {
+    // const categoryList = await getAllCategories();
 
-      categoryList && setCategories(categoryList as ICategory[]);
-    };
+    //  categoryList && setCategories(categoryList as ICategory[]);
+   // };
 
-    getCategories();
+   // getCategories();
   }, []);
 
   const onSelectCategory = (category: string) => {
@@ -74,7 +75,7 @@ const CategoryFilterSearch = ({ handleFilter }: { handleFilter: (value :any) => 
             <SelectItem
               value={category.name}
               key={category._id}
-              className="flex w-full p-regular-14 dark:hover:bg-[#131B1E]"
+              className="flex w-full cursor-pointer p-regular-14 dark:hover:bg-[#131B1E]"
             >
               <div className="flex w-[280px] justify-between items-center">
                 <div className="flex gap-1 items-center">
