@@ -135,7 +135,7 @@ if (!isOpen) return null;
       </div>
       {hoveredCategory && (
         <div
-          className={`absolute w-full z-10 p-0 dark:bg-[#222528] bg-white transition-all duration-300"
+          className={`absolute w-full z-10 p-0 dark:bg-[#222528] bg-gray-200 transition-all duration-300"
           }`}
     
         >
