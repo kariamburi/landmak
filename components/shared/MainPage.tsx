@@ -148,7 +148,7 @@ const MainPage = ({
     setIsOpenAdView(false);
     setIsOpenAdEdit(false);
     setIsOpenPay(false);
-   // setIsOpenCategory(false);
+   setIsOpenCategory(false);
   };
   useEffect(() => {
     const params = new URLSearchParams(window.location.search);
@@ -211,6 +211,9 @@ const MainPage = ({
     setIsOpenSearchTab(true);
    
   };
+  const handleHoverCategory = (value:string) => {
+    setHoveredCategory(value);
+    }
   const handleCloseSearchTab = () => {
     setIsOpenSearchTab(false);
   };
@@ -995,6 +998,7 @@ const handleCloseAdView = () => {
       handleOpenSell={handleOpenSell}
       handleCategory={handleCategory}
       handleOpenChat={handleOpenChat}
+      handleOpenSearchTab={handleOpenSearchTab}
       userId={userId}
     />
   </div>
@@ -1131,7 +1135,8 @@ const handleCloseAdView = () => {
       <PopupSell isOpen={isOpenSell} onClose={handleCloseSell} type={"Create"} userId={userId} userName={userName} handleOpenSell={handleOpenSell} handlePay={handlePay} handleOpenAbout={handleOpenAbout} handleOpenTerms={handleOpenTerms} handleOpenPrivacy={handleOpenPrivacy} handleOpenSafety={handleOpenSafety} handleOpenBook={handleOpenBook} handleOpenPlan={handleOpenPlan} handleOpenChat={handleOpenChat} handleCategory={handleCategory}
             handleOpenShop={handleOpenShop}
             handleOpenPerfomance={handleOpenPerfomance} 
-            handleOpenSettings={handleOpenSettings} />
+            handleOpenSettings={handleOpenSettings}
+            handleOpenSearchTab={handleOpenSearchTab} />
 
       <PopupAdEdit isOpen={isOpenAdEdit} onClose={handleCloseAdEdit} type={"Update"} userId={userId} userName={userName} adId={adId} handleOpenSell={handleOpenSell} handleAdView={handleAdView} handleOpenAbout={handleOpenAbout} handleOpenTerms={handleOpenTerms} handleOpenPrivacy={handleOpenPrivacy} handleOpenSafety={handleOpenSafety} handleOpenBook={handleOpenBook} handleOpenPlan={handleOpenPlan} handleOpenChat={handleOpenChat}
       handleOpenShop={handleOpenShop}
@@ -1182,7 +1187,8 @@ const handleCloseAdView = () => {
       handleOpenSettings={handleOpenSettings}
       handleCategory={handleCategory} 
       handleAdEdit={handleAdEdit} 
-      handleAdView={handleAdView}/>
+      handleAdView={handleAdView}
+      handleOpenSearchTab={handleOpenSearchTab}/>
       
       <PopupReviews isOpen={isOpenReview} onClose={handleCloseReview} userId={userId} handleOpenSell={handleOpenSell} handleOpenAbout={handleOpenAbout} handleOpenTerms={handleOpenTerms} handleOpenPrivacy={handleOpenPrivacy} handleOpenSafety={handleOpenSafety} handleOpenBook={handleOpenBook} handleOpenPlan={handleOpenPlan} userImage={userImage} userName={userName} handleOpenChat={handleOpenChat} recipientUid={recipientUid} handleOpenSettings={handleOpenSettings} handleOpenChatId={handleOpenChatId} handleOpenReview={handleOpenReview}
       handleOpenPerfomance={handleOpenPerfomance}
@@ -1227,13 +1233,15 @@ const handleCloseAdView = () => {
       handleOpenPerfomance={handleOpenPerfomance}
       handleOpenSettings={handleOpenSettings} 
      />
-  <SearchTabWindow 
-      isOpen={isOpenSearchTab} 
-      handleSubCategory={handleSubCategory} 
-      onClose={handleCloseSearchTab} 
-      categoryList={categoryList}
-      subcategoryList={subcategoryList} 
-      category={CategorySelect}/>
+   <SearchTabWindow 
+                isOpen={isOpenSearchTab}
+                handleSubCategory={handleSubCategory}
+                onClose={handleCloseSearchTab}
+                categoryList={categoryList}
+                subcategoryList={subcategoryList}
+                hoveredCategory={hoveredCategory} 
+                handleCategory={handleCategory} 
+                handleHoverCategory={handleHoverCategory}/>
       </div>
   );
 };

@@ -223,7 +223,7 @@ const CollectionSearch = ({
       ) : (
         loading === false && (
           <>
-            <div className="flex items-center min-h-[200px] w-full flex-col gap-3 rounded-[14px] bg-grey-50 py-28 text-center">
+            <div className="flex items-center min-h-[100px] w-full flex-col gap-3 rounded-[14px] bg-grey-50 py-28 text-center">
               <h3 className="font-bold text-[16px] lg:text-[25px]">
                 {emptyTitle}
               </h3>
@@ -253,7 +253,7 @@ const CollectionSearch = ({
       )}
       {loading && (
         <div>
-          <div className="w-full mt-10 h-full min-h-[200px] flex flex-col items-center justify-center">
+          <div className="w-full mt-10 h-full min-h-[100px] flex flex-col items-center justify-center">
             <Image
               src="/assets/icons/loading2.gif"
               alt="loading"

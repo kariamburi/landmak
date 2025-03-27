@@ -109,7 +109,7 @@ const BottomNavigation = ({ userId, popup, handleOpenSearchTab, handleOpenSell, 
             }}
           >
             <div className="absolute -top-4 left-1/2 transform -translate-x-1/2">
-              <div className="flex justify-center cursor-pointer items-center w-16 h-16 bg-emerald-600 text-white rounded-full shadow-lg hover:bg-emerald-700 active:bg-emerald-800 transition duration-200">
+              <div className="flex justify-center cursor-pointer items-center w-16 h-16 bg-green-600 text-white rounded-full shadow-lg hover:bg-green-700 active:bg-green-800 transition duration-200">
                 <AddCircleOutlineOutlinedIcon className="text-3xl" />
               </div>
             </div>
@@ -126,7 +126,7 @@ const BottomNavigation = ({ userId, popup, handleOpenSearchTab, handleOpenSell, 
             }}
           >
             <div className="absolute -top-4 left-1/2 transform -translate-x-1/2">
-              <div className="flex justify-center cursor-pointer items-center w-16 h-16 bg-green-600 text-white rounded-full shadow-lg hover:bg-emerald-700 active:bg-emerald-800 transition duration-200">
+              <div className="flex justify-center cursor-pointer items-center w-16 h-16 bg-green-600 text-white rounded-full shadow-lg hover:bg-green-700 active:bg-green-800 transition duration-200">
                 <AddCircleOutlineOutlinedIcon className="text-3xl" />
               </div>
             </div>

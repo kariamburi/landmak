@@ -111,14 +111,7 @@ const SettingsComponent = ({userId,user,onClose,
                    handleOpenPrivacy={handleOpenPrivacy}
                    handleOpenSafety={handleOpenSafety}/> 
         </div>
-        <div className="lg:hidden">
-          <BottomNavigation userId={userId} 
-           popup={"settings"}
-           onClose={onClose} 
-           handleOpenSell={handleOpenSell}
-           handleOpenChat={handleOpenChat}
-           handleCategory={handleCategory} />
-        </div>
+       
       </footer>
     </ScrollArea>
   );

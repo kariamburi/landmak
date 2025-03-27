@@ -35,6 +35,7 @@ type MobileProps = {
   userId:string;
   handleOpenChat: () => void;
   handleCategory:(value:string)=> void;
+  handleOpenSearchTab:(value:string)=> void;
 };
 
 export default function MenuSubmobileMain({
@@ -45,6 +46,7 @@ export default function MenuSubmobileMain({
   handleOpenChat,
   handleOpenSell,
   handleCategory,
+  handleOpenSearchTab,
 }: MobileProps) {
   const router = useRouter();
   const searchParams = useSearchParams();
@@ -142,6 +144,7 @@ export default function MenuSubmobileMain({
         handleOpenSell={handleOpenSell}
         handleOpenChat={handleOpenChat}
         handleCategory={handleCategory}
+        handleOpenSearchTab={handleOpenSearchTab}
 
       />
       <ProgressPopup isOpen={isOpenP} onClose={handleCloseP} />

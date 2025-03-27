@@ -44,10 +44,11 @@ interface WindowProps {
   handleOpenShop: (shopId:string) => void;
   handleOpenPerfomance: () => void;
   handleOpenSettings: () => void;
+  handleOpenSearchTab:(value:string)=> void;
 }
 
 const PopupSell = ({ isOpen, type, userId, userName, handleOpenSettings,
-  handleOpenShop,
+  handleOpenShop,handleOpenSearchTab,
   handleOpenPerfomance, handleCategory, handleOpenChat, onClose,handleOpenPlan, handleOpenBook, handleOpenSell, handlePay, handleOpenAbout,handleOpenTerms,handleOpenPrivacy,handleOpenSafety }: WindowProps) => {
   const [subscription, setSubscription] = useState<any>(null);
   const [packagesList, setPackagesList] = useState<IPackages[]>([]);
@@ -132,7 +133,7 @@ const PopupSell = ({ isOpen, type, userId, userName, handleOpenSettings,
                                                            onClose={onClose} 
                                                            handleOpenSell={handleOpenSell}
                                                            handleOpenChat={handleOpenChat}
-                                                           handleCategory={handleCategory} />
+                                                           handleOpenSearchTab={handleOpenSearchTab} />
                                                          </div>
                                                        </footer>
                        </div>

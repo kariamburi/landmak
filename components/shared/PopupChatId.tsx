@@ -45,13 +45,14 @@ interface WindowProps {
   handleOpenPerfomance: () => void;
   handleAdEdit:(id:string)=> void;
   handleAdView:(id:string)=> void;
+  handleOpenSearchTab: (value:string) => void;
   userImage: string;
   userId: string;
   recipientUid: string;
   userName: string;
 }
 
-const PopupChatId = ({ isOpen, userId,userName,userImage,recipientUid,handleAdEdit,handleAdView,
+const PopupChatId = ({ isOpen, userId,userName,userImage,recipientUid, handleOpenSearchTab, handleAdEdit,handleAdView,
   handleOpenPerfomance, handleCategory, handleOpenSettings, onClose, handleOpenChatId, handleOpenShop, handleOpenChat,handleOpenBook,handleOpenPlan, handleOpenSell, handleOpenAbout,handleOpenTerms,handleOpenPrivacy,handleOpenSafety }: WindowProps) => {
   const [user, setuser] = useState<any>([]);
   const [loading, setLoading] = useState<boolean>(true);
@@ -103,7 +104,7 @@ const PopupChatId = ({ isOpen, userId,userName,userImage,recipientUid,handleAdEd
                                                      onClose={onClose} 
                                                      handleOpenSell={handleOpenSell}
                                                      handleOpenChat={handleOpenChat}
-                                                     handleCategory={handleCategory} />
+                                                     handleOpenSearchTab={handleOpenSearchTab} />
                                                    </div>
                                                  </footer>
                  </div>
