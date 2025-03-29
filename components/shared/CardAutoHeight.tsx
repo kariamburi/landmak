@@ -104,7 +104,7 @@ const CardAutoHeight = ({
   return (
     <>
       <div
-        className={`mb-2 min-w-[200px] rounded-lg border shadow-sm bg-white dark:bg-[#2D3236]`}
+        className={`mb-2 w-full lg:min-w-[200px] rounded-lg border shadow-sm bg-white dark:bg-[#2D3236]`}
         style={
           ad.plan.name !== "Free"
             ? {
