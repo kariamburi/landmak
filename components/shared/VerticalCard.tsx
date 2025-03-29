@@ -146,7 +146,7 @@ const VerticalCard = ({
   return (
     <>
       <div
-        className={`mb-2 w-full rounded-lg border shadow-sm bg-white dark:bg-[#2D3236] overflow-hidden`}
+        className={`mb-2 w-full min-w-[200px] rounded-lg border shadow-sm bg-white dark:bg-[#2D3236] overflow-hidden`}
         style={
           ad.plan.name !== "Free"
             ? {

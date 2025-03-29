@@ -21,6 +21,7 @@ import {
 import { SignedIn, SignedOut } from "@clerk/nextjs";
 import { Button } from "../ui/button";
 import { useRouter } from "next/navigation";
+import { DeleteReview } from "./DeleteReview";
 interface Revieww {
   id: number;
   name: string;
@@ -354,7 +355,7 @@ const handleReviewSubmit = async () => {
               .reverse().map((review:any, index:number) => (
           <div
             key={index}
-            className="p-1 border rounded-lg flex gap-3 items-start bg-gray-50"
+            className="p-1 border rounded-lg flex gap-3 items-start dark:bg-[#222528] bg-gray-50"
           >
             <Image
               src={review.avatar}
@@ -366,9 +367,18 @@ const handleReviewSubmit = async () => {
             <div className="flex-1">
               <div className="flex justify-between">
                 <h4 className="font-medium text-gray-800">{review.name}</h4>
+                <div className="flex flex-col gap-1 justify-center items-center">
                 <span className="text-gray-500 text-sm">  {review.createdAt?.seconds
     ? new Date(review.createdAt.seconds * 1000).toLocaleDateString()
     : "Date not available"}</span>
+      {uid === review.uid && (
+                <div className="bg-red-100 shadow rounded-lg pt-1 pl-1 pr-1">
+                  <DeleteReview messageId={review.id} />
+                </div>
+              )}
+</div>
+
+
               </div>
               <div className="flex gap-1 text-yellow-500">
 
@@ -399,9 +409,9 @@ const handleReviewSubmit = async () => {
       {/* Review Form Popup */}
       {showForm && (
         <div className="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center">
-          <div className="bg-white p-6 rounded-lg shadow-lg w-11/12 max-w-md">
+          <div className="dark:bg-[#131B1E] dark:text-gray-300 bg-white p-6 rounded-lg shadow-lg w-11/12 max-w-md">
             <div className="flex justify-between items-center">
-              <h3 className="text-lg font-medium text-gray-700">
+              <h3 className="text-lg font-medium dark:text-gray-300 text-gray-700">
                 Leave a Review
               </h3>
               <button onClick={() => setShowForm(false)}>
@@ -411,13 +421,13 @@ const handleReviewSubmit = async () => {
 
             <textarea
               placeholder="Write a review..."
-              className="w-full p-2 border rounded-md mb-2"
+              className="w-full p-2 border rounded-md mb-2 dark:border-gray-600 dark:bg-[#2D3236] dark:text-gray-100 bg-white"
               value={newReview.comment}
               onChange={(e) =>
                 setNewReview({ ...newReview, comment: e.target.value })}
             />
             <div className="flex gap-2 items-center">
-              <span className="text-gray-700">Rating:</span>
+              <span className="dark:text-gray-300 text-gray-700">Rating:</span>
 
                  {starClicked.map((clicked, index) => (
                     <StarIcon

@@ -60,11 +60,11 @@ const PopupReviews = ({ isOpen, userId,userName,userImage,recipientUid, onClose,
   const [loading, setLoading] = useState<boolean>(true);
 
   useEffect(() => {
-    if (isOpen && userId) {
+    if (isOpen && recipientUid) {
       setLoading(true);
       const fetchData = async () => {
         try {
-         const user = await getUserById(userId);
+         const user = await getUserById(recipientUid);
          setuser(user);
         
         } catch (error) {
@@ -76,7 +76,7 @@ const PopupReviews = ({ isOpen, userId,userName,userImage,recipientUid, onClose,
 
       fetchData();
     }
-  }, [isOpen, userId]);
+  }, [isOpen, recipientUid]);
 
   if (!isOpen) return null;
      

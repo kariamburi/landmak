@@ -68,21 +68,27 @@ const PopupSell = ({ isOpen, type, userId, userName, handleOpenSettings,
       const fetchData = async () => {
         try {
           setLoading(true);
-        const category = await getallcategories();
-        setCategories(category);
-
+          //console.log(`Fetching subscription data for userId: ${userId}`);
+          const subscriptionData = await getData(userId);
+         // console.log("Subscription data received:", subscriptionData);
+          const category = await getallcategories();
+          setCategories(category);
+        //  console.log("Subscription data received:", category);
           const packages = await getAllPackages();
           setPackagesList(packages);
-          const subscriptionData = await getData(userId);
+         // console.log("packages data received:", packages);
+       
           if (subscriptionData) {
             setSubscription(subscriptionData);
             const listedAds = subscriptionData.ads || 0;
             setListed(listedAds);
-            setRemainingAds(Number(subscriptionData.currentpack.list) - listedAds);
-            setPriority(Number(subscriptionData.currentpack.priority));
-            setColor(subscriptionData.currentpack.color);
-            setPlanPackage(subscriptionData.currentpack.name);
-            setPlanId(subscriptionData.transaction?.planId || FreePackId);
+            if (subscriptionData.currentpack && !Array.isArray(subscriptionData.currentpack)) {
+              
+              setRemainingAds(subscriptionData.currentpack.list - listedAds);
+              setPriority(subscriptionData.currentpack.priority);
+              setColor(subscriptionData.currentpack.color);
+              setPlanPackage(subscriptionData.currentpack.name);
+              setPlanId(subscriptionData.transaction?.planId || FreePackId);
             const createdAtDate = new Date(subscriptionData.transaction?.createdAt || new Date());
             const periodDays = parseInt(subscriptionData.transaction?.period) || 0;
             const expiryDate = new Date(createdAtDate.getTime() + periodDays * 24 * 60 * 60 * 1000);
@@ -90,17 +96,20 @@ const PopupSell = ({ isOpen, type, userId, userName, handleOpenSettings,
             const currentDate = new Date();
             const remainingDays = Math.ceil((expiryDate.getTime() - currentDate.getTime()) / (1000 * 60 * 60 * 24));
             setDaysRemaining(remainingDays);
-            if ((remainingDays > 0 && remainingAds > 0) || (remainingAds > 0 && planPackage === "Free")) {
-              setAdStatus("Active");
-            }
+            setAdStatus((remainingDays > 0 && (subscriptionData.currentpack.list - listedAds) > 0) || ((subscriptionData.currentpack.list - listedAds) > 0 && subscriptionData.currentpack.name === "Free") ? "Active" : "Pending");
+          //  alert((remainingDays > 0 && (subscriptionData.currentpack.list - listedAds) > 0) || ((subscriptionData.currentpack.list - listedAds) > 0 && subscriptionData.currentpack.name === "Free") ? "Active" : "Pending");
+            
+          } else {
+            console.warn("No current package found for the user.");
+          }
           }
         } catch (error) {
           console.error("Failed to fetch data", error);
         } finally {
-          setLoading(false); // Mark loading as complete
+       
+          setLoading(false);
         }
       };
-
       fetchData();
     }
   }, [isOpen, userId]);
