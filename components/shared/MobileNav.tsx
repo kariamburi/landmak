@@ -61,7 +61,7 @@ const MobileNav = ({ userstatus, userId,popup, onClose, handleOpenSettings, hand
             <div className="flex justify-between items-center mb-1">
             <div className="flex items-center gap-2">
                 <img src="/logo.png" alt="Logo" className="w-6 h-6 rounded-full" />
-                <span className="text-lg font-semibold">LandMak</span>
+                <StyledBrandName/>
               </div>
               <button
                 onClick={handleclicklink}
@@ -84,7 +84,7 @@ const MobileNav = ({ userstatus, userId,popup, onClose, handleOpenSettings, hand
             handleOpenShop={handleOpenShop}
             handleOpenPerfomance={handleOpenPerfomance}
             handleOpenSettings={handleOpenSettings} popup={popup}          />
-          <Separator className="border border-gray-300 dark:border-gray-700" />
+        {/*   <Separator className="border border-gray-300 dark:border-gray-700" />
           <div className="flex text-xs">
             <div className="flex gap-1 w-full dark:text-gray-400 text-gray-600">
               <div className="transition-colors text-[10px] hover:text-emerald-600 hover:cursor-pointer">
@@ -124,7 +124,7 @@ const MobileNav = ({ userstatus, userId,popup, onClose, handleOpenSettings, hand
                 </div>
               </div>
             </div>
-          </div>
+          </div>*/}
         </SheetContent>
       </Sheet>
     </nav>

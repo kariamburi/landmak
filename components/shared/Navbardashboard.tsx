@@ -104,7 +104,7 @@ export default function Navbardashboard({
          
               <div className="flex items-center gap-2">
                 <img src="/logo.png" alt="Logo" className="w-6 h-6 rounded-full" />
-                <span className="text-lg font-semibold">LandMak</span>
+                 <StyledBrandName/>
               </div>
            
           </div>

@@ -64,6 +64,7 @@ import BottomNavigation from "./BottomNavigation";
 import PopupPerfomance from "./PopupPerfomance";
 import { useToast } from "../ui/use-toast";
 import SearchTabWindow from "./SearchTabWindow";
+import StyledBrandName from "./StyledBrandName";
 type CollectionProps = {
   limit: number;
   userId: string;
@@ -845,7 +846,7 @@ const handleCloseAdView = () => {
             <div className="w-full justify-between flex items-center">
               <div className="flex items-center gap-2">
                 <img src="/logo.png" alt="Logo" className="w-6 h-6 rounded-full" />
-                <span className="text-xl font-bold">LandMak</span>
+                <StyledBrandName/>
               </div>
 
               <div className="flex gap-2 items-center"><div className="hidden lg:inline">

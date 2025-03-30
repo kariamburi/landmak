@@ -200,7 +200,7 @@ const ReviewsComponent =  ({displayName,uid,photoURL,recipientUid,recipient,onCl
 
  {/* Leave a Review Button (Fixed) */}
       <button
-        className="bg-green-600 text-white px-5 py-2 rounded-full shadow-lg"
+        className="text-xs lg:text-base bg-green-600 text-white px-5 py-2 rounded-full shadow-lg"
         onClick={() => setShowForm(true)}
       >
         Leave a Review

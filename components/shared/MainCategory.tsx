@@ -90,6 +90,7 @@ import ArrowBackOutlinedIcon from "@mui/icons-material/ArrowBackOutlined";
 import FloatingChatIcon from "./FloatingChatIcon";
 import ChatWindow from "./ChatWindow";
 import PropertyMapSearch from "./PropertyMapSearch";
+import StyledBrandName from "./StyledBrandName";
 type CollectionProps = {
   loading: boolean;
   userId: string;
@@ -495,7 +496,7 @@ CollectionProps) => {
 
         <div className="flex items-center gap-2">
           <img src="/logo.png" alt="Logo" className="w-6 h-6 rounded-full" />
-          <span className="text-xl font-bold">LandMak</span>
+           <StyledBrandName/>
         </div>
       </div>
 
