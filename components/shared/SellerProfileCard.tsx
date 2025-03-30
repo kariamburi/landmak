@@ -216,21 +216,9 @@ const SellerProfileCard = ({ ad, userId, userImage, userName,handlePay, handleOp
         </div>
     
         </div>
-      {/* <div
-        onClick={() => {
-          handleOpenP();
-          router.push(`/shop/${ad.organizer._id}`);
-        }}
-        className="cursor-pointer no-underline w-full flex gap-1 items-center mt-3"
-      >
-        <LocalOfferOutlinedIcon sx={{ fontSize: 24 }} />
-        <p className="hover:underline">View Seller Profile</p>
-      </div>*/}
-     
-    
           <div className="flex gap-1 items-center p-1 w-full">
             <SignedIn>
-            <Button onClick={handleShowPhoneClick} variant="outline" className="flex text-emerald-600 w-full items-center gap-2">
+            <Button onClick={handleShowPhoneClick} variant="outline" className="flex w-full items-center gap-2">
             <CallIcon sx={{ fontSize: 18 }} /><div className="hidden lg:inline">Call</div>
            </Button>
               
@@ -239,7 +227,7 @@ const SellerProfileCard = ({ ad, userId, userImage, userName,handlePay, handleOp
             <Button onClick={() => {
                  // handleOpenP();
                   router.push(`/sign-in`);
-                }} variant="outline" className="flex text-emerald-600 w-full items-center gap-2">
+                }} variant="outline" className="flex w-full items-center gap-2">
             <CallIcon sx={{ fontSize: 18 }} /><div className="hidden lg:inline">Call</div>
            </Button>
              
@@ -258,7 +246,7 @@ const SellerProfileCard = ({ ad, userId, userImage, userName,handlePay, handleOp
                  // handleOpenP();
                   router.push(`/sign-in`);
                 }}
-                 variant="outline" className="flex w-full text-emerald-600 items-center gap-2">
+                 variant="outline" className="flex w-full items-center gap-2">
             <ChatBubbleOutlineOutlinedIcon sx={{ fontSize: 18 }} />
             <div className="hidden lg:inline">Message</div>
            </Button>
@@ -270,7 +258,7 @@ const SellerProfileCard = ({ ad, userId, userImage, userName,handlePay, handleOp
               <>
                 <SignedIn>
                 <Button  onClick={handlewhatsappClick}
-                 variant="outline" className="flex w-full text-emerald-600 items-center gap-2">
+                 variant="outline" className="flex w-full items-center gap-2">
             <WhatsAppIcon sx={{ fontSize: 18 }} />
 
 <div className="hidden lg:inline">WhatsApp</div>
@@ -283,7 +271,7 @@ const SellerProfileCard = ({ ad, userId, userImage, userName,handlePay, handleOp
                      // handleOpenP();
                       router.push(`/sign-in`);
                     }}
-                 variant="outline" className="flex text-emerald-600 w-full items-center gap-2">
+                 variant="outline" className="flex w-full items-center gap-2">
            <WhatsAppIcon sx={{ fontSize: 18 }} />
 
 <div className="hidden lg:inline">WhatsApp</div>

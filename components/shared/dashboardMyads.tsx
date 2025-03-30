@@ -24,8 +24,6 @@ import {
 import dynamic from "next/dynamic";
 import Skeleton from "@mui/material/Skeleton";
 import { IUser } from "@/lib/database/models/user.model";
-import ReviewsBoxMyAds from "./ReviewsBoxMyAds";
-import SendReviewMyAds from "./SendReviewMyAds";
 import Footersub from "./Footersub";
 import Navbar from "./navbar";
 import { mode } from "@/constants";

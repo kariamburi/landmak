@@ -24,10 +24,9 @@ import DashboardBookmark from "./dashboardBookmark";
 import CircularProgress from "@mui/material/CircularProgress";
 import ChatComponent from "./ChatComponent";
 import SellerProfile from "./SellerProfile";
-import ReviewsBox from "./ReviewsBox";
 import SendReviewMyAds from "./SendReviewMyAds";
 import { ScrollArea } from "../ui/scroll-area";
-import ReviewSection from "./ReviewSection";
+import ReviewsComponent from "./ReviewsComponent";
 
 //import { getAllPackages, getData } from "@/lib/api";
 
@@ -86,7 +85,11 @@ const PopupReviews = ({ isOpen, userId,userName,userImage,recipientUid, onClose,
           {loading ? (
                  <div className="h-screen w-full bg-gray-200"> 
                  <div className="top-0 z-10 fixed w-full">
-                  <Navbar userstatus={"User"} userId={userId} onClose={onClose} popup={"reviews"} handleOpenSell={handleOpenSell} handleOpenBook={handleOpenBook} handleOpenPlan={handleOpenPlan} handleOpenChat={handleOpenChat}
+                  <Navbar userstatus={"User"} userId={userId} onClose={onClose} popup={"reviews"} 
+                  handleOpenSell={handleOpenSell} 
+                  handleOpenBook={handleOpenBook} 
+                  handleOpenPlan={handleOpenPlan} 
+                  handleOpenChat={handleOpenChat}
                    handleOpenPerfomance={handleOpenPerfomance}
                    handleOpenSettings={handleOpenSettings}
                    handleOpenAbout={handleOpenAbout}
@@ -101,36 +104,28 @@ const PopupReviews = ({ isOpen, userId,userName,userImage,recipientUid, onClose,
                  </div>
                 
                ) : (<>
-            
-          <div className="h-[100vh] bg-gray-200 p-0 dark:bg-[#131B1E] text-black dark:text-[#F1F3F3]">
-                 
-                <div className="top-0 z-10 fixed w-full">
-                  <Navbar userstatus={user.status} userId={userId} onClose={onClose} popup={"reviews"} handleOpenSell={handleOpenSell} handleOpenBook={handleOpenBook} handleOpenPlan={handleOpenPlan} handleOpenChat={handleOpenChat}
-                  handleOpenPerfomance={handleOpenPerfomance}
-                  handleOpenSettings={handleOpenSettings}
-                  handleOpenAbout={handleOpenAbout}
-                  handleOpenTerms={handleOpenTerms}
-                  handleOpenPrivacy={handleOpenPrivacy}
-                  handleOpenSafety={handleOpenSafety} 
-                  handleOpenShop={handleOpenShop}/>
-                 </div>
-                <div className="w-full flex mt-[70px] lg:mt-[60px] p-1">
-
-                <ReviewSection
-                displayName={userName}
-                uid={userId}
-                photoURL={userImage}
-                recipientUid={recipientUid}
-                recipient={user}
-                handleOpenReview={handleOpenReview} 
-                handleOpenChatId={handleOpenChatId} 
-                handleOpenSettings={handleOpenSettings}
-                handlePay={handlePay}
-                />
-
-<Toaster />
-                </div>
-              </div>
+            <ReviewsComponent
+              displayName={userName}
+              uid={userId}
+              photoURL={userImage}
+              recipientUid={recipientUid}
+              recipient={user}
+              handleOpenReview={handleOpenReview}
+              handleOpenChatId={handleOpenChatId}
+              handleOpenSettings={handleOpenSettings}
+              handleOpenSell={handleOpenSell}
+              handleOpenBook={handleOpenBook}
+              handleOpenPlan={handleOpenPlan}
+              handleOpenChat={handleOpenChat}
+              handleOpenPerfomance={handleOpenPerfomance}
+              handleOpenAbout={handleOpenAbout}
+              handleOpenTerms={handleOpenTerms}
+              handleOpenPrivacy={handleOpenPrivacy}
+              handleOpenSafety={handleOpenSafety}
+              handleOpenShop={handleOpenShop} 
+              onClose={onClose} 
+              handlePay={handlePay}/>
+                
           </>  )}
      
         <Toaster />

@@ -59,6 +59,7 @@ import ProgressPopup from "./ProgressPopup";
 import CopyShareAdLink from "./CopyShareAdLink";
 import { Email } from "@mui/icons-material";
 import { Button } from "../ui/button";
+import { updatewhatsapp } from "@/lib/actions/dynamicAd.actions";
 
 type CollectionProps = {
   userId: string;
@@ -78,6 +79,10 @@ const SellerProfile = ({ userId, loggedId, user, handlePay, handleOpenReview, ha
   const isActiveReviews = pathname === "/reviews/" + userId;
   const router = useRouter();
   const isAdCreator = userId === loggedId;
+  const handlewhatsappClick = () => {
+     
+      window.location.href = `https://wa.me/${user.whatsapp}/`;
+    };
   const handleShowPhoneClick = (e: any) => {
     setshowphone(true);
     window.location.href = `tel:${user.phone}`;
@@ -123,16 +128,16 @@ const SellerProfile = ({ userId, loggedId, user, handlePay, handleOpenReview, ha
     <div className="flex flex-col m-0 dark:text-gray-100 items-center w-full lg:w-[350px]">
      
      <div className="flex flex-col dark:bg-[#2D3236] dark:text-gray-100 border bg-white justify-between items-center p-1 w-full rounded-lg">
-      <div className="flex gap-4 dark:bg-[#2D3236] dark:text-gray-100 border bg-white  items-center p-1 w-full rounded-lg">
+      <div className="flex gap-4 dark:bg-[#2D3236] dark:text-gray-100 border-b bg-white  items-center p-1 w-full rounded-lg">
         <div className="flex flex-col w-full items-center w-full">
-          <div className="w-24 h-24 rounded-full bg-white relative">
+          <div className="w-16 h-16 rounded-full bg-white relative">
             <Zoom>
               <Image
                 className="w-full h-full rounded-full object-cover"
                 src={user.photo ?? "/avator.png"}
                 alt="Avator"
-                width={200}
-                height={200}
+                width={100}
+                height={100}
               />
             </Zoom>
             {/* Verified Icon */}
@@ -142,7 +147,7 @@ const SellerProfile = ({ userId, loggedId, user, handlePay, handleOpenReview, ha
                   <Tooltip>
                     <TooltipTrigger asChild>
                       <div className="shadow-[0px_4px_20px_rgba(0,0,0,0.3)] absolute text-white bottom-0 right-0 bg-gradient-to-b from-emerald-500 to-emerald-600 rounded-full p-1">
-                        <VerifiedUserOutlinedIcon />
+                        <VerifiedUserOutlinedIcon sx={{ fontSize: 16 }}/>
                       </div>
                     </TooltipTrigger>
                     <TooltipContent>
@@ -157,7 +162,7 @@ const SellerProfile = ({ userId, loggedId, user, handlePay, handleOpenReview, ha
                   <Tooltip>
                     <TooltipTrigger asChild>
                       <div className="shadow-[0px_4px_20px_rgba(0,0,0,0.3)] absolute text-gray-100 bottom-0 right-0 bg-gradient-to-b from-gray-500 to-gray-600 rounded-full p-1">
-                        <ShieldOutlinedIcon />
+                        <ShieldOutlinedIcon sx={{ fontSize: 16 }}/>
                       </div>
                     </TooltipTrigger>
                     <TooltipContent>
@@ -193,7 +198,7 @@ const SellerProfile = ({ userId, loggedId, user, handlePay, handleOpenReview, ha
               >
                 <Button variant="outline">
                   <EditOutlinedIcon sx={{ fontSize: 14 }} />
-                  Edit your Profile
+                  Edit Profile
                 </Button>
               </div>
             </div>
@@ -208,201 +213,85 @@ const SellerProfile = ({ userId, loggedId, user, handlePay, handleOpenReview, ha
       </div>
      
  
-      <div className="flex flex-col gap-4 mt-2 mb-2 dark:bg-[#2D3236] dark:text-gray-100 border bg-white justify-between items-center p-1 w-full rounded-lg">
-      <h1 className="mt-2 p-0">Seller contacts</h1>
-      <div className="flex gap-4 text-gray-600">
-     
-      {user?.phone && (
-                <>
+      <div className="flex flex-col gap-4 mt-2 mb-2 dark:bg-[#2D3236] dark:text-gray-100 border-b bg-white justify-between items-center p-1 w-full rounded-lg">
+    
+       <div className="flex flex-col gap-1 items-center w-full">
                   <SignedIn>
-                    <TooltipProvider>
-                      <Tooltip>
-                        <TooltipTrigger asChild>
-                          <button
-                            className={`hover:bg-[emerald-700] bg-[#000000] text-white mt-2 p-2 shadow  ${
-                              showphone ? "rounded-sm" : "rounded-full"
-                            }`}
-                            onClick={handleShowPhoneClick}
-                          >
-                            <CallIcon/>
-                            {showphone ? <>{user?.phone}</> : <> </>}
-                          </button>
-                        </TooltipTrigger>
-                        <TooltipContent>
-                          <p>Call Seller</p>
-                        </TooltipContent>
-                      </Tooltip>
-                    </TooltipProvider>
+                  <Button onClick={handleShowPhoneClick} variant="default" className="w-full">
+                  <CallIcon sx={{ fontSize: 18 }} /><div>Call</div>
+                 </Button>
+                    
                   </SignedIn>
+                 
                   <SignedOut>
-                    <TooltipProvider>
-                      <Tooltip>
-                        <TooltipTrigger asChild>
-                          <div
-                            onClick={() => {
-                             // handleOpenP();
-                              router.push(`/sign-in`);
-                            }}
-                            className="cursor-pointer"
-                          >
-                            <button className="hover:bg-emerald-700 bg-[#000000] text-white mt-2 p-2 rounded-full shadow">
-                              <CallIcon />
-                            </button>
-                          </div>
-                        </TooltipTrigger>
-                        <TooltipContent>
-                          <p>Call Seller</p>
-                        </TooltipContent>
-                      </Tooltip>
-                    </TooltipProvider>
+                  <Button onClick={() => {
+                       // handleOpenP();
+                        router.push(`/sign-in`);
+                      }} variant="default" className="w-full">
+                  <CallIcon sx={{ fontSize: 18 }} /><div>Call</div>
+                 </Button>
+                   
                   </SignedOut>
-                </>
-              )}
-              {userId !== loggedId && (
-                <>
+                  {userId !== loggedId && (<>
                   <SignedIn>
-                    <TooltipProvider>
-                      <Tooltip>
-                        <TooltipTrigger asChild>
-                          <div
-                            onClick={() => {
-                             // handleOpenP();
+                  <Button onClick={() => {
+                           
                              handleOpenChatId(userId);
-                              //router.push(`/chat/${userId}`);
+                             
                             }}
-                            className="cursor-pointer"
-                          >
-                            <button className="hover:bg-emerald-700 bg-[#000000] text-white mt-2 p-2 rounded-full shadow">
-                              <ChatBubbleOutlineOutlinedIcon
-                                
-                              />
-                            </button>
-                          </div>
-                        </TooltipTrigger>
-                        <TooltipContent>
-                          <p>Chat with seller</p>
-                        </TooltipContent>
-                      </Tooltip>
-                    </TooltipProvider>
+                       variant="default" className="w-full">
+                  <ChatBubbleOutlineOutlinedIcon sx={{ fontSize: 18 }} />
+                  <div>Message</div>
+                 </Button>
                   </SignedIn>
                   <SignedOut>
-                    <TooltipProvider>
-                      <Tooltip>
-                        <TooltipTrigger asChild>
-                          <div
-                            onClick={() => {
-                              //handleOpenP();
-                              router.push(`/sign-in`);
-                            }}
-                            className="cursor-pointer"
-                          >
-                            <button className="hover:bg-emerald-700 bg-[#000000] text-white mt-2 p-2 rounded-full shadow">
-                              <ChatBubbleOutlineOutlinedIcon
-                                
-                              />
-                            </button>
-                          </div>
-                        </TooltipTrigger>
-                        <TooltipContent>
-                          <p>Chat with Seller</p>
-                        </TooltipContent>
-                      </Tooltip>
-                    </TooltipProvider>
+                  <Button onClick={() => {
+                       // handleOpenP();
+                        router.push(`/sign-in`);
+                      }}
+                       variant="default" className="w-full">
+                  <ChatBubbleOutlineOutlinedIcon sx={{ fontSize: 18 }} />
+                  <div>Message</div>
+                 </Button>
+      
+                   
                   </SignedOut>
-                </>
-              )}
-              {user?.whatsapp && (
-                <>
-                  <SignedIn>
-                    <TooltipProvider>
-                      <Tooltip>
-                        <TooltipTrigger asChild>
-                          <a href={`https://wa.me/${user?.whatsapp}/`}>
-                            <button className="hover:bg-emerald-700 bg-[#000000] text-white mt-2 p-2 rounded-full shadow">
-                              <WhatsAppIcon/>
-                            </button>
-                          </a>
-                        </TooltipTrigger>
-                        <TooltipContent>
-                          <p>Whatsapp Seller</p>
-                        </TooltipContent>
-                      </Tooltip>
-                    </TooltipProvider>
-                  </SignedIn>
-                  <SignedOut>
-                    <TooltipProvider>
-                      <Tooltip>
-                        <TooltipTrigger asChild>
-                          <div
-                            onClick={() => {
-                              //handleOpenP();
-                              router.push(`/sign-in`);
-                            }}
-                            className="cursor-pointer"
-                          >
-                            <button className="hover:bg-emerald-700 bg-[#000000] text-white mt-2 p-2 rounded-full shadow">
-                              <WhatsAppIcon />
-                            </button>
-                          </div>
-                        </TooltipTrigger>
-                        <TooltipContent>
-                          <p>Whatsapp Seller</p>
-                        </TooltipContent>
-                      </Tooltip>
-                    </TooltipProvider>
-                  </SignedOut>
-                </>
-              )}
-
+                  </>)}
+                  {user.whatsapp && (
+                    <div className="w-full">
+                      <SignedIn>
+                    
+                      <Button 
+                      onClick={handlewhatsappClick}
+                       variant="default" className="w-full">
+                  <WhatsAppIcon sx={{ fontSize: 18 }} />
+      
+      <div>WhatsApp</div>
+                 </Button>
+                         
+                     
+      
+                        
+                      </SignedIn>
+                      <SignedOut>
+                      <Button  onClick={() => {
+                           // handleOpenP();
+                            router.push(`/sign-in`);
+                          }}
+                       variant="default" className="w-full">
+                 <WhatsAppIcon sx={{ fontSize: 18 }} />
+      
+      <div >WhatsApp</div>
+                 </Button>
+      
+                       
+                      </SignedOut>
+                    </div>
+                  )}
                 </div>
-
-                <h1 className="mt-2 p-0">Seller Social media</h1>
-
-                <div className="justify-center gap-5">
-                {user?.whatsapp && (
-                  <Link
-                    href={`${user?.facebook}`}
-                    className="no-underline font-boldm-1 mr-2"
-                  >
-                    <FontAwesomeIcon icon={faFacebook} className="text-2xl" />
-                  </Link>
-                )}
-
-                {user?.twitter && (
-                  <Link
-                    href={`${user?.twitter}`}
-                    className="no-underline font-boldm-1 mr-2"
-                  >
-                    <FontAwesomeIcon icon={faTwitter} className="text-2xl" />
-                  </Link>
-                )}
-
-                {user?.instagram && (
-                  <Link
-                    href={`${user?.instagram}`}
-                    className="no-underline font-boldm-1 mr-2"
-                  >
-                    <FontAwesomeIcon icon={faInstagram} className="text-2xl" />
-                  </Link>
-                )}
-                {user?.tiktok && (
-                  <Link
-                    href={`${user?.tiktok}`}
-                    className="no-underline font-boldm-1 mr-2"
-                  >
-                    <FontAwesomeIcon icon={faTiktok} className="text-2xl" />
-                  </Link>
-                )}
-
-                {user?.website && (
-                  <Link
-                    href={`${user?.website}`}
-                    className="no-underline font-boldm-1 mr-2"
-                  >
-                    <FontAwesomeIcon icon={faChrome} className="text-2xl" />
-                  </Link>
-                )}
-              </div>
+      
+              
+                
               </div>
 
 
@@ -412,6 +301,8 @@ const SellerProfile = ({ userId, loggedId, user, handlePay, handleOpenReview, ha
 
                 </div>
      
+              
+
       <div className="flex flex-col mt-2 items-center dark:bg-[#2D3236] border dark:text-gray-100 bg-white rounded-lg w-full p-1">
         <div className="divider"></div>
       
@@ -726,6 +617,59 @@ const SellerProfile = ({ userId, loggedId, user, handlePay, handleOpenReview, ha
                                   </div>
                                 </>
                               )}
+                      <div className="flex w-full gap-5 p-1 dark:bg-[#2D3236] dark:text-gray-100 bg-white rounded-lg">
+                  
+                        <p>
+                        Seller Social media...
+                        </p>
+                     
+                      <div className="justify-center gap-5">
+                {user?.whatsapp && (
+                  <Link
+                    href={`${user?.facebook}`}
+                    className="no-underline font-boldm-1 mr-2"
+                  >
+                    <FontAwesomeIcon icon={faFacebook} className="text-2xl" />
+                  </Link>
+                )}
+
+                {user?.twitter && (
+                  <Link
+                    href={`${user?.twitter}`}
+                    className="no-underline font-boldm-1 mr-2"
+                  >
+                    <FontAwesomeIcon icon={faTwitter} className="text-2xl" />
+                  </Link>
+                )}
+
+                {user?.instagram && (
+                  <Link
+                    href={`${user?.instagram}`}
+                    className="no-underline font-boldm-1 mr-2"
+                  >
+                    <FontAwesomeIcon icon={faInstagram} className="text-2xl" />
+                  </Link>
+                )}
+                {user?.tiktok && (
+                  <Link
+                    href={`${user?.tiktok}`}
+                    className="no-underline font-boldm-1 mr-2"
+                  >
+                    <FontAwesomeIcon icon={faTiktok} className="text-2xl" />
+                  </Link>
+                )}
+
+                {user?.website && (
+                  <Link
+                    href={`${user?.website}`}
+                    className="no-underline font-boldm-1 mr-2"
+                  >
+                    <FontAwesomeIcon icon={faChrome} className="text-2xl" />
+                  </Link>
+                )}
+              </div>
+              </div>   
+                       
                           </div>
                         </div>
                       </AccordionContent>

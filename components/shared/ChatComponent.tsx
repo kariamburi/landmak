@@ -21,6 +21,7 @@ import BottomNavigation from "@/components/shared/BottomNavigation";
 import Sidebarmain from "@/components/shared/Sidebarmain";
 import { mode } from "@/constants";
 import SellerProfileReviews from "./SellerProfileReviews";
+import SellerProfileChat from "./SellerProfileChat";
 interface AdsProps {
   senderId: string;
   senderName: string;
@@ -90,7 +91,7 @@ const ChatComponent =  ({senderId,senderName,senderImage,user,onClose, handlePay
       <div className="w-full lg:max-w-6xl lg:mx-auto h-full flex mt-[73px] lg:mt-[60px] mb-0 p-1">
         <div className="hidden lg:inline mr-5">
           <div className="w-full rounded-lg p-1">
-            <SellerProfileReviews
+            <SellerProfileChat
               user={user}
               loggedId={senderId}
               userId={recipientUid}
@@ -117,7 +118,7 @@ const ChatComponent =  ({senderId,senderName,senderImage,user,onClose, handlePay
               <ScrollArea className="h-[75vh] p-1 bg-white rounded-b-lg dark:bg-[#2D3236]">
     
               <Sidebarmain userId={senderId} handleOpenChatId={handleOpenChatId}/>
-</ScrollArea>
+              </ScrollArea>
               <Toaster />
             </div>
           </div>

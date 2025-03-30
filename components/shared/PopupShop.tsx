@@ -67,6 +67,8 @@ const PopupShop = ({ isOpen, userId, shopId, queryObject, userName,userImage, on
     const fetchData = async () => {
       try {
         setLoading(true);
+         const user = await getUserById(shopId);
+        setuser(user);
         //console.log(`Fetching subscription data for userId: ${userId}`);
         const subscriptionData = await getData(shopId);
        // console.log("Subscription data received:", subscriptionData);

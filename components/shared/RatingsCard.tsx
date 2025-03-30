@@ -34,39 +34,37 @@ const RatingsCard = ({ recipientUid, handleOpenReview }: Ratingsprop) => {
   const [averangestar, setaverangestar] = useState<number>(0);
   const pathname = usePathname();
   useEffect(() => {
+    if (!recipientUid) return; // Ensure recipientUid is defined before running the query
+  
     const fetchMessages = () => {
       const messagesQuery = query(
         collection(db, "reviews"),
         where("recipientUid", "==", recipientUid),
         limit(100)
       );
-
+  
       const unsubscribe = onSnapshot(messagesQuery, (snapshot) => {
         let totalClickedStars = 0;
         let totalMessages = snapshot.size;
+        
         snapshot.forEach((doc) => {
           const reviewData = doc.data() as Review;
-
           totalClickedStars += reviewData.starClicked
-            ? reviewData.starClicked.filter((clicked: boolean) => clicked)
-                .length
+            ? reviewData.starClicked.filter((clicked: boolean) => clicked).length
             : 0;
         });
-
+  
         setClickedStarsCount(totalClickedStars);
         setMessagesCount(totalMessages);
-        if (totalMessages === 0) {
-          setaverangestar(0);
-        } else {
-          setaverangestar(totalClickedStars / totalMessages);
-        }
+        setaverangestar(totalMessages === 0 ? 0 : totalClickedStars / totalMessages);
       });
-
+  
       return unsubscribe;
     };
-
+  
     fetchMessages();
   }, [recipientUid]);
+  
   const router = useRouter();
   return (
     <div className="flex flex-col items-center justify-center h-full">

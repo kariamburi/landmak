@@ -183,7 +183,7 @@ CollectionProps) => {
       </div>
       <div className="min-h-screen mt-[10vh]">
       <div className="w-full lg:max-w-6xl mx-auto p-1">
-        <section className="bg-grey-50 bg-dotted-pattern bg-cover bg-center py-0 md:py-0 rounded-sm">
+        <section className="bg-gray-50 dark:bg-[#2D3236] bg-dotted-pattern bg-cover bg-center py-0 md:py-0 rounded-sm">
           <div className="flex items-center p-1 justify-between">
             <div className="flex flex-col">
               <SellerProfilePermonance
@@ -276,13 +276,14 @@ CollectionProps) => {
                     className="flex flex-col lg:flex-row gap-1 bg-white shadow-lg rounded-lg overflow-hidden mb-6 border border-gray-200"
                   >
                     {/* Ad Image */}
+                  
                     <img
                       src={ad.data.imageUrls[0] || "/default-ad-image.jpg"}
                       alt={ad.data.title}
-                      className="w-full lg:w-64 h-40 lg:h-64 object-cover"
+                      className="flex w-full lg:w-64 h-40 lg:h-full object-cover"
                     />
 
-                    <div className="p-2 grid grid-cols-2 lg:grid-cols-3 w-full">
+                    <div className="flex-1 p-2 grid grid-cols-2 lg:grid-cols-3 w-full">
                       {/* 1. Ad Details */}
                       <section className="mb-1 mr-1 bg-gray-100 p-1 rounded-lg">
                         <p className="text-xs lg:text-base font-bold mb-1 text-gray-800">
@@ -451,10 +452,10 @@ CollectionProps) => {
                     <img
                       src={ad.data.imageUrls[0] || "/default-ad-image.jpg"}
                       alt={ad.data.title}
-                      className="w-full lg:w-64 h-40 lg:h-64 object-cover"
+                      className="w-full lg:w-64 h-40 lg:h-full object-cover"
                     />
 
-                    <div className="p-2 grid grid-cols-2 lg:grid-cols-3">
+                    <div className="p-2 grid grid-cols-2 lg:grid-cols-3 w-full">
                       {/* 1. Ad Details */}
                       <section className="mb-1 mr-1 bg-gray-100 p-1 rounded-lg">
                         <p className="text-xs lg:text-base font-bold mb-1 text-gray-800">

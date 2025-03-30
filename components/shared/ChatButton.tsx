@@ -81,14 +81,10 @@ const ChatButton = ({ ad, userId, userName, userImage }: chatProps) => {
         imageUrl: ad.data.imageUrls[0],
         adTitle: ad.data.title,
         adDescription: ad.data.description,
-        adUrl:process.env.NEXT_PUBLIC_DOMAIN_URL+"ads/"+ad._id,
+        adUrl:process.env.NEXT_PUBLIC_DOMAIN_URL+"?Ad="+ad._id,
         read: "1",
       });
 
-      const adTitle = ad.data.title;
-      const adUrl = process.env.NEXT_PUBLIC_DOMAIN_URL+"ads/"+ad._id;
-      const phoneNumber = ad.data.phone;
-      const recipientEmail = ad?.organizer?.email;
       const callbackUrl = process.env.NEXT_PUBLIC_DOMAIN_URL+"chat"
       sendMessage(message, userName, ad.organizer._id, callbackUrl, ad.data.imageUrls[0])
       // Send notification SMS and email 
@@ -139,7 +135,7 @@ const ChatButton = ({ ad, userId, userName, userImage }: chatProps) => {
   return (
     <>
       <Button  onClick={() => setIsOpen(true)}
-                 variant="outline" className="flex w-full text-emerald-600 items-center gap-2">
+                 variant="outline" className="flex w-full items-center gap-2">
             <ChatBubbleOutlineOutlinedIcon sx={{ fontSize: 24 }} />
             <div className="hidden lg:inline"> Enquire</div>
            </Button>

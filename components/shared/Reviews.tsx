@@ -26,20 +26,12 @@ interface ReviewsProps {
     name: string;
     text: string;
   };
-  displayName: string;
   uid: string;
-  photoURL: string;
-  recipientUid: string | null;
-  recipient: UpdateUserParams;
 }
 
 const Reviews = ({
   message,
-  displayName,
   uid,
-  recipientUid,
-  photoURL,
-  recipient,
 }: ReviewsProps) => {
   // Convert Timestamp to Date object
   let formattedCreatedAt = "";

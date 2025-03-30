@@ -71,6 +71,8 @@ const PopupAdEdit = ({ isOpen, type, userId, userName, adId, handleOpenPerfomanc
     const fetchData = async () => {
       try {
         setLoading(true);
+          const ad = await getAdById(adId);
+          setAd(ad);
         //console.log(`Fetching subscription data for userId: ${userId}`);
         const subscriptionData = await getData(userId);
        // console.log("Subscription data received:", subscriptionData);
