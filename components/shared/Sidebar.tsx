@@ -178,11 +178,12 @@ const Sidebar = ({ userId ,handleOpenChatId}: sidebarProps) => {
                           {message.name}
                         </p>
                         <p className="flex gap-1 text-[10px] dark:text-gray-300 text-gray-500 truncate">
-                          {truncateTitle(message.text, 18)}
+                        
                           <UnreadmessagesPeruser
                             uid={message.uid}
                             recipientUid={userId}
                           />
+                            {truncateTitle(message.text, 18)}
                         </p>
                       </div>
                       <div className="whitespace-nowrap text-[10px] dark:text-gray-500 text-gray-500">

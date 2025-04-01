@@ -97,6 +97,7 @@ type CollectionProps = {
   userName: string;
   userImage: string;
   categoryList?: ICategory;
+  subcategoryList:any;
   limit: number;
   emptyTitle: string;
   emptyStateSubtext: string;
@@ -127,6 +128,7 @@ const MainCategory = ({
   userName,
   userImage,
   categoryList,
+  subcategoryList,
   emptyTitle,
   emptyStateSubtext,
   AdsCountPerRegion,
@@ -423,7 +425,7 @@ CollectionProps) => {
           {/* Categories Section */}
            <ScrollArea className="h-[100vh] text-sm lg:text-base w-full dark:bg-[#2D3236] bg-white rounded-0 border p-3">
                       <SidebarSearchMain
-                          categoryList={categoryList}
+                          categoryList={subcategoryList}
                           category={newqueryObject.category}
                           subcategory={newqueryObject.subcategory}
                           AdsCountPerRegion={AdsCountPerRegion}
@@ -798,7 +800,7 @@ CollectionProps) => {
                         
       
                             <SidebarSearchmobile
-                              categoryList={categoryList}
+                              categoryList={subcategoryList}
                               category={newqueryObject.category}
                               subcategory={newqueryObject.subcategory}
                               AdsCountPerRegion={AdsCountPerRegion}
@@ -969,7 +971,7 @@ CollectionProps) => {
       {newqueryObject.subcategory && (
         <div className="w-full dark:bg-[#2D3236] dark:text-gray-300 flex flex-col rounded-lg mb-1">
           <MenuType
-            categoryList={categoryList}
+            categoryList={subcategoryList}
             category={newqueryObject.category}
             subcategory={newqueryObject.subcategory}
             clearQuery={clearQuery}

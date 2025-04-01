@@ -87,23 +87,7 @@ const ChatButton = ({ ad, userId, userName, userImage }: chatProps) => {
 
       const callbackUrl = process.env.NEXT_PUBLIC_DOMAIN_URL+"chat"
       sendMessage(message, userName, ad.organizer._id, callbackUrl, ad.data.imageUrls[0])
-      // Send notification SMS and email 
-
-     // if (sendsms && daysRemaining > 0) {
-     //   await sendSMS(phoneNumber, message, adTitle, adUrl);
-    //  }
-
-      // if (sendemail && daysRemaining > 0) {
-      // alert(recipientEmail);
-     // await sendEmail(
-     //   recipientEmail,
-      //  message,
-       // adTitle,
-      //  adUrl,
-       // userName,
-       // userImage
-     // );
-      //  }
+   
 
       const inquiries = (Number(ad.inquiries ?? "0") + 1).toString();
       const _id = ad._id;

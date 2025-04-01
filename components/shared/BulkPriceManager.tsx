@@ -74,25 +74,25 @@ export const BulkPriceManager = ({
      {isMobile ? (
                    
                       // Fullscreen Popover for Mobile
-                      <div className="fixed inset-0 z-10 bg-gray-200 dark:bg-[#222528] dark:text-gray-100 p-4 flex flex-col">
+                      <div className="fixed inset-0 z-10 bg-gray-200 dark:bg-[#2D3236] dark:text-gray-100 p-1 lg:p-4 flex flex-col">
                         <div className="flex justify-between items-center border-b pb-2">
-                        <h2 className="text-2xl font-bold text-center mb-6">
+                        <p className="text-lg lg:text-2xl font-bold text-center">
         Bulk Price Manager
-      </h2>
+      </p>
                           <Button variant="outline" onClick={handleClosePopupBulk}>
                           <CloseOutlinedIcon />
                           </Button>
                         </div> 
                         
-                        <div className="w-full p-6 bg-white border border-gray-200 dark:border-gray-600 dark:bg-[#2D3236] dark:text-gray-100 rounded-sm shadow-md">
+                        <div className="w-full p-6 bg-white dark:bg-[#2D3236] dark:text-gray-100">
     
-      <div className="flex gap-1 items-center">
-        <div className="flex flex-col">
+      <div className="flex flex-col lg:flex-row gap-1 items-center w-full">
+        <div className="flex flex-col w-full">
           <label className="font-medium mb-1">Quantity:</label>
           <select
             value={quantity}
             onChange={(e) => setQuantity(parseInt(e.target.value, 10))}
-            className="px-4 py-2 border border-gray-800 rounded-md dark:bg-[#131B1E] dark:text-gray-100"
+            className="px-4 w-full py-2 border border-gray-800 rounded-md dark:bg-[#131B1E] dark:text-gray-100"
           >
             <option value=""></option>
             <option value="2">2 pieces</option>
@@ -109,7 +109,7 @@ export const BulkPriceManager = ({
             <option value="50+">50+ pieces</option>
           </select>
         </div>
-        <div className="flex flex-col">
+        <div className="flex flex-col w-full">
           <label className="font-medium mb-1">Price Per Piece:</label>
           <input
             type="text"
@@ -118,16 +118,16 @@ export const BulkPriceManager = ({
               setPricePerPiece(parseCurrencyToNumber(e.target.value))
             }
             placeholder="Enter price per piece"
-            className="px-4 py-2 border border-gray-800 rounded-md dark:bg-[#131B1E] dark:text-gray-100"
+            className="px-4 py-2 w-full border border-gray-800 rounded-md dark:bg-[#131B1E] dark:text-gray-100"
           />
         </div>
 
         <button
           onClick={handleAdd}
-          className="bg-black mt-6 hover:bg-gray-600 
+          className="bg-black w-full mt-6 hover:bg-gray-600 
     dark:bg-emerald-700 dark:hover:bg-emerald-600 text-[#F1F3F3] p-2 rounded-xl"
         >
-          <AddOutlinedIcon />
+          <AddOutlinedIcon /> Add
         </button>
       </div>
 
@@ -180,7 +180,7 @@ export const BulkPriceManager = ({
                         
                         
                         </div>  ):(
-    <div className="fixed inset-0 flex items-center justify-center bg-gray-800 bg-opacity-90 z-50">
+    <div className="fixed inset-0 flex items-center justify-center bg-black bg-opacity-50 z-50">
                             <div className="dark:border-gray-600 dark:bg-[#2D3236] dark:text-gray-100 bg-white p-1 lg:p-6 w-full  lg:max-w-3xl rounded-md shadow-md relative">
                               <div className="flex justify-end items-center mb-1">
                                 <Button

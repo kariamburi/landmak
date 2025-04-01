@@ -21,6 +21,7 @@ import SubCategorySelect from "./SubCategorySelect";
 import { Multiselect } from "./Multiselect";
 import AutoComplete from "./AutoComplete";
 import AddOutlinedIcon from "@mui/icons-material/AddOutlined";
+
 import dynamic from "next/dynamic";
 import "react-quill/dist/quill.snow.css";
 const ReactQuill = dynamic(() => import("react-quill"), { ssr: false });
@@ -1232,12 +1233,12 @@ const AdForm = ({
                       }}
                       className="w-full"
                     />
-
-                    <Button
+                    <button
                       onClick={handleOpenPopupBulk}
-                      variant="default">
+                      className="py-3 w-[200px] px-1 rounded-sm bg-green-600 text-white hover:bg-green-700">
                       <AddOutlinedIcon /> Add Bulk Price
-                    </Button>
+                    </button>
+                   
 
                     {showPopupBulk && (
                       
@@ -1573,11 +1574,12 @@ const AdForm = ({
 
               {field.type === "delivery" && (
                 <div className="flex flex-col w-full gap-1">
-                  <Button
-                    onClick={handleOpenPopup}
-                    variant="default">
-                    <AddOutlinedIcon /> Add Delivery Option
-                  </Button>
+                    <button
+                      onClick={handleOpenPopup}
+                      className="py-3 w-full px-1 rounded-sm bg-green-600 text-white hover:bg-green-700">
+                      <AddOutlinedIcon /> Add Delivery Option
+                    </button>
+                  
 
                   {showPopup && (
                     
@@ -1595,12 +1597,13 @@ const AdForm = ({
               
                     {field.type === "propertyarea" && (
                 <div className="flex flex-col w-full gap-1">
-                  <Button
-                    onClick={handleOpenPopupArea}
-                    variant="default"
-                  >
-                    🗺️ Advanced Property Mapping
-                  </Button>
+                   <button
+                      onClick={handleOpenPopupArea}
+                      className="py-3 w-full px-1 rounded-sm bg-green-600 text-white hover:bg-green-700">
+                      <AddLocationAltOutlinedIcon /> Advanced Property Mapping
+                    </button>
+                  
+                 
 
                   {showPopupArea && (
                     <div className="fixed inset-0 flex items-center justify-center bg-gray-200 z-50">
@@ -1895,18 +1898,16 @@ const AdForm = ({
             </>
           )}
 
-          <Button
-            onClick={handleSubmit}
-            size="lg"
-            disabled={loading}
-            className="button col-span-2 mt-3 w-full"
-          >
-            <div className="flex gap-1 items-center">
+<button
+  disabled={loading}
+                      onClick={handleSubmit}
+                      className="py-3 w-full px-1 mt-2 items-center justify-center rounded-sm bg-green-600 text-white hover:bg-green-700">
+                       <div className="flex w-full justify-center gap-1 items-center">
               {loading && <CircularProgressWithLabel value={uploadProgress} />}
 
               {loading ? "Submitting..." : `${type} Ad `}
             </div>
-          </Button>
+            </button>
           <p className="mt-2 text-xs text-gray-600 dark:text-gray-500 text-center">
             By clicking on Create Ad, you accept the{" "}
             <span onClick={() => handleOpenTerms()} className="text-green-600 cursor-pointer underline">

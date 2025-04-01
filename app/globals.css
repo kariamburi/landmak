@@ -63,7 +63,72 @@
   * {
     @apply border-border;
   }
+
   body {
     @apply bg-background text-foreground;
   }
+}
+
+/* ✅ Custom Styles for ReactQuill */
+.ql-container {
+  background-color: var(--background);
+  color: var(--foreground);
+  border: 1px solid var(--border) !important;
+
+  /* ✅ Light mode border */
+
+  border-radius: 0 0 var(--radius) var(--radius);
+  /* ✅ Rounded bottom only */
+
+}
+
+/* Light Mode Toolbar */
+.ql-toolbar {
+  background-color: var(--background);
+  border: 1px solid var(--border) !important;
+  border-radius: var(--radius) var(--radius) 0 0;
+  /* ✅ Rounded top only */
+  /* ✅ Light mode border */
+}
+
+/* Dark Mode */
+.dark .ql-container {
+  background-color: #2D3236 !important;
+  color: #E5E7EB !important;
+  border: 1px solid #4B5563 !important;
+  /* ✅ dark:border-gray-600 */
+}
+
+.dark .ql-editor {
+  color: #E5E7EB !important;
+}
+
+/* ✅ Remove Italic Placeholder Text */
+.ql-editor::before {
+  color: #4B5563 !important;
+  /* ✅ gray-600 in light mode */
+  font-style: normal !important;
+  /* ✅ Removes italic */
+}
+
+.dark .ql-editor::before {
+  color: #9CA3AF !important;
+  /* ✅ gray-400 in dark mode */
+  font-style: normal !important;
+  /* ✅ Removes italic */
+}
+
+/* Dark Mode Toolbar */
+.dark .ql-toolbar {
+  background-color: #1F2326 !important;
+  border: 1px solid #4B5563 !important;
+  /* ✅ dark:border-gray-600 */
+}
+
+/* ✅ Dark Mode Toolbar Icons */
+.dark .ql-toolbar .ql-stroke,
+.dark .ql-toolbar .ql-fill {
+  stroke: #D1D5DB !important;
+  /* Equivalent to Tailwind's text-gray-300 */
+  fill: #D1D5DB !important;
 }

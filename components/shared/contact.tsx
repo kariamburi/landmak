@@ -19,7 +19,7 @@ type chatProps = {
   userId: string;
   userName: string;
   userImage: string;
-  ad: IAd;
+  ad: any;
   handleOpenReview: (value:string) => void;
   handleOpenChatId: (value:string) => void;
   handleOpenShop: (value:string) => void;
@@ -29,8 +29,17 @@ type chatProps = {
 };
 const Contact = ({ ad, userId, userName, userImage,handlePay, handleOpenReview, handleOpenChatId, handleOpenSettings, handleOpenShop }: chatProps) => {
   const [showphone, setshowphone] = useState(false);
+  const [isOpenP, setIsOpenP] = useState(false);
+  const handleOpenP = () => {
+    setIsOpenP(true);
+  };
+
+  const handleCloseP = () => {
+    setIsOpenP(false);
+  };
   const handleShowPhoneClick = async (e: any) => {
     setshowphone(true);
+    setIsOpenP(true);
     const calls = (Number(ad.calls ?? "0") + 1).toString();
     const _id = ad._id;
     await updatecalls({
@@ -38,10 +47,12 @@ const Contact = ({ ad, userId, userName, userImage,handlePay, handleOpenReview, 
       calls,
       path: `/ads/${ad._id}`,
     });
-    window.location.href = `tel:${ad.phone}`;
+    window.location.href = `tel:${ad.data.phone}`;
+    setIsOpenP(false);
   };
 
   const handlewhatsappClick = async (e: any) => {
+    setIsOpenP(true);
     const whatsapp = (Number(ad.whatsapp ?? "0") + 1).toString();
     const _id = ad._id;
     await updatewhatsapp({
@@ -50,17 +61,11 @@ const Contact = ({ ad, userId, userName, userImage,handlePay, handleOpenReview, 
       path: `/ads/${ad._id}`,
     });
     window.location.href = `https://wa.me/${ad.organizer.whatsapp}/`;
+    setIsOpenP(false);
   };
 
   const isAdCreator = userId === ad.organizer._id;
-   const [isOpenP, setIsOpenP] = useState(false);
-    const handleOpenP = () => {
-      setIsOpenP(true);
-    };
-  
-    const handleCloseP = () => {
-      setIsOpenP(false);
-    };
+   
   return (
     <div className="w-full">
       <div className="lg:hidden justify-between flex w-full gap-1">
@@ -142,7 +147,7 @@ const Contact = ({ ad, userId, userName, userImage,handlePay, handleOpenReview, 
           )}
         </div>
       </div>
-      
+      <ProgressPopup isOpen={isOpenP} onClose={handleCloseP} />
     </div>
   );
 };

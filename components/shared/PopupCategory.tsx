@@ -11,6 +11,7 @@ import {
 import CircularProgress from "@mui/material/CircularProgress";
 import Navbar from "./navbar";
 import BottomNavigation from "./BottomNavigation";
+import { getAllCategories } from "@/lib/actions/category.actions";
 
 interface WindowProps {
   isOpen: boolean;
@@ -55,6 +56,7 @@ const PopupCategory = ({
   handleOpenAbout,handleOpenTerms,handleOpenPrivacy,handleOpenSafety,handleOpenPlan,handleOpenChat,
 }: WindowProps) => {
   const [categoryList, setCategoryList] = useState<any>([]);
+  const [subcategoryList, setsubCategoryList] = useState<any>([]);
   const [adsCount, setAdsCount] = useState<any>([]);
   const [AdsCountPerRegion, setAdsCountPerRegion] = useState<any>([]);
   const [AdsCountPerVerifiedTrue, setAdsCountPerVerifiedTrue] = useState<any>([]);
@@ -65,8 +67,11 @@ const PopupCategory = ({
     const fetchData = async () => {
       try {
         setLoading(true);
-        const categoryData = await getAllSubCategories();
+        const categoryData = await getAllCategories();
         setCategoryList(categoryData);
+
+        const subcategoryData = await getAllSubCategories();
+        setsubCategoryList(subcategoryData);
 
         const { category, subcategory } = queryObject;
 
@@ -177,6 +182,7 @@ const PopupCategory = ({
             emptyStateSubtext="Go create some now"
             limit={20}
             categoryList={categoryList}
+            subcategoryList={subcategoryList}
             queryObject={queryObject}
             AdsCountPerRegion={AdsCountPerRegion}
             AdsCountPerVerifiedTrue={AdsCountPerVerifiedTrue}
