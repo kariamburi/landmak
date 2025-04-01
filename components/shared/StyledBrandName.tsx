@@ -3,8 +3,8 @@ import React from "react";
 const StyledBrandName: React.FC = () => {
   return (
     <h1 className="text-lg lg:text-xl">
-      <span className="text-black font-bold">Land</span>
-      <span className="text-green-600">Mak</span>
+      <span className="text-white lg:text-green-600 font-bold">mapa</span>
+     
     </h1>
   );
 };

@@ -62,28 +62,28 @@ const AboutComponent =  ({userId, onClose,
     
     <Head>
       <title>
-        About LandMak | Kenya&apos;s Leading Property & Marketplace
+        About mapa | Kenya&apos;s Leading Property & Marketplace
       </title>
       <meta
         name="description"
-        content="Learn about LandMak.co.ke, Kenya's premier platform for buying and selling properties and other products. From land and houses to general merchandise, we connect buyers and sellers nationwide."
+        content="Learn about mapa.co.ke, Kenya's premier platform for buying and selling properties and other products. From land and houses to general merchandise, we connect buyers and sellers nationwide."
       />
       <meta
         property="og:title"
-        content="About LandMak | Kenya's Leading Property & Marketplace"
+        content="About mapa | Kenya's Leading Property & Marketplace"
       />
       <meta
         property="og:description"
-        content="At LandMak.co.ke, we offer a seamless, transparent, and secure platform to buy and sell properties and products across Kenya. Discover land, houses, and advanced property mapping for easy location."
+        content="At mapa.co.ke, we offer a seamless, transparent, and secure platform to buy and sell properties and products across Kenya. Discover land, houses, and advanced property mapping for easy location."
       />
       <meta property="og:image" content="/assets/images/logo.png" />
-      <meta property="og:url" content="https://LandMak.co.ke/about" />
+      <meta property="og:url" content="https://mapa.co.ke/about" />
       <meta property="og:type" content="website" />
       <meta
         name="keywords"
-        content="LandMak, buy properties, sell land, houses, real estate, Kenya marketplace"
+        content="mapa, buy properties, sell land, houses, real estate, Kenya marketplace"
       />
-      <meta name="author" content="LandMak" />
+      <meta name="author" content="mapa" />
     </Head>
 
      <div className="top-0 z-10 fixed w-full">
@@ -105,12 +105,12 @@ const AboutComponent =  ({userId, onClose,
         <div className="border rounded-lg dark:bg-[#2D3236] bg-white max-w-6xl mx-auto lg:flex-row mt-0 p-1 justify-center">
           <div className="max-w-4xl mx-auto p-8">
             <h1 className="text-3xl font-bold dark:text-gray-400 text-gray-800 mb-6 text-center">
-              About LandMak.co.ke
+              About mapa.co.ke
             </h1>
 
             <div className="space-y-6 dark:text-gray-300 text-gray-700">
               <p className="text-lg">
-                Welcome to <span className="font-semibold text-emerald-600">LandMak.co.ke</span>, 
+                Welcome to <span className="font-semibold text-emerald-600">mapa.co.ke</span>, 
                 Kenya&apos;s premier online marketplace for properties and other products. Whether you&apos;re looking for land, 
                 houses, or general merchandise, we provide an advanced and user-friendly platform to connect buyers and sellers nationwide.
               </p>
@@ -120,7 +120,7 @@ const AboutComponent =  ({userId, onClose,
                   Our Mission
                 </h2>
                 <p>
-                  At LandMak.co.ke, our mission is to simplify the process of buying and selling properties and products 
+                  At mapa.co.ke, our mission is to simplify the process of buying and selling properties and products 
                   with advanced tools like <span className="font-semibold text-emerald-600">virtual tours, 3D modeling</span> and <span className="font-semibold text-emerald-600">Google property mapping</span>. Our goal is to offer a seamless, 
                   transparent, and secure marketplace for all users.
                 </p>
@@ -128,7 +128,7 @@ const AboutComponent =  ({userId, onClose,
 
               <div>
                 <h2 className="text-2xl font-semibold dark:text-gray-400 text-gray-800 mb-4">
-                  Why Choose LandMak.co.ke?
+                  Why Choose mapa.co.ke?
                 </h2>
                 <ul className="list-disc pl-6 space-y-2">
                   <li><span className="font-semibold">Advanced Property Mapping</span>: Use interactive maps to easily locate properties with high precision.</li>
@@ -144,7 +144,7 @@ const AboutComponent =  ({userId, onClose,
                   Our Story
                 </h2>
                 <p>
-                  LandMak.co.ke was founded with a vision to revolutionize property sales and e-commerce in Kenya. We are dedicated to 
+                  mapa.co.ke was founded with a vision to revolutionize property sales and e-commerce in Kenya. We are dedicated to 
                   providing an innovative platform where users can list, search, and purchase properties with ease and confidence.
                 </p>
               </div>
@@ -154,11 +154,11 @@ const AboutComponent =  ({userId, onClose,
                   Join Our Community
                 </h2>
                 <p>
-                  Whether you&apos;re a property developer, buyer, or seller, LandMak.co.ke is your trusted partner. 
+                  Whether you&apos;re a property developer, buyer, or seller, mapa.co.ke is your trusted partner. 
                   Join our community today and explore a smarter way to buy and sell properties and products.
                 </p>
                 <p>
-                  Thank you for choosing <span className="font-semibold text-emerald-600">LandMak.co.ke</span>. 
+                  Thank you for choosing <span className="font-semibold text-emerald-600">mapa.co.ke</span>. 
                   We look forward to serving you.
                 </p>
               </div>

@@ -128,7 +128,7 @@ const HelpBox = ({
         <AccordionItem key="faq-1" value="item-1">
           <AccordionTrigger>
             <div className="w-full">
-              <h3>1. How do I post a product or property on Landmak.co.ke?</h3>
+              <h3>1. How do I post a product or property on mapa.co.ke?</h3>
             </div>
           </AccordionTrigger>
           <AccordionContent>
@@ -147,7 +147,7 @@ const HelpBox = ({
           </AccordionTrigger>
           <AccordionContent>
             <p>
-              Posting a basic listing on Landmak.co.ke is free. However, we
+              Posting a basic listing on mapa.co.ke is free. However, we
               offer premium packages to boost your listing for more visibility at
               an affordable fee.
             </p>

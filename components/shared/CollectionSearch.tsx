@@ -255,7 +255,7 @@ const CollectionSearch = ({
         <div>
           <div className="w-full mt-10 h-full min-h-[100px] flex flex-col items-center justify-center">
             <Image
-              src="/assets/icons/loading2.gif"
+              src="/assets/icons/loading.gif"
               alt="loading"
               width={40}
               height={40}

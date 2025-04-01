@@ -148,7 +148,7 @@ const ChatButtonBottom = ({ ad, userId, userName, userImage }: chatProps) => {
     <>
      
            <button
-              className="bg-emerald-700 hover:bg-emerald-800 text-white text-xs mt-2 p-2 rounded-lg shadow"
+              className="bg-green-600 hover:bg-green-700 text-white text-xs mt-2 p-2 rounded-lg shadow"
               onClick={() => setIsOpen(true)}
             >
               <ChatBubbleOutlineOutlinedIcon sx={{ fontSize: 24 }} />
@@ -156,7 +156,7 @@ const ChatButtonBottom = ({ ad, userId, userName, userImage }: chatProps) => {
             </button>
     
       {isOpen && (
-        <div className="fixed inset-0 flex items-center justify-center bg-gray-800 bg-opacity-50 z-50">
+        <div className="fixed inset-0 flex items-center justify-center bg-gray-700 bg-opacity-50 z-50">
           <div className="h-[90vh] dark:bg-[#2D3236] dark:text-[#F1F3F3] bg-white rounded-lg p-6 w-full max-w-md">
          <div className="flex items-center justify-between"> <p className="font-semibold mb-2">{ad.data.title.length > 50
                 ? `${ad.data.title.substring(0, 50)}...`
@@ -172,7 +172,7 @@ const ChatButtonBottom = ({ ad, userId, userName, userImage }: chatProps) => {
 </div>
            
 
-            <p className="text-sm text-gray-700 dark:text-gray-300 mb-1">
+            <p className="text-sm text-gray-600 dark:text-gray-300 mb-1">
             <span dangerouslySetInnerHTML={{ __html:  truncateDescription(ad.data.description ?? "", 65) }} />
             
             </p>
@@ -184,7 +184,7 @@ const ChatButtonBottom = ({ ad, userId, userName, userImage }: chatProps) => {
               src={ad.data.imageUrls[0]}
               alt={ad.data.title}
               className="w-full h-16 object-cover mb-2 rounded"
-              width={800} // Adjust width as needed
+              width={700} // Adjust width as needed
               height={400} // Adjust height as needed
             />
             <div className="grid grid-cols-2 gap-2 mb-4">
@@ -192,7 +192,7 @@ const ChatButtonBottom = ({ ad, userId, userName, userImage }: chatProps) => {
                 <button
                   key={index}
                   onClick={() => handleQuickMessageClick(msg)}
-                  className="text-sm border px-2 py-1 text-white rounded-md bg-emerald-700 hover:bg-emerald-800 transition"
+                  className="text-sm border px-2 py-1 text-white rounded-md bg-green-600 hover:bg-green-700 transition"
                 >
                   {msg}
                 </button>
@@ -209,7 +209,7 @@ const ChatButtonBottom = ({ ad, userId, userName, userImage }: chatProps) => {
             <div className="flex justify-end">
               <button
                 onClick={handleSendMessage}
-                className={`px-4 py-2 text-white rounded hover:bg-green-700 focus:outline-none mr-2  ${
+                className={`px-4 py-2 text-white rounded hover:bg-green-600 focus:outline-none mr-2  ${
                   isSending ? "bg-green-200" : "bg-green-600"
                 }`}
                 disabled={isSending} // Disable button while sending

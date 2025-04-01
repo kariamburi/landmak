@@ -56,24 +56,24 @@ const PrivacyComponent =  ({userId, handleOpenPerfomance,
   return (
     <ScrollArea className="h-[100vh] bg-gray-200 dark:bg-[#131B1E] text-black dark:text-[#F1F3F3]">
     <Head>
-      <title>Privacy Policy | LandMak.co.ke</title>
+      <title>Privacy Policy | mapa.co.ke</title>
       <meta
         name="description"
-        content="Learn how LandMak.co.ke collects, uses, and protects your personal information. Our Privacy Policy outlines your data protection rights and how we safeguard your privacy when using our website."
+        content="Learn how mapa.co.ke collects, uses, and protects your personal information. Our Privacy Policy outlines your data protection rights and how we safeguard your privacy when using our website."
       />
-      <meta property="og:title" content="Privacy Policy | LandMak.co.ke" />
+      <meta property="og:title" content="Privacy Policy | mapa.co.ke" />
       <meta
         property="og:description"
-        content="Read LandMak.co.ke's Privacy Policy to understand how your personal information is handled. Your privacy and data protection are important to us."
+        content="Read mapa.co.ke's Privacy Policy to understand how your personal information is handled. Your privacy and data protection are important to us."
       />
-      <meta property="og:url" content="https://LandMak.co.ke/privacy" />
+      <meta property="og:url" content="https://mapa.co.ke/privacy" />
       <meta property="og:type" content="article" />
       <meta
         name="keywords"
-        content="privacy policy, LandMak, data protection, personal information, cookies, Kenya real estate marketplace"
+        content="privacy policy, mapa, data protection, personal information, cookies, Kenya real estate marketplace"
       />
-      <meta name="author" content="LandMak" />
-      <link rel="canonical" href="https://LandMak.co.ke/privacy" />
+      <meta name="author" content="mapa" />
+      <link rel="canonical" href="https://mapa.co.ke/privacy" />
     </Head>
    <div className="top-0 z-10 fixed w-full">
                            <Navbar userstatus="User" userId={userId} onClose={onClose} popup={"privacy"} handleOpenSell={handleOpenSell} handleOpenBook={handleOpenBook} handleOpenPlan={handleOpenPlan} handleOpenChat={handleOpenChat}
@@ -95,7 +95,7 @@ const PrivacyComponent =  ({userId, handleOpenPerfomance,
             <h1 className="text-2xl font-bold mb-4">Privacy Policy</h1>
   
             <p className="mb-4">
-              Your privacy is important to us at LandMak.co.ke. This Privacy Policy explains how we collect, use, disclose, and safeguard your information when you visit our website or use our services. By using our site, you agree to the terms outlined in this policy. If you do not agree with the terms, please do not use our website.
+              Your privacy is important to us at mapa.co.ke. This Privacy Policy explains how we collect, use, disclose, and safeguard your information when you visit our website or use our services. By using our site, you agree to the terms outlined in this policy. If you do not agree with the terms, please do not use our website.
             </p>
   
             <h2 className="text-xl font-semibold mt-6 mb-2">1. Information We Collect</h2>
@@ -159,7 +159,7 @@ const PrivacyComponent =  ({userId, handleOpenPerfomance,
   
             <p className="mb-4">We may update this Privacy Policy from time to time. Please review it periodically.</p>
   
-            <p className="mt-4">For any questions about this Privacy Policy, please contact us at <strong>support@LandMak.co.ke</strong>.</p>
+            <p className="mt-4">For any questions about this Privacy Policy, please contact us at <strong>support@mapa.co.ke</strong>.</p>
           </div>
         </div>
       </div>

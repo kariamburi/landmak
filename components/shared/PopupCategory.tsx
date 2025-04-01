@@ -9,6 +9,7 @@ import {
   getAdsCountPerVerifiedTrue,
 } from "@/lib/actions/dynamicAd.actions";
 import CircularProgress from "@mui/material/CircularProgress";
+import Image from "next/image";
 import Navbar from "./navbar";
 import BottomNavigation from "./BottomNavigation";
 import { getAllCategories } from "@/lib/actions/category.actions";
@@ -158,7 +159,13 @@ const PopupCategory = ({
             />
           </div>
            <div className="flex justify-center items-center h-full text-lg font-bold">
-           <div className="flex gap-2 items-center">  <CircularProgress sx={{ color: "gray" }} size={30} /> <div className="hidden lg:inline">Loading...</div></div>
+           <div className="flex gap-2 items-center"> <Image
+                         src="/assets/icons/loading.gif"
+                         alt="loading"
+                         width={40}
+                         height={40}
+                         unoptimized
+                       /></div>
           </div>
            <footer>
                                   

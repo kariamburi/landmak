@@ -473,12 +473,12 @@ CollectionProps) => {
         )}
       </Button>
         {/* Header Section */}
-        <div className="mb-1 flex fixed flex-col gap-2 top-0 left-0 w-full bg-white p-0 shadow-md z-10 md:relative md:w-auto md:shadow-none">
+        <div className="mb-1 flex fixed flex-col gap-2 top-0 left-0 w-full bg-gradient-to-b from-green-600 to-green-600 lg:from-white lg:to-white p-0 shadow-md z-10 md:relative md:w-auto md:shadow-none">
   <div className="p-2 w-full flex flex-col items-center">
     <div className="w-full justify-between flex items-center">
       <div className="flex items-center">
         <div
-          className="mr-2 w-5 h-8 flex items-center justify-center rounded-sm tooltip tooltip-bottom hover:cursor-pointer hover:text-green-600"
+          className="mr-2 w-5 h-8 text-white lg:text-gray-500 flex items-center justify-center rounded-sm tooltip tooltip-bottom hover:cursor-pointer lg:hover:text-green-600"
           data-tip="Back"
           onClick={() => {
             onClose();
@@ -497,8 +497,10 @@ CollectionProps) => {
         </div>
 
         <div className="flex items-center gap-2">
-          <img src="/logo.png" alt="Logo" className="w-6 h-6 rounded-full" />
-           <StyledBrandName/>
+        <img src="/logo_white.png" alt="Logo" className="lg:hidden w-8 h-8 rounded-full" />
+                <img src="/logo.png" alt="Logo" className="hidden lg:inline w-8 h-8 rounded-full" />
+                
+        <StyledBrandName/>
         </div>
       </div>
 
@@ -654,7 +656,7 @@ CollectionProps) => {
                 <TooltipTrigger asChild>
                   <button
                     onClick={handleOpenPopupMapSearch}
-                    className="flex text-xs gap-2 text-gray-700 items-center justify-between w-full py-3 px-2 border-gray-300 border rounded-sm hover:bg-gray-200"
+                    className="flex text-xs gap-2 bg-white text-gray-700 items-center justify-between w-full py-3 px-2 border-gray-300 border rounded-sm hover:bg-gray-200"
                   >
                     <div className="flex gap-2 items-center">
                       <Image
@@ -683,7 +685,7 @@ CollectionProps) => {
               <TooltipTrigger asChild>
                 <div
                   onClick={togglePopup}
-                  className="flex text-xs py-4 px-3 cursor-pointer border-gray-300 border rounded-sm text-gray-700 text-sm hover:bg-gray-200 p-1 justify-between items-center"
+                  className="flex text-xs bg-white py-4 px-3 cursor-pointer border-gray-300 border rounded-sm text-gray-700 text-sm hover:bg-gray-200 p-1 justify-between items-center"
                 >
                 
                   <div className="hidden lg:inline">

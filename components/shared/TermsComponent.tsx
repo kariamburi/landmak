@@ -55,43 +55,43 @@ const TermsComponent =  ({userId, handleOpenPerfomance,
   return (
     <ScrollArea className="h-[100vh] bg-gray-200 dark:bg-[#131B1E] text-black dark:text-[#F1F3F3]">
     <Head>
-      <title>Terms and Conditions | LandMak.co.ke</title>
+      <title>Terms and Conditions | mapa.co.ke</title>
       <meta
         name="description"
-        content="Read the terms and conditions for using LandMak.co.ke, our trusted property marketplace. By accessing the site, you agree to be bound by these terms."
+        content="Read the terms and conditions for using mapa.co.ke, our trusted property marketplace. By accessing the site, you agree to be bound by these terms."
       />
       <meta
         name="keywords"
-        content="LandMak, terms and conditions, property marketplace, real estate, LandMak terms"
+        content="mapa, terms and conditions, property marketplace, real estate, mapa terms"
       />
       <meta
         property="og:title"
-        content="Terms and Conditions | LandMak.co.ke"
+        content="Terms and Conditions | mapa.co.ke"
       />
       <meta
         property="og:description"
-        content="Understand the terms and conditions for using LandMak.co.ke, your trusted real estate marketplace in Kenya."
+        content="Understand the terms and conditions for using mapa.co.ke, your trusted real estate marketplace in Kenya."
       />
       <meta property="og:type" content="website" />
-      <meta property="og:url" content="https://www.LandMak.co.ke/terms" />
+      <meta property="og:url" content="https://www.mapa.co.ke/terms" />
       <meta
         property="og:image"
-        content="https://www.LandMak.co.ke/assets/images/terms-and-conditions-cover.jpg"
+        content="https://www.mapa.co.ke/assets/images/terms-and-conditions-cover.jpg"
       />
       <meta name="twitter:card" content="summary_large_image" />
       <meta
         name="twitter:title"
-        content="Terms and Conditions | LandMak.co.ke"
+        content="Terms and Conditions | mapa.co.ke"
       />
       <meta
         name="twitter:description"
-        content="Review the terms and conditions for using LandMak.co.ke. Learn more about our policies, user obligations, and legal guidelines."
+        content="Review the terms and conditions for using mapa.co.ke. Learn more about our policies, user obligations, and legal guidelines."
       />
       <meta
         name="twitter:image"
-        content="https://www.LandMak.co.ke/assets/images/terms-and-conditions-cover.jpg"
+        content="https://www.mapa.co.ke/assets/images/terms-and-conditions-cover.jpg"
       />
-      <link rel="canonical" href="https://www.LandMak.co.ke/terms" />
+      <link rel="canonical" href="https://www.mapa.co.ke/terms" />
     </Head>
 
     <div className="top-0 z-10 fixed w-full">
@@ -116,7 +116,7 @@ const TermsComponent =  ({userId, handleOpenPerfomance,
             </h1>
 
             <p className="mb-4">
-              Welcome to LandMak.co.ke! By using our website, you agree to
+              Welcome to mapa.co.ke! By using our website, you agree to
               comply with and be bound by the following terms and conditions.
               Please review them carefully. If you do not agree to these
               terms, you should not use this website.
@@ -124,7 +124,7 @@ const TermsComponent =  ({userId, handleOpenPerfomance,
 
             <h2 className="text-xl font-semibold mt-6 mb-2">1. Acceptance of Terms</h2>
             <p className="mb-4">
-              By accessing and using LandMak.co.ke, you accept and agree to
+              By accessing and using mapa.co.ke, you accept and agree to
               be bound by these terms. Additional guidelines or rules may be
               posted and modified from time to time.
             </p>
@@ -133,7 +133,7 @@ const TermsComponent =  ({userId, handleOpenPerfomance,
             <p className="mb-4">
               Users must provide accurate property details and refrain from
               posting misleading or false information. Illegal activities on
-              LandMak.co.ke are strictly prohibited.
+              mapa.co.ke are strictly prohibited.
             </p>
 
             <h2 className="text-xl font-semibold mt-6 mb-2">3. Listing Guidelines</h2>
@@ -144,13 +144,13 @@ const TermsComponent =  ({userId, handleOpenPerfomance,
 
             <h2 className="text-xl font-semibold mt-6 mb-2">4. Payment and Fees</h2>
             <p className="mb-4">
-              LandMak.co.ke may charge fees for premium property listings.
+              mapa.co.ke may charge fees for premium property listings.
               Fees will be communicated clearly before a paid service is used.
             </p>
 
             <h2 className="text-xl font-semibold mt-6 mb-2">5. No Guarantee of Sale</h2>
             <p className="mb-4">
-              LandMak.co.ke does not guarantee the sale of listed properties
+              mapa.co.ke does not guarantee the sale of listed properties
               or mediate transactions between buyers and sellers.
             </p>
 
@@ -162,25 +162,25 @@ const TermsComponent =  ({userId, handleOpenPerfomance,
 
             <h2 className="text-xl font-semibold mt-6 mb-2">7. Intellectual Property</h2>
             <p className="mb-4">
-              Content on LandMak.co.ke is protected by intellectual property laws.
+              Content on mapa.co.ke is protected by intellectual property laws.
               Unauthorized copying or distribution is prohibited.
             </p>
 
             <h2 className="text-xl font-semibold mt-6 mb-2">8. Limitation of Liability</h2>
             <p className="mb-4">
-              LandMak.co.ke is not responsible for any damages arising from the use
+              mapa.co.ke is not responsible for any damages arising from the use
               of this website.
             </p>
 
             <h2 className="text-xl font-semibold mt-6 mb-2">9. Modifications to Terms</h2>
             <p className="mb-4">
-              LandMak.co.ke reserves the right to modify these terms at any time.
+              mapa.co.ke reserves the right to modify these terms at any time.
               Continued use of the site constitutes acceptance of the changes.
             </p>
 
             <h2 className="text-xl font-semibold mt-6 mb-2">10. Termination of Use</h2>
             <p className="mb-4">
-              LandMak.co.ke may suspend or terminate user access if terms are violated.
+              mapa.co.ke may suspend or terminate user access if terms are violated.
             </p>
 
             <h2 className="text-xl font-semibold mt-6 mb-2">11. Governing Law</h2>
@@ -191,8 +191,8 @@ const TermsComponent =  ({userId, handleOpenPerfomance,
             <h2 className="text-xl font-semibold mt-6 mb-2">12. Contact Information</h2>
             <p className="mb-4">
               For questions, contact us at:
-              <a href="mailto:support@LandMak.co.ke" className="text-emerald-600 hover:underline">
-                support@LandMak.co.ke
+              <a href="mailto:support@mapa.co.ke" className="text-emerald-600 hover:underline">
+                support@mapa.co.ke
               </a>
             </p>
           </div>

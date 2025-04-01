@@ -139,7 +139,7 @@ const SendMessageSupport = ({
 
             <button
               type="submit"
-              className="bg-gradient-to-b from-emerald-800 to-emerald-900 text-white rounded-lg py-2 px-4"
+              className="bg-gradient-to-b from-green-600 to-green-700 text-white rounded-lg py-2 px-4"
             >
               Send
             </button>
@@ -156,7 +156,7 @@ const SendMessageSupport = ({
             <button
               type="submit"
               disabled
-              className="bg-gradient-to-b from-emerald-800 to-emerald-900 text-white rounded-lg px-4"
+              className="bg-gradient-to-b from-green-600 to-green-700 text-white rounded-lg px-4"
             >
               Send
             </button>

@@ -146,12 +146,12 @@ const SellerProfile = ({ userId, loggedId, user, handlePay, handleOpenReview, ha
                 <TooltipProvider>
                   <Tooltip>
                     <TooltipTrigger asChild>
-                      <div className="shadow-[0px_4px_20px_rgba(0,0,0,0.3)] absolute text-white bottom-0 right-0 bg-gradient-to-b from-emerald-500 to-emerald-600 rounded-full p-1">
+                      <div className="shadow-[0px_4px_20px_rgba(0,0,0,0.3)] absolute text-white bottom-0 right-0 bg-gradient-to-b from-green-500 to-green-600 rounded-full p-1">
                         <VerifiedUserOutlinedIcon sx={{ fontSize: 16 }}/>
                       </div>
                     </TooltipTrigger>
                     <TooltipContent>
-                      <p className="text-emerald-500">Verified Seller</p>
+                      <p className="text-green-500">Verified Seller</p>
                     </TooltipContent>
                   </Tooltip>
                 </TooltipProvider>
@@ -217,7 +217,7 @@ const SellerProfile = ({ userId, loggedId, user, handlePay, handleOpenReview, ha
     
        <div className="flex flex-col gap-1 items-center w-full">
                   <SignedIn>
-                  <Button onClick={handleShowPhoneClick} variant="default" className="w-full">
+                  <Button onClick={handleShowPhoneClick} variant="default" className="w-full bg-green-600 hover:bg-green-700">
                   <CallIcon sx={{ fontSize: 18 }} /><div>Call</div>
                  </Button>
                     
@@ -227,7 +227,7 @@ const SellerProfile = ({ userId, loggedId, user, handlePay, handleOpenReview, ha
                   <Button onClick={() => {
                        // handleOpenP();
                         router.push(`/sign-in`);
-                      }} variant="default" className="w-full">
+                      }} variant="default" className="w-full bg-green-600 hover:bg-green-700">
                   <CallIcon sx={{ fontSize: 18 }} /><div>Call</div>
                  </Button>
                    
@@ -239,7 +239,7 @@ const SellerProfile = ({ userId, loggedId, user, handlePay, handleOpenReview, ha
                              handleOpenChatId(userId);
                              
                             }}
-                       variant="default" className="w-full">
+                       variant="default" className="w-full bg-green-600 hover:bg-green-700">
                   <ChatBubbleOutlineOutlinedIcon sx={{ fontSize: 18 }} />
                   <div>Message</div>
                  </Button>
@@ -249,7 +249,7 @@ const SellerProfile = ({ userId, loggedId, user, handlePay, handleOpenReview, ha
                        // handleOpenP();
                         router.push(`/sign-in`);
                       }}
-                       variant="default" className="w-full">
+                       variant="default" className="w-full bg-green-600 hover:bg-green-700">
                   <ChatBubbleOutlineOutlinedIcon sx={{ fontSize: 18 }} />
                   <div>Message</div>
                  </Button>
@@ -263,7 +263,7 @@ const SellerProfile = ({ userId, loggedId, user, handlePay, handleOpenReview, ha
                     
                       <Button 
                       onClick={handlewhatsappClick}
-                       variant="default" className="w-full">
+                       variant="default" className="w-full bg-green-600 hover:bg-green-700">
                   <WhatsAppIcon sx={{ fontSize: 18 }} />
       
       <div>WhatsApp</div>
@@ -278,7 +278,7 @@ const SellerProfile = ({ userId, loggedId, user, handlePay, handleOpenReview, ha
                            // handleOpenP();
                             router.push(`/sign-in`);
                           }}
-                       variant="default" className="w-full">
+                       variant="default" className="w-full bg-green-600 hover:bg-green-700">
                  <WhatsAppIcon sx={{ fontSize: 18 }} />
       
       <div >WhatsApp</div>
@@ -398,7 +398,7 @@ const SellerProfile = ({ userId, loggedId, user, handlePay, handleOpenReview, ha
                                     <div className="justify-between flex w-full mb-5">
                                       <button
                                         onClick={handleDirectionClick}
-                                        className="hover:bg-emerald-700 bg-[#000000] text-white text-xs mt-2 p-2 rounded-lg shadow"
+                                        className="hover:bg-green-700 bg-[#000000] text-white text-xs mt-2 p-2 rounded-lg shadow"
                                       >
                                         <AssistantDirectionIcon
                                           sx={{ marginRight: "5px" }}
@@ -683,7 +683,7 @@ const SellerProfile = ({ userId, loggedId, user, handlePay, handleOpenReview, ha
                 <div className="flex justify-center w-full p-1 items-center">
                   <div>
                     <a href={`/settings/`}>
-                      <button className="p-2 gap-1 text-xs bg-emerald-900 rounded-lg text-white  hover:bg-emerald-600">
+                      <button className="p-2 gap-1 text-xs bg-green-900 rounded-lg text-white  hover:bg-green-600">
                         <EditOutlinedIcon sx={{ fontSize: 14 }} />
                         Edit your Profile
                       </button>

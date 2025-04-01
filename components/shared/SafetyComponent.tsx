@@ -56,37 +56,37 @@ const SafetyComponent =  ({userId, handleOpenPerfomance,
   return (
   <ScrollArea className="h-[100vh] bg-gray-200 dark:bg-[#131B1E] text-black dark:text-[#F1F3F3]">
    <Head>
-  <title>Safety Tips | LandMak.co.ke</title>
+  <title>Safety Tips | mapa.co.ke</title>
   <meta
     name="description"
-    content="Stay safe while buying or selling property on LandMak.co.ke. Follow our safety tips to protect yourself and ensure a secure transaction."
+    content="Stay safe while buying or selling property on mapa.co.ke. Follow our safety tips to protect yourself and ensure a secure transaction."
   />
   <meta
     name="keywords"
-    content="LandMak, safety tips, property buying, property selling, secure transactions, online marketplace safety, LandMak safety"
+    content="mapa, safety tips, property buying, property selling, secure transactions, online marketplace safety, mapa safety"
   />
-  <meta property="og:title" content="Safety Tips | LandMak.co.ke" />
+  <meta property="og:title" content="Safety Tips | mapa.co.ke" />
   <meta
     property="og:description"
-    content="Follow these important safety tips to protect yourself when buying or selling property on LandMak.co.ke."
+    content="Follow these important safety tips to protect yourself when buying or selling property on mapa.co.ke."
   />
   <meta property="og:type" content="website" />
-  <meta property="og:url" content="https://www.LandMak.co.ke/safety" />
+  <meta property="og:url" content="https://www.mapa.co.ke/safety" />
   <meta
     property="og:image"
-    content="https://www.LandMak.co.ke/assets/images/safety-tips-cover.jpg"
+    content="https://www.mapa.co.ke/assets/images/safety-tips-cover.jpg"
   />
   <meta name="twitter:card" content="summary_large_image" />
-  <meta name="twitter:title" content="Safety Tips | LandMak.co.ke" />
+  <meta name="twitter:title" content="Safety Tips | mapa.co.ke" />
   <meta
     name="twitter:description"
-    content="Learn how to stay safe while buying or selling property on LandMak.co.ke with our safety guidelines."
+    content="Learn how to stay safe while buying or selling property on mapa.co.ke with our safety guidelines."
   />
   <meta
     name="twitter:image"
-    content="https://www.LandMak.co.ke/assets/images/safety-tips-cover.jpg"
+    content="https://www.mapa.co.ke/assets/images/safety-tips-cover.jpg"
   />
-  <link rel="canonical" href="https://www.LandMak.co.ke/safety" />
+  <link rel="canonical" href="https://www.mapa.co.ke/safety" />
 </Head>
 
    <div className="top-0 z-10 fixed w-full">
@@ -106,7 +106,7 @@ const SafetyComponent =  ({userId, handleOpenPerfomance,
   <div className="border rounded-lg dark:bg-[#2D3236] bg-white max-w-6xl mx-auto lg:flex-row mt-0 p-1 justify-center">
     <div className="max-w-3xl mx-auto p-6">
       <h2 className="text-2xl font-semibold dark:text-gray-400 text-gray-800 mb-4">
-        Safety Tips for LandMak.co.ke
+        Safety Tips for mapa.co.ke
       </h2>
 
       <div className="space-y-6">
@@ -125,7 +125,7 @@ const SafetyComponent =  ({userId, handleOpenPerfomance,
               Bring a Friend: If possible, bring a friend or family member when meeting buyers. Never go alone, especially to unfamiliar locations.
             </li>
             <li>
-              Avoid Sharing Personal Information: Do not disclose sensitive details like your home address or financial information. Communicate through LandMak.co.ke&apos;s secure messaging system.
+              Avoid Sharing Personal Information: Do not disclose sensitive details like your home address or financial information. Communicate through mapa.co.ke&apos;s secure messaging system.
             </li>
             <li>
               Secure Payment: Be cautious of checks or money orders. Prefer cash or verified electronic transfers. Ensure payment is completed and verified before handing over property documents.
@@ -145,7 +145,7 @@ const SafetyComponent =  ({userId, handleOpenPerfomance,
           </h3>
           <ul className="list-disc pl-6 space-y-2 dark:text-gray-300 text-gray-700">
             <li>
-              Research the Seller: Check the seller&apos;s profile and reviews if available. Be cautious of sellers with little to no history on LandMak.co.ke.
+              Research the Seller: Check the seller&apos;s profile and reviews if available. Be cautious of sellers with little to no history on mapa.co.ke.
             </li>
             <li>
               Inspect the Property: Always visit the property in person before making a purchase. Ensure it matches the listing description.

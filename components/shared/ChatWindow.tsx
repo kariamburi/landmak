@@ -98,7 +98,7 @@ const ChatWindow: React.FC<ChatWindowProps> = ({
                   
                 </div>
                 <div className="gap-2 justify-center flex w-full items-center">
-                  <h3 className="font-bold text-emerald-100 text-sm lg:text-lg">
+                  <h3 className="font-bold text-green-100 text-sm lg:text-lg">
                     Hi {senderName}
                   </h3>
                   <div className="h-10 w-10">
@@ -188,7 +188,7 @@ const ChatWindow: React.FC<ChatWindowProps> = ({
                   
                 </div>
                 <div className="gap-2 justify-center flex w-full items-center">
-                <h3 className="font-semibold text-2xl lg:text-lg text-emerald-100 mb-4">
+                <h3 className="font-semibold text-2xl lg:text-lg text-green-100 mb-4">
                   Call Support
                 </h3>
                  
@@ -249,7 +249,7 @@ const ChatWindow: React.FC<ChatWindowProps> = ({
              height={120}
            />
          </div>
-         <h3 className="font-bold text-emerald-100 text-lg mt-3">Hi {senderName}</h3>
+         <h3 className="font-bold text-green-100 text-lg mt-3">Hi {senderName}</h3>
          <Image src="/hello.png" alt="logo" width={40} height={40} />
          <h3 className="font-semibold text-2xl text-white mt-2">How can we help?</h3>
        </div>
@@ -321,7 +321,7 @@ const ChatWindow: React.FC<ChatWindowProps> = ({
                   
                 </div>
                 <div className="gap-2 justify-center flex w-full items-center">
-                <h3 className="font-semibold text-2xl lg:text-lg text-emerald-100 mb-4">
+                <h3 className="font-semibold text-2xl lg:text-lg text-green-100 mb-4">
                   Call Support
                 </h3>
                  

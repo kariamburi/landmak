@@ -163,7 +163,7 @@ const ChatButton = ({ ad, userId, userName, userImage }: chatProps) => {
                 <button
                   key={index}
                   onClick={() => handleQuickMessageClick(msg)}
-                  className="text-sm border px-2 py-1 text-white rounded-md bg-emerald-700 hover:bg-emerald-800 transition"
+                  className="text-sm border px-2 py-1 text-white rounded-md bg-green-700 hover:bg-green-800 transition"
                 >
                   {msg}
                 </button>
