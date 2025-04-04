@@ -117,6 +117,8 @@ export function FileUploader({
 }: FileUploaderProps) {
   const { toast } = useToast();
   const [showAlert, setShowAlert] = useState(false);
+  const [isLoading, setIsLoading] = useState(true);
+
   const [showmessage, setmessage] = useState("");
   const onDrop = useCallback(
     async (acceptedFiles: File[]) => {
@@ -170,7 +172,7 @@ export function FileUploader({
             return await applyWatermark(
               file,
               userName.toUpperCase(),
-              "Posted on PocketShop"
+              "Posted on mapa"
             );
           } catch (error) {
             console.error("Watermark failed, proceeding without:", error);
@@ -237,8 +239,7 @@ export function FileUploader({
             <div className="grid grid-cols-3 lg:grid-cols-5 w-full p-2 rounded-sm">
           
 {imageUrls.map((url, index) => {
-  const [isLoading, setIsLoading] = useState(true);
-
+ 
   return (
     <div
       key={index}
