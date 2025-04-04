@@ -61,11 +61,11 @@ type chatProps = {
   userId: string;
   userName: string;
   userImage: string;
-  ad: IAd;
-  handleOpenReview: (value:string) => void;
+  ad: any;
+  handleOpenReview: (value:any) => void;
   handleOpenChatId: (value:string) => void;
   handleOpenSettings: () => void;
-  handleOpenShop: (value:string) => void;
+  handleOpenShop: (value:any) => void;
  
 };
 const SellerProfileMobile = ({
@@ -111,7 +111,7 @@ const SellerProfileMobile = ({
       <div className="lg:hidden flex gap-1 items-center p-1 w-full">
         <div
           onClick={() => {
-            handleOpenShop(ad.organizer._id);
+            handleOpenShop(ad.organizer);
             //router.push(`/shop/${ad.organizer._id}`);
           }}
           className="cursor-pointer no-underline font-bold m-1"
@@ -131,7 +131,7 @@ const SellerProfileMobile = ({
         <div className="flex flex-col">
           <div
             onClick={() => {
-              handleOpenShop(ad.organizer._id);
+              handleOpenShop(ad.organizer);
               //router.push(`/shop/${ad.organizer._id}`);
             }}
             className="cursor-pointer no-underline font-bold m-1"
@@ -143,7 +143,7 @@ const SellerProfileMobile = ({
 
           <div
             onClick={() => {
-              handleOpenShop(ad.organizer._id);
+              handleOpenShop(ad.organizer);
               //router.push(`/shop/${ad.organizer._id}`);
             }}
             className="cursor-pointer no-underline m-1"

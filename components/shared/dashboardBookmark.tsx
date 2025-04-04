@@ -31,9 +31,9 @@ type CollectionProps = {
   handleOpenTerms: () => void;
   handleOpenPrivacy: () => void;
   handleOpenSafety: () => void;
-  handleAdEdit: (id:string) => void;
-  handleAdView: (id:string) => void;
-  handleOpenShop: (value:string) => void;
+  handleAdEdit: (ad:any) => void;
+  handleAdView: (ad:any) => void;
+  handleOpenShop: (value:any) => void;
   handleOpenChatId: (value:string) => void;
   handleOpenSettings: () => void;
   handleOpenPerfomance: () => void;
@@ -78,7 +78,7 @@ CollectionProps) => {
      <ScrollArea className="h-[100vh] bg-gray-200 dark:bg-[#131B1E] text-black dark:text-[#F1F3F3]">
        
       <div className="z-10 top-0 fixed w-full">
-            <Navbar userstatus={user.status} userId={userId} onClose={onClose} handleOpenSell={handleOpenSell} handleOpenPlan={handleOpenPlan} popup={"bookmark"} handleOpenBook={handleOpenBook} handleOpenChat={handleOpenChat}
+            <Navbar user={user} userstatus={user.status} userId={userId} onClose={onClose} handleOpenSell={handleOpenSell} handleOpenPlan={handleOpenPlan} popup={"bookmark"} handleOpenBook={handleOpenBook} handleOpenChat={handleOpenChat}
              handleOpenPerfomance={handleOpenPerfomance}
              handleOpenSettings={handleOpenSettings}
              handleOpenAbout={handleOpenAbout}

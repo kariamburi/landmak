@@ -65,76 +65,16 @@ type sidebarProps = {
   category: string;
   categoryList?: any;
   subcategory?: string;
-  AdsCountPerRegion?: any;
-  AdsCountPerVerifiedTrue?: any;
-  AdsCountPerVerifiedFalse?: any;
-  adsCount?: any;
-  onLoading: () => void;
   handleFilter:(value:any) => void;
 };
 const SidebarSearchMain = ({
   category,
   categoryList,
   subcategory,
-  AdsCountPerRegion,
-  AdsCountPerVerifiedTrue,
-  AdsCountPerVerifiedFalse,
-  adsCount,
-  onLoading,
   handleFilter,
 }: sidebarProps) => {
-  const [query, setQuery] = useState("");
-  const router = useRouter();
-  const searchParams = useSearchParams();
-  const [totalVerifiedAll, settotalVerifiedAll] = useState(0);
-  const [totalRegion, settotalRegion] = useState(0);
-  const [minPrice, setminPrice] = useState("");
-  const [maxPrice, setmaxPrice] = useState("");
-  const [selectedRegion, setSelectedRegion] = useState("All Kenya");
-  const [selectedArea, setSelectedArea] = useState("");
-  const [selectedOption, setSelectedOption] = useState("all");
-
-  useEffect(() => {
-    try {
-      setQuery(subcategory || "");
-      const totalAdCountRegion = AdsCountPerRegion.reduce(
-        (total: any, current: any) => {
-          // Parse the adCount value to a number, ignore if it's not a valid number
-          const adCount = parseInt(current.adCount);
-          return !isNaN(adCount) ? total + adCount : total;
-        },
-        0
-      );
-
-      settotalRegion(totalAdCountRegion); // Output: 0
-
-      const totalAdCountVerified = AdsCountPerVerifiedTrue.reduce(
-        (total: any, current: any) => {
-          // Parse the adCount value to a number, ignore if it's not a valid number
-          const totalAds = parseInt(current.totalAds);
-          return !isNaN(totalAds) ? total + totalAds : total;
-        },
-        0
-      );
-
-      const totalAdCountVerifiedFalse = AdsCountPerVerifiedFalse.reduce(
-        (total: any, current: any) => {
-          // Parse the adCount value to a number, ignore if it's not a valid number
-          const totalAds = parseInt(current.totalAds);
-          return !isNaN(totalAds) ? total + totalAds : total;
-        },
-        0
-      );
-
-      settotalVerifiedAll(totalAdCountVerifiedFalse + totalAdCountVerified); // Output: 0
-    } catch (error) {
-      console.error("Error fetching data:", error);
-      // setHasError(true);
-    } finally {
-      // setIsLoading(false);
-    }
-  }, [AdsCountPerRegion, AdsCountPerVerifiedTrue, AdsCountPerVerifiedFalse]);
-
+  const [query, setQuery] = useState(subcategory);
+ 
   // Usage
   const handleQuery = (index: number, query: string) => {
 
@@ -154,35 +94,9 @@ const SidebarSearchMain = ({
   const closeDialog = () => {
     setIsOpen(false);
   };
-  const groupedData = AdsCountPerRegion.reduce((acc: any, curr: any) => {
-    const existingRegion = acc.find((item: any) => item.region === curr.region);
+  
 
-    if (existingRegion) {
-      existingRegion.adCount += curr.adCount;
-      existingRegion.areas.push({ area: curr.area, adCount: curr.adCount });
-    } else {
-      acc.push({
-        region: curr.region,
-        adCount: curr.adCount,
-        areas: [{ area: curr.area, adCount: curr.adCount }],
-      });
-    }
 
-    return acc;
-  }, []);
-
- 
-
-  const formatToCurrency = (value: string | number) => {
-    if (!value) return "0";
-    const numberValue =
-      typeof value === "string" ? parseFloat(value.replace(/,/g, "")) : value;
-    return new Intl.NumberFormat("en-US", {
-      style: "decimal",
-      minimumFractionDigits: 0,
-      maximumFractionDigits: 0,
-    }).format(numberValue);
-  };
   const selectedCategory = categoryList.find(
     (cat: any) => cat.category.name === category
   );
@@ -208,14 +122,11 @@ const SidebarSearchMain = ({
       <div className="flex flex-col items-center w-full">
         
         <div className="w-full p-0 dark:bg-[#2D3236] bg-white rounded-lg">
-         {/* <div className="flex flex-col bg-[#064E3B] font-bold text-white items-center rounded-t-lg w-full p-1">
-            CATEGORY
-          </div> */}
+       
           <div className="flex flex-col p-1 text-sm font-bold rounded-t-lg w-full">
             <div className="flex w-full justify-between p-1 text-lg gap-1 items-center mt-1 mb-1 border-b border-gray-300 dark:border-gray-600">
               {selectedCategory && (
                 <>
-                  {" "}
                   <div className="flex gap-1 items-center">
                     <div className="rounded-full dark:bg-[#131B1E] bg-white p-1">
                       <Image
@@ -252,7 +163,7 @@ const SidebarSearchMain = ({
                     : "dark:bg-[#2D3236] bg-white"
                 }`}
               >
-                <div className="flex w-full gap-1 items-center p-1">
+                <div className="flex w-full gap-1 items-center p-2">
                   <Image
                     className="h-6 w-7 object-cover"
                     src={sub.imageUrl[0] || ""}
@@ -282,191 +193,7 @@ const SidebarSearchMain = ({
           </div>
         </div>
       
-  {/*
-        <div className="border dark:bg-[#2D3236] dark:text-gray-300 text-sm mt-2 rounded-lg w-full bg-white p-2">
-          <Accordion type="single" collapsible>
-            <AccordionItem value="item-1" className="border-0">
-              <AccordionTrigger>
-                <div className="flex gap-1 items-center font-bold">
-                  <CreditScoreOutlinedIcon sx={{ fontSize: 16 }} />
-                  Price
-                </div>
-              </AccordionTrigger>
-              <AccordionContent>
-                <div>
-                  <div className="flex grid grid-cols-2  gap-1 justify-between">
-                    <div className="w-full text-sm px-0 py-2">
-                      <TextField
-                        value={formatToCurrency(minPrice ?? 0)}
-                        label="Min Price*"
-                        className="w-full text-sm"
-                        onChange={(e) => setminPrice(e.target.value)}
-                        variant="outlined"
-                        InputProps={{
-                          classes: {
-                            root: "dark:bg-[#131B1E] dark:text-gray-100",
-                            notchedOutline:
-                              "border-gray-300 dark:border-gray-600",
-                            focused: "",
-                          },
-                        }}
-                        InputLabelProps={{
-                          classes: {
-                            root: "text-gray-500 dark:text-gray-400",
-                            focused: "text-green-500 dark:text-green-400",
-                          },
-                        }}
-                      />
-                    </div>
-
-                    <div className="w-full px-0 py-2">
-                      <TextField
-                        value={formatToCurrency(maxPrice ?? 0)}
-                        label="Max Price*"
-                        className="w-full text-sm"
-                        onChange={(e) => setmaxPrice(e.target.value)}
-                        variant="outlined"
-                        InputProps={{
-                          classes: {
-                            root: "dark:bg-[#131B1E] dark:text-gray-100",
-                            notchedOutline:
-                              "border-gray-300 dark:border-gray-600",
-                            focused: "",
-                          },
-                        }}
-                        InputLabelProps={{
-                          classes: {
-                            root: "text-gray-500 dark:text-gray-400",
-                            focused: "text-green-500 dark:text-green-400",
-                          },
-                        }}
-                      />
-                    </div>
-                    <div className="w-full">
-                      <button
-                        type="submit"
-                        onClick={() => onSelectPriceClear()}
-                        className="bg-gray-600 w-full p-1 text-xs rounded-sm text-white h-full"
-                      >
-                        <CloseIcon
-                          className="text-white"
-                          sx={{ fontSize: 24 }}
-                        />
-                        Clear Price
-                      </button>
-                    </div>
-                    <div className="w-full">
-                      <button
-                        type="submit"
-                        onClick={() => handlebutton()}
-                        className="bg-emerald-700 w-full p-1 text-xs rounded-sm text-white h-full"
-                      >
-                        <SearchIcon /> Search Price
-                      </button>
-                    </div>
-                  </div>
-                </div>
-              </AccordionContent>
-            </AccordionItem>
-          </Accordion>
-        </div>
-
-        <div className="border dark:bg-[#2D3236] dark:text-gray-300 text-sm mt-2 rounded-lg w-full bg-white p-2">
-          <Accordion type="single" collapsible>
-            <AccordionItem value="item-1" className="border-0">
-              <AccordionTrigger>
-                <div className="flex gap-1 items-center font-bold no-underline">
-                  <VerifiedUserOutlinedIcon sx={{ fontSize: 16 }} />
-                  Verified sellers
-                </div>
-              </AccordionTrigger>
-              <AccordionContent>
-                <div>
-                  <div className="w-full text-xs">
-                    <div className="flex w-full gap-2 p-1">
-                      <input
-                        className="cursor-pointer"
-                        type="radio"
-                        value="all"
-                        checked={selectedOption === "all"}
-                        onChange={handleChange}
-                      />
-                      <div className="flex justify-between w-full gap-1 items-center mt-1 mb-1">
-                        Show All
-                        <div className="dark:text-gray-400 text-emerald-600 flex gap-1">
-                          {totalVerifiedAll}
-                          <div>ads</div>
-                        </div>
-                      </div>
-                    </div>
-
-                    <div className="flex w-full gap-2 p-1">
-                      <input
-                        className="cursor-pointer"
-                        type="radio"
-                        value="verified"
-                        checked={selectedOption === "verified"}
-                        onChange={handleChange}
-                      />
-                      <div className="flex justify-between w-full gap-1 items-center mt-1 mb-1">
-                        Verified sellers
-                        <div className="dark:text-gray-400 flex text-xs gap-1 text-emerald-600">
-                          {AdsCountPerVerifiedTrue.length > 0
-                            ? AdsCountPerVerifiedTrue[0].totalAds
-                            : 0}
-                          <div>ads</div>
-                        </div>
-                      </div>
-                    </div>
-                    <div className="flex w-full gap-2 p-1">
-                      <input
-                        className="cursor-pointer"
-                        type="radio"
-                        value="unverified"
-                        checked={selectedOption === "unverified"}
-                        onChange={handleChange}
-                      />
-                      <div className="flex w-full justify-between gap-1 items-center mt-1 mb-1">
-                        Unverified sellers
-                        <div className="dark:text-gray-400 flex text-xs gap-1 text-emerald-600">
-                          {AdsCountPerVerifiedFalse.length > 0
-                            ? AdsCountPerVerifiedFalse[0].totalAds
-                            : 0}
-                          <div>ads</div>
-                        </div>
-                      </div>
-                    </div>
-                  </div>
-                </div>
-              </AccordionContent>
-            </AccordionItem>
-          </Accordion>
-        </div>
-        {subcategory && (
-          <>
-            <div className="border dark:bg-[#2D3236] dark:text-gray-300 text-sm mt-2 bg-white rounded-lg w-full p-2">
-              <Accordion type="single" collapsible>
-                <AccordionItem value="item-1" className="border-0">
-                  <AccordionTrigger>
-                    <div className="flex gap-1 items-center font-bold">
-                      <TuneOutlinedIcon sx={{ fontSize: 16 }} />
-                      Advanced Filter
-                    </div>
-                  </AccordionTrigger>
-                  <AccordionContent>
-                    <FilterComponent
-                      category={category}
-                      subcategory={subcategory || ""}
-                      allsubcategory={categoryList}
-                      adsCount={adsCount}
-                      onLoading={onLoading}
-                    />
-                  </AccordionContent>
-                </AccordionItem>
-              </Accordion>
-            </div>
-          </>
-        )}*/} 
+ 
       </div>
     </>
   );

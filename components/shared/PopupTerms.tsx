@@ -34,12 +34,13 @@ interface WindowProps {
   handleOpenPrivacy: () => void;
   handleOpenSafety: () => void;
   userId: string;
+  user:any;
   handleOpenPerfomance: () => void;
   handleOpenSettings: () => void;
-  handleOpenShop: (shopId:string) => void;
+  handleOpenShop: (shopId:any) => void;
 }
 
-const PopupTerms = ({ isOpen, userId, onClose, handleOpenPerfomance,
+const PopupTerms = ({ isOpen, userId, user,onClose, handleOpenPerfomance,
   handleOpenSettings,
   handleOpenShop, handleOpenSell,handleOpenBook,handleOpenChat,handleOpenPlan, handleOpenAbout,handleOpenTerms,handleOpenPrivacy,handleOpenSafety }: WindowProps) => {
  
@@ -50,6 +51,7 @@ const PopupTerms = ({ isOpen, userId, onClose, handleOpenPerfomance,
       <div className="dark:bg-[#131B1E] dark:text-gray-300 bg-white p-1 w-full h-[100vh] flex flex-col">
        
       <TermsComponent userId={userId} onClose={onClose} 
+      user={user}
       handleOpenAbout={handleOpenAbout} 
       handleOpenTerms={handleOpenTerms}
       handleOpenPrivacy={handleOpenPrivacy}

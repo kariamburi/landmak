@@ -62,8 +62,8 @@ type chatProps = {
   userName: string;
   userImage: string;
   user: IUser;
-  handleOpenShop:(shopId:string) => void;
-  handleOpenReview:(id:string) => void;
+  handleOpenShop:(shopId:any) => void;
+  handleOpenReview:(value:any) => void;
   handlePay: (id:string) => void;
 };
 const SellerProfilePermonance = ({
@@ -91,7 +91,7 @@ const SellerProfilePermonance = ({
         <div
           onClick={() => {
            // handleOpenP();
-            handleOpenShop(userId);
+            handleOpenShop(user);
            // router.push(`/shop/${userId}`);
           }}
           className="cursor-pointer no-underline font-bold m-1"
@@ -113,7 +113,7 @@ const SellerProfilePermonance = ({
             onClick={() => {
               //handleOpenP();
               //router.push(`/shop/${userId}`);
-              handleOpenShop(userId);
+              handleOpenShop(user);
             }}
             className="cursor-pointer no-underline font-boldm-1"
           >
@@ -121,7 +121,7 @@ const SellerProfilePermonance = ({
           </div>
 
           <Verification user={user} userId={userId} isAdCreator={true} handlePayNow={handlePay}/>
-          <Ratingsmobile recipientUid={userId} handleOpenReview={handleOpenReview} />
+          <Ratingsmobile recipientUid={userId} user={user} handleOpenReview={handleOpenReview} />
         </div>
       </div>
    

@@ -15,6 +15,7 @@ import { mode } from "@/constants";
 import { ScrollArea } from "../ui/scroll-area";
 interface Props {
   userId: string;
+  user:any;
   handleOpenSell:() => void;
   handleOpenBook: () => void;
   handleOpenPlan: () => void;
@@ -26,11 +27,11 @@ interface Props {
   handleOpenSafety: () => void;
   handleOpenPerfomance: () => void;
   handleOpenSettings: () => void;
-  handleOpenShop: (shopId:string) => void;
+  handleOpenShop: (shopId:any) => void;
   
 }
 
-const PrivacyComponent =  ({userId, handleOpenPerfomance,
+const PrivacyComponent =  ({userId,user, handleOpenPerfomance,
   handleOpenSettings,
   handleOpenShop, handleOpenSell, handleOpenBook,handleOpenChat,handleOpenPlan, onClose,handleOpenAbout,handleOpenTerms,handleOpenPrivacy,handleOpenSafety}:Props) => {
  const [isDarkMode, setIsDarkMode] = useState<boolean | null>(null);
@@ -76,7 +77,7 @@ const PrivacyComponent =  ({userId, handleOpenPerfomance,
       <link rel="canonical" href="https://mapa.co.ke/privacy" />
     </Head>
    <div className="top-0 z-10 fixed w-full">
-                           <Navbar userstatus="User" userId={userId} onClose={onClose} popup={"privacy"} handleOpenSell={handleOpenSell} handleOpenBook={handleOpenBook} handleOpenPlan={handleOpenPlan} handleOpenChat={handleOpenChat}
+                           <Navbar user={user} userstatus="User" userId={userId} onClose={onClose} popup={"privacy"} handleOpenSell={handleOpenSell} handleOpenBook={handleOpenBook} handleOpenPlan={handleOpenPlan} handleOpenChat={handleOpenChat}
                             handleOpenPerfomance={handleOpenPerfomance}
                             handleOpenSettings={handleOpenSettings}
                             handleOpenAbout={handleOpenAbout}

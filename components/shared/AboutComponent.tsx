@@ -15,6 +15,7 @@ import { mode } from "@/constants";
 import { ScrollArea } from "../ui/scroll-area";
 interface Props {
   userId: string;
+  user:any;
   handleOpenSell:() => void;
   handleOpenBook: () => void;
   handleOpenPlan: () => void;
@@ -26,10 +27,10 @@ handleOpenPrivacy: () => void;
 handleOpenSafety: () => void;
 handleOpenPerfomance: () => void;
 handleOpenSettings: () => void;
-handleOpenShop: (shopId:string) => void;
+handleOpenShop: (shopId:any) => void;
 }
 
-const AboutComponent =  ({userId, onClose,
+const AboutComponent =  ({userId, user,onClose,
   handleOpenSell,
   handleOpenBook,
   handleOpenChat,
@@ -87,7 +88,7 @@ const AboutComponent =  ({userId, onClose,
     </Head>
 
      <div className="top-0 z-10 fixed w-full">
-                        <Navbar userstatus="User" userId={userId} onClose={onClose} popup={"about"} handleOpenSell={handleOpenSell} handleOpenBook={handleOpenBook} handleOpenPlan={handleOpenPlan} handleOpenChat={handleOpenChat}
+                        <Navbar user={user} userstatus={user.status} userId={userId} onClose={onClose} popup={"about"} handleOpenSell={handleOpenSell} handleOpenBook={handleOpenBook} handleOpenPlan={handleOpenPlan} handleOpenChat={handleOpenChat}
 
         handleOpenPerfomance={handleOpenPerfomance}
         handleOpenSettings={handleOpenSettings}

@@ -43,12 +43,13 @@ const UserButton = dynamic(
 type NavProps = {
   userstatus: string;
   userId: string;
+  user:any;
   onClose: () => void;
   handleOpenBook: () => void;
   handleOpenPlan: () => void;
   handleOpenChat: () => void;
   handleOpenSell: () => void;
-  handleOpenShop: (shopId:string) => void;
+  handleOpenShop: (shopId:any) => void;
   handleOpenPerfomance: () => void;
   handleOpenSettings: () => void;
   handleOpenAbout: () => void;
@@ -58,7 +59,7 @@ type NavProps = {
   popup:string;
 };
 
-export default function Navbar({ userstatus, userId, onClose, popup, handleOpenSell,handleOpenChat, handleOpenBook,handleOpenPlan ,
+export default function Navbar({ userstatus, userId, user, onClose, popup, handleOpenSell,handleOpenChat, handleOpenBook,handleOpenPlan ,
   handleOpenShop,
   handleOpenPerfomance,
   handleOpenSettings, 
@@ -214,6 +215,7 @@ export default function Navbar({ userstatus, userId, onClose, popup, handleOpenS
       </SignedIn>
       <MobileNav userstatus={userstatus} userId={userId}
       popup={popup}
+      user={user}
       handleOpenSell={handleOpenSell}
       handleOpenBook={handleOpenBook}
       handleOpenPlan={handleOpenPlan}

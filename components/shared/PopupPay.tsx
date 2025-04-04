@@ -36,7 +36,7 @@ interface WindowProps {
   handleOpenPrivacy: () => void;
   handleOpenSafety: () => void;
 
-  handleOpenShop: (shopId:string) => void;
+  handleOpenShop: (shopId:any) => void;
   handleOpenChatId: (value:string) => void;
   handleOpenSettings: () => void;
   handleOpenPerfomance: () => void;
@@ -44,9 +44,10 @@ interface WindowProps {
   userId: string;
   userName: string;
   txtId: string;
+  user:any;
 }
 
-const PopupPay = ({ isOpen, userId, userName, txtId,  handleOpenPerfomance, handleOpenSettings,
+const PopupPay = ({ isOpen, userId, userName, txtId, user,  handleOpenPerfomance, handleOpenSettings,
   handleOpenShop, handleOpenChatId, onClose, handleOpenSell, handleOpenChat, handleOpenBook, handleOpenPlan, handleOpenAbout,handleOpenTerms,handleOpenPrivacy,handleOpenSafety, }: WindowProps) => {
   const [trans, settrans] = useState<any>(null);
  const [loading, setLoading] = useState<boolean>(true);
@@ -79,7 +80,7 @@ const PopupPay = ({ isOpen, userId, userName, txtId,  handleOpenPerfomance, hand
        {loading ? (
                    <div className="h-screen w-full bg-gray-200"> 
                    <div className="top-0 z-10 fixed w-full">
-                    <Navbar userstatus="User" userId={userId} onClose={onClose} popup={"pay"} handleOpenSell={handleOpenSell} handleOpenBook={handleOpenBook} handleOpenPlan={handleOpenPlan} handleOpenChat={handleOpenChat}
+                    <Navbar user={user} userstatus="User" userId={userId} onClose={onClose} popup={"pay"} handleOpenSell={handleOpenSell} handleOpenBook={handleOpenBook} handleOpenPlan={handleOpenPlan} handleOpenChat={handleOpenChat}
                     handleOpenPerfomance={handleOpenPerfomance}
                     handleOpenSettings={handleOpenSettings}
                     handleOpenAbout={handleOpenAbout}
@@ -94,7 +95,7 @@ const PopupPay = ({ isOpen, userId, userName, txtId,  handleOpenPerfomance, hand
                    </div>
                   
                  ) : (
-         <DashboardPay userId={userId} trans={trans} recipientUid={userId} onClose={onClose} handleOpenSell={handleOpenSell} handleOpenAbout={handleOpenAbout}
+         <DashboardPay user={user} userId={userId} trans={trans} recipientUid={userId} onClose={onClose} handleOpenSell={handleOpenSell} handleOpenAbout={handleOpenAbout}
             handleOpenTerms={handleOpenTerms}
             handleOpenPrivacy={handleOpenPrivacy}
             handleOpenSafety={handleOpenSafety}

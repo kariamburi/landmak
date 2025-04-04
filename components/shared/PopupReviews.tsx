@@ -43,73 +43,34 @@ interface WindowProps {
   handleOpenSafety: () => void;
    handleOpenSettings: () => void;
     handleOpenChatId: (value:string) => void;
-    handleOpenReview: (value:string) => void;
-  handleOpenShop: (shopId:string) => void;
+    handleOpenReview: (value:any) => void;
+  handleOpenShop: (shopId:any) => void;
   handleOpenPerfomance: () => void;
   handlePay: (id:string) => void;
   handleCategory: (value:string) => void;
   userImage: string;
   userId: string;
   userName: string;
-  recipientUid:string;
+  recipient:any;
+  user:any;
+  
 }
 
-const PopupReviews = ({ isOpen, userId,userName,userImage,recipientUid, onClose,handlePay, handleOpenShop, handleOpenPerfomance, handleOpenAbout,handleOpenTerms,handleOpenPrivacy,handleOpenSafety, handleOpenBook,handleOpenPlan, handleOpenSell, handleOpenSettings,handleOpenReview,handleOpenChat,handleOpenChatId, }: WindowProps) => {
-  const [user, setuser] = useState<any>([]);
-  const [loading, setLoading] = useState<boolean>(true);
-
-  useEffect(() => {
-    if (isOpen && recipientUid) {
-      setLoading(true);
-      const fetchData = async () => {
-        try {
-         const user = await getUserById(recipientUid);
-         setuser(user);
-        
-        } catch (error) {
-          console.error("Failed to fetch data", error);
-        } finally {
-          setLoading(false); // Mark loading as complete
-        }
-      };
-
-      fetchData();
-    }
-  }, [isOpen, recipientUid]);
+const PopupReviews = ({ isOpen, userId, userName, userImage, user, recipient, onClose,handlePay, handleOpenShop, handleOpenPerfomance, handleOpenAbout,handleOpenTerms,handleOpenPrivacy,handleOpenSafety, handleOpenBook,handleOpenPlan, handleOpenSell, handleOpenSettings,handleOpenReview,handleOpenChat,handleOpenChatId, }: WindowProps) => {
+ 
 
   if (!isOpen) return null;
      
   return (
     <div className="fixed inset-0 flex items-center justify-center bg-gray-800 bg-opacity-50 z-50">
       <div className="dark:bg-[#131B1E] dark:text-gray-300 bg-white p-1 w-full h-[100vh] flex flex-col">
-          {loading ? (
-                 <div className="h-screen w-full bg-gray-200"> 
-                 <div className="top-0 z-10 fixed w-full">
-                  <Navbar userstatus={"User"} userId={userId} onClose={onClose} popup={"reviews"} 
-                  handleOpenSell={handleOpenSell} 
-                  handleOpenBook={handleOpenBook} 
-                  handleOpenPlan={handleOpenPlan} 
-                  handleOpenChat={handleOpenChat}
-                   handleOpenPerfomance={handleOpenPerfomance}
-                   handleOpenSettings={handleOpenSettings}
-                   handleOpenAbout={handleOpenAbout}
-                   handleOpenTerms={handleOpenTerms}
-                   handleOpenPrivacy={handleOpenPrivacy}
-                   handleOpenSafety={handleOpenSafety} 
-                   handleOpenShop={handleOpenShop}/>
-                 </div>
-                  <div className="flex justify-center items-center h-full text-lg font-bold">
-                  <div className="flex gap-2 items-center">  <CircularProgress sx={{ color: "gray" }} size={30} /> <div className="hidden lg:inline">Loading...</div></div>
-                 </div>
-                 </div>
-                
-               ) : (<>
+        
             <ReviewsComponent
               displayName={userName}
               uid={userId}
               photoURL={userImage}
-              recipientUid={recipientUid}
-              recipient={user}
+              recipient={recipient}
+              user={user}
               handleOpenReview={handleOpenReview}
               handleOpenChatId={handleOpenChatId}
               handleOpenSettings={handleOpenSettings}
@@ -126,8 +87,6 @@ const PopupReviews = ({ isOpen, userId,userName,userImage,recipientUid, onClose,
               onClose={onClose} 
               handlePay={handlePay}/>
                 
-          </>  )}
-     
         <Toaster />
       </div>
     </div>

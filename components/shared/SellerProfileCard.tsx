@@ -70,11 +70,11 @@ type chatProps = {
   ad: any;
   userImage: string;
   userName: string;
-  handleOpenReview: (value:string) => void;
-  handleOpenShop: (value:string) => void;
+  handleOpenReview: (value:any) => void;
+  handleOpenShop: (value:any) => void;
   handlePay: (id:string) => void;
 };
-const SellerProfileCard = ({ ad, userId, userImage, userName,handlePay, handleOpenReview,handleOpenShop, }: chatProps) => {
+const SellerProfileCard = ({ ad, userId, userImage, userName, handlePay, handleOpenReview,handleOpenShop, }: chatProps) => {
   const pathname = usePathname();
 
   const isAdCreator = userId === ad.organizer._id;
@@ -143,7 +143,7 @@ const SellerProfileCard = ({ ad, userId, userImage, userName,handlePay, handleOp
             <Image
               onClick={() => {
                 //handleOpenP();
-                handleOpenShop(ad.organizer._id);
+                handleOpenShop(ad.organizer);
                 //router.push(`/shop/${ad.organizer._id}`);
               }}
               className="w-full h-full cursor-pointer rounded-full object-cover"
@@ -192,7 +192,7 @@ const SellerProfileCard = ({ ad, userId, userImage, userName,handlePay, handleOp
             onClick={() => {
              // handleOpenP();
              // router.push(`/shop/${ad.organizer._id}`);
-             handleOpenShop(ad.organizer._id);
+             handleOpenShop(ad.organizer);
             }}
             className="ml-2 text-xl cursor-pointer font-bold hover:underline hover:text-emerald-600"
           >
@@ -210,6 +210,7 @@ const SellerProfileCard = ({ ad, userId, userImage, userName,handlePay, handleOp
 
         <div className="flex flex-col">
           <RatingsCard
+            user={ad.organizer}
             recipientUid={ad.organizer._id}
             handleOpenReview={handleOpenReview}
           />

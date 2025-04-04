@@ -27,17 +27,18 @@ type NavItemsProps = {
   userstatus: string;
   userId: string;
   popup: string;
+  user:any;
   onClose: () => void;
   handleOpenSell: () => void;
   handleOpenBook: () => void;
   handleOpenPlan: () => void;
   handleOpenChat: () => void;
-  handleOpenShop: (shopId:string) => void;
+  handleOpenShop: (shopId:any) => void;
   handleOpenPerfomance: () => void;
   handleOpenSettings: () => void;
   handleclicklink:() => void;
 };
-const NavItems = ({ userstatus, userId, popup, onClose, handleclicklink, handleOpenSettings, handleOpenPlan, handleOpenBook, handleOpenPerfomance, handleOpenChat, handleOpenSell,handleOpenShop }: NavItemsProps) => {
+const NavItems = ({ userstatus, userId,user, popup, onClose, handleclicklink, handleOpenSettings, handleOpenPlan, handleOpenBook, handleOpenPerfomance, handleOpenChat, handleOpenSell,handleOpenShop }: NavItemsProps) => {
   const pathname = usePathname();
   const [isOpenP, setIsOpenP] = useState(false);
   const router = useRouter();
@@ -113,7 +114,7 @@ const NavItems = ({ userstatus, userId, popup, onClose, handleclicklink, handleO
                         )}
                         {link.label === "My Shop" && (
                           <div
-                          onClick={()=>  {handleOpenShop(userId); handleclicklink();}}
+                          onClick={()=>  {handleOpenShop(user); handleclicklink();}}
                           className={`${
                             isActive &&
                             "dark:bg-green-600 dark:text-white bg-green-600 text-white rounded-full"

@@ -20,9 +20,9 @@ type chatProps = {
   userName: string;
   userImage: string;
   ad: any;
-  handleOpenReview: (value:string) => void;
+  handleOpenReview: (value:any) => void;
   handleOpenChatId: (value:string) => void;
-  handleOpenShop: (value:string) => void;
+  handleOpenShop: (value:any) => void;
   handleOpenPlan: () => void;
   handleOpenSettings: () => void;
   handlePay: (id:string) => void;
@@ -75,7 +75,7 @@ const Contact = ({ ad, userId, userName, userImage,handlePay, handleOpenReview, 
           isAdCreator={isAdCreator}
           handlePayNow={handlePay}
         />
-        <Ratingsmobile recipientUid={ad.organizer._id} handleOpenReview={handleOpenReview} />
+        <Ratingsmobile recipientUid={ad.organizer._id} user={ad.organizer} handleOpenReview={handleOpenReview} />
       </div>
       <div className="justify-between lg:justify-end flex w-full gap-1">
         <div className="lg:hidden flex gap-1 items-center p-1 w-full">

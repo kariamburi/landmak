@@ -295,7 +295,7 @@ const SettingsEdit = ({ user, type, userId }: setingsProp) => {
     <Form {...form}>
       <form
         onSubmit={form.handleSubmit(onSubmit)}
-        className="p-0 flex flex-col border"
+        className="p-0 flex flex-col"
       >
         <Accordion type="single" collapsible className="w-full">
           <AccordionItem value="item-1">

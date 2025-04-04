@@ -89,8 +89,8 @@ type payProps = {
   handleOpenPlan: () => void;
   handleOpenChat: () => void;
   handleOpenSell: () => void;
-  handleOpenShop: (shopId:string) => void;
-  handleOpenChatId: (value:string) => void;
+  handleOpenShop: (shopId:any) => void;
+  handleOpenChatId: (value:any) => void;
   handleOpenSettings: () => void;
   handleOpenPerfomance: () => void;
   handleCategory:(value:string) => void;
@@ -153,6 +153,7 @@ const DashboardChat = ({
     <Navbar
       userstatus={user.status}
       userId={senderId}
+      user={user}
       onClose={onClose}
       handleOpenSell={handleOpenSell}
       handleOpenPlan={handleOpenPlan}
@@ -183,7 +184,7 @@ const DashboardChat = ({
             Latest Chats
           </div>
         </div>
-        <Sidebar userId={senderId} handleOpenChatId={handleOpenChatId} />
+        <Sidebar userId={senderId} recipientUid= {recipientUid} handleOpenChatId={handleOpenChatId} />
       </div>
     </div>
 

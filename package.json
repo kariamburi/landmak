@@ -95,6 +95,9 @@
     "zod": "^3.23.8"
   },
   "devDependencies": {
+    "@iconify-icons/svg-spinners": "^1.2.0",
+    "@iconify-json/svg-spinners": "^1.2.2",
+    "@iconify/react": "^5.2.1",
     "@types/axios": "^0.14.0",
     "@types/firebase": "^3.2.1",
     "@types/js-cookie": "^3.0.6",

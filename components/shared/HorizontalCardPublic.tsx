@@ -28,12 +28,15 @@ import { updatebookmarked } from "@/lib/actions/ad.actions";
 import { SignedIn, SignedOut } from "@clerk/nextjs";
 import CircularProgress from "@mui/material/CircularProgress";
 import sanitizeHtml from "sanitize-html";
+import { Icon } from "@iconify/react";
+import threeDotsScale from "@iconify-icons/svg-spinners/3-dots-scale"; // Correct import
+ // Correct import
 type CardProps = {
   userId: string;
   ad: any;
   isAdCreator?: boolean;
-  handleAdEdit: (id:string) => void;
-  handleAdView: (id:string) => void;
+  handleAdEdit: (ad:any) => void;
+  handleAdView: (ad:any) => void;
   handleOpenPlan: () => void;
 };
 
@@ -141,21 +144,24 @@ const HorizontalCardPublic = ({
       >
         <div
           onClick={() => {
-            handleAdView(ad._id);
+            handleAdView(ad);
           }}
           className="relative w-[160px] h-[200px]"
         >
           <div className="relative w-full h-full">
             {isLoadingsmall && (
-              <div className="absolute rounded-lg inset-0 flex items-center justify-center bg-[#000000] bg-opacity-50">
-                {/* Spinner or loading animation */}
-                <CircularProgress sx={{ color: "white" }} size={30} />
-              </div>
-            )}
+                            <div 
+                            onClick={() => {
+                              handleAdView(ad);
+                             }}
+                             className="absolute inset-0 flex justify-center items-center bg-gray-100">
+                              <Icon icon={threeDotsScale} className="w-6 h-6 text-gray-500" />
+                            </div>
+                          )}
 
             <Image
               onClick={() => {
-                handleAdView(ad._id);
+                handleAdView(ad);
               }}
               src={ad.data.imageUrls[0]}
               alt="ad image"
@@ -198,7 +204,7 @@ const HorizontalCardPublic = ({
             <div className="absolute right-2 top-10 flex flex-col gap-4 rounded-xl bg-white p-3 shadow-sm transition-all">
               <div
                 onClick={() => {
-                  handleAdEdit(ad._id);
+                  handleAdEdit(ad);
                 }}
                 className="cursor-pointer"
               >
@@ -271,7 +277,7 @@ const HorizontalCardPublic = ({
         <div className="flex-1 mt-2 p-2">
           <div
             onClick={() => {
-              handleAdView(ad._id);
+              handleAdView(ad);
             }}
             className="cursor-pointer dark:text-gray-400 text-emerald-950 font-bold text-sm lg:text-basefont-bold line-clamp-2 hover:no-underline"
           >
@@ -297,7 +303,7 @@ const HorizontalCardPublic = ({
             <div className="flex justify-between items-center w-full">
               <div
                 onClick={() => {
-                  handleAdView(ad._id);
+                  handleAdView(ad);
                 }}
                 className="flex gap-1 cursor-pointer items-center no-underline"
               >
@@ -347,7 +353,7 @@ const HorizontalCardPublic = ({
             <div className="flex items-center">
               <div
                 onClick={() => {
-                  handleAdView(ad._id);
+                  handleAdView(ad);
                 }}
                 className="flex gap-1 cursor-pointer items-center no-underline"
               >

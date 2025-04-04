@@ -18,9 +18,11 @@ import Skeleton from "@mui/material/Skeleton";
 import { ScrollArea } from "../ui/scroll-area";
 import { format, isToday, isYesterday } from "date-fns";
 import ProgressPopup from "./ProgressPopup";
+import ChatListSkeleton from "./ChatListSkeleton";
 type sidebarProps = {
   userId: string;
-  handleOpenChatId: (value:string) => void;
+  recipientUid:string;
+  handleOpenChatId: (value:any) => void;
 };
 
 export async function updateRead(recipientUid: string, uid: string) {
@@ -43,12 +45,12 @@ export async function updateRead(recipientUid: string, uid: string) {
   });
 }
 
-const Sidebar = ({ userId ,handleOpenChatId}: sidebarProps) => {
+const Sidebar = ({ userId ,recipientUid, handleOpenChatId}: sidebarProps) => {
   const [messages, setMessages] = useState<any[]>([]);
   const [loading, setLoading] = useState(true);
   const router = useRouter();
   const pathname = usePathname();
-
+  const [recipient, setrecipient] = useState(recipientUid);
   useEffect(() => {
     const getLastMessagesInConversations = async () => {
       try {
@@ -82,54 +84,28 @@ const Sidebar = ({ userId ,handleOpenChatId}: sidebarProps) => {
     getLastMessagesInConversations().then((lastMessages) => {
       setMessages(lastMessages);
     });
-  }, [userId]);
+   // updateRead(recipientUid, userId);
+  }, [userId, recipient]);
 
   const truncateTitle = (title: string, maxLength: number) => {
     return title.length > maxLength
       ? title.substring(0, maxLength) + "..."
       : title;
   };
- const [recipient, setrecipient] = useState('');
+ 
   
   const handle = (uid: string, recipientUid: string) => {
     //setIsOpenP(true);
     updateRead(recipientUid, uid);
-    setrecipient(recipientUid);
-   handleOpenChatId(recipientUid)
+    setrecipient(uid);
+    handleOpenChatId(uid)
   };
  
   return (
     <div>
       {loading ? (
         <div className="flex flex-col justify-center w-[350px] p-1">
-          <div className="flex gap-2 justify-center mb-1">
-            <Skeleton
-              variant="rectangular"
-              animation="wave"
-              //  height={50}
-              className="rounded-sm w-6 h-6"
-            />
-            <Skeleton
-              variant="rectangular"
-              animation="wave"
-              //  height={50}
-              className="rounded-sm w-full h-6"
-            />
-          </div>
-          <div className="flex gap-2 justify-center mb-1">
-            <Skeleton
-              variant="rectangular"
-              animation="wave"
-              //  height={50}
-              className="rounded-sm w-6 h-6"
-            />
-            <Skeleton
-              variant="rectangular"
-              animation="wave"
-              //  height={50}
-              className="rounded-sm w-full h-6"
-            />
-          </div>
+           <ChatListSkeleton/>
         </div>
       ) : messages.length > 0 ? (
         <>
@@ -137,7 +113,7 @@ const Sidebar = ({ userId ,handleOpenChatId}: sidebarProps) => {
             <ScrollArea className="h-full w-full p-2">
               <ul className="divide-y divide-gray-200 dark:divide-gray-600">
                 {messages.map((message, index) => {
-                  const isActive = pathname === "/chat/" + message.uid;
+                  //const isActive = pathname === "/chat/" + message.uid;
                   let formattedCreatedAt = "";
                   try {
                     const createdAtDate = new Date(
@@ -160,8 +136,8 @@ const Sidebar = ({ userId ,handleOpenChatId}: sidebarProps) => {
                     <li
                       key={index}
                       onClick={() => handle(message.uid, message.recipientUid)}
-                      className={`p-4 border-b flex items-center space-x-4 dark:hover:bg-black hover:bg-gray-100 hover:cursor-pointer ${
-                        message.recipientUid === recipient ? "dark:bg-[#131B1E] bg-emerald-100" : ""
+                      className={`p-4 border-b flex items-center space-x-4 dark:hover:bg-black hover:bg-green-100 hover:cursor-pointer ${
+                        message.uid === recipient ? "dark:bg-[#131B1E] bg-green-200" : "bg-white dark:bg-gray-800"
                       }`}
                     >
                       <div className="flex-shrink-0">

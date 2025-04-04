@@ -37,12 +37,13 @@ interface WindowProps {
   handleOpenPrivacy: () => void;
   handleOpenSafety: () => void;
   userId: string;
+  user:any;
   handleOpenPerfomance: () => void;
   handleOpenSettings: () => void;
-  handleOpenShop: (shopId:string) => void;
+  handleOpenShop: (shopId:any) => void;
 }
 
-const PopupSafety = ({ isOpen, userId, onClose,handleOpenPerfomance,
+const PopupSafety = ({ isOpen, user, userId, onClose,handleOpenPerfomance,
   handleOpenSettings,
   handleOpenShop, handleOpenSell, handleOpenBook,handleOpenChat,handleOpenPlan, handleOpenAbout,handleOpenTerms,handleOpenPrivacy,handleOpenSafety }: WindowProps) => {
  
@@ -63,7 +64,8 @@ const PopupSafety = ({ isOpen, userId, onClose,handleOpenPerfomance,
       handleOpenPlan={handleOpenPlan}
       handleOpenSettings={handleOpenSettings}
       handleOpenShop={handleOpenShop} 
-      handleOpenPerfomance={handleOpenPerfomance} />
+      handleOpenPerfomance={handleOpenPerfomance} 
+      user={user}/>
         <Toaster />
       </div>
     </div>

@@ -7,6 +7,10 @@ import { getallBookmarkByuserId } from "@/lib/actions/bookmark.actions";
 import Image from "next/image";
 import Masonry from "react-masonry-css";
 import ProgressPopup from "./ProgressPopup";
+import Skeleton from "@mui/material/Skeleton";
+import { Icon } from "@iconify/react";
+import sixDotsScale from "@iconify-icons/svg-spinners/6-dots-scale"; // Correct import
+ // Correct import
 type CollectionProps = {
   userId: string;
   //data: IAd[];
@@ -19,8 +23,8 @@ type CollectionProps = {
   isAdCreator: boolean;
   isVertical: boolean;
   collectionType?: "Ads_Organized" | "My_Tickets" | "All_Ads";
-  handleAdEdit: (id:string) => void;
-  handleAdView: (id:string) => void;
+  handleAdEdit: (ad:any) => void;
+  handleAdView: (ad:any) => void;
   handleOpenPlan: () => void;
 };
 
@@ -43,6 +47,7 @@ const CollectionBookmark = ({
   const [page, setPage] = useState(1);
   const [totalPages, setTotalPages] = useState(1);
   const [loading, setLoading] = useState(true);
+   const [isInitialLoading, setIsInitialLoading] = useState(true);
   // const observer = useRef();
   const observer = useRef<IntersectionObserver | null>(null);
 
@@ -67,6 +72,7 @@ const CollectionBookmark = ({
       console.error("Error fetching ads", error);
     } finally {
       setLoading(false);
+      setIsInitialLoading(false);
     }
   };
 
@@ -201,19 +207,23 @@ const CollectionBookmark = ({
         )
       )}
       {loading && (
-        <div>
-          <div className="w-full mt-10 h-full flex flex-col items-center justify-center">
-            <Image
-              src="/assets/icons/loading.gif"
-              alt="loading"
-              width={40}
-              height={40}
-              unoptimized
-            />
-          </div>
-        </div>
-      )}
-      
+               <>
+                 {isInitialLoading ? (
+                   <div className="grid grid-cols-2 lg:grid-cols-4 gap-2">
+                     {Array.from({ length: 12 }).map((_, index) => (
+                       <div key={index} className="bg-gray-200 dark:bg-[#2D3236] p-4 rounded-lg shadow-md w-full">
+                         <Skeleton variant="rectangular" width="100%" height={140} />
+                         <Skeleton variant="text" width="80%" height={30} className="mt-2" />
+                         <Skeleton variant="text" width="60%" height={25} />
+                       </div>
+                     ))}
+                   </div>
+                 ) : (
+                   <div className="w-full min-h-[200px] h-full flex flex-col items-center justify-center">
+                      <Icon icon={sixDotsScale} className="w-10 h-10 text-gray-500" />
+                   </div>
+                 )}
+                 </>)}
     </>
   );
 };

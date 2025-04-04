@@ -14,7 +14,8 @@ import Link from "next/link";
 import { usePathname, useRouter } from "next/navigation";
 type Ratingsprop = {
   recipientUid: string;
-  handleOpenReview: (value:string) => void;
+  user:any;
+  handleOpenReview: (value:any) => void;
 };
 
 interface Review {
@@ -28,7 +29,7 @@ interface Review {
   starClicked: boolean[];
 }
 
-const RatingsCard = ({ recipientUid, handleOpenReview }: Ratingsprop) => {
+const RatingsCard = ({ recipientUid, user, handleOpenReview }: Ratingsprop) => {
   const [clickedStarsCount, setClickedStarsCount] = useState<number>(0);
   const [messagesCount, setMessagesCount] = useState<number>(0);
   const [averangestar, setaverangestar] = useState<number>(0);
@@ -71,11 +72,8 @@ const RatingsCard = ({ recipientUid, handleOpenReview }: Ratingsprop) => {
      
       <div
         onClick={() => {
-          handleOpenReview(recipientUid);
-          //if (pathname !== `/reviews/${recipientUid}`) {
-          //  openLoading();
-           // router.push(`/reviews/${recipientUid}`);
-         // }
+          handleOpenReview(user);
+        
         }}
         className="flex cursor-pointer flex-col  dark:hover:text-green-600 p-1 items-center w-[130px]"
       >
@@ -83,7 +81,7 @@ const RatingsCard = ({ recipientUid, handleOpenReview }: Ratingsprop) => {
           {averangestar.toFixed(1)}
         </h1>
 
-        <p className="dark:text-gray-300 text-gray-600 hover:underline dark:hover:underline text-sm">Ratings</p>
+        <p className="dark:text-gray-300 text-gray-600 underline hover:font-bold dark:hover:font-bold text-sm">Ratings</p>
 
         {averangestar < 1 && (
         <div className="w-[70px] items-center justify-center">
@@ -179,7 +177,7 @@ const RatingsCard = ({ recipientUid, handleOpenReview }: Ratingsprop) => {
       </div>
       <div
         onClick={() => {
-          handleOpenReview(recipientUid);
+          handleOpenReview(user);
           //if (pathname !== `/reviews/${recipientUid}`) {
           //  openLoading();
           //  router.push(`/reviews/${recipientUid}`);
@@ -191,7 +189,7 @@ const RatingsCard = ({ recipientUid, handleOpenReview }: Ratingsprop) => {
           {messagesCount}
         </h1>
 
-        <p className="dark:text-gray-300 text-gray-600 hover:underline dark:hover:underline text-sm">Reviews</p>
+        <p className="dark:text-gray-300 text-gray-600 hover:underline underline hover:font-bold dark:hover:font-bold text-sm">Reviews</p>
       </div>
 
     </div>

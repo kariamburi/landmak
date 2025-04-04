@@ -34,145 +34,57 @@ interface WindowProps {
   handleOpenTerms: () => void;
   handleOpenPrivacy: () => void;
   handleOpenSafety: () => void;
-  handleAdView:(id:string) => void;
+  handleAdView: (ad:any) => void;
   handleOpenPlan: () => void;
   handleOpenChat: () => void;
   handleOpenBook: () => void;
   handleOpenPerfomance: () => void;
 handleOpenSettings: () => void;
-handleOpenShop: (shopId:string) => void;
+handleOpenShop: (shopId:any) => void;
 handleCategory:(value:string) => void;
   type: string;
   userId: string;
   userName: string;
-  adId:string;
+  ad:any;
+  user:any;
+  subcategoryList:any;
 
 }
 
-const PopupAdEdit = ({ isOpen, type, userId, userName, adId, handleOpenPerfomance,
+const PopupAdEdit = ({ isOpen, type, user, userId, userName, subcategoryList, ad, handleOpenPerfomance,
   handleOpenSettings,
   handleOpenShop,handleCategory, onClose, handleAdView, handleOpenBook ,handleOpenChat,handleOpenPlan, handleOpenSell, handleOpenAbout, handleOpenTerms,handleOpenPrivacy,handleOpenSafety }: WindowProps) => {
-  const [subscription, setSubscription] = useState<any>(null);
-  const [Ad, setAd] = useState<any>([]);
-  const [packagesList, setPackagesList] = useState<IPackages[]>([]);
-  const [daysRemaining, setDaysRemaining] = useState(0);
-  const [remainingAds, setRemainingAds] = useState(0);
-  const [categories, setCategories] = useState<any>([]);
-  const [planPackage, setPlanPackage] = useState("Free");
-  const [planId, setPlanId] = useState(FreePackId);
-  const [priority, setPriority] = useState(0);
-  const [adStatus, setAdStatus] = useState("Pending");
-  const [color, setColor] = useState("#000000");
-  const [expirationDate, setExpirationDate] = useState(new Date());
- const [loading, setLoading] = useState<boolean>(true);
- const [listed, setListed] = useState(0);
- useEffect(() => {
-  if (isOpen && userId) {
-    const fetchData = async () => {
-      try {
-        setLoading(true);
-          const ad = await getAdById(adId);
-          setAd(ad);
-        //console.log(`Fetching subscription data for userId: ${userId}`);
-        const subscriptionData = await getData(userId);
-       // console.log("Subscription data received:", subscriptionData);
-        const category = await getallcategories();
-        setCategories(category);
-      //  console.log("Subscription data received:", category);
-        const packages = await getAllPackages();
-        setPackagesList(packages);
-       // console.log("packages data received:", packages);
-     
-        if (subscriptionData) {
-          setSubscription(subscriptionData);
-          const listedAds = subscriptionData.ads || 0;
-          setListed(listedAds);
-          if (subscriptionData.currentpack && !Array.isArray(subscriptionData.currentpack)) {
-            
-            setRemainingAds(subscriptionData.currentpack.list - listedAds);
-            setPriority(subscriptionData.currentpack.priority);
-            setColor(subscriptionData.currentpack.color);
-            setPlanPackage(subscriptionData.currentpack.name);
-            setPlanId(subscriptionData.transaction?.planId || FreePackId);
-          const createdAtDate = new Date(subscriptionData.transaction?.createdAt || new Date());
-          const periodDays = parseInt(subscriptionData.transaction?.period) || 0;
-          const expiryDate = new Date(createdAtDate.getTime() + periodDays * 24 * 60 * 60 * 1000);
-          setExpirationDate(expiryDate);
-          const currentDate = new Date();
-          const remainingDays = Math.ceil((expiryDate.getTime() - currentDate.getTime()) / (1000 * 60 * 60 * 24));
-          setDaysRemaining(remainingDays);
-          setAdStatus((remainingDays > 0 && (subscriptionData.currentpack.list - listedAds) > 0) || ((subscriptionData.currentpack.list - listedAds) > 0 && subscriptionData.currentpack.name === "Free") ? "Active" : "Pending");
-        //  alert((remainingDays > 0 && (subscriptionData.currentpack.list - listedAds) > 0) || ((subscriptionData.currentpack.list - listedAds) > 0 && subscriptionData.currentpack.name === "Free") ? "Active" : "Pending");
-          
-        } else {
-          console.warn("No current package found for the user.");
-        }
-        }
-      } catch (error) {
-        console.error("Failed to fetch data", error);
-      } finally {
-     
-        setLoading(false);
-      }
-    };
-    fetchData();
-  }
-}, [isOpen, userId]);
+ 
   if (!isOpen) return null;
      
   return (
-    <div className="fixed inset-0 flex items-center justify-center bg-gray-z-50">
-      <div className="dark:bg-[#131B1E] dark:text-gray-300 bg-white p-1 w-full h-[100vh] flex flex-col">
+    <div className="fixed inset-0 flex items-center justify-center bg-gray-200 z-50">
+      <div className="dark:bg-[#131B1E] dark:text-gray-300 bg-white p-0 w-full h-[100vh] flex flex-col">
        
-      {loading ? (
-              <div className="h-screen w-full bg-gray-200"> 
-              <div className="top-0 z-10 fixed w-full">
-               <Navbar userstatus="User" userId={userId} onClose={onClose} popup={"sell"} handleOpenSell={handleOpenSell} handleOpenBook={handleOpenBook} handleOpenPlan={handleOpenPlan} handleOpenChat={handleOpenChat}
-                handleOpenPerfomance={handleOpenPerfomance}
-                handleOpenSettings={handleOpenSettings}
-                handleOpenAbout={handleOpenAbout}
-                handleOpenTerms={handleOpenTerms}
-                handleOpenPrivacy={handleOpenPrivacy}
-                handleOpenSafety={handleOpenSafety} 
-                handleOpenShop={handleOpenShop}/>
-              </div>
-               <div className="flex justify-center items-center h-full text-lg font-bold">
-               <div className="flex gap-2 items-center">  <CircularProgress sx={{ color: "gray" }} size={30} />  <div className="hidden lg:inline">Loading...</div></div>
-              </div>
-             
-              </div>
-             
-            ) : (
+     
         <DashboardSellMain
-              userId={userId}
-              type={type}
-              categories={categories}
-              daysRemaining={daysRemaining}
-              packname={planPackage}
-              planId={planId}
-              userName={userName}
-              packagesList={packagesList}
-              listed={remainingAds}
-              expirationDate={expirationDate}
-              priority={priority}
-              adstatus={adStatus}
-              onClose={onClose}
-              handleOpenSell={handleOpenSell}
-              handleAdView={handleAdView}
-              popup={"sell"}
-              adId={adId}
-              ad={Ad}
-              handleOpenAbout={handleOpenAbout}
-              handleOpenTerms={handleOpenTerms}
-              handleOpenPrivacy={handleOpenPrivacy}
-              handleOpenSafety={handleOpenSafety}
-              handleOpenBook={handleOpenBook}
-              handleOpenChat={handleOpenChat}
-              handleOpenPlan={handleOpenPlan}
-              handleOpenShop={handleOpenShop}
-              handleOpenPerfomance={handleOpenPerfomance}
-              handleOpenSettings={handleOpenSettings} 
-              handleCategory={handleCategory}/>)}
+          userId={userId}
+          type={type}
+          subcategoryList={subcategoryList}
+          userName={userName}
+          onClose={onClose}
+          handleOpenSell={handleOpenSell}
+          handleAdView={handleAdView}
+          popup={"sell"}
+          adId={ad._id}
+          ad={ad}
+          user={user}
+          handleOpenAbout={handleOpenAbout}
+          handleOpenTerms={handleOpenTerms}
+          handleOpenPrivacy={handleOpenPrivacy}
+          handleOpenSafety={handleOpenSafety}
+          handleOpenBook={handleOpenBook}
+          handleOpenChat={handleOpenChat}
+          handleOpenPlan={handleOpenPlan}
+          handleOpenShop={handleOpenShop}
+          handleOpenPerfomance={handleOpenPerfomance}
+          handleOpenSettings={handleOpenSettings}
+          handleCategory={handleCategory}/>
         <Toaster />
       </div>
     </div>

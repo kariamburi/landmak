@@ -14,6 +14,10 @@ import { SignedIn, SignedOut } from "@clerk/nextjs";
 import { Button } from "../ui/button";
 import AddOutlinedIcon from '@mui/icons-material/AddOutlined';
 import { useRouter } from "next/navigation";
+import CircularProgress from "@mui/material/CircularProgress";
+import { Icon } from "@iconify/react";
+import sixDotsScale from "@iconify-icons/svg-spinners/6-dots-scale"; // Correct import
+ // Correct import
 type CollectionProps = {
   userId: string;
   emptyTitle: string;
@@ -22,9 +26,9 @@ type CollectionProps = {
   activeButton: number;
   queryObject: any;
   loadPopup: boolean;
-  handleAdEdit: (id:string) => void;
+  handleAdEdit: (ad:any) => void;
   handleOpenSell: () => void;
-  handleAdView: (id:string) => void;
+  handleAdView: (ad:any) => void;
   handleOpenPlan: () => void;
 };
 
@@ -46,20 +50,9 @@ const CollectionSearch = ({
   const [totalPages, setTotalPages] = useState(1);
   const [loading, setLoading] = useState(true);
   const [newpage, setnewpage] = useState(false);
+  const [isInitialLoading, setIsInitialLoading] = useState(true);
   const router = useRouter();
   const observer = useRef<IntersectionObserver | null>(null);
-
-
-   //const [newqueryObject, setNewqueryObject] = useState<any>(queryObject);
- // const handleFilter = (value:any) => {
-   // setNewqueryObject({
-     // ...queryObject, // Preserve existing properties
-      //location: lat+"/"+lng,
-    //  value,
-   // });
-   // setAds([]);
-   // };
-  
 
   let Ads: any = [];
   const fetchAds = async () => {
@@ -94,7 +87,7 @@ const CollectionSearch = ({
       console.error("Error fetching ads", error);
     } finally {
       setLoading(false);
-     // setIsOpenP(false);
+      setIsInitialLoading(false);
       //closeLoading();
     }
   };
@@ -251,19 +244,24 @@ const CollectionSearch = ({
           </>
         )
       )}
-      {loading && (
-        <div>
-          <div className="w-full mt-10 h-full min-h-[100px] flex flex-col items-center justify-center">
-            <Image
-              src="/assets/icons/loading.gif"
-              alt="loading"
-              width={40}
-              height={40}
-              unoptimized
-            />
-          </div>
-        </div>
-      )}
+       {loading && (
+          <>
+            {isInitialLoading ? (
+              <div className="grid grid-cols-2 lg:grid-cols-4 gap-2">
+                {Array.from({ length: 12 }).map((_, index) => (
+                  <div key={index} className="bg-gray-200 dark:bg-[#2D3236] p-4 rounded-lg shadow-md w-full">
+                    <Skeleton variant="rectangular" width="100%" height={140} />
+                    <Skeleton variant="text" width="80%" height={30} className="mt-2" />
+                    <Skeleton variant="text" width="60%" height={25} />
+                  </div>
+                ))}
+              </div>
+            ) : (
+              <div className="w-full min-h-[200px] h-full flex flex-col items-center justify-center">
+                <Icon icon={sixDotsScale} className="w-10 h-10 text-gray-500" />
+              </div>
+            )}
+            </>)}
     {/*  <ProgressPopup isOpen={loadPopup} onClose={handleCloseP} /> */} 
     </>
   );

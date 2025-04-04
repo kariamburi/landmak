@@ -23,6 +23,7 @@ import { format, isToday, isYesterday } from "date-fns";
 import ProgressPopup from "./ProgressPopup";
 import { DeleteReview } from "./DeleteReview";
 import Reviews from "./Reviews";
+import ChatListSkeleton from "./ChatListSkeleton";
 type sidebarProps = {
   recipientUid: string;
   uid:string;
@@ -102,62 +103,7 @@ useEffect(() => {
     <div>
       {loading ? (
         <div className="flex flex-col justify-center w-full">
-          <div className="flex gap-2 justify-center mb-1">
-            <Skeleton
-              variant="rectangular"
-              animation="wave"
-              //  height={50}
-              className="rounded-sm w-6 h-10 dark:bg-[#2D3236]"
-            />
-            <Skeleton
-              variant="rectangular"
-              animation="wave"
-              //  height={50}
-              className="rounded-sm w-full h-10 dark:bg-[#2D3236]"
-            />
-          </div>
-          <div className="flex gap-2 justify-center mb-1">
-            <Skeleton
-              variant="rectangular"
-              animation="wave"
-              //  height={50}
-              className="rounded-sm w-6 h-10 dark:bg-[#2D3236]"
-            />
-            <Skeleton
-              variant="rectangular"
-              animation="wave"
-              //  height={50}
-              className="rounded-sm w-full h-10 dark:bg-[#2D3236]"
-            />
-          </div>
-          <div className="flex gap-2 justify-center mb-1">
-            <Skeleton
-              variant="rectangular"
-              animation="wave"
-              //  height={50}
-              className="rounded-sm w-6 h-10 dark:bg-[#2D3236]"
-            />
-            <Skeleton
-              variant="rectangular"
-              animation="wave"
-              //  height={50}
-              className="rounded-sm w-full h-10 dark:bg-[#2D3236]"
-            />
-          </div>
-          <div className="flex gap-2 justify-center mb-1">
-            <Skeleton
-              variant="rectangular"
-              animation="wave"
-              //  height={50}
-              className="rounded-sm w-6 h-10 dark:bg-[#2D3236]"
-            />
-            <Skeleton
-              variant="rectangular"
-              animation="wave"
-              //  height={50}
-              className="rounded-sm w-full h-10 dark:bg-[#2D3236]"
-            />
-          </div>
+         <ChatListSkeleton/>
         </div>
       ) : messages.length > 0 ? (
         <>

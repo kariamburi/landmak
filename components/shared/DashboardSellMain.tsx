@@ -18,18 +18,18 @@ type Package = {
 };
 type dashboardProps = {
   userId: string;
-  planId: string;
-  daysRemaining: number;
-  packname: string;
+  user: any;
+ // daysRemaining: number;
+  //packname: string;
   userName: string;
   type: string;
   ad?: any;
   adId?: string;
-  packagesList: any;
-  listed: number;
-  priority: number;
-  expirationDate: Date;
-  adstatus: string;
+ // packagesList: any;
+ // listed: number;
+ // priority: number;
+//expirationDate: Date;
+ // adstatus: string;
   onClose: () => void;
   handleOpenBook: () => void;
   handleOpenChat: () => void;
@@ -39,30 +39,30 @@ type dashboardProps = {
   handleOpenTerms: () => void;
   handleOpenPrivacy: () => void;
   handleOpenSafety: () => void;
-  handleAdView?:(id:string) => void;
+  handleAdView: (ad:any) => void;
   handleCategory:(value:string) => void;
   handlePay?:(id:string) => void;
   popup:string;
-  categories:any;
-  handleOpenShop: (shopId:string) => void;
+  subcategoryList:any;
+  handleOpenShop: (shopId:any) => void;
   handleOpenPerfomance: () => void;
   handleOpenSettings: () => void;
 };
 const DashboardSellMain = ({
   userId,
-  planId,
-  packname,
+  user,
+  //packname,
   userName,
-  daysRemaining,
+  //daysRemaining,
   type,
   ad,
   adId,
-  packagesList,
-  listed,
-  priority,
-  expirationDate,
-  adstatus,
-  categories,
+  //packagesList,
+  //listed,
+  //priority,
+  //expirationDate,
+  //adstatus,
+  subcategoryList,
   onClose,
   handleCategory,
   handleOpenSell,
@@ -105,7 +105,8 @@ const DashboardSellMain = ({
        
       <div className="z-10 top-0 fixed w-full">
     <Navbar
-      userstatus="User"
+      user={user}
+      userstatus={user.status}
       userId={userId}
       onClose={onClose}
       popup={popup}
@@ -131,17 +132,17 @@ const DashboardSellMain = ({
                 userId={userId}
                 type={type}
                 ad={ad}
-                categories={categories}
+                categories={subcategoryList}
                 adId={adId}
-                planId={planId}
+               // planId={planId}
                 userName={userName}
-                daysRemaining={daysRemaining}
-                packname={packname}
-                listed={listed}
-                priority={priority}
-                expirationDate={expirationDate}
-                adstatus={adstatus}
-                packagesList={packagesList}
+                //daysRemaining={daysRemaining}
+               // packname={packname}
+               // listed={listed}
+                //priority={priority}
+                //expirationDate={expirationDate}
+                //adstatus={adstatus}
+                //packagesList={packagesList}
                 handleAdView={handleAdView}
                 handlePay={handlePay}
                 handleOpenTerms={handleOpenTerms}

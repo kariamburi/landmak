@@ -27,7 +27,7 @@ type setingsProp = {
 handleOpenPrivacy: () => void;
 handleOpenSafety: () => void;
 handleOpenSettings: () => void;
-  handleOpenShop: (shopId:string) => void;
+  handleOpenShop: (shopId:any) => void;
   handlePay: (id:string) => void;
   handleCategory: (value:string) => void;
   handleOpenPerfomance: () => void;
@@ -67,7 +67,7 @@ const SettingsComponent = ({userId,user,onClose,
       <ScrollArea className="h-[100vh] bg-gray-200 dark:bg-[#131B1E] text-black dark:text-[#F1F3F3]">
        
       <div className="top-0 z-10 fixed w-full">
-                              <Navbar userstatus={user.status} userId={userId} onClose={onClose} popup={"settings"} handleOpenSell={handleOpenSell} handleOpenBook={handleOpenBook} handleOpenPlan={handleOpenPlan} handleOpenChat={handleOpenChat}
+                              <Navbar user={user} userstatus={user.status} userId={userId} onClose={onClose} popup={"settings"} handleOpenSell={handleOpenSell} handleOpenBook={handleOpenBook} handleOpenPlan={handleOpenPlan} handleOpenChat={handleOpenChat}
                               handleOpenPerfomance={handleOpenPerfomance}
                               handleOpenSettings={handleOpenSettings}
                               handleOpenAbout={handleOpenAbout}
@@ -80,7 +80,7 @@ const SettingsComponent = ({userId,user,onClose,
         <div className="hidden lg:inline mr-5"></div>
 
         <div className="flex-1">
-          <div className="w-full lg:max-w-6xl lg:mx-auto lg:mb-3 dark:bg-[#2D3236] p-1 mb-20 justify-center">
+          <div className="w-full lg:max-w-6xl lg:mx-auto lg:mb-3 dark:bg-[#2D3236] bg-white rounded-xl p-1 lg:p-3 mb-20 justify-center">
             <section className="w-full p-0">
               <div className="w-full flex flex-col lg:flex-row lg:justify-between">
                 <div className="flex text-lg mb-1 gap-1 font-bold">

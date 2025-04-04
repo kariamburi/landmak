@@ -13,7 +13,10 @@ import Masonry from "react-masonry-css";
 import CardAutoHeight from "./CardAutoHeight";
 import ProgressPopup from "./ProgressPopup";
 import VerticalCard from "./VerticalCard";
-
+import Skeleton from "@mui/material/Skeleton";
+import { Icon } from "@iconify/react";
+import sixDotsScale from "@iconify-icons/svg-spinners/6-dots-scale"; // Correct import
+ // Correct import
 type CollectionProps = {
   //  data: IAd[];
   emptyTitle: string;
@@ -28,8 +31,8 @@ type CollectionProps = {
   userId: string;
   userName: string;
   userImage: string;
-  handleAdView: (id:string) => void;
-  handleAdEdit: (id:string) => void;
+  handleAdEdit: (ad:any) => void;
+  handleAdView: (ad:any) => void;
   handleOpenPlan: () => void;
   collectionType?: "Ads_Organized" | "My_Tickets" | "All_Ads";
 };
@@ -185,17 +188,17 @@ const CollectionRelated = ({
       )}
 
       {loading && (
-        <div>
-          <div className="w-full dark:bg-[#131B1E] mt-10 h-full flex flex-col items-center justify-center">
-            <Image
-              src="/assets/icons/loading.gif"
-              alt="loading"
-              width={40}
-              height={40}
-              unoptimized
-            />
-          </div>
-        </div>
+        <>
+          <div className="grid grid-cols-2 lg:grid-cols-4 gap-2">
+                {Array.from({ length: 8 }).map((_, index) => (
+                  <div key={index} className="bg-gray-200 dark:bg-[#2D3236] p-4 rounded-lg shadow-md w-full">
+                    <Skeleton variant="rectangular" width="100%" height={140} />
+                    <Skeleton variant="text" width="80%" height={30} className="mt-2" />
+                    <Skeleton variant="text" width="60%" height={25} />
+                  </div>
+                ))}
+              </div>
+        </>
       )}
       <ProgressPopup isOpen={isOpenP} onClose={handleCloseP} />
     </div>

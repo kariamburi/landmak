@@ -35,8 +35,8 @@ interface WindowProps {
   handleOpenTerms: () => void;
   handleOpenPrivacy: () => void;
   handleOpenSafety: () => void;
-  handleAdEdit: (id:string) => void;
-  handleAdView: (id:string) => void;
+  handleAdEdit: (ad:any) => void;
+  handleAdView: (ad:any) => void;
   handleCategory:(value:string) => void;
   handleOpenShop: (value:string) => void;
     handleOpenChatId: (value:string) => void;
@@ -44,58 +44,20 @@ interface WindowProps {
     handleOpenPerfomance: () => void;
   //type: string;
   userId: string;
- // userName: string;
+  user: any;
 }
 
-const PopupBookmark = ({ isOpen, userId, onClose, handleOpenShop,
+const PopupBookmark = ({ isOpen, userId, user, onClose, handleOpenShop,
   handleOpenChatId,
   handleOpenSettings,
   handleOpenPerfomance, handleOpenChat, handleOpenBook, handleOpenPlan, handleOpenSell, handleAdEdit,handleAdView, handleOpenAbout,handleOpenTerms,handleOpenPrivacy,handleOpenSafety }: WindowProps) => {
-  const [user, setuser] = useState<any>([]);
-  const [loading, setLoading] = useState<boolean>(true);
-
-  useEffect(() => {
-    if (isOpen && userId) {
-      setLoading(true);
-      const fetchData = async () => {
-        try {
-         const user = await getUserById(userId);
-         setuser(user);
-        
-        } catch (error) {
-          console.error("Failed to fetch data", error);
-        } finally {
-          setLoading(false); // Mark loading as complete
-        }
-      };
-
-      fetchData();
-    }
-  }, [isOpen, userId]);
-
+ 
   if (!isOpen) return null;
      
   return (
     <div className="fixed inset-0 flex items-center justify-center bg-gray-800 bg-opacity-50 z-50">
-      <div className="dark:bg-[#131B1E] dark:text-gray-300 bg-white p-1 w-full h-[100vh] flex flex-col">
-          {loading ? (
-                 <div className="h-screen w-full bg-gray-200"> 
-                 <div className="top-0 z-10 fixed w-full">
-                  <Navbar userstatus="User" userId={userId} onClose={onClose} popup={"bookmark"} handleOpenSell={handleOpenSell} handleOpenBook={handleOpenBook} handleOpenPlan={handleOpenPlan} handleOpenChat={handleOpenChat}
-                   handleOpenPerfomance={handleOpenPerfomance}
-                   handleOpenSettings={handleOpenSettings}
-                   handleOpenAbout={handleOpenAbout}
-                   handleOpenTerms={handleOpenTerms}
-                   handleOpenPrivacy={handleOpenPrivacy}
-                   handleOpenSafety={handleOpenSafety} 
-                   handleOpenShop={handleOpenShop}/>
-                 </div>
-                  <div className="flex justify-center items-center h-full text-lg font-bold">
-                  <div className="flex gap-2 items-center">  <CircularProgress sx={{ color: "gray" }} size={30} /> <div className="hidden lg:inline">Loading...</div></div>
-                 </div>
-                 </div>
-                
-               ) : (
+      <div className="dark:bg-[#131B1E] dark:text-gray-300 bg-white p-0 w-full h-[100vh] flex flex-col">
+      
       <DashboardBookmark
               userId={userId}
               user={user}
@@ -118,7 +80,7 @@ const PopupBookmark = ({ isOpen, userId, onClose, handleOpenShop,
               handleOpenChatId={handleOpenChatId}
               handleOpenShop={handleOpenShop}
               handleOpenPerfomance={handleOpenPerfomance}
-              handleOpenSettings={handleOpenSettings}/>)}
+              handleOpenSettings={handleOpenSettings}/>
      
         <Toaster />
       </div>

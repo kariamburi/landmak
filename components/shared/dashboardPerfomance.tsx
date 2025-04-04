@@ -38,15 +38,21 @@ import Navbar from "./navbar";
 import { ScrollArea } from "../ui/scroll-area";
 import { getAdByUser } from "@/lib/actions/dynamicAd.actions";
 import { IdynamicAd } from "@/lib/database/models/dynamicAd.model";
-
+import { getData } from "@/lib/actions/transactions.actions";
+import { Icon } from "@iconify/react";
+import Barsscale from "@iconify-icons/svg-spinners/bars-scale"; 
+import sixDotsScale from "@iconify-icons/svg-spinners/6-dots-scale"; // Correct import
+ // Correct import
+import AdPerformanceSkeleton from "./AdPerformanceSkeleton";
+import SubscriptionSkeleton from "./SubscriptionSkeleton";
 type CollectionProps = {
   userId: string;
   userName: string;
   userImage: string;
   loggedId: string;
-  daysRemaining?: number;
-  packname?: string;
-  color: string;
+ // daysRemaining?: number;
+ // packname?: string;
+ // color: string;
   sortby: string;
   user: IUser;
   emptyTitle: string;
@@ -64,10 +70,10 @@ type CollectionProps = {
   handleOpenTerms: () => void;
   handleOpenPrivacy: () => void;
   handleOpenSafety: () => void;
-  handleAdEdit: (id:string) => void;
-  handleAdView: (id:string) => void;
-  handleOpenReview: (id:string) => void;
-  handleOpenShop: (shopId:string) => void;
+  handleAdEdit: (ad:any) => void;
+  handleAdView: (ad:any) => void;
+  handleOpenReview: (value:any) => void;
+  handleOpenShop: (shopId:any) => void;
   handleOpenSettings: () => void;
   handleOpenPerfomance: () => void;
   handlePay: (id:string) => void;
@@ -78,9 +84,9 @@ const DashboardPerformance = ({
   userName,
   userImage,
   sortby,
-  packname,
-  daysRemaining,
-  color,
+ // packname,
+ // daysRemaining,
+ // color,
   emptyTitle,
   emptyStateSubtext,
   collectionType,
@@ -94,13 +100,57 @@ const DashboardPerformance = ({
 CollectionProps) => {
   const [activeButton, setActiveButton] = useState(0);
   const [isVertical, setisVertical] = useState(true);
-
+  const [isInitialLoading, setIsInitialLoading] = useState(true);
   const [data, setAds] = useState<IdynamicAd[]>([]); // Initialize with an empty array
   const [page, setPage] = useState(1);
   const [totalPages, setTotalPages] = useState(1);
   const [loading, setLoading] = useState(true);
   // const observer = useRef();
   const observer = useRef<IntersectionObserver | null>(null);
+ const [loadingSub, setLoadingSub] = useState<boolean>(true);
+  const [daysRemaining, setDaysRemaining] = useState(0);
+  const [planPackage, setPlanPackage] = useState("Free");
+  const [color, setColor] = useState("#000000");
+ 
+  useEffect(() => {
+   
+      const fetchData = async () => {
+        try {
+          setLoadingSub(true);
+          const subscriptionData = await getData(userId);
+      
+          if (subscriptionData) {
+         
+            const listedAds = subscriptionData.ads || 0;
+            if (subscriptionData.currentpack && !Array.isArray(subscriptionData.currentpack)) {
+              
+             // setRemainingAds(subscriptionData.currentpack.list - listedAds);
+           
+              setColor(subscriptionData.currentpack.color);
+              setPlanPackage(subscriptionData.currentpack.name);
+           
+            const createdAtDate = new Date(subscriptionData.transaction?.createdAt || new Date());
+            const periodDays = parseInt(subscriptionData.transaction?.period) || 0;
+            const expiryDate = new Date(createdAtDate.getTime() + periodDays * 24 * 60 * 60 * 1000);
+          
+            const currentDate = new Date();
+            const remainingDays = Math.ceil((expiryDate.getTime() - currentDate.getTime()) / (1000 * 60 * 60 * 24));
+            setDaysRemaining(remainingDays);
+          
+          } else {
+            console.warn("No current package found for the user.");
+          }
+          }
+        } catch (error) {
+          console.error("Failed to fetch data", error);
+        } finally {
+          setIsInitialLoading(false);
+          setLoadingSub(false);
+        }
+      };
+      fetchData();
+  
+  }, []);
 
   const fetchAds = async () => {
     setLoading(true);
@@ -172,7 +222,7 @@ CollectionProps) => {
   <ScrollArea className="h-[100vh] bg-gray-200 p-0 dark:bg-[#131B1E] text-black dark:text-[#F1F3F3]">
      
       <div className="top-0 z-10 fixed w-full">
-        <Navbar userstatus={user.status} userId={userId} onClose={onClose} popup={"performance"} handleOpenSell={handleOpenSell} handleOpenBook={handleOpenBook} handleOpenPlan={handleOpenPlan} handleOpenChat={handleOpenChat}
+        <Navbar user={user} userstatus={user.status} userId={userId} onClose={onClose} popup={"performance"} handleOpenSell={handleOpenSell} handleOpenBook={handleOpenBook} handleOpenPlan={handleOpenPlan} handleOpenChat={handleOpenChat}
          handleOpenPerfomance={handleOpenPerfomance}
          handleOpenSettings={handleOpenSettings}
          handleOpenAbout={handleOpenAbout}
@@ -185,7 +235,7 @@ CollectionProps) => {
       <div className="w-full lg:max-w-6xl mx-auto p-1">
         <section className="bg-gray-50 dark:bg-[#2D3236] bg-dotted-pattern bg-cover bg-center py-0 md:py-0 rounded-sm">
           <div className="flex items-center p-1 justify-between">
-            <div className="flex flex-col">
+            <div className="flex flex-col w-full">
               <SellerProfilePermonance
                 userId={userId}
                 userName={userName}
@@ -196,68 +246,47 @@ CollectionProps) => {
                 handlePay={handlePay}
               />
             </div>
+            {loadingSub ? (<>  <SubscriptionSkeleton/></>):(<>
 
-            {isAdCreator &&
-            packname !== "Free" &&
-            daysRemaining &&
-            daysRemaining > 0 ? (
-              <>
-                <div
-                  style={{
-                    backgroundColor: color,
-                  }}
-                  className="text-center sm:text-left rounded-lg p-3 text-white relative"
-                >
-                  <div className="flex flex-col">
-                    <div className="font-bold text-sm mt-4">
-                      Plan: {packname}
-                    </div>
-                    <div className="text-xs">
-                      Days remaining: {daysRemaining}
-                    </div>
-                  </div>
-                  {/* Green ribbon */}
-                  <div className="absolute top-0 shadow-lg left-0 bg-green-500 text-white text-xs py-1 px-3 rounded-bl-lg rounded-tr-lg">
-                    Active
-                  </div>
-                  <div 
-                  //href="/plan"
-                  onClick={()=> handleOpenPlan()}
-                  >
-                    <div className="p-1 items-center flex flex-block text-black underline text-xs cursor-pointer border-2 border-transparent rounded-full hover:bg-[#000000]  hover:text-white">
-                      <div>Upgrade Plan</div>
-                    </div>
-                  </div>
-                </div>
-              </>
-            ) : (
-              <>
-                <div
-                  style={{
-                    backgroundColor: color,
-                  }}
-                  className="text-center sm:text-left rounded-lg p-3 text-white relative"
-                >
-                  <div className="flex flex-col">
-                    <div className="font-bold text-sm mt-4">
-                      Plan: {packname}
-                    </div>
-                  </div>
-                  {/* Green ribbon */}
-                  <div className="absolute top-0 shadow-lg left-0 bg-green-500 text-white text-xs py-1 px-3 rounded-bl-lg rounded-tr-lg">
-                    Active
-                  </div>
-                  <div 
-                 // href="/plan"
-                 onClick={()=> handleOpenPlan()}
-                  >
-                    <div className="p-1 items-center flex flex-block text-black underline text-xs cursor-pointer border-2 border-transparent rounded-full hover:bg-[#000000]  hover:text-white">
-                      <div>Upgrade Plan</div>
-                    </div>
-                  </div>
-                </div>
-              </>
-            )}
+                             {isAdCreator &&
+                             planPackage !== "Free" &&
+                             daysRemaining &&
+                             daysRemaining > 0 ? (
+                               <>
+                                
+
+                                 <div className="flex gap-1 w-full items-center bg-green-100 px-3 py-1 rounded-lg">
+                                 <div
+                                   style={{
+                                     backgroundColor: color,
+                                   }}
+                                   className="h-5 w-5 rounded-full"
+                                 ></div>
+    <span className="text-sm text-green-700 font-semibold">Active | {planPackage} Plan | {daysRemaining} Days Left </span>
+    <button  onClick={()=> handleOpenPlan()} className="ml-2 text-green-600 underline">Upgrade</button>
+  </div>
+
+
+
+                               </>
+                             ) : (
+                               <>
+
+<div className="flex w-full items-center gap-1 bg-green-100 px-3 py-1 rounded-lg">
+<div
+                                   style={{
+                                     backgroundColor: color,
+                                   }}
+                                   className="h-5 w-5 rounded-full"
+                                 ></div>
+    <span className="text-sm text-green-700 font-semibold">Active | {planPackage} Plan </span>
+    <button  onClick={()=> handleOpenPlan()} className="ml-2 text-green-600 underline">Upgrade</button>
+  </div>
+
+                            
+                               </>
+                             )}
+                             </>)}
           </div>
         </section>
         <h1 className="text-3xl font-bold">Ad Performance</h1>
@@ -359,7 +388,7 @@ CollectionProps) => {
                         )}
                         <div className="flex mt-2 gap-4 rounded-xl p-3 shadow-sm transition-all">
                           <div 
-                          onClick={()=> handleAdEdit(ad._id)}
+                          onClick={()=> handleAdEdit(ad)}
                           >
                             <Image
                               src="/assets/icons/edit.svg"
@@ -531,7 +560,7 @@ CollectionProps) => {
                         )}
                         <div className="flex mt-2 gap-4 rounded-xl p-3 shadow-sm transition-all">
                         <div 
-                          onClick={()=> handleAdEdit(ad._id)}
+                          onClick={()=> handleAdEdit(ad)}
                           >
                             <Image
                               src="/assets/icons/edit.svg"
@@ -626,19 +655,27 @@ CollectionProps) => {
           )
         )}
 
-        {loading && (
-          <div>
-            <div className="w-full mt-10 h-full flex flex-col items-center justify-center">
-              <Image
-                src="/assets/icons/loading2.gif"
-                alt="loading"
-                width={40}
-                height={40}
-                unoptimized
-              />
+{loading && (
+           <div>
+             {isInitialLoading ? (
+              
+              <div className="grid grid-cols-2 lg:grid-cols-4 gap-2">
+              {Array.from({ length: 12 }).map((_, index) => (
+                <div key={index} className="bg-gray-200 dark:bg-[#2D3236] p-4 rounded-lg shadow-md">
+                  <Skeleton variant="rectangular" width="100%" height={140} />
+                  <Skeleton variant="text" width="80%" height={30} className="mt-2" />
+                  <Skeleton variant="text" width="60%" height={25} />
+                </div>
+              ))}
             </div>
-          </div>
-        )}
+             
+             ) : (
+               <div className="w-full mt-10 h-full flex flex-col items-center justify-center">
+               <Icon icon={sixDotsScale} className="w-10 h-10 text-gray-500" />
+               </div>
+             )}
+           </div>
+         )}
       </div>
       <Toaster />
       </div>

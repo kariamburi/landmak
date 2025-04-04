@@ -16,6 +16,7 @@ type payProps = {
   userId: string;
   recipientUid:string;
   trans: any;
+  user:any;
   onClose: () => void;
   handleOpenSell: () => void;
   handleOpenBook: () => void;
@@ -25,13 +26,13 @@ type payProps = {
   handleOpenTerms: () => void;
   handleOpenPrivacy: () => void;
   handleOpenSafety: () => void;
-  handleOpenShop: (shopId:string) => void;
+  handleOpenShop: (shopId:any) => void;
   handleOpenChatId: (value:string) => void;
   handleOpenSettings: () => void;
   handleOpenPerfomance: () => void;
   
 };
-const DashboardPay = ({ userId, trans, recipientUid, handleOpenPerfomance, handleOpenSettings,
+const DashboardPay = ({ userId, trans,user, recipientUid, handleOpenPerfomance, handleOpenSettings,
   handleOpenShop, onClose, handleOpenSell,handleOpenChat, handleOpenBook, handleOpenPlan, handleOpenAbout,handleOpenTerms,handleOpenPrivacy,handleOpenSafety }: payProps) => {
   const { toast } = useToast();
   const router = useRouter();
@@ -193,7 +194,7 @@ const [isDarkMode, setIsDarkMode] = useState<boolean | null>(null);
   return (
     <div className="min-h-screen dark:bg-[#131B1E] h-screen text-black dark:text-[#F1F3F3] bg-gray-200">
      <div className="top-0 z-10 fixed w-full">
-                        <Navbar userstatus="User" userId={userId} onClose={onClose} popup={"pay"} handleOpenSell={handleOpenSell} handleOpenBook={handleOpenBook} handleOpenPlan={handleOpenPlan} handleOpenChat={handleOpenChat}
+                        <Navbar user={user}  userstatus={user.status} userId={userId} onClose={onClose} popup={"pay"} handleOpenSell={handleOpenSell} handleOpenBook={handleOpenBook} handleOpenPlan={handleOpenPlan} handleOpenChat={handleOpenChat}
                          handleOpenPerfomance={handleOpenPerfomance}
                          handleOpenSettings={handleOpenSettings}
                          handleOpenAbout={handleOpenAbout}

@@ -21,11 +21,12 @@ type MobileProps = {
   userstatus: string;
   userId: string;
   popup:string;
+  user:any;
   handleOpenSell: () => void;
   handleOpenBook: () => void;
   handleOpenPlan: () => void;
   handleOpenChat: () => void;
-  handleOpenShop: (shopId:string) => void;
+  handleOpenShop: (shopId:any) => void;
   onClose: () => void;
   handleOpenAbout: () => void;
   handleOpenTerms: () => void;
@@ -34,7 +35,7 @@ type MobileProps = {
   handleOpenPerfomance: () => void;
   handleOpenSettings: () => void;
 };
-const MobileNav = ({ userstatus, userId,popup, onClose, handleOpenSettings, handleOpenPerfomance, handleOpenShop,handleOpenChat,handleOpenPlan,handleOpenBook,handleOpenAbout,handleOpenTerms,handleOpenPrivacy,handleOpenSafety, handleOpenSell }: MobileProps) => {
+const MobileNav = ({ userstatus, userId,popup,user, onClose, handleOpenSettings, handleOpenPerfomance, handleOpenShop,handleOpenChat,handleOpenPlan,handleOpenBook,handleOpenAbout,handleOpenTerms,handleOpenPrivacy,handleOpenSafety, handleOpenSell }: MobileProps) => {
   const [isSheetOpen, setIsSheetOpen] = useState(false);
 
   const handleclicklink = () => {
@@ -75,6 +76,7 @@ const MobileNav = ({ userstatus, userId,popup, onClose, handleOpenSettings, hand
           <NavItems
             userstatus={userstatus}
             userId={userId}
+            user={user}
             onClose={onClose}
             handleclicklink={handleclicklink}
             handleOpenSell={handleOpenSell}

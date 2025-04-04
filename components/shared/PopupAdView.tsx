@@ -37,11 +37,11 @@ interface WindowProps {
   handleOpenTerms: () => void;
   handleOpenPrivacy: () => void;
   handleOpenSafety: () => void;
-  handleAdView: (id:string) => void;
-  handleAdEdit: (id:string) => void;
+  handleAdEdit: (ad:any) => void;
+  handleAdView: (ad:any) => void;
   handleSubCategory:(category: string, subcategory: string) => void;
-  handleOpenReview: (value:string) => void;
-  handleOpenShop: (shopId:string) => void;
+  handleOpenReview: (value:any) => void;
+  handleOpenShop: (shopId:any) => void;
   handleOpenChatId: (value:string) => void;
   handleOpenSettings: () => void;
   handleOpenPerfomance: () => void;
@@ -51,33 +51,34 @@ interface WindowProps {
   userId: string;
   userName: string;
   userImage: string;
-  id:string;
+  ad:any;
+  user:any;
 }
 
-const PopupAdView = ({ isOpen, type, userId, userName, userImage, id, handlePay, handleOpenPerfomance, handleOpenSettings,
+const PopupAdView = ({ isOpen, type,user, userId, userName, userImage, ad, handlePay, handleOpenPerfomance, handleOpenSettings,
   handleOpenShop, handleCategory, handleSubCategory,handleOpenReview, handleOpenChatId,
   onClose, handleOpenSell,handleOpenBook ,handleOpenChat,handleOpenPlan, handleAdView, handleAdEdit, handleOpenAbout,handleOpenTerms,handleOpenPrivacy,handleOpenSafety }: WindowProps) => {
-  const [ad, setAd] = useState<any>([]);
-const [loading, setLoading] = useState<boolean>(true);
-  useEffect(() => {
-    if (isOpen) {
-      const fetchData = async () => {
-        try {
-          setLoading(true);
-            const ad = await getAdById(id);
-            setAd(ad);
+  //const [ad, setAd] = useState<any>([]);
+//const [loading, setLoading] = useState<boolean>(true);
+ // useEffect(() => {
+ //   if (isOpen) {
+   //   const fetchData = async () => {
+   //     try {
+     //     setLoading(true);
+      //      const ad = await getAdById(id);
+     //       setAd(ad);
         //  const subscriptionData = await getData(userId);
          
-        } catch (error) {
-          console.error("Failed to fetch data", error);
-        } finally {
-          setLoading(false); // Mark loading as complete
-        }
-      };
+      //  } catch (error) {
+      //    console.error("Failed to fetch data", error);
+      //  } finally {
+        //  setLoading(false); // Mark loading as complete
+       // }
+     // };
 
-      fetchData();
-    }
-  }, [isOpen, id]);
+     // fetchData();
+    //}
+  //}, [isOpen, id]);
 
   if (!isOpen) return null;
      
@@ -85,32 +86,15 @@ const [loading, setLoading] = useState<boolean>(true);
 
   return (
     <div className="fixed inset-0 flex items-center justify-center bg-gray-200 z-50">
-         <div className="dark:bg-[#131B1E] dark:text-gray-300 bg-white p-1 w-full h-[100vh] flex flex-col">
+         <div className="dark:bg-[#131B1E] dark:text-gray-300 bg-white w-full h-[100vh] flex flex-col">
         
-     {loading ? (
-             <div className="h-screen w-full bg-gray-200"> 
-             <div className="top-0 z-10 fixed w-full">
-                            <Navbar userstatus="User" userId={userId} onClose={onClose} popup={"sell"} handleOpenSell={handleOpenSell} handleOpenBook={handleOpenBook} handleOpenPlan={handleOpenPlan} handleOpenChat={handleOpenChat}
-                             handleOpenPerfomance={handleOpenPerfomance}
-                             handleOpenSettings={handleOpenSettings}
-                             handleOpenAbout={handleOpenAbout}
-                             handleOpenTerms={handleOpenTerms}
-                             handleOpenPrivacy={handleOpenPrivacy}
-                             handleOpenSafety={handleOpenSafety} 
-                             handleOpenShop={handleOpenShop}/>
-                           </div>
-              <div className="flex justify-center items-center h-full text-lg font-bold">
-              <div className="flex gap-2 items-center">  <CircularProgress sx={{ color: "gray" }} size={30} />  <div className="hidden lg:inline">Loading...</div></div>
-             </div>
-           
-             </div>
-            
-           ) : ( 
-          <AdsComponent ad={ad}
+          <AdsComponent 
+            ad={ad}
+            user={user}
             userId={userId}
             userName={userName}
             userImage={userImage}
-            id={id}
+            id={ad._id}
             handleAdView={handleAdView}
             onClose={onClose}
             handleSubCategory={handleSubCategory}
@@ -128,7 +112,7 @@ const [loading, setLoading] = useState<boolean>(true);
             handleOpenShop={handleOpenShop}
             handleOpenSettings={handleOpenSettings} 
             handleOpenPerfomance={handleOpenPerfomance}
-            handlePay={handlePay}/>)}
+            handlePay={handlePay}/>
         <Toaster />
       </div>
       </div>

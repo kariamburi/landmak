@@ -64,7 +64,7 @@ type CollectionProps = {
   userId: string;
   loggedId: string;
   user: any;
-  handleOpenReview: (value:string) => void;
+  handleOpenReview: (value:any) => void;
   handleOpenChatId: (value:string) => void;
   handleOpenSettings: () => void;
   handlePay: (id:string) => void;

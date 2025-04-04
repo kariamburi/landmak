@@ -14,7 +14,8 @@ import Link from "next/link";
 import { useRouter } from "next/navigation";
 type Ratingsprop = {
   recipientUid: string;
-  handleOpenReview: (value:string) => void;
+  user: any;
+  handleOpenReview: (value:any) => void;
 };
 
 interface Review {
@@ -28,7 +29,7 @@ interface Review {
   starClicked: boolean[];
 }
 
-const Ratingsmobile = ({ recipientUid, handleOpenReview }: Ratingsprop) => {
+const Ratingsmobile = ({ recipientUid, user, handleOpenReview }: Ratingsprop) => {
   const [clickedStarsCount, setClickedStarsCount] = useState<number>(0);
   const [messagesCount, setMessagesCount] = useState<number>(0);
   const [averangestar, setaverangestar] = useState<number>(0);
@@ -165,8 +166,8 @@ const Ratingsmobile = ({ recipientUid, handleOpenReview }: Ratingsprop) => {
       <div
         onClick={() => {
          // openLoading();
-         handleOpenReview(recipientUid);
-          //router.push(`/reviews/${recipientUid}`);
+         handleOpenReview(user);
+        
         }}
         className="cursor-pointer dark:text-gray-400 text-gray-600 text-sm underline font-bold m-1"
       >

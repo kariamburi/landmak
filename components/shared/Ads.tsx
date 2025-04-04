@@ -87,6 +87,9 @@ import CopyShareAdLink from "./CopyShareAdLink";
 import { Button } from "../ui/button";
 import MappingAds from "./MappingAds";
 import EastOutlinedIcon from '@mui/icons-material/EastOutlined';
+import { Icon } from "@iconify/react";
+import threeDotsScale from "@iconify-icons/svg-spinners/3-dots-scale"; // Correct import
+ // Correct import
 type CardProps = {
   ad: any;
   userId: string;
@@ -94,8 +97,8 @@ type CardProps = {
   userName: string;
   onClose: () => void;
   handleSubCategory:(category: string, subcategory: string) => void;
-  handleOpenReview: (value:string) => void;
-  handleOpenShop: (value:string) => void;
+  handleOpenReview: (value:any) => void;
+  handleOpenShop: (value:any) => void;
   handlePay: (id:string) => void;
   handleOpenPlan: () => void;
   handleOpenSell: () => void;
@@ -452,12 +455,14 @@ export default function Ads({ ad, userId, userImage, userName, onClose,handlePay
                 {ad.data.imageUrls.map((image: string, index: number) => (
                   <CarouselItem key={index}>
                     <div className="relative h-[400px] lg:h-[500px] w-full">
-                      {isLoading && (
-                        <div className="absolute inset-0 flex items-center justify-center bg-[#000000] bg-opacity-50">
-                          {/* Spinner or loading animation */}
-                          <CircularProgress sx={{ color: "white" }} />
-                        </div>
-                      )}
+                     
+                       {isLoading && (
+                                              <div 
+                                             
+                                               className="absolute inset-0 flex justify-center items-center bg-[#000000] bg-opacity-50">
+                                                <Icon icon={threeDotsScale} className="w-6 h-6 text-gray-500" />
+                                              </div>
+                                            )}
                       <Zoom>
                         <Image
                           src={image}
@@ -555,16 +560,14 @@ export default function Ads({ ad, userId, userImage, userName, onClose,handlePay
                     >
                       <span key={index} onClick={() => handleImageClick(index)}>
                         <div className="relative">
-                          {isLoadingsmall && (
-                            <div className="absolute rounded-lg inset-0 flex items-center justify-center bg-[#000000] bg-opacity-50">
-                              {/* Spinner or loading animation */}
-                              <CircularProgress
-                                sx={{ color: "white" }}
-                                size={30}
-                              />
-                            </div>
-                          )}
-
+                         
+  {isLoadingsmall && (
+                                              <div 
+                                             
+                                               className="absolute inset-0 flex justify-center items-center bg-[#000000] bg-opacity-50">
+                                                <Icon icon={threeDotsScale} className="w-6 h-6 text-gray-500" />
+                                              </div>
+                                            )}
                           <Image
                             src={image}
                             alt={`Image ${index + 1}`}
@@ -605,12 +608,20 @@ export default function Ads({ ad, userId, userImage, userName, onClose,handlePay
                       {ad.data.imageUrls.map((image: string, index: number) => (
                         <CarouselItem key={index}>
                           <div className="relative h-[500px] w-full">
+                           
                             {isLoadingpopup && (
                               <div className="absolute inset-0 flex items-center justify-center bg-[#000000] bg-opacity-50">
                                 {/* Spinner or loading animation */}
                                 <CircularProgress sx={{ color: "white" }} />
                               </div>
                             )}
+                              {isLoadingpopup && (
+                                              <div 
+                                             
+                                               className="absolute inset-0 flex justify-center items-center bg-[#000000] bg-opacity-50">
+                                                <Icon icon={threeDotsScale} className="w-6 h-6 text-gray-500" />
+                                              </div>
+                                            )}
                             <Zoom>
                               <Image
                                 src={image}
@@ -1627,7 +1638,7 @@ export default function Ads({ ad, userId, userImage, userName, onClose,handlePay
               <Button   onClick={() => {
                       
                      // setIsOpenP(true);
-                     handleOpenReview(ad.organizer._id)
+                     handleOpenReview(ad.organizer)
                       //  router.push(`/reviews/${ad.organizer._id}`);
                       
                     }} variant="default" className="flex w-full bg-green-600 hover:bg-green-700 items-center gap-2">

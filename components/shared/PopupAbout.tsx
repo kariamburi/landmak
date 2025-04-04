@@ -24,6 +24,7 @@ import AboutComponent from "./AboutComponent";
 
 interface WindowProps {
   isOpen: boolean;
+  user:any;
   onClose: () => void;
   handleOpenBook: () => void;
   handleOpenPlan: () => void;
@@ -36,10 +37,10 @@ interface WindowProps {
   userId: string;
   handleOpenPerfomance: () => void;
 handleOpenSettings: () => void;
-handleOpenShop: (shopId:string) => void;
+handleOpenShop: (shopId:any) => void;
 }
 
-const PopupAbout = ({ isOpen, userId, onClose, handleOpenPerfomance,
+const PopupAbout = ({ isOpen, userId, user, onClose, handleOpenPerfomance,
   handleOpenSettings,
   handleOpenShop, handleOpenBook,handleOpenChat,handleOpenPlan, handleOpenSell,handleOpenAbout,handleOpenTerms,handleOpenPrivacy,handleOpenSafety }: WindowProps) => {
  
@@ -47,9 +48,9 @@ const PopupAbout = ({ isOpen, userId, onClose, handleOpenPerfomance,
      
   return (
     <div className="fixed inset-0 flex items-center justify-center bg-gray-800 bg-opacity-50 z-50">
-      <div className="dark:bg-[#131B1E] dark:text-gray-300 bg-gray-200 p-1 w-full h-[100vh] flex flex-col">
+      <div className="dark:bg-[#131B1E] dark:text-gray-300 bg-gray-200 p-0 w-full h-[100vh] flex flex-col">
        
-      <AboutComponent userId={userId} onClose={onClose} 
+      <AboutComponent user={user} userId={userId} onClose={onClose} 
       handleOpenAbout={handleOpenAbout} 
       handleOpenTerms={handleOpenTerms}
       handleOpenPrivacy={handleOpenPrivacy}
