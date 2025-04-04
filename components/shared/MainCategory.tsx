@@ -109,7 +109,7 @@ type CollectionProps = {
   //AdsCountPerVerifiedTrue: any;
   //AdsCountPerVerifiedFalse: any;
   queryObject: any;
-  //adsCount: any;
+  user: any;
   onClose:()=> void;
   handleOpenSell: () => void;
   handleOpenBook: () => void;
@@ -135,6 +135,7 @@ const MainCategory = ({
   subcategoryList,
   emptyTitle,
   emptyStateSubtext,
+  user,
  // AdsCountPerRegion,
   //AdsCountPerVerifiedTrue,
   //AdsCountPerVerifiedFalse,
@@ -712,6 +713,7 @@ CollectionProps) => {
             userstatus={"User"}
             userId={userId}
             popup={"category"}
+            user={user}
             handleOpenSell={handleOpenSell}
             handleOpenBook={handleOpenBook}
             handleOpenPlan={handleOpenPlan}

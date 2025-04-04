@@ -38,6 +38,7 @@ interface WindowProps {
   queryObject: any;
   categoryList:any;
   subcategoryList:any;
+  user:any;
 }
 
 const PopupCategory = ({
@@ -48,6 +49,7 @@ const PopupCategory = ({
   userId,
   userName,
   userImage,
+  user,
   onClose,
   handleOpenBook,
   handleOpenSell,
@@ -75,6 +77,7 @@ const PopupCategory = ({
             emptyTitle="No ads have been created yet"
             emptyStateSubtext="Go create some now"
             limit={20}
+            user={user}
             categoryList={categoryList}
             subcategoryList={subcategoryList}
             queryObject={queryObject}

@@ -1142,7 +1142,8 @@ const handleCloseAdView = () => {
       handleCategory={handleCategory}
       handleOpenSearchTab={handleOpenSearchTab} 
       categoryList={categoryList} 
-      subcategoryList={subcategoryList}/>
+      subcategoryList={subcategoryList}
+      user={user}/>
 
       <PopupShop isOpen={isOpenShop} handleOpenReview={handleOpenReview} onClose={handleCloseShop} userId={userId} shopAcc={shopId} userName={userName} userImage={userImage} queryObject={newqueryObject} handleOpenSell={handleOpenSell} handleAdView={handleAdView} handleAdEdit={handleAdEdit} handleOpenAbout={handleOpenAbout} handleOpenTerms={handleOpenTerms} handleOpenPrivacy={handleOpenPrivacy} handleOpenSafety={handleOpenSafety} handleOpenBook={handleOpenBook} handleOpenPlan={handleOpenPlan} handleOpenChat={handleOpenChat} handleOpenChatId={handleOpenChatId} handleOpenSettings={handleOpenSettings}
       handleOpenShop={handleOpenShop}
