@@ -176,7 +176,7 @@ const CollectionTransactions = ({
         </div>
       ) : (
         <div className="flex-center wrapper min-h-[200px] w-full flex-col gap-3 rounded-[14px] bg-grey-50 py-28 text-center">
-          <h3 className="font-bold text-[16px] lg:text-[25px]">{emptyTitle}</h3>
+          <div className="font-bold text-[16px] lg:text-[25px]">{emptyTitle}</div>
           <p className="text-xs lg:p-regular-14">{emptyStateSubtext}</p>
         </div>
       )}

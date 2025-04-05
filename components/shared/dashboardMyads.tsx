@@ -233,7 +233,7 @@ CollectionProps) => {
           <div className="hidden lg:inline">
             <div className="w-full">
             
-              <div className="flex gap-1 flex-col border rounded-lg flex justify-center items-center w-full h-full">
+              <div className="flex mt-2 lg:mt-0 gap-1 flex-col border rounded-lg flex justify-center items-center w-full h-full">
               {loadingSub ? (<>  <SubscriptionSkeleton/></>):(<>
 
                              {isAdCreator &&

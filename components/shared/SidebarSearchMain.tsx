@@ -157,9 +157,9 @@ const SidebarSearchMain = ({
               <div
                 key={index}
                 onClick={() => handleQuery(index, sub.subcategory)}
-                className={`border-b rounded-sm dark:border-gray-600 flex items-center w-full justify-between p-0 mb-0 text-sm cursor-pointer dark:hover:bg-[#131B1E] dark:hover:text-white hover:bg-emerald-100 hover:text-emerald-600 ${
+                className={`border-b rounded-sm dark:border-gray-600 flex items-center w-full justify-between p-0 mb-0 text-sm cursor-pointer dark:hover:bg-[#131B1E] dark:hover:text-white hover:bg-green-100 ${
                   query === sub.subcategory
-                    ? "bg-green-600 text-white hover:bg-green-600 hover:text-white "
+                    ? "bg-green-200 hover:bg-green-200"
                     : "dark:bg-[#2D3236] bg-white"
                 }`}
               >
@@ -176,7 +176,7 @@ const SidebarSearchMain = ({
                     <div
                       className={`flex text-xs gap-1 ${
                         query === sub.subcategory
-                          ? "dark:text-gray-300 text-white"
+                          ? "dark:text-gray-300 text-gray-500"
                           : "dark:text-gray-500 text-gray-500"
                       }`}
                     >

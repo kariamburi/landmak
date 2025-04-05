@@ -75,7 +75,7 @@ const PopupPay = ({ isOpen, userId, userName, txtId, user,  handleOpenPerfomance
      
   return (
     <div className="fixed inset-0 flex items-center justify-center bg-gray-800 bg-opacity-50 z-50">
-      <div className="dark:bg-[#131B1E] dark:text-gray-300 bg-white p-1 w-full h-[100vh] flex flex-col">
+      <div className="dark:bg-[#131B1E] dark:text-gray-300 bg-white p-0 w-full h-[100vh] flex flex-col">
        
        {loading ? (
                    <div className="h-screen w-full bg-gray-200"> 

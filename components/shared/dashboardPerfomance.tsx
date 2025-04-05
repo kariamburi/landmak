@@ -41,7 +41,7 @@ import { IdynamicAd } from "@/lib/database/models/dynamicAd.model";
 import { getData } from "@/lib/actions/transactions.actions";
 import { Icon } from "@iconify/react";
 import Barsscale from "@iconify-icons/svg-spinners/bars-scale"; 
-import sixDotsScale from "@iconify-icons/svg-spinners/6-dots-scale"; // Correct import
+//import sixDotsScale from "@iconify-icons/svg-spinners/6-dots-scale"; // Correct import
  // Correct import
 import AdPerformanceSkeleton from "./AdPerformanceSkeleton";
 import SubscriptionSkeleton from "./SubscriptionSkeleton";
@@ -144,7 +144,7 @@ CollectionProps) => {
         } catch (error) {
           console.error("Failed to fetch data", error);
         } finally {
-          setIsInitialLoading(false);
+       
           setLoadingSub(false);
         }
       };
@@ -178,6 +178,7 @@ CollectionProps) => {
       console.error("Error fetching ads", error);
     } finally {
       setLoading(false);
+      setIsInitialLoading(false);
     }
   };
 
@@ -649,31 +650,32 @@ CollectionProps) => {
           </div>
         ) : (
           loading === false && (
-            <>
-              <p className="text-gray-500">No ads to display.</p>
-            </>
+            <div className="flex items-center lg:min-h-[200px] w-full flex-col gap-3 rounded-[14px] bg-grey-50 py-5 lg:py-28 text-center">
+              <h3 className="font-bold text-[16px] lg:text-[25px]">
+                0 ads
+              </h3>
+              <p className="text-sm lg:p-regular-14">No ads to display.</p>
+             
+            </div>
           )
         )}
 
 {loading && (
            <div>
-             {isInitialLoading ? (
-              
-              <div className="grid grid-cols-2 lg:grid-cols-4 gap-2">
-              {Array.from({ length: 12 }).map((_, index) => (
-                <div key={index} className="bg-gray-200 dark:bg-[#2D3236] p-4 rounded-lg shadow-md">
-                  <Skeleton variant="rectangular" width="100%" height={140} />
-                  <Skeleton variant="text" width="80%" height={30} className="mt-2" />
-                  <Skeleton variant="text" width="60%" height={25} />
-                </div>
-              ))}
-            </div>
-             
-             ) : (
-               <div className="w-full mt-10 h-full flex flex-col items-center justify-center">
-               <Icon icon={sixDotsScale} className="w-10 h-10 text-gray-500" />
-               </div>
-             )}
+          
+            
+                       <div className="w-full mt-10 lg:min-h-[200px] flex flex-col items-center justify-center">
+                         <Image
+                           src="/assets/icons/loading2.gif"
+                           alt="loading"
+                           width={40}
+                           height={40}
+                           unoptimized
+                         />
+                       </div>
+                     
+                   
+            
            </div>
          )}
       </div>

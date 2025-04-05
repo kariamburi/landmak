@@ -7,7 +7,7 @@ const AdPerformanceSkeleton = () => {
       <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
         {/* Ad Image */}
         <div className="col-span-1">
-          <Skeleton variant="rectangular" width="100%" height={200} />
+          <Skeleton variant="rectangular" width="100%" height="100%" />
         </div>
 
         {/* Ad Details */}
