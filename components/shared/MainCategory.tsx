@@ -173,7 +173,7 @@ CollectionProps) => {
       try {
         setLoadingCount(true);
     
-        const { category, subcategory } = queryObject;
+        const { category, subcategory } = newqueryObject;
 
         if (subcategory) {
           const getFieldsByCategoryAndSubcategory = (
@@ -238,7 +238,7 @@ CollectionProps) => {
   
       fetchData();
     
-  }, [newqueryObject]);
+  }, [newqueryObject.category, newqueryObject.subcategory]);
 
 
 
@@ -915,40 +915,12 @@ CollectionProps) => {
       )}
         {showPopup && (<>
                         
-                        {loadingCount ? (<>{isMobile ? (<>
-                          <div className="fixed inset-0 z-50 bg-gray-200 dark:bg-[#222528] dark:text-gray-100 p-1 flex flex-col">
-                                            <div className="flex justify-between items-center border-b pb-2">
-                                            <div className="font-bold text-lg  dark:text-gray-300 text-emerald-950 text-center sm:text-left p-2">
-                                                    Filter
-                                                   </div>
-                                              <Button variant="outline" onClick={togglePopup}>
-                                              <CloseOutlinedIcon />
-                                              </Button>
-                                  </div>
-                          <FilterSkeleton/>
-                          </div></>):(<>
-                          
-                            <div className="fixed inset-0 flex items-center justify-center bg-gray-800 bg-opacity-90 z-50">
-                      <div className="h-[90vh] dark:border-gray-600 dark:bg-[#2D3236] dark:text-gray-100 bg-gray-200 p-0 w-full  lg:max-w-3xl rounded-md shadow-md relative">
-                    <div className="flex justify-between items-center border-b pb-2">
-                                            <div className="font-bold text-lg  dark:text-gray-300 text-emerald-950 text-center sm:text-left p-2">
-                                                    Filter
-                                                   </div>
-                                              <Button variant="outline" onClick={togglePopup}>
-                                              <CloseOutlinedIcon />
-                                              </Button>
-                                  </div>
-                          <FilterSkeleton/>
-                          </div></div>
-                          
-                          </>)}
-                         
-                                    </>):(<>
+                      
                             <SidebarSearchmobile
                               categoryList={subcategoryList}
                               category={newqueryObject.category}
                               subcategory={newqueryObject.subcategory}
-                              AdsCountPerRegion={AdsCountPerRegion}
+                             // AdsCountPerRegion={AdsCountPerRegion}
                               AdsCountPerVerifiedTrue={AdsCountPerVerifiedTrue}
                               AdsCountPerVerifiedFalse={AdsCountPerVerifiedFalse}
                               adsCount={adsCount}
@@ -968,7 +940,7 @@ CollectionProps) => {
                               handleInputYearChange={handleInputYearChange}
                               handleClearForm={handleClearForm}
                               HandletogglePopup={togglePopup}
-                            /></>)}
+                            />
                          
                          </> )}
                         

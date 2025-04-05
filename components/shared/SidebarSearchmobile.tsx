@@ -54,10 +54,10 @@ import { useMediaQuery } from "react-responsive"; // Detect mobile screens
 type sidebarProps = {
   category: string;
   categoryList?: any;
-  AdsCountPerRegion?: any;
+ // AdsCountPerRegion?: any;
   subcategory?: string;
-  AdsCountPerVerifiedTrue: any;
-  AdsCountPerVerifiedFalse: any;
+  AdsCountPerVerifiedTrue?: any;
+  AdsCountPerVerifiedFalse?: any;
   adsCount: any;
   onLoading: () => void;
   handleFilter:(value:any) => void;
@@ -80,7 +80,7 @@ type sidebarProps = {
 const SidebarSearchmobile = ({
   category,
   categoryList,
-  AdsCountPerRegion,
+ // AdsCountPerRegion,
   subcategory,
   AdsCountPerVerifiedTrue,
   AdsCountPerVerifiedFalse,
@@ -139,7 +139,7 @@ const SidebarSearchmobile = ({
     } finally {
       // setIsLoading(false);
     }
-  }, [AdsCountPerRegion, AdsCountPerVerifiedTrue, AdsCountPerVerifiedFalse]);
+  }, [AdsCountPerVerifiedTrue, AdsCountPerVerifiedFalse]);
 
   // Usage
   const totalAdCount = getTotalAdCount(categoryList);
@@ -152,22 +152,7 @@ const SidebarSearchmobile = ({
   const closeDialog = () => {
     setIsOpen(false);
   };
-  const groupedData = AdsCountPerRegion.reduce((acc: any, curr: any) => {
-    const existingRegion = acc.find((item: any) => item.region === curr.region);
-
-    if (existingRegion) {
-      existingRegion.adCount += curr.adCount;
-      existingRegion.areas.push({ area: curr.area, adCount: curr.adCount });
-    } else {
-      acc.push({
-        region: curr.region,
-        adCount: curr.adCount,
-        areas: [{ area: curr.area, adCount: curr.adCount }],
-      });
-    }
-
-    return acc;
-  }, []);
+ 
 
   const handlemaxPriceChange_ = (maxP:string) => {
     if (maxP) {

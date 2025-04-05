@@ -16,7 +16,7 @@ import AddOutlinedIcon from '@mui/icons-material/AddOutlined';
 import { useRouter } from "next/navigation";
 import CircularProgress from "@mui/material/CircularProgress";
 import { Icon } from "@iconify/react";
-import sixDotsScale from "@iconify-icons/svg-spinners/6-dots-scale"; // Correct import
+import sixDotsScale from "@iconify-icons/svg-spinners/8-dots-rotate"; // Correct import
  // Correct import
 type CollectionProps = {
   userId: string;
