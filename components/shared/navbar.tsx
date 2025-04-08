@@ -73,7 +73,10 @@ export default function Navbar({ userstatus, userId, user, onClose, popup, handl
   // Get the params of the User
   const pathname = usePathname();
   const isActive = pathname === "/";
- 
+  const [isOpenP, setIsOpenP] = useState(false);
+  const handleCloseP = () => {
+    setIsOpenP(false);
+  };
   return (
     <div className="h-[60px] items-center flex p-2 lg:p-3 gap-1 w-full border-b bg-gradient-to-b from-green-600 to-green-600 lg:from-white lg:to-white">
       <div className="flex-1 mt-1">
@@ -110,7 +113,9 @@ export default function Navbar({ userstatus, userId, user, onClose, popup, handl
       <div className="hidden lg:inline">
         
       <div className="flex mt-1 items-center gap-2">   
-      {popup !=="bookmark" && (<div
+      {popup !=="bookmark" && (<>
+         <SignedIn>
+         <div
             className="w-8 h-8 flex items-center justify-center rounded-full dark:bg-[#131B1E] dark:hover:bg-[#2D3236] bg-gray-200 hover:bg-gray-300 tooltip tooltip-bottom hover:cursor-pointer"
             data-tip="Messages"
             onClick={() => {
@@ -128,8 +133,32 @@ export default function Navbar({ userstatus, userId, user, onClose, popup, handl
               </Tooltip>
             </TooltipProvider>
           </div>
-        )}    
-        {popup !=="chat" && (<div
+          </SignedIn>
+          <SignedOut>
+         <div
+            className="w-8 h-8 flex items-center justify-center rounded-full dark:bg-[#131B1E] dark:hover:bg-[#2D3236] bg-gray-200 hover:bg-gray-300 tooltip tooltip-bottom hover:cursor-pointer"
+            data-tip="Messages"
+            onClick={() => {
+              setIsOpenP(true);
+               router.push("/sign-in");
+             }} 
+          >
+            <TooltipProvider>
+              <Tooltip>
+                <TooltipTrigger asChild>
+                  <BookmarkIcon sx={{ fontSize: 16 }} />
+                </TooltipTrigger>
+                <TooltipContent>
+                  <p>Bookmark</p>
+                </TooltipContent>
+              </Tooltip>
+            </TooltipProvider>
+          </div>
+          </SignedOut>
+          </>)}    
+        {popup !=="chat" && (<>
+            <SignedIn>
+             <div
             className="w-8 h-8 flex items-center justify-center rounded-full dark:bg-[#131B1E] dark:hover:bg-[#2D3236] bg-gray-200 hover:bg-gray-300  tooltip tooltip-bottom hover:cursor-pointer"
             data-tip="Messages"
             onClick={() => {
@@ -159,9 +188,35 @@ export default function Navbar({ userstatus, userId, user, onClose, popup, handl
                 </TooltipContent>
               </Tooltip>
             </TooltipProvider>
-          </div>)}  
+          </div>
+          </SignedIn>
+          <SignedOut>
+            <div
+              className="w-8 h-8 flex items-center justify-center rounded-full dark:bg-[#131B1E] dark:hover:bg-[#2D3236] bg-white tooltip tooltip-bottom hover:cursor-pointer"
+              data-tip="Messages"
+              onClick={() => {
+                setIsOpenP(true);
+                 router.push("/sign-in");
+               }} 
+            >
+              <TooltipProvider>
+                <Tooltip>
+                  <TooltipTrigger asChild>
+                  <MessageIcon sx={{ fontSize: 16 }} className="absolute" />
+                  </TooltipTrigger>
+                  <TooltipContent>
+                    <p>Message</p>
+                  </TooltipContent>
+                </Tooltip>
+              </TooltipProvider>
+            </div>
+            </SignedOut>
+          </>
+        )}  
 
-         {popup !=="plan" && (<div
+         {popup !=="plan" && (
+          
+          <div
             className="w-8 h-8 flex items-center justify-center rounded-full dark:bg-[#131B1E] dark:hover:bg-[#2D3236] bg-gray-200 hover:bg-gray-300 tooltip tooltip-bottom hover:cursor-pointer"
             data-tip="Messages"
             onClick={() => {
@@ -178,7 +233,8 @@ export default function Navbar({ userstatus, userId, user, onClose, popup, handl
                 </TooltipContent>
               </Tooltip>
             </TooltipProvider>
-          </div>)} 
+          </div>
+        )} 
 
           {popup !=="sell" && (  <div className="flex gap-1">
           <SignedIn>
@@ -227,7 +283,7 @@ export default function Navbar({ userstatus, userId, user, onClose, popup, handl
       handleOpenTerms={handleOpenTerms}
       handleOpenPrivacy={handleOpenPrivacy}
       handleOpenSafety={handleOpenSafety} onClose={onClose}/>
-     
+      <ProgressPopup isOpen={isOpenP} onClose={handleCloseP} />
     </div>
   );
 }

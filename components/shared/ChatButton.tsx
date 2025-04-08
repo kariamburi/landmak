@@ -37,33 +37,33 @@ const ChatButton = ({ ad, userId, userName, userImage }: chatProps) => {
 
   const [messages, setMessages] = useState<{ senderName: string; message: string }[]>([]);
  
-  const { sendMessage } = SendChat(); // Get the sendMessage function
+  const { NotifyUser } = SendChat(); // Get the sendMessage function
 
-  useEffect(() => {
-    const checkSubscription = async () => {
-      try {
-        subscription = await getData(ad.organizer._id);
+  //useEffect(() => {
+   // const checkSubscription = async () => {
+    //  try {
+    //    subscription = await getData(ad.organizer._id);
 
-        setsendsms(subscription.currentpack.features[5].checked);
-        setsendemail(subscription.currentpack.features[6].checked);
-        setplanpackage(subscription.currentpack.name);
-        const createdAtDate = new Date(subscription.transaction.createdAt);
-        const periodDays = parseInt(subscription.transaction.period);
-        const expirationDate = new Date(
-          createdAtDate.getTime() + periodDays * 24 * 60 * 60 * 1000
-        );
-        const currentDate = new Date();
-        const daysRemaining_ = Math.ceil(
-          (expirationDate.getTime() - currentDate.getTime()) /
-            (1000 * 60 * 60 * 24)
-        );
-        setdaysRemaining(daysRemaining_);
-      } catch (error) {
-        console.error("Error checking subscription: ", error);
-      }
-    };
-    checkSubscription();
-  }, [ad.organizer._id]);
+    //    setsendsms(subscription.currentpack.features[5].checked);
+     //   setsendemail(subscription.currentpack.features[6].checked);
+     //   setplanpackage(subscription.currentpack.name);
+     //   const createdAtDate = new Date(subscription.transaction.createdAt);
+     //   const periodDays = parseInt(subscription.transaction.period);
+     //   const expirationDate = new Date(
+     //     createdAtDate.getTime() + periodDays * 24 * 60 * 60 * 1000
+     //   );
+      //  const currentDate = new Date();
+      //  const daysRemaining_ = Math.ceil(
+       //   (expirationDate.getTime() - currentDate.getTime()) /
+       //     (1000 * 60 * 60 * 24)
+       /// );
+      //  setdaysRemaining(daysRemaining_);
+     // } catch (error) {
+     //   console.error("Error checking subscription: ", error);
+     // }
+    //};
+    //checkSubscription();
+  //}, [ad.organizer._id]);
 
   const handleSendMessage = async () => {
     if (message.trim() === "") return;
@@ -85,9 +85,13 @@ const ChatButton = ({ ad, userId, userName, userImage }: chatProps) => {
         read: "1",
       });
 
-      const callbackUrl = process.env.NEXT_PUBLIC_DOMAIN_URL+"chat"
-      sendMessage(message, userName, ad.organizer._id, callbackUrl, ad.data.imageUrls[0])
-   
+     // const callbackUrl = process.env.NEXT_PUBLIC_DOMAIN_URL+"chat"
+      //sendMessage(message, userName, ad.organizer._id, callbackUrl, ad.data.imageUrls[0])
+      if(ad.organizer.token){
+        const inquiryMessage = message;
+        NotifyUser(ad, userId, userName, inquiryMessage)
+      }
+    
 
       const inquiries = (Number(ad.inquiries ?? "0") + 1).toString();
       const _id = ad._id;

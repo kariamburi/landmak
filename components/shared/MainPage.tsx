@@ -159,6 +159,7 @@ const MainPage = ({
       const params = new URLSearchParams(window.location.search);
       const id = params.get("Ad");
       const Profile = params.get("Profile");
+      const action = params.get("action");
   
       if (id) {
         const ad = await getAdById(id);
@@ -175,6 +176,12 @@ const MainPage = ({
         setIsOpenShop(true);
       } else {
         setIsOpenShop(false);
+      }
+
+      if (action) {
+        setIsOpenChat(true);
+      } else {
+        setIsOpenChat(false);
       }
     };
   
@@ -235,7 +242,8 @@ const MainPage = ({
     const params = new URLSearchParams(window.location.search);
     const Profile = params.get("Profile");
     const Ad = params.get("Ad");
-    if(Profile || Ad){
+    const action = params.get("action");
+    if(Profile || Ad || action){
       router.push("/", { scroll: false });
       setNewqueryObject([])
     }
@@ -251,7 +259,8 @@ const MainPage = ({
     const params = new URLSearchParams(window.location.search);
     const Profile = params.get("Profile");
     const Ad = params.get("Ad");
-    if(Profile || Ad){
+    const action = params.get("action");
+    if(Profile || Ad || action){
       router.push("/", { scroll: false });
       setNewqueryObject([])
     }
@@ -267,7 +276,8 @@ const MainPage = ({
     const params = new URLSearchParams(window.location.search);
     const Profile = params.get("Profile");
     const Ad = params.get("Ad");
-    if(Profile || Ad){
+    const action = params.get("action");
+    if(Profile || Ad || action){
       router.push("/", { scroll: false });
       setNewqueryObject([])
     }
@@ -285,7 +295,8 @@ const MainPage = ({
     const params = new URLSearchParams(window.location.search);
     const Profile = params.get("Profile");
     const Ad = params.get("Ad");
-    if(Profile || Ad){
+    const action = params.get("action");
+    if(Profile || Ad || action){
       router.push("/", { scroll: false });
       setNewqueryObject([])
     }
@@ -303,7 +314,8 @@ const MainPage = ({
     const params = new URLSearchParams(window.location.search);
     const Profile = params.get("Profile");
     const Ad = params.get("Ad");
-    if(Profile || Ad){
+    const action = params.get("action");
+    if(Profile || Ad || action){
       router.push("/", { scroll: false });
       setNewqueryObject([])
     }
@@ -320,7 +332,8 @@ const MainPage = ({
     const params = new URLSearchParams(window.location.search);
     const Profile = params.get("Profile");
     const Ad = params.get("Ad");
-    if(Profile || Ad){
+    const action = params.get("action");
+    if(Profile || Ad || action){
       router.push("/", { scroll: false });
       setNewqueryObject([])
     }
@@ -335,7 +348,8 @@ const MainPage = ({
     const params = new URLSearchParams(window.location.search);
     const Profile = params.get("Profile");
     const Ad = params.get("Ad");
-    if(Profile || Ad){
+    const action = params.get("action");
+    if(Profile || Ad || action){
       router.push("/", { scroll: false });
       setNewqueryObject([]);
     }
@@ -350,7 +364,8 @@ const MainPage = ({
     const params = new URLSearchParams(window.location.search);
     const Profile = params.get("Profile");
     const Ad = params.get("Ad");
-    if(Profile || Ad){
+    const action = params.get("action");
+    if(Profile || Ad || action){
       router.push("/", { scroll: false });
       setNewqueryObject([])
     }
@@ -366,7 +381,8 @@ const MainPage = ({
     const params = new URLSearchParams(window.location.search);
     const Profile = params.get("Profile");
     const Ad = params.get("Ad");
-    if(Profile || Ad){
+    const action = params.get("action");
+    if(Profile || Ad || action){
       router.push("/", { scroll: false });
       setNewqueryObject([])
     }
@@ -380,7 +396,8 @@ const MainPage = ({
       const params = new URLSearchParams(window.location.search);
     const Profile = params.get("Profile");
     const Ad = params.get("Ad");
-    if(Profile || Ad){
+    const action = params.get("action");
+    if(Profile || Ad || action){
       router.push("/", { scroll: false });
       setNewqueryObject([])
     }
@@ -394,7 +411,8 @@ const MainPage = ({
         const params = new URLSearchParams(window.location.search);
     const Profile = params.get("Profile");
     const Ad = params.get("Ad");
-    if(Profile || Ad){
+    const action = params.get("action");
+    if(Profile || Ad || action){
       router.push("/", { scroll: false });
       setNewqueryObject([])
     }
@@ -409,7 +427,8 @@ const MainPage = ({
     const params = new URLSearchParams(window.location.search);
     const Profile = params.get("Profile");
     const Ad = params.get("Ad");
-    if(Profile || Ad){
+    const action = params.get("action");
+    if(Profile || Ad || action){
       router.push("/", { scroll: false });
       setNewqueryObject([])
     }
@@ -431,7 +450,8 @@ const handlePay = (id:string) => {
     const params = new URLSearchParams(window.location.search);
     const Profile = params.get("Profile");
     const Ad = params.get("Ad");
-    if(Profile || Ad){
+    const action = params.get("action");
+    if(Profile || Ad || action){
       router.push("/", { scroll: false });
       setNewqueryObject([])
     }
@@ -442,7 +462,8 @@ const handleCloseAdEdit = () => {
   const params = new URLSearchParams(window.location.search);
     const Profile = params.get("Profile");
     const Ad = params.get("Ad");
-    if(Profile || Ad){
+    const action = params.get("action");
+    if(Profile || Ad || action){
       router.push("/", { scroll: false });
       setNewqueryObject([])
     }
@@ -473,7 +494,8 @@ const handleCloseAdView = () => {
     const params = new URLSearchParams(window.location.search);
     const Profile = params.get("Profile");
     const Ad = params.get("Ad");
-    if(Profile || Ad){
+    const action = params.get("action");
+    if(Profile || Ad || action){
       router.push("/", { scroll: false });
     }
     setNewqueryObject([])
@@ -489,7 +511,8 @@ const handleCloseAdView = () => {
     const params = new URLSearchParams(window.location.search);
     const Profile = params.get("Profile");
     const Ad = params.get("Ad");
-    if(Profile || Ad){
+    const action = params.get("action");
+    if(Profile || Ad || action){
       router.push("/", { scroll: false });
       setNewqueryObject([])
     }
@@ -865,6 +888,7 @@ const handleCloseAdView = () => {
 
               <div className="flex gap-2 items-center"><div className="hidden lg:inline">
             <div className="flex items-center gap-2">
+            <SignedIn>
             <div
               className="w-8 h-8 flex items-center justify-center rounded-full dark:bg-[#131B1E] dark:hover:bg-[#2D3236] bg-gray-200 hover:bg-gray-300 emerald-500 tooltip tooltip-bottom hover:cursor-pointer"
               data-tip="Messages"
@@ -883,7 +907,29 @@ const handleCloseAdView = () => {
                 </Tooltip>
               </TooltipProvider>
             </div>
-
+            </SignedIn>
+            <SignedOut>
+                     <div
+                        className="w-8 h-8 flex items-center justify-center rounded-full dark:bg-[#131B1E] dark:hover:bg-[#2D3236] bg-gray-200 hover:bg-gray-300 tooltip tooltip-bottom hover:cursor-pointer"
+                        data-tip="Messages"
+                        onClick={() => {
+                          setIsOpenP(true);
+                           router.push("/sign-in");
+                         }} 
+                      >
+                        <TooltipProvider>
+                          <Tooltip>
+                            <TooltipTrigger asChild>
+                              <BookmarkIcon sx={{ fontSize: 16 }} />
+                            </TooltipTrigger>
+                            <TooltipContent>
+                              <p>Bookmark</p>
+                            </TooltipContent>
+                          </Tooltip>
+                        </TooltipProvider>
+                      </div>
+            </SignedOut>
+            <SignedIn>
             <div
               className="w-8 h-8 flex items-center justify-center rounded-full dark:bg-[#131B1E] dark:hover:bg-[#2D3236] bg-gray-200 hover:bg-gray-300 tooltip tooltip-bottom hover:cursor-pointer"
               data-tip="Messages"
@@ -915,6 +961,29 @@ const handleCloseAdView = () => {
                 </Tooltip>
               </TooltipProvider>
             </div>
+</SignedIn>
+ <SignedOut>
+            <div
+              className="w-8 h-8 flex items-center justify-center rounded-full dark:bg-[#131B1E] dark:hover:bg-[#2D3236] bg-white tooltip tooltip-bottom hover:cursor-pointer"
+              data-tip="Messages"
+              onClick={() => {
+                setIsOpenP(true);
+                 router.push("/sign-in");
+               }} 
+            >
+              <TooltipProvider>
+                <Tooltip>
+                  <TooltipTrigger asChild>
+                  <MessageIcon sx={{ fontSize: 16 }} className="absolute" />
+                  </TooltipTrigger>
+                  <TooltipContent>
+                    <p>Message</p>
+                  </TooltipContent>
+                </Tooltip>
+              </TooltipProvider>
+            </div>
+            </SignedOut>
+
 
             <div
               className="w-8 h-8 flex items-center justify-center rounded-full dark:bg-[#131B1E] dark:hover:bg-[#2D3236] bg-gray-200 hover:bg-gray-300 tooltip tooltip-bottom hover:cursor-pointer"

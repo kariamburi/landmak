@@ -1,6 +1,8 @@
 import { auth } from "@clerk/nextjs/server";
 import { SignedIn } from "@clerk/nextjs";
 import ReceiveChat from "@/components/shared/ReceiveChat";
+import PresenceProvider from "@/components/shared/PresenceProvider";
+import FCMTokenProvider from "@/components/shared/FCMTokenProvider";
 export default async function RootLayout({
   children,
 }: {
@@ -11,7 +13,8 @@ export default async function RootLayout({
   return <main className="flex-1">
       {/* Only load WebSocket listener if user is signed in */}
       <SignedIn>
-        <ReceiveChat userId={userId} />
+        <PresenceProvider  userId={userId}/>
+        <FCMTokenProvider userId={userId}/>
       </SignedIn>
     {children}</main>;
 }

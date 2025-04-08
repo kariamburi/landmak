@@ -90,7 +90,7 @@ export async function updateUserStatus(_id: string, status: string) {
     throw error;
   }
 }
-export async function updateUserToken(userId: string, user: UpdateUserToken) {
+export async function updateUserToken(userId: string, currentToken: string) {
   try {
     await connectToDatabase();
 
@@ -102,9 +102,9 @@ export async function updateUserToken(userId: string, user: UpdateUserToken) {
     }
 
     // Check if the FCM token already exists
-    if (existingUser.token !== user.fcmToken) {
+    if (existingUser.token !== currentToken) {
       // Update the user's FCM token
-      existingUser.token = user.fcmToken;
+      existingUser.token = currentToken;
       // Save the updated user data
       const updatedUser = await existingUser.save();
 

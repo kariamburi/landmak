@@ -24,7 +24,7 @@ export interface IUser extends Document {
   tiktok?: string;
   verified: Verified[];
   imageUrl?: string;
-  fcmToken?: string;
+  token?: string;
 }
 
 export interface Businesshours {
@@ -76,8 +76,9 @@ const UserSchema = new Schema({
   imageUrl: { type: String }, // Optional
   isOnline: { type: Boolean, default: false },
   lastActive: { type: Date, default: null },
+  token: { type: String },
 });
-delete mongoose.models.User;
+//delete mongoose.models.User;
 const User = models.User || model('User', UserSchema);
 
 export default User;

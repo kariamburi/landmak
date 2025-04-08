@@ -8,7 +8,7 @@ import { revalidatePath } from "next/cache"
 import { UTApi } from "uploadthing/server"
 import Packages from "../database/models/packages.model"
 import Bookmark from "../database/models/bookmark.model"
-import Ad from "../database/models/ad.model"
+//import Ad from "../database/models/ad.model"
 
 import DynamicAd from "../database/models/dynamicAd.model"
 import User from "../database/models/user.model"
@@ -20,7 +20,7 @@ import { PipelineStage } from "mongoose"
 const populateAd = (query: any) => {
   return query
     .populate({ path: 'subcategory', model: Subcategory, select: 'fields' })
-    .populate({ path: 'organizer', model: User, select: '_id clerkId email firstName lastName photo businessname aboutbusiness businessaddress latitude longitude businesshours businessworkingdays phone whatsapp website facebook twitter instagram tiktok imageUrl verified' })
+    .populate({ path: 'organizer', model: User, select: '_id clerkId email firstName lastName photo businessname aboutbusiness businessaddress latitude longitude businesshours businessworkingdays phone whatsapp website facebook twitter instagram tiktok imageUrl verified token' })
     .populate({ path: 'plan', model: Packages, select: '_id name color imageUrl' })
 }
 export const fetchDynamicAds = async () => {
@@ -120,6 +120,8 @@ export async function getAlldynamicAd({ limit = 20, page, queryObject
             ];
             break;
           case 'membership':
+            break;
+          case 'action':
             break;
           case 'source':
             break;
@@ -233,6 +235,8 @@ export async function getListingsNearLocation({ limit = 20, queryObject
             break;
           case 'membership':
             break;
+          case 'action':
+            break;
           case 'source':
             break;
           case 'Ad':
@@ -280,13 +284,13 @@ export async function getListingsNearLocation({ limit = 20, queryObject
       ]);
       //console.log(ads)
       // Step 2: Populate the aggregated results
-      const populatedAds = await Ad.populate(ads, [
+      const populatedAds = await DynamicAd.populate(ads, [
         { path: 'organizer', model: User, select: '_id clerkId email firstName lastName photo businessname aboutbusiness businessaddress latitude longitude businesshours businessworkingdays phone whatsapp website facebook twitter instagram tiktok imageUrl verified' },
         { path: 'subcategory', model: Subcategory, select: 'fields' },
         { path: 'plan', model: Packages, select: '_id name color imageUrl' }
       ]);
 
-      const AdCount = await Ad.countDocuments(conditions);
+      const AdCount = await DynamicAd.countDocuments(conditions);
       //const AdCount = await Ad.countDocuments(conditions)
 
       return {

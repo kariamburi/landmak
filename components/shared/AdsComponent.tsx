@@ -47,8 +47,8 @@ interface AdsProps {
     handleOpenPlan: () => void;
   handleOpenChat: () => void;
   handleOpenBook: () => void;
-    handleAdView: (id:string) => void;
-   handleAdEdit: (id:string) => void;
+    handleAdView: (ad:any) => void;
+   handleAdEdit: (ad:any) => void;
     handlePay: (id:string) => void;
     handleSubCategory:(category: string, subcategory: string) => void;
     handleOpenReview: (value:any) => void;
