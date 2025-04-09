@@ -12,6 +12,7 @@ import SettingsEdit from "./SettingsEdit";
 import { useEffect, useState } from "react";
 import { mode } from "@/constants";
 import { ScrollArea } from "../ui/scroll-area";
+import NotificationPreferences from "./NotificationPreferences";
 
 type setingsProp = {
  
@@ -97,8 +98,15 @@ const SettingsComponent = ({userId,user,onClose,
                 </div>
               </div>
             </section>
-
+            <NotificationPreferences
+             userId={userId}
+             defaultValues={{ email: true, fcm: true }}
+             />
+<div className="p-1 lg:p-4 mt-2 border rounded-xl shadow-sm w-full space-y-3">
+      <h2 className="text-lg font-semibold text-green-600">Profile Information</h2>
+     
             <SettingsEdit user={user} type="Update" userId={userId} />
+            </div>
             <Toaster />
           </div>
         </div>

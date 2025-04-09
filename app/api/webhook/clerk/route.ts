@@ -68,8 +68,10 @@ export async function POST(req: Request) {
       photo: image_url,
       status: "User",
       verified: [{ accountverified: false, verifieddate: new Date() }],
+      notifications: [{ email: true, fcm: true }],
     }
-    console.log("create");
+
+    //notifications: { email: value.email, fcm: value.fcm }
     const newUser = await createUser(user);
     // console.log(newUser);
     if (newUser) {

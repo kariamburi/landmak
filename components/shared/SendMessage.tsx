@@ -105,7 +105,7 @@ const SendMessage = ({
 
       if (recipientStatus === "offline") {
         const user = await getUserById(recipientUid);
-        if (user.token) {
+       if(user.token && user.notifications.fcm){
           const token = user.token;
           sendNotify(token, `You've got a new message from ${displayName}!`);
         }

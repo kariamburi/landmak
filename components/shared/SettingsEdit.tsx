@@ -213,7 +213,7 @@ const SettingsEdit = ({ user, type, userId }: setingsProp) => {
 
         if (updatedUser) {
           // form.reset();
-          router.push(`/settings/`);
+         // router.push(`/settings/`);
           toast({
             title: "Successful!",
             description: "You have updated your details successfully",

@@ -87,11 +87,26 @@ const ChatButton = ({ ad, userId, userName, userImage }: chatProps) => {
 
      // const callbackUrl = process.env.NEXT_PUBLIC_DOMAIN_URL+"chat"
       //sendMessage(message, userName, ad.organizer._id, callbackUrl, ad.data.imageUrls[0])
-      if(ad.organizer.token){
-        const inquiryMessage = message;
-        NotifyUser(ad, userId, userName, inquiryMessage)
-      }
-    
+    if(ad.organizer.token && ad.organizer.notifications.fcm){
+           
+            const inquiryMessage = message;
+            NotifyUser(ad, userId, userName, inquiryMessage)
+          }
+          if(ad.organizer.notifications.email){
+           
+            const adTitle = ad.data.title;
+            const adUrl = `https://mapa.co.ke/?Ad=${ad._id}`;
+            const recipientEmail = ad?.organizer?.email;
+            await sendEmail(
+              recipientEmail,
+              message,
+              adTitle,
+              adUrl,
+              userName,
+              userImage
+            );
+          }
+       
 
       const inquiries = (Number(ad.inquiries ?? "0") + 1).toString();
       const _id = ad._id;

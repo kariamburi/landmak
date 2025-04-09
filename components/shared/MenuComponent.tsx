@@ -18,7 +18,7 @@
           <MenubarContent align="end" className="w-40">
             <label
               htmlFor="file"
-              className="cursor-pointer flex items-center gap-2 p-2 hover:bg-gray-100 dark:hover:bg-gray-700 rounded-md"
+              className="cursor-pointer flex text-base items-center gap-2 p-2 hover:bg-gray-100 dark:hover:bg-gray-700 rounded-md"
             >
               <AttachFileOutlined /> Attach Image
             </label>
@@ -28,7 +28,7 @@
               className="hidden"
               onChange={(e) => setImg(e.target.files?.[0] || null)}
             />
-            <MenubarItem onClick={handleOpenPopupGps} className="flex items-center gap-2">
+            <MenubarItem onClick={handleOpenPopupGps} className="flex cursor-pointer text-base items-center gap-2">
               <LocationOn /> Share Location
             </MenubarItem>
           </MenubarContent>
