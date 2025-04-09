@@ -35,8 +35,8 @@ export async function sendEmail(
     <div style="font-family: Arial, sans-serif; max-width: 600px; margin: auto; padding: 20px; background-color: #f7f7f7; border-radius: 8px; color: #333;">
      <div style="text-align: center; margin-bottom: 30px;">
   <span style="display: inline-flex; align-items: center; gap: 8px;">
-    <img src="https://mapa.co.ke/logo.png" alt="mapa Logo" style="height: 28px; width: auto;" />
-    <span style="font-size: 24px; font-weight: bold; color: #16A34A;">mapa</span>
+    <img src="https://mapa.co.ke/logo.png" alt="mapa Logo" style="height: 30px; gap:5px; width: auto;" />
+    <span style="font-size: 20px; font-weight: bold; color: #16A34A;">mapa</span>
   </span>
 </div>
     

@@ -220,6 +220,12 @@ const ReviewsComponent =  ({displayName,uid,photoURL,user, recipient, onClose, h
               placeholder="Write a review..."
               className="w-full p-2 border rounded-md mb-2 dark:border-gray-600 dark:bg-[#2D3236] dark:text-gray-100 bg-white"
               value={newReview.comment}
+              onKeyDown={(e) => {
+                if (e.key === "Enter" && !e.shiftKey) {
+                  e.preventDefault(); // prevent newline
+                  handleReviewSubmit(); // trigger message send
+                }
+              }}
               onChange={(e) =>
                 setNewReview({ ...newReview, comment: e.target.value })}
             />
