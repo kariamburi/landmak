@@ -198,6 +198,12 @@ const ChatButtonBottom = ({ ad, userId, userName, userImage }: chatProps) => {
             </div>
             <textarea
               value={message}
+              onKeyDown={(e) => {
+                if (e.key === "Enter" && !e.shiftKey) {
+                  e.preventDefault(); // prevent newline
+                  handleSendMessage(); // trigger message send
+                }
+              }}
               onChange={(e) => setMessage(e.target.value)}
               placeholder="Write your inquiry here..."
               className="w-full h-[100px] text-sm dark:bg-[#131B1E] dark:text-gray-100 p-2 border rounded mb-4 focus:outline-none focus:ring-2 focus:ring-blue-600"
