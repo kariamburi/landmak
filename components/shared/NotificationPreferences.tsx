@@ -37,7 +37,7 @@ export default function NotificationPreferences({
 
   return (
     <div className="p-1 lg:p-4 border rounded-xl shadow-sm bg-white w-full space-y-3">
-      <h2 className="text-lg font-semibold text-green-600">Notification Preferences</h2>
+      <h2 className="text-lg font-semibold text-green-600">Alert Preferences</h2>
       <p className="text-sm text-gray-500">Select how you want to receive notifications:</p>
 
       <div className="space-y-2">
@@ -49,7 +49,7 @@ export default function NotificationPreferences({
             className="accent-green-600 cursor-pointer"
             disabled={loading}
           />
-          <span>Email Notification</span>
+          <span>Email</span>
         </label>
 
         <label className="flex items-center space-x-2">
@@ -60,7 +60,7 @@ export default function NotificationPreferences({
             className="accent-green-600 cursor-pointer"
             disabled={loading}
           />
-          <span>FCM Notification</span>
+          <span>Notification</span>
         </label>
       </div>
     </div>

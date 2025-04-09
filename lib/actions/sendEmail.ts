@@ -33,7 +33,13 @@ export async function sendEmail(
     subject: `New Inquiry on Your Ad: ${adTitle}`,
     html: `
     <div style="font-family: Arial, sans-serif; max-width: 600px; margin: auto; padding: 20px; background-color: #f7f7f7; border-radius: 8px; color: #333;">
-      <h2 style="color: #16A34A;">You've Received a New Inquiry</h2>
+       <div style="text-align: center; margin-bottom: 30px;">
+        <!-- Logo and Site Name -->
+        <img src="https://mapa.co.ke/logo.png" alt="mapa Logo" style="width: 80px; height: auto;" />
+        <h1 style="margin: 10px 0 0 0; font-size: 24px; color: #16A34A;">mapa</h1>
+      </div>
+    
+    <h2 style="color: #16A34A;">You've Received a New Inquiry</h2>
 
       <p>Hello,</p>
 
@@ -52,7 +58,7 @@ export async function sendEmail(
         </div>
       </div>
 
-      <a href="${adUrl}" style="display: inline-block; padding: 12px 24px; background-color: #1a73e8; color: white; text-decoration: none; border-radius: 5px;">
+      <a href="${adUrl}" style="display: inline-block; padding: 12px 24px; background-color: #16A34A; color: white; text-decoration: none; border-radius: 5px;">
         View Ad on mapa
       </a>
 
