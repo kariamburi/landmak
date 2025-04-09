@@ -60,7 +60,7 @@ export default function NotificationPreferences({
             className="accent-green-600 cursor-pointer"
             disabled={loading}
           />
-          <span>Notification</span>
+          <span>Push Notification</span>
         </label>
       </div>
     </div>

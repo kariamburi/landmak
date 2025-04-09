@@ -33,11 +33,12 @@ export async function sendEmail(
     subject: `New Inquiry on Your Ad: ${adTitle}`,
     html: `
     <div style="font-family: Arial, sans-serif; max-width: 600px; margin: auto; padding: 20px; background-color: #f7f7f7; border-radius: 8px; color: #333;">
-       <div style="text-align: center; margin-bottom: 30px;">
-        <!-- Logo and Site Name -->
-        <img src="https://mapa.co.ke/logo.png" alt="mapa Logo" style="width: 80px; height: auto;" />
-        <h1 style="margin: 10px 0 0 0; font-size: 24px; color: #16A34A;">mapa</h1>
-      </div>
+     <div style="text-align: center; margin-bottom: 30px;">
+  <span style="display: inline-flex; align-items: center; gap: 8px;">
+    <img src="https://mapa.co.ke/logo.png" alt="mapa Logo" style="height: 28px; width: auto;" />
+    <span style="font-size: 24px; font-weight: bold; color: #16A34A;">mapa</span>
+  </span>
+</div>
     
     <h2 style="color: #16A34A;">You've Received a New Inquiry</h2>
 
