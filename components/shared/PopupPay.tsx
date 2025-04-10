@@ -78,7 +78,7 @@ const PopupPay = ({ isOpen, userId, userName, txtId, user,  handleOpenPerfomance
       <div className="dark:bg-[#131B1E] dark:text-gray-300 bg-white p-0 w-full h-[100vh] flex flex-col">
        
        {loading ? (
-                   <div className="h-screen w-full bg-gray-200"> 
+                   <div className="h-screen w-full dark:bg-[#131B1E] dark:text-gray-300 bg-gray-200"> 
                    <div className="top-0 z-10 fixed w-full">
                     <Navbar user={user} userstatus={user.status} userId={userId} onClose={onClose} popup={"pay"} handleOpenSell={handleOpenSell} handleOpenBook={handleOpenBook} handleOpenPlan={handleOpenPlan} handleOpenChat={handleOpenChat}
                     handleOpenPerfomance={handleOpenPerfomance}

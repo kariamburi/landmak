@@ -10,11 +10,11 @@ import Packages from "../database/models/packages.model"
 
 
 
-export const createPackage = async ({ pack, path}: CreatePackagesParams) => {
+export const createPackage = async ({ pack, path }: CreatePackagesParams) => {
   try {
     await connectToDatabase();
- 
-    const newPackage = await Packages.create({ ...pack});
+
+    const newPackage = await Packages.create({ ...pack });
     revalidatePath(path)
     return JSON.parse(JSON.stringify(newPackage));
   } catch (error) {
@@ -39,7 +39,7 @@ export const getAllPackages = async () => {
   try {
     await connectToDatabase();
 
-    const packages = await Packages.find();
+    const packages = await Packages.find().sort({ priority: 1 }); // 1 for ascending
 
     return JSON.parse(JSON.stringify(packages));
   } catch (error) {
@@ -52,7 +52,7 @@ export async function updatePackage({ pack, path }: UpdatePackagesParams) {
     await connectToDatabase()
     const updatedPack = await Packages.findByIdAndUpdate(
       pack._id,
-      { ...pack},
+      { ...pack },
       { new: true }
     )
     revalidatePath(path)
@@ -63,7 +63,7 @@ export async function updatePackage({ pack, path }: UpdatePackagesParams) {
   }
 }
 // DELETE
-export async function deletePackage({ packageId,packageIcon, path }: DeletePackagesParams) {
+export async function deletePackage({ packageId, packageIcon, path }: DeletePackagesParams) {
   try {
     await connectToDatabase()
 
@@ -72,7 +72,7 @@ export async function deletePackage({ packageId,packageIcon, path }: DeletePacka
     const url = new URL(packageIcon);
     const filename = url.pathname.split('/').pop();
     if (filename) {
-        const utapi = new UTApi();
+      const utapi = new UTApi();
       await utapi.deleteFiles(filename);
     }
     if (deletedAd) revalidatePath(path)

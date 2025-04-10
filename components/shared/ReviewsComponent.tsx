@@ -29,6 +29,8 @@ import { addDoc, collection, getDocs, limit, onSnapshot, query, serverTimestamp,
 import { db } from "@/lib/firebase";
 import Ratingsmobile from "./ratingsmobile";
 import CircularProgress from "@mui/material/CircularProgress";
+import { SignedIn, SignedOut } from "@clerk/nextjs";
+import { useRouter } from "next/navigation";
 interface AdsProps {
  displayName: string;
   uid: string;
@@ -58,6 +60,7 @@ const ReviewsComponent =  ({displayName,uid,photoURL,user, recipient, onClose, h
   handleOpenPerfomance,handleOpenSettings,handleOpenReview,handleOpenChat,handleOpenChatId, handleOpenBook, handleOpenSell, handleOpenPlan, handleOpenAbout,handleOpenTerms,handleOpenPrivacy,handleOpenSafety}:AdsProps) => {
  const [showForm, setShowForm] = useState(false);
   const [isSending, setIsSending] = useState(false); 
+    const router = useRouter();
   // console.log(senderId);
   const [newReview, setNewReview] = useState({
       comment: "",
@@ -196,13 +199,25 @@ const ReviewsComponent =  ({displayName,uid,photoURL,user, recipient, onClose, h
                 </div>
 
  {/* Leave a Review Button (Fixed) */}
+ <SignedIn>
       <button
         className="text-sm lg:text-base bg-green-600 text-white py-1 px-2 lg:px-5 lg:py-2 rounded-full shadow-lg"
         onClick={() => setShowForm(true)}
       >
         Leave a Review
       </button>
-
+      </SignedIn>
+      <SignedOut>
+      <button
+        className="text-sm lg:text-base bg-green-600 text-white py-1 px-2 lg:px-5 lg:py-2 rounded-full shadow-lg"
+        onClick={() => {
+         
+           router.push("/sign-in");
+         }} 
+      >
+        Leave a Review
+      </button>
+      </SignedOut>
       {/* Review Form Popup */}
       {showForm && (
         <div className="fixed z-20 inset-0 bg-black bg-opacity-50 flex items-center justify-center">
@@ -241,6 +256,7 @@ const ReviewsComponent =  ({displayName,uid,photoURL,user, recipient, onClose, h
                     />
                   ))}
             </div>
+            
             <button
               disabled={isSending}
               className="w-full mt-3 bg-green-600 text-white p-2 rounded-lg flex items-center justify-center gap-2"

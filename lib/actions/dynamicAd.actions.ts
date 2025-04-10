@@ -37,7 +37,8 @@ export const fetchDynamicAds = async () => {
 }
 
 export const createData = async (
-  { userId,
+  {
+    userId,
     subcategory,
     formData,
     expirely,
@@ -47,43 +48,54 @@ export const createData = async (
     plan,
     pricePack,
     periodPack,
-    path }: CreateAdShopParams) => {
+    path
+  }: CreateAdShopParams
+) => {
   try {
     await connectToDatabase();
-    const organizer = await User.findById(userId)
-    if (!organizer) throw new Error('Organizer not found')
+
+    const organizer = await User.findById(userId);
+    if (!organizer) throw new Error('Organizer not found');
+
     const response = await DynamicAd.create({
       data: formData,
-      priority: priority,
-      expirely: expirely,
-      adstatus: adstatus,
+      priority,
+      expirely,
+      adstatus,
       organizer: userId,
-      subcategory: subcategory,
-      plan: planId
+      subcategory,
+      plan: planId,
     });
 
     if (response.adstatus === "Pending") {
       const trans = {
         orderTrackingId: response._id,
         amount: pricePack,
-        plan: plan,
-        planId: response.plan._id,
+        plan,
+        planId: response.plan,
         period: periodPack,
         buyerId: userId,
         merchantId: userId,
         status: response.adstatus,
         createdAt: new Date(),
       };
-      //  console.log(trans);
-      const newTransaction = await createTransaction(trans);
+      await createTransaction(trans);
     }
-    revalidatePath(path)
 
-    return JSON.parse(JSON.stringify(response));
+    revalidatePath(path);
+
+    // Populate the newly created ad before returning
+    const populatedResponse = await populateAd(
+      DynamicAd.findById(response._id)
+    );
+
+    return JSON.parse(JSON.stringify(await populatedResponse));
+
   } catch (error) {
-    handleError(error)
+    handleError(error);
   }
-}
+};
+
 
 
 // GET ALL Ad
@@ -631,23 +643,25 @@ export async function updateBanAll(phone: string, adstatus: string) {
 // UPDATE
 export async function updateAd(userId: string, _id: string, formData: any) {
   try {
-    await connectToDatabase()
+    await connectToDatabase();
 
-    const AdToUpdate = await DynamicAd.findById(_id)
+    const AdToUpdate = await DynamicAd.findById(_id);
     if (!AdToUpdate || AdToUpdate.organizer.toHexString() !== userId) {
-      throw new Error('Unauthorized or Ad not found')
+      throw new Error('Unauthorized or Ad not found');
     }
 
-    const updatedAd = await DynamicAd.findByIdAndUpdate(
+    await DynamicAd.findByIdAndUpdate(
       _id,
       { data: formData },
       { new: true }
-    )
-    // revalidatePath(path)
+    );
 
-    return JSON.parse(JSON.stringify(updatedAd))
+    // Refetch and populate the updated ad
+    const populatedUpdatedAd = await populateAd(DynamicAd.findById(_id));
+
+    return JSON.parse(JSON.stringify(await populatedUpdatedAd));
   } catch (error) {
-    handleError(error)
+    handleError(error);
   }
 }
 
