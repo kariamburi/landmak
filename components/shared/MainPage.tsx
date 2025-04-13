@@ -67,6 +67,7 @@ import SearchTabWindow from "./SearchTabWindow";
 import StyledBrandName from "./StyledBrandName";
 import { getAdById } from "@/lib/actions/dynamicAd.actions";
 import { getUserById } from "@/lib/actions/user.actions";
+import Head from "next/head";
 type CollectionProps = {
   limit: number;
   userId: string;
@@ -655,6 +656,32 @@ const handleCloseAdView = () => {
   };
   return (
     <div className="relative flex w-full h-screen">
+      <Head>
+  <title>mapa | Buy, Sell & Rent Properties and More in Kenya</title>
+  <meta
+    name="description"
+    content="mapa.co.ke is Kenya's trusted online marketplace for buying, selling, and renting properties. Explore land, homes, apartments, and a wide range of other products and services."
+  />
+  <meta
+    property="og:title"
+    content="mapa | Buy, Sell & Rent Properties and More in Kenya"
+  />
+  <meta
+    property="og:description"
+    content="Discover the easiest way to buy, sell, or rent properties on mapa.co.ke. From land and homes to vehicles and electronics, find everything you need across Kenya."
+  />
+  <meta property="og:image" content="/logo.png" />
+  <meta property="og:url" content="https://mapa.co.ke" />
+  <meta property="og:type" content="website" />
+  <meta
+    name="keywords"
+    content="mapa, buy properties Kenya, sell land, rent house Kenya, marketplace Kenya, online shopping Kenya, real estate Kenya"
+  />
+  <meta name="author" content="mapa" />
+  <link rel="manifest" href="/manifest.json" />
+  <link rel="canonical" href="https://mapa.co.ke" />
+</Head>
+s
       {/* Sidebar */}
       <div
         onClick={(e) => e.stopPropagation()} // Prevent sidebar from closing on itself click

@@ -1,0 +1,14 @@
+[
+    {
+        "relation": [
+            "delegate_permission/common.handle_all_urls"
+        ],
+        "target": {
+            "namespace": "android_app",
+            "package_name": "ke.co.pocketshop.twa",
+            "sha256_cert_fingerprints": [
+                "B2:CD:51:B6:4E:DD:4F:DF:40:02:60:DC:9A:A6:2C:4B:45:81:5B:0A:43:6D:2A:01:32:95:34:72:12:9B:31:55"
+            ]
+        }
+    }
+]
