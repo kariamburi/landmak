@@ -34,33 +34,7 @@ export default async function Home({ searchParams }: SearchParamProps) {
 //const AdsCountPerRegion:any = [];
   return (
     <main>
-<MainPage emptyTitle="No Ads Found"
-            emptyStateSubtext="Come back later"
-            collectionType="All_Ads"
-            limit={20}
-            user={user}
-            userId={userId}
-            userName={userName}
-            userImage={userImage}
-            queryObject={queryObject}
-            categoryList={categoryList}
-            subcategoryList={subcategoryList}
-            AdsCountPerRegion={AdsCountPerRegion}/>
-       {/* <CollectionInfinite
-            emptyTitle="No Ads Found"
-            emptyStateSubtext="Come back later"
-            collectionType="All_Ads"
-            limit={20}
-            user={user}
-            userId={userId}
-            userName={userName}
-            userImage={userImage}
-            queryObject={queryObject}
-            categoryList={categoryList}
-            subcategoryList={subcategoryList}
-            AdsCountPerRegion={AdsCountPerRegion}
-          />
- <HomePage 
+<MainPage 
 emptyTitle="No Ads Found"
             emptyStateSubtext="Come back later"
             collectionType="All_Ads"
@@ -72,7 +46,8 @@ emptyTitle="No Ads Found"
             queryObject={queryObject}
             categoryList={categoryList}
             subcategoryList={subcategoryList}
-            AdsCountPerRegion={AdsCountPerRegion}/>*/} 
+            AdsCountPerRegion={AdsCountPerRegion}/>
+      
           <Toaster />
       
    

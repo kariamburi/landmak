@@ -227,14 +227,14 @@ CollectionProps) => {
                                             handleOpenSafety={handleOpenSafety} 
                                             handleOpenShop={handleOpenShop}/>
                        </div>
-      <div className="lg:p-4 mt-[80px] lg:mt-[60px]">
+      <div className="lg:p-4 mt-[60px]">
       <div className="w-full flex flex-col">
         <div className="w-full flex">
           <div className="hidden lg:inline">
             <div className="w-full">
             
               <div className="flex mt-2 lg:mt-0 gap-1 flex-col border rounded-lg flex justify-center items-center w-full h-full">
-              {loadingSub ? (<>  <SubscriptionSkeleton/></>):(<>
+              {loadingSub ? (<> <Icon icon={Barsscale} className="w-6 h-6 text-gray-500" /></>):(<>
 
                              {isAdCreator &&
                              planPackage !== "Free" &&

@@ -77,12 +77,12 @@ const SettingsComponent = ({userId,user,onClose,
                               handleOpenSafety={handleOpenSafety} 
                               handleOpenShop={handleOpenShop}/>
                              </div>
-      <div className="max-w-3xl mx-auto flex mt-[80px] lg:mt-[60px] p-1 min-h-screen">
+      <div className="max-w-3xl mx-auto flex mt-[60px] p-1 min-h-screen">
         <div className="hidden lg:inline mr-5"></div>
 
         <div className="flex-1">
-          <div className="w-full lg:max-w-6xl lg:mx-auto lg:mb-3 dark:bg-[#2D3236] bg-white rounded-xl p-1 lg:p-3 mb-20 justify-center">
-            <section className="w-full p-0">
+          <div className="w-full lg:max-w-6xl lg:mx-auto lg:mb-3  rounded-xl p-1 lg:p-3 mb-20 justify-center">
+            <section className="w-full mb-2">
               <div className="w-full flex flex-col lg:flex-row lg:justify-between">
                 <div className="flex text-lg mb-1 gap-1 font-bold">
                   <SettingsOutlinedIcon />
@@ -102,7 +102,7 @@ const SettingsComponent = ({userId,user,onClose,
              userId={userId}
              defaultValues={{ email: true, fcm: true }}
              />
-<div className="p-1 lg:p-4 mt-2 border rounded-xl shadow-sm w-full space-y-3">
+<div className="p-1 lg:p-4 dark:bg-[#2D3236] bg-white mt-2 border rounded-xl shadow-sm w-full space-y-3">
       <h2 className="text-lg font-semibold text-green-600">Profile Information</h2>
      
             <SettingsEdit user={user} type="Update" userId={userId} />

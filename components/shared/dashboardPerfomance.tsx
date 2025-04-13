@@ -235,8 +235,8 @@ CollectionProps) => {
       <div className="min-h-screen mt-[10vh]">
       <div className="w-full lg:max-w-6xl mx-auto p-1">
         <section className="bg-gray-50 dark:bg-[#2D3236] bg-dotted-pattern bg-cover bg-center py-0 md:py-0 rounded-sm">
-          <div className="flex items-center p-1 justify-between">
-            <div className="flex flex-col w-full">
+          <div className="flex items-center p-1 flex-col">
+            <div className="flex flex-col">
               <SellerProfilePermonance
                 userId={userId}
                 userName={userName}
@@ -247,7 +247,7 @@ CollectionProps) => {
                 handlePay={handlePay}
               />
             </div>
-            {loadingSub ? (<>  <SubscriptionSkeleton/></>):(<>
+            {loadingSub ? (<>   <Icon icon={Barsscale} className="w-6 h-6 text-gray-500" /></>):(<>
 
                              {isAdCreator &&
                              planPackage !== "Free" &&
@@ -256,7 +256,7 @@ CollectionProps) => {
                                <>
                                 
 
-                                 <div className="flex gap-1 w-full items-center bg-green-100 px-3 py-1 rounded-lg">
+                                 <div className="w-full lg:max-w-2xl flex gap-1 w-full items-center bg-green-100 px-3 py-1 rounded-lg">
                                  <div
                                    style={{
                                      backgroundColor: color,
@@ -273,7 +273,7 @@ CollectionProps) => {
                              ) : (
                                <>
 
-<div className="flex w-full items-center gap-1 bg-green-100 px-3 py-1 rounded-lg">
+<div className="w-full lg:max-w-2xl flex w-full items-center gap-1 bg-green-100 px-3 py-1 rounded-lg">
 <div
                                    style={{
                                      backgroundColor: color,

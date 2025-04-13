@@ -5,9 +5,9 @@
         ],
         "target": {
             "namespace": "android_app",
-            "package_name": "ke.co.pocketshop.twa",
+            "package_name": "ke.co.mapa.twa",
             "sha256_cert_fingerprints": [
-                "B2:CD:51:B6:4E:DD:4F:DF:40:02:60:DC:9A:A6:2C:4B:45:81:5B:0A:43:6D:2A:01:32:95:34:72:12:9B:31:55"
+                "95:EB:76:05:92:74:CA:91:C5:D1:D6:DB:0A:80:2A:FC:DE:53:E4:4F:44:DD:61:BB:15:33:D8:02:1F:4C:9B:A7"
             ]
         }
     }

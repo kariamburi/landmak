@@ -124,7 +124,7 @@ const DashboardSellMain = ({
     />
   </div>
   
-  <div className="flex flex-col justify-center w-full h-full mt-[70px] lg:[50px]">
+  <div className="flex flex-col justify-center w-full h-full mt-[50px]">
       
   <div className="p-1 lg: p-2 flex min-h-[100vh] flex-col w-full lg:max-w-3xl lg:mx-auto h-full rounded-lg">
    

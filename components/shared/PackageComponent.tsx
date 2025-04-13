@@ -115,7 +115,7 @@ const PackageComponent =  ({userId,user, onClose,handlePay, handleOpenAbout,hand
          handleOpenShop={handleOpenShop}
         />
       </div>
-      <div className="max-w-6xl mx-auto flex mt-[70px] lg:mt-[60px] mb-10 p-1">
+      <div className="max-w-6xl mx-auto flex mt-[60px] mb-10 p-1">
    
         <div className="flex-1">
           <div className="w-full flex flex-col">

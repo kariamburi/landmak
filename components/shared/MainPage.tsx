@@ -681,7 +681,7 @@ const handleCloseAdView = () => {
   <link rel="manifest" href="/manifest.json" />
   <link rel="canonical" href="https://mapa.co.ke" />
 </Head>
-s
+
       {/* Sidebar */}
       <div
         onClick={(e) => e.stopPropagation()} // Prevent sidebar from closing on itself click

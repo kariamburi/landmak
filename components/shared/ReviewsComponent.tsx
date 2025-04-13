@@ -172,7 +172,7 @@ const ReviewsComponent =  ({displayName,uid,photoURL,user, recipient, onClose, h
                   handleOpenPrivacy={handleOpenPrivacy}
                   handleOpenSafety={handleOpenSafety}/>
                </div>
-      <div className="w-full max-w-6xl mx-auto h-full flex mt-[73px] lg:mt-[60px] mb-0 p-1">
+      <div className="w-full max-w-6xl mx-auto h-full flex mt-[60px] mb-0 p-1">
         <div className="hidden lg:inline mr-5">
           <div className="w-full rounded-lg p-1">
             <SellerProfileReviews
@@ -201,7 +201,7 @@ const ReviewsComponent =  ({displayName,uid,photoURL,user, recipient, onClose, h
  {/* Leave a Review Button (Fixed) */}
  <SignedIn>
       <button
-        className="text-sm lg:text-base bg-green-600 text-white py-1 px-2 lg:px-5 lg:py-2 rounded-full shadow-lg"
+        className="text-sm lg:text-base bg-green-600 text-white py-2 px-2 lg:px-5 lg:py-2 rounded-full shadow-lg"
         onClick={() => setShowForm(true)}
       >
         Leave a Review

@@ -993,7 +993,7 @@ CollectionProps) => {
 </div>
 
         {/* List Ads Section */}
-  <ScrollArea className="h-[100vh] w-full bg-gray-200 rounded-t-md border mt-[210px] lg:mb-0 lg:mt-0">
+  <ScrollArea className="h-[100vh] w-full bg-gray-200 rounded-t-md border mt-[180px] lg:mb-0 lg:mt-0">
   <section className="p-1 mb-20">
     <div className="flex items-center p-1 w-full justify-between">
       <div className="flex items-center gap-1 flex-wrap justify-start items-center mb-0">

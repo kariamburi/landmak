@@ -381,7 +381,7 @@ export default function Ads({ ad, userId, userImage, userName, onClose,handlePay
   <button
     title="Ad Pictures"
     onClick={() => setInputMode("Images")}
-    className={`p-3 flex gap-2 justify-center items-center text-[10px] lg:text-xs rounded-tl-xl ${
+    className={`p-3 flex gap-2 justify-center items-center text-[10px] lg:text-xs lg:rounded-tl-xl ${
       inputMode === "Images"
         ? "text-white bg-[#131B1E] dark:text-white"
         : "bg-green-600 text-white"
@@ -404,7 +404,7 @@ export default function Ads({ ad, userId, userImage, userName, onClose,handlePay
   <button
     title="Ad 3D Virtual"
     onClick={() => setInputMode("Virtual")}
-    className={`p-3 flex gap-2 justify-center items-center text-[10px] lg:text-xs rounded-tr-xl ${
+    className={`p-3 flex gap-2 justify-center items-center text-[10px] lg:text-xs lg:rounded-tr-xl ${
       inputMode === "Virtual"
         ? "text-white bg-[#131B1E] dark:text-white"
         : "bg-green-600 text-white"

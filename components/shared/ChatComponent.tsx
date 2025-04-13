@@ -88,7 +88,7 @@ const ChatComponent =  ({senderId,senderName,senderImage,user,onClose, handlePay
                   handleOpenPrivacy={handleOpenPrivacy}
                   handleOpenSafety={handleOpenSafety}/>
                </div>
-      <div className="w-full lg:max-w-6xl lg:mx-auto h-full flex mt-[73px] lg:mt-[60px] mb-0 p-1">
+      <div className="w-full lg:max-w-6xl lg:mx-auto h-full flex mt-[60px] mb-0 p-1">
         <div className="hidden lg:inline mr-5">
           <div className="w-full rounded-lg p-1">
             <SellerProfileChat

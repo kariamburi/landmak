@@ -87,7 +87,7 @@ CollectionProps) => {
              handleOpenSafety={handleOpenSafety} 
              handleOpenShop={handleOpenShop}/>
           </div>
-      <div className="min-h-screen mt-[70px] lg:mt-[60px]">
+      <div className="min-h-screen mt-[60px]">
       <div className="max-w-6xl mx-auto flex mt-3 p-1">
         <div className="flex-1">
           <div className="max-w-6xl mx-auto lg:flex-row mt-2 p-1 justify-center">
