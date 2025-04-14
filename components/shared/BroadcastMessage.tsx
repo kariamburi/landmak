@@ -21,6 +21,7 @@ function BroadcastMessage() {
       const data = await broadcastMessage(type, message);
       if (data) {
         setResponse(data.message);
+        setMessage('');
       } else {
         setResponse("Failed to send messages.");
       }
@@ -41,7 +42,7 @@ function BroadcastMessage() {
           className="dark:text-gray-100 dark:bg-[#2D3236] text-xs bg-white w-full p-2 border rounded"
         >
           <option value="email">Email</option>
-          <option value="sms">SMS</option>
+          <option value="sms">Notification</option>
         </select>
       </div>
       <div className="mb-4">

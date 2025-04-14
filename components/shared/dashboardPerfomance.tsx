@@ -232,9 +232,9 @@ CollectionProps) => {
          handleOpenSafety={handleOpenSafety} 
          handleOpenShop={handleOpenShop}/>
       </div>
-      <div className="min-h-screen mt-[10vh]">
+      <div className="min-h-screen mt-[60px]">
       <div className="w-full lg:max-w-6xl mx-auto p-1">
-        <section className="bg-gray-50 dark:bg-[#2D3236] bg-dotted-pattern bg-cover bg-center py-0 md:py-0 rounded-sm">
+        <section className="lg:bg-gray-50 dark:bg-[#2D3236] bg-dotted-pattern bg-cover bg-center py-0 md:py-0 rounded-sm">
           <div className="flex items-center p-1 flex-col">
             <div className="flex flex-col">
               <SellerProfilePermonance

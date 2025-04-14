@@ -51,6 +51,7 @@ import Navbar from "./navbar";
 import { Toaster } from "../ui/toaster";
 import CollectionAbuse from "./CollectionAbuse";
 import Navbardashboard from "./Navbardashboard";
+import PopupChatId from "./PopupChatId";
 
 type homeProps = {
   userId: string;
@@ -91,6 +92,82 @@ const HomeDashboard = ({
   const [startDate, setStartDate] = useState<string | null>(null);
   const [endDate, setEndDate] = useState<string | null>(null);
   const [search, setSearch] = useState("");
+
+  const [recipient, setrecipient] = useState<any>([]);
+    const [recipientUid, setrecipientUid] = useState('');
+    const [shopId, setshopId] = useState<any>([]);
+    const [isOpenAbout, setIsOpenAbout] = useState(false);
+    const [isOpenTerms, setIsOpenTerms] = useState(false);
+    const [isOpenPrivacy, setIsOpenPrivacy] = useState(false);
+    const [isOpenSafety, setIsOpenSafety] = useState(false);
+    const [isOpenFaq, setIsOpenFaq] = useState(false);
+    const [isOpenBook, setIsOpenBook] = useState(false);
+    const [isOpenPlan, setIsOpenPlan] = useState(false);
+    const [isOpenChat, setIsOpenChat] = useState(false);
+    const [isOpenChatId, setIsOpenChatId] = useState(false);
+    const [isOpenReview, setIsOpenReview] = useState(false);
+    const [isOpenShop, setIsOpenShop] = useState(false);
+    const [isOpenSettings, setIsOpenSettings] = useState(false);
+    const [isOpenPerfomance, setIsOpenPerfomance] = useState(false);
+    const [isOpenSearchTab, setIsOpenSearchTab] = useState(false);
+
+  const handleCloseChatId = () => {
+    setrecipientUid('')
+    setIsOpenChatId(false);
+  };
+  const handleOpenChatId = (value:string) => {
+    
+    setrecipientUid(value)
+   setIsOpenChatId(true);
+   
+    };
+    const handleOpenSell = () => {
+       
+    };
+    const handleOpenAbout=() => {
+   
+    };
+    const handleOpenTerms=() => {
+   
+    };
+    const handleOpenPrivacy=() => {
+   
+    }; 
+    const handleOpenSafety=() => {
+   
+    };
+    const handleOpenBook=() => {
+   
+    };
+    const handleOpenPlan=() => {
+   
+    };
+   
+    const handleOpenChat=() => {
+   
+    };
+    const handleOpenShop=() => {
+   
+    };
+   
+    const handleOpenPerfomance=() => {
+   
+    };
+    const handleOpenSettings=() => {
+   
+    };
+    const handleCategory=() => {
+   
+    };
+    const handleAdEdit=() => {
+   
+    };
+    const handleAdView=() => {
+   
+    };
+    const handleOpenSearchTab=() => {
+   
+    };
   const handle = async (title: string) => {
     setActiveTab(title);
     if (title === "Categories") {
@@ -630,14 +707,14 @@ const HomeDashboard = ({
 
               <ScrollArea className="w-[340px] lg:w-full">
                 <CollectionAbuse
-                  data={reported.data}
-                  emptyTitle={`No Abuse`}
-                  emptyStateSubtext="Come back later"
-                  limit={limit}
-                  page={page}
-                  userId={userId}
-                  totalPages={reported.totalPages}
-                />
+                      data={reported.data}
+                      emptyTitle={`No Abuse`}
+                      emptyStateSubtext="Come back later"
+                      limit={limit}
+                      page={page}
+                      userId={userId}
+                      totalPages={reported.totalPages} 
+                      handleOpenChatId={handleOpenChatId}                />
                 <ScrollBar orientation="horizontal" />
               </ScrollArea>
             </div>
@@ -647,6 +724,30 @@ const HomeDashboard = ({
     </div>
     <Toaster />
       </div>
+      <PopupChatId 
+           isOpen={isOpenChatId} 
+           onClose={handleCloseChatId} 
+           recipientUid={recipientUid} 
+           userId={userId} 
+           handleOpenSell={handleOpenSell} 
+           handleOpenAbout={handleOpenAbout} 
+           handleOpenTerms={handleOpenTerms} 
+           handleOpenPrivacy={handleOpenPrivacy} 
+           handleOpenSafety={handleOpenSafety} 
+           handleOpenBook={handleOpenBook} 
+           handleOpenPlan={handleOpenPlan} 
+           userImage={userImage} 
+           userName={userName} 
+           handleOpenChat={handleOpenChat} 
+           handleOpenShop={handleOpenShop} 
+           handleOpenChatId={handleOpenChatId}
+            handleOpenPerfomance={handleOpenPerfomance}
+            handleOpenSettings={handleOpenSettings}
+            handleCategory={handleCategory} 
+            handleAdEdit={handleAdEdit} 
+            handleAdView={handleAdView}
+            handleOpenSearchTab={handleOpenSearchTab}
+            user={users}/>
     </div>
   );
 };

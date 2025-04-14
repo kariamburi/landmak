@@ -340,7 +340,7 @@ CollectionProps) => {
           <div className="flex-1 min-h-screen">
           <div className="p-1 lg:hidden">
             <div className="flex flex-col gap-1 w-full ">
-            {loadingSub ? (<>  <SubscriptionSkeleton/></>):(<>
+            {loadingSub ? (<>  <Icon icon={Barsscale} className="w-6 h-6 text-gray-500" /></>):(<>
 
                              {isAdCreator &&
                              planPackage !== "Free" &&

@@ -1,8 +1,8 @@
 "use client";
-import React, { useState, useEffect } from "react";
+import React, { useState, useEffect, useRef } from "react";
 import { Menu, X } from "lucide-react";
 import { Button } from "../ui/button";
-import { ScrollArea } from "../ui/scroll-area";
+import * as ScrollArea from "@radix-ui/react-scroll-area";
 import { ICategory } from "@/lib/database/models/category.model";
 import ViewListIcon from "@mui/icons-material/ViewList";
 import ViewModuleIcon from "@mui/icons-material/ViewModule";
@@ -110,6 +110,7 @@ type CollectionProps = {
   //AdsCountPerVerifiedFalse: any;
   queryObject: any;
   user: any;
+  viewportRef:any;
   onClose:()=> void;
   handleOpenSell: () => void;
   handleOpenBook: () => void;
@@ -136,6 +137,7 @@ const MainCategory = ({
   emptyTitle,
   emptyStateSubtext,
   user,
+  viewportRef,
  // AdsCountPerRegion,
   //AdsCountPerVerifiedTrue,
   //AdsCountPerVerifiedFalse,
@@ -240,24 +242,52 @@ CollectionProps) => {
     
   }, [newqueryObject.category, newqueryObject.subcategory]);
 
+  useEffect(() => {
+    const handleResize = () => {
+      if (window.innerWidth < 768) {
+        setShowSidebar(false); // Disable sidebar on mobile
+      } else {
+        setShowSidebar(true); // Enable sidebar on desktop
+      }
+    };
 
+    // Initial check
+    handleResize();
+    window.addEventListener("resize", handleResize);
 
+    return () => window.removeEventListener("resize", handleResize);
+  }, []);
+  const [showBottomNav, setShowBottomNav] = useState(true);
+  //const viewportRef = useRef<HTMLDivElement | null>(null);
+ // const popupBRef = useRef<HTMLDivElement | null>(null);
+  const lastScrollTop = useRef(0);
 
-   useEffect(() => {
-     const handleResize = () => {
-       if (window.innerWidth < 768) {
-         setShowSidebar(false); // Disable sidebar on mobile
-       } else {
-         setShowSidebar(true); // Enable sidebar on desktop
-       }
-     };
- 
-     // Initial check
-     handleResize();
-     window.addEventListener("resize", handleResize);
- 
-     return () => window.removeEventListener("resize", handleResize);
-   }, []);
+  useEffect(() => {
+    const viewport = viewportRef.current;
+    alert("nice")
+    if (!viewport) return;
+    alert("good")
+    const handleScroll = () => {
+
+      alert("ok")
+      const currentScrollTop = viewport.scrollTop;
+
+      if (currentScrollTop > lastScrollTop.current) {
+        // Scrolling down
+        setShowBottomNav(false);
+      } else {
+        // Scrolling up
+        setShowBottomNav(true);
+      }
+
+      lastScrollTop.current = currentScrollTop;
+    };
+
+    viewport.addEventListener("scroll", handleScroll);
+    return () => viewport.removeEventListener("scroll", handleScroll);
+  }, []);
+
+  
    // Close sidebar when clicking outside
    useEffect(() => {
      const handleClickOutside = (e: MouseEvent) => {
@@ -509,7 +539,9 @@ CollectionProps) => {
             </div>
           
           {/* Categories Section */}
-           <ScrollArea className="h-[100vh] text-sm lg:text-base w-full dark:bg-[#2D3236] bg-white rounded-0 border p-3">
+          <ScrollArea.Root className="flex-1 overflow-hidden">
+        <ScrollArea.Viewport  className="h-full overflow-y-auto text-sm lg:text-base w-full dark:bg-[#2D3236] bg-white rounded-0 border p-3">
+      
                   
                       <SidebarSearchMain
                           categoryList={subcategoryList}
@@ -519,7 +551,10 @@ CollectionProps) => {
                          
                         />
                         
-                        </ScrollArea>
+                      </ScrollArea.Viewport>
+                         <ScrollArea.Scrollbar orientation="vertical" />
+                           <ScrollArea.Corner />
+                         </ScrollArea.Root>
         </div>
       )}
     </div>
@@ -540,7 +575,7 @@ CollectionProps) => {
     >
      
   
-      <div className="relative h-full flex flex-col">
+      <div className="relative h-screen flex flex-col">
       <Button
         onClick={handleSidebarToggle}
         className="hidden lg:inline absolute bottom-5 left-4 z-10 md:block bg-green-600 text-white shadow-lg hover:bg-green-700"
@@ -556,7 +591,7 @@ CollectionProps) => {
         )}
       </Button>
         {/* Header Section */}
-        <div className="mb-1 flex fixed flex-col gap-2 top-0 left-0 w-full bg-gradient-to-b from-green-600 to-green-600 lg:from-white lg:to-white p-0 shadow-md z-10 md:relative md:w-auto md:shadow-none">
+        <div className="mb-1 flex flex-col gap-2 top-0 left-0 w-full bg-gradient-to-b from-green-600 to-green-600 lg:from-white lg:to-white p-1 shadow-md z-10 md:relative md:w-auto md:shadow-none">
   <div className="p-2 w-full flex flex-col items-center">
     <div className="w-full justify-between flex items-center">
       <div className="flex items-center">
@@ -774,9 +809,14 @@ CollectionProps) => {
         </div>
       </div>
     </div>
-
+    </div>
+    <div
+  className={`transition-all duration-300 overflow-hidden ${
+    showBottomNav ? "max-h-[120px] opacity-100" : "max-h-0 opacity-0"
+  }`}
+>
     <div className="w-full lg:hidden">
-      <div className="flex w-full mt-3 gap-1 items-center">
+      <div className="flex w-full mt-0 gap-1 items-center">
         {newqueryObject.category === "Property" && (
           <div className="flex-1">
             <TooltipProvider>
@@ -834,7 +874,7 @@ CollectionProps) => {
       </div>
     </div>
 
-    <div className="flex w-full gap-1 mt-2 justify-center items-center mb-1">
+    <div className="flex w-full gap-1 mt-0 justify-center items-center mb-1">
       <button
         onClick={handleOpenPopupLocation}
         className="flex text-xs lg:text-base gap-1 items-center justify-center py-4 px-2 border border-gray-300 dark:border-gray-600 bg-white dark:bg-[#2D3236] dark:text-gray-100 rounded-sm hover:bg-gray-200"
@@ -987,13 +1027,15 @@ CollectionProps) => {
                             />
                          
                          </> )}
-                        
-    </div>
+                         </div>              
+   
   </div>
 </div>
 
         {/* List Ads Section */}
-  <ScrollArea className="h-[100vh] w-full bg-gray-200 rounded-t-md border mt-[180px] lg:mb-0 lg:mt-0">
+     <ScrollArea.Root className="flex-1 overflow-hidden">
+      <ScrollArea.Viewport ref={viewportRef} className="h-full overflow-y-auto bg-gray-200 lg:rounded-t-md border">
+      
   <section className="p-1 mb-20">
     <div className="flex items-center p-1 w-full justify-between">
       <div className="flex items-center gap-1 flex-wrap justify-start items-center mb-0">
@@ -1185,19 +1227,28 @@ CollectionProps) => {
       handleOpenSafety={handleOpenSafety}
     />
   </div>
-</ScrollArea>
+ </ScrollArea.Viewport>
+    <ScrollArea.Scrollbar orientation="vertical" />
+      <ScrollArea.Corner />
+    </ScrollArea.Root>
+
 
         <footer>
-          <div className="lg:hidden">
-           <BottomNavigation 
-           userId={userId} 
-           popup={"category"}
-           onClose={onClose} 
-          handleOpenSell={handleOpenSell}
-          handleOpenChat={handleOpenChat}
-          handleOpenSearchTab={handleOpenSearchTab} 
-                               />
-          </div>
+          <div
+                 className={`lg:hidden fixed bottom-0 left-0 right-0 z-50 transition-transform duration-300 ${
+                   showBottomNav ? "translate-y-0" : "translate-y-full"
+                 }`}
+               >
+                <BottomNavigation 
+                          userId={userId} 
+                          popup={"category"}
+                          onClose={onClose} 
+                         handleOpenSell={handleOpenSell}
+                         handleOpenChat={handleOpenChat}
+                         handleOpenSettings={handleOpenSettings}
+                         handleOpenSearchTab={handleOpenSearchTab} 
+                                              />
+               </div>
         </footer>
       </div>
     </div>

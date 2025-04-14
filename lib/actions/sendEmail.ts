@@ -28,7 +28,7 @@ export async function sendEmail(
     html: `<p>You have a new inquiry on your ad titled "<b>${adTitle}</b>".</p><p>Message: ${message}</p><p>From: ${userName}</p><p><b>Kindly replay on mapa</b></p></p>`,
   };
   const mailOptions = {
-    from: '"mapa" <no-reply@mapa.co.ke>',
+    from: '"mapa" <support@mapa.co.ke>',
     to: recipientEmail,
     subject: `New Inquiry on Your Ad: ${adTitle}`,
     html: `

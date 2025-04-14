@@ -40,11 +40,12 @@ interface WindowProps {
   handleOpenPerfomance: () => void;
   handlePay: (id:string) => void;
   handleCategory: (value:string) => void;
+  handleOpenSearchTab: (value:string) => void;
   userId: string;
   user:any;
 }
 
-const PopupSettings = ({ isOpen, userId, user, handleCategory, handleOpenShop,handlePay,
+const PopupSettings = ({ isOpen, userId, user, handleOpenSearchTab, handleCategory, handleOpenShop,handlePay,
   handleOpenPerfomance, handleOpenSettings, onClose, handleOpenBook,handleOpenChat,handleOpenPlan, handleOpenSell,handleOpenAbout,handleOpenTerms,handleOpenPrivacy,handleOpenSafety }: WindowProps) => {
 
   if (!isOpen) return null;
@@ -70,6 +71,7 @@ const PopupSettings = ({ isOpen, userId, user, handleCategory, handleOpenShop,ha
         handleOpenShop={handleOpenShop}
         handlePay={handlePay}
         handleCategory={handleCategory}
+        handleOpenSearchTab={handleOpenSearchTab}
         />
         <Toaster />
       </div>

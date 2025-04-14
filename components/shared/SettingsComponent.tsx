@@ -32,9 +32,10 @@ handleOpenSettings: () => void;
   handlePay: (id:string) => void;
   handleCategory: (value:string) => void;
   handleOpenPerfomance: () => void;
+  handleOpenSearchTab: (value:string) => void;
 };
 
-const SettingsComponent = ({userId,user,onClose,
+const SettingsComponent = ({userId,user,onClose, handleOpenSearchTab,
   handleOpenShop,
   handleOpenPerfomance, 
   handleOpenSettings,
@@ -102,7 +103,7 @@ const SettingsComponent = ({userId,user,onClose,
              userId={userId}
              defaultValues={{ email: true, fcm: true }}
              />
-<div className="p-1 lg:p-4 dark:bg-[#2D3236] bg-white mt-2 border rounded-xl shadow-sm w-full space-y-3">
+<div className="p-1 lg:p-4 dark:bg-[#2D3236] bg-white mt-2 border rounded-sm shadow-sm w-full space-y-3">
       <h2 className="text-lg font-semibold text-green-600">Profile Information</h2>
      
             <SettingsEdit user={user} type="Update" userId={userId} />
@@ -119,7 +120,15 @@ const SettingsComponent = ({userId,user,onClose,
                    handleOpenPrivacy={handleOpenPrivacy}
                    handleOpenSafety={handleOpenSafety}/> 
         </div>
-       
+        <div className="lg:hidden mt-[65px]">
+          <BottomNavigation userId={userId} 
+          popup={"settings"}
+          onClose={onClose}
+          handleOpenSettings={handleOpenSettings}
+          handleOpenSell={handleOpenSell}
+          handleOpenChat={handleOpenChat}
+          handleOpenSearchTab={handleOpenSearchTab} />
+        </div>
       </footer>
     </ScrollArea>
   );

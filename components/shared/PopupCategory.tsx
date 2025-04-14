@@ -39,6 +39,7 @@ interface WindowProps {
   categoryList:any;
   subcategoryList:any;
   user:any;
+  viewportRef:any;
 }
 
 const PopupCategory = ({
@@ -50,6 +51,7 @@ const PopupCategory = ({
   userName,
   userImage,
   user,
+  viewportRef,
   onClose,
   handleOpenBook,
   handleOpenSell,
@@ -83,6 +85,7 @@ const PopupCategory = ({
             queryObject={queryObject}
             onClose={onClose}
             loading={false}
+            viewportRef={viewportRef}
             handleOpenSell={handleOpenSell}
             handleAdView={handleAdView}
             handleOpenAbout={handleOpenAbout} 

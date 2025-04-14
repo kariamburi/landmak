@@ -528,20 +528,37 @@ const AdForm = ({
     setPeriodInput(periodInput);
     
   };
+  function isValidKenyanPhoneNumber(phone: string): boolean {
+    const kenyanPhoneRegex = /^(?:\+254|254|0)?(7\d{8})$/;
+    return kenyanPhoneRegex.test(phone.trim());
+  }
   const handleSubmit = async () => {
     setLoading(true);
     setUploadProgress(0);
     try {
       if (type === "Create") {
         const isValid = await validateForm();
-
         if (!isValid) return;
+
+        const phone = countryCode + removeLeadingZero(phoneNumber);
+        if(!isValidKenyanPhoneNumber(phone)){
+          toast({
+            title: "Invalid Phone",
+            description: "Invalid Phone Number.",
+            duration: 5000,
+            className: "bg-[#999999] text-white",
+          });
+          return
+        }
+
         const uploadedUrls = await uploadFiles();
+        if (!uploadedUrls) return;
+
         const finalData = {
           ...formData,
           imageUrls: uploadedUrls,
           price: parseCurrencyToNumber(formData["price"].toString()),
-          phone: countryCode + removeLeadingZero(phoneNumber),
+          phone: phone,
         };
         const pricePack = Number(priceInput);
         const newAd = await createData({
@@ -584,6 +601,16 @@ const AdForm = ({
         const isValid = await validateForm();
         if (!isValid) return;
 
+        const phone = countryCode + removeLeadingZero(phoneNumber);
+        if(!isValidKenyanPhoneNumber(phone)){
+          toast({
+            title: "Invalid Phone",
+            description: "Invalid Phone Number.",
+            duration: 5000,
+            className: "bg-[#999999] text-white",
+          });
+          return
+        }
         const uploadedUrls = await uploadFiles();
         // Preserve existing imageUrls if no new files are uploaded
         const finalImageUrls =
@@ -593,7 +620,7 @@ const AdForm = ({
           ...formData,
           imageUrls: finalImageUrls,
           price: parseCurrencyToNumber(formData["price"].toString()),
-          phone: countryCode + removeLeadingZero(phoneNumber),
+          phone: phone,
         };
         const _id = ad._id;
         const updatedAd = await updateAd(userId, _id, finalData);

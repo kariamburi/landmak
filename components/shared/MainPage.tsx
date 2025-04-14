@@ -2,7 +2,8 @@
 import React, { useState, useEffect, useRef } from "react";
 import { Menu, X } from "lucide-react";
 import { Button } from "../ui/button";
-import { ScrollArea } from "../ui/scroll-area";
+//import { ScrollArea } from "../ui/scroll-area";
+import * as ScrollArea from "@radix-ui/react-scroll-area";
 import { AdminId, mode } from "@/constants";
 import { usePathname, useRouter, useSearchParams } from "next/navigation";
 import { IdynamicAd } from "@/lib/database/models/dynamicAd.model";
@@ -18,7 +19,8 @@ import NotificationsIcon from "@mui/icons-material/Notifications";
 import DiamondIcon from "@mui/icons-material/Diamond";
 import KeyboardArrowLeftOutlinedIcon from '@mui/icons-material/KeyboardArrowLeftOutlined';
 import KeyboardArrowRightOutlinedIcon from '@mui/icons-material/KeyboardArrowRightOutlined';
-
+import KeyboardArrowUpOutlinedIcon from '@mui/icons-material/KeyboardArrowUpOutlined';
+import KeyboardArrowDownOutlinedIcon from '@mui/icons-material/KeyboardArrowDownOutlined';
 import {
   Tooltip,
   TooltipContent,
@@ -155,6 +157,8 @@ const MainPage = ({
     setIsOpenPay(false);
    setIsOpenCategory(false);
   };
+
+ 
   useEffect(() => {
     const fetchData = async () => {
       const params = new URLSearchParams(window.location.search);
@@ -207,6 +211,33 @@ const MainPage = ({
 
     return () => window.removeEventListener("resize", handleResize);
   }, []);
+  const [showBottomNav, setShowBottomNav] = useState(true);
+  const viewportRef = useRef<HTMLDivElement | null>(null);
+  const lastScrollTop = useRef(0);
+
+  useEffect(() => {
+    const viewport = viewportRef.current;
+    if (!viewport) return;
+
+    const handleScroll = () => {
+      const currentScrollTop = viewport.scrollTop;
+
+      if (currentScrollTop > lastScrollTop.current) {
+        // Scrolling down
+        setShowBottomNav(false);
+      } else {
+        // Scrolling up
+        setShowBottomNav(true);
+      }
+
+      lastScrollTop.current = currentScrollTop;
+    };
+
+    viewport.addEventListener("scroll", handleScroll);
+    return () => viewport.removeEventListener("scroll", handleScroll);
+  }, []);
+
+
   // Close sidebar when clicking outside
   useEffect(() => {
     const handleClickOutside = (e: MouseEvent) => {
@@ -654,6 +685,30 @@ const handleCloseAdView = () => {
     }
     }
   };
+
+  const viewportRef_ = useRef<HTMLDivElement | null>(null);
+  const [showScrollUp, setShowScrollUp] = useState(false);
+
+  // Scroll listener to toggle scroll up/down buttons
+  useEffect(() => {
+    const viewport = viewportRef_.current;
+    if (!viewport) return;
+
+    const handleScroll = () => {
+      setShowScrollUp(viewport.scrollTop > 10); // show top button after slight scroll
+    };
+
+    viewport.addEventListener("scroll", handleScroll);
+    return () => viewport.removeEventListener("scroll", handleScroll);
+  }, []);
+
+  // Scroll up/down function
+  const scrollBy = (amount: number) => {
+    if (viewportRef_.current) {
+      viewportRef_.current.scrollBy({ top: amount, behavior: "smooth" });
+    }
+  };
+
   return (
     <div className="relative flex w-full h-screen">
       <Head>
@@ -726,8 +781,29 @@ const handleCloseAdView = () => {
                 <X />
               </Button>
             </div>
-            <ScrollArea className="h-[100vh] text-sm lg:text-base w-full dark:bg-[#2D3236] bg-white rounded-t-md border p-4">
-            <div className="relative flex z-20">
+              {/* Scroll Buttons */}
+              <div className="relative flex-1 overflow-hidden">
+      <div className="absolute top-1 left-1/2 z-50 flex flex-col gap-2">
+
+      {showScrollUp && (
+          <button
+            onClick={() => scrollBy(-300)}
+            className="bg-gray-100 text-black h-10 w-10 p-0 rounded-full shadow"
+          >
+             <KeyboardArrowUpOutlinedIcon/>
+          </button>
+        )} 
+       
+       
+      </div>
+        <ScrollArea.Root 
+         className="h-full">
+      <ScrollArea.Viewport 
+         ref={viewportRef_}
+         className="h-full overflow-y-auto text-sm lg:text-base w-full dark:bg-[#2D3236] bg-white rounded-t-md border p-4">
+      
+      <div className="relative flex z-20">
+        
       <div className="w-full p-0">
         <div
           className={`flex flex-col items-center`}
@@ -810,7 +886,22 @@ const handleCloseAdView = () => {
      
       
     </div>
-          </ScrollArea>
+    </ScrollArea.Viewport>
+     <ScrollArea.Scrollbar orientation="vertical" />
+      <ScrollArea.Corner />
+    </ScrollArea.Root>
+    <div className="absolute bottom-1 left-1/2 z-50 flex flex-col gap-2">
+    {!showScrollUp && (
+          <button
+            onClick={() => scrollBy(300)}
+            className="bg-gray-100 text-black p-0 h-10 w-10 rounded-full shadow"
+          >
+           <KeyboardArrowDownOutlinedIcon/>
+          </button>
+        )}
+       
+      </div>
+      </div>
           </div>
         )}
       </div>
@@ -836,8 +927,8 @@ const handleCloseAdView = () => {
           onMouseEnter={() => setHoveredCategory(hoveredCategory)}
           onMouseLeave={() => setHoveredCategory(null)}
         >
-         
-          <ScrollArea className="h-[450px] w-full">
+          <ScrollArea.Root>
+      <ScrollArea.Viewport className="h-[450px] w-full">
             {subcategoryList
               .filter((cat: any) => cat.category.name === hoveredCategory)
               .map((sub: any, index: number) => (
@@ -892,10 +983,13 @@ const handleCloseAdView = () => {
                 
                 </div>
               ))}
-          </ScrollArea>
+        </ScrollArea.Viewport>
+      <ScrollArea.Scrollbar orientation="vertical" />
+      <ScrollArea.Corner />
+    </ScrollArea.Root>
         </div>
       )}
-        <div onMouseEnter={() => setHoveredCategory(null)} className="relative p-0 lg:p-2 h-full flex flex-col">
+        <div onMouseEnter={() => setHoveredCategory(null)} className="relative p-0 lg:p-2 h-screen flex flex-col">
         <Button
           onClick={handleSidebarToggle}
           className="hidden lg:inline absolute bottom-5 left-4 z-10 md:block bg-green-600 text-white shadow-lg hover:bg-green-700"
@@ -1082,8 +1176,12 @@ const handleCloseAdView = () => {
         
         </div>
             </div>
-            <div className="w-full mt-2 gap-2 justify-between flex items-center">
-           
+            </div>
+            <div
+  className={`transition-all duration-300 overflow-hidden ${
+    showBottomNav ? "max-h-[120px] opacity-100" : "max-h-0 opacity-0"
+  }`}
+>
         <HeaderMain handleFilter={handleFilter} handleOpenPlan={handleOpenPlan} AdsCountPerRegion={AdsCountPerRegion} queryObject={newqueryObject}
          handleAdEdit={handleAdEdit}
          handleAdView={handleAdView}
@@ -1092,15 +1190,16 @@ const handleCloseAdView = () => {
          />
        {/*  <AppPopup />*/}
        
-          </div>
+         
           </div>
           </div>
 
 
 
-          {/* List Ads 
-          <div className="space-y-4 overflow-y-auto mt-0 flex-1">*/}
-         <ScrollArea className="h-[100vh] p-0 w-full bg-gray-200 lg:rounded-t-md border overflow-hidden"> 
+        
+     <ScrollArea.Root className="flex-1 overflow-hidden">
+      <ScrollArea.Viewport ref={viewportRef}  className="h-full overflow-y-auto bg-gray-200 lg:rounded-t-md border">
+    
   <div className="lg:hidden p-1">
     <MenuSubmobileMain
       categoryList={categoryList}
@@ -1214,19 +1313,33 @@ const handleCloseAdView = () => {
       handleOpenSafety={handleOpenSafety}
     />
   </div>
-</ScrollArea>
+  
+  </ScrollArea.Viewport>
+  <ScrollArea.Scrollbar orientation="vertical" />
+      <ScrollArea.Corner />
+    </ScrollArea.Root>
+
+
+
 
            <footer>
                   
-                  <div className="lg:hidden">
-                    <BottomNavigation userId={userId} 
-                     popup={"home"}
-                     onClose={handleClose} 
-                     handleOpenSell={handleOpenSell}
-                     handleOpenChat={handleOpenChat}
-                     handleOpenSearchTab={handleOpenSearchTab} 
-                    />
-                  </div>
+                
+                  <div
+        className={`lg:hidden fixed bottom-0 left-0 right-0 z-50 transition-transform duration-300 ${
+          showBottomNav ? "translate-y-0" : "translate-y-full"
+        }`}
+      >
+       <BottomNavigation 
+                 userId={userId} 
+                 popup={"home"}
+                 onClose={handleClose} 
+                handleOpenSell={handleOpenSell}
+                handleOpenChat={handleOpenChat}
+                handleOpenSettings={handleOpenSettings}
+                handleOpenSearchTab={handleOpenSearchTab} 
+                                     />
+      </div>
                 </footer>
         </div>
       </div>
@@ -1239,7 +1352,8 @@ const handleCloseAdView = () => {
       handleOpenSearchTab={handleOpenSearchTab} 
       categoryList={categoryList} 
       subcategoryList={subcategoryList}
-      user={user}/>
+      user={user}
+      viewportRef={viewportRef}/>
 
       <PopupShop isOpen={isOpenShop} handleOpenReview={handleOpenReview} onClose={handleCloseShop} userId={userId} shopAcc={shopId} userName={userName} userImage={userImage} queryObject={newqueryObject} handleOpenSell={handleOpenSell} handleAdView={handleAdView} handleAdEdit={handleAdEdit} handleOpenAbout={handleOpenAbout} handleOpenTerms={handleOpenTerms} handleOpenPrivacy={handleOpenPrivacy} handleOpenSafety={handleOpenSafety} handleOpenBook={handleOpenBook} handleOpenPlan={handleOpenPlan} handleOpenChat={handleOpenChat} handleOpenChatId={handleOpenChatId} handleOpenSettings={handleOpenSettings}
       handleOpenShop={handleOpenShop}
@@ -1342,7 +1456,8 @@ const handleCloseAdView = () => {
       handleCategory={handleCategory}
       handlePay={handlePay}
       handleOpenShop={handleOpenShop}
-      user={user}/>
+      user={user}
+      handleOpenSearchTab={handleOpenSearchTab}/>
      
       <PopupPay txtId={txtId} isOpen={isOpenPay} onClose={handleClosePay} userId={userId} userName={userName} handleOpenSell={handleOpenSell} handleOpenAbout={handleOpenAbout} handleOpenTerms={handleOpenTerms} handleOpenPrivacy={handleOpenPrivacy} handleOpenSafety={handleOpenSafety} handleOpenBook={handleOpenBook} handleOpenPlan={handleOpenPlan} handleOpenChat={handleOpenChat}
       handleOpenPerfomance={handleOpenPerfomance}

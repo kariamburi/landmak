@@ -36,7 +36,7 @@ export default function NotificationPreferences({
   };
 
   return (
-    <div className="p-1 lg:p-4 border rounded-xl shadow-sm bg-white w-full space-y-3">
+    <div className="p-1 lg:p-4 border rounded-sm shadow-sm bg-white w-full space-y-3">
       <h2 className="text-lg font-semibold text-green-600">Alert Preferences</h2>
       <p className="text-sm text-gray-500">Select how you want to receive notifications:</p>
 

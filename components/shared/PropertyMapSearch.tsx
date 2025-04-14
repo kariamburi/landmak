@@ -154,11 +154,11 @@ useEffect(() => {
   const userId="";
   
    return isLoaded ? (  <>
-    <div className="flex w-full h-screen">
+    <div className="flex w-full h-screen bg-gray-200 p-1">
     
       {/* Sidebar with Toggle Button */}
       <div
-        className={`bg-white mt-5 lg:mt-0 h-[100vh] shadow-lg transition-transform duration-300 ease-in-out fixed md:relative ${
+        className={`bg-gray-200 h-[100vh] shadow-lg transition-transform duration-300 ease-in-out fixed md:relative ${
           showSidebar ? "w-full md:w-1/3 p-1" : "-translate-x-full md:w-0 md:translate-x-0"
         }`}
       >
@@ -268,7 +268,7 @@ useEffect(() => {
         
       
 
-     <div className="flex flex-col items-center w-full p-0 h-[90vh] lg:h-screen">
+     <div className="flex flex-col items-center w-full p-0 h-screen">
      <div className="h-[65px] lg:h-[50px] flex bg-white justify-between items-center p-1 w-full">
            <p className="text-sm text-gray-600">Click on the map to set a location.</p>
            <div className="">
@@ -359,7 +359,7 @@ useEffect(() => {
                </GoogleMap>
              </div>
            
-             <div className="h-[90px] lg:h-70px] bg-white w-full">
+             <div className="h-[90px] lg:h-70px] w-full">
              <label className="block text-gray-700 font-medium mb-0">
                Select Distance: {radius / 1000} km
              </label>

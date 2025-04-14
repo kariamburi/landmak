@@ -5,6 +5,7 @@ import Image from "next/image";
 import { ScrollArea } from "../ui/scroll-area";
 import { usePathname, useRouter } from "next/navigation";
 import ProgressPopup from "./ProgressPopup";
+import sanitizeHtml from "sanitize-html";
 import {
   deleteAd,
   getAdByUser,
@@ -12,17 +13,20 @@ import {
   updateStatus,
 } from "@/lib/actions/dynamicAd.actions";
 import { updateUserStatus } from "@/lib/actions/user.actions";
+import ContactSeller from "./ContactSeller";
 
 interface ChatWindowProps {
   isOpen: boolean;
   onClose: () => void;
   ad: any;
+  handleOpenChatId:(value:string)=> void;
 }
 
 const ReportActionWindow: React.FC<ChatWindowProps> = ({
   isOpen,
   ad,
   onClose,
+  handleOpenChatId,
 }) => {
  
   const [status, setStatus] = useState(ad.adstatus);
@@ -34,7 +38,15 @@ const ReportActionWindow: React.FC<ChatWindowProps> = ({
   const sortby = "recommended";
   const [userId, setUserId] = useState(ad.organizer);
   const [organizerAds, setOrganizerAds] = useState<any>([]);
+  const [selectAds, setSelectAds] = useState<any>([]);
   const [isOpenP, setIsOpenP] = useState(false);
+  const [isOpenContact, setIsOpenContact] = useState(false);
+  const handleOpenContact = (ad:any) => {
+    setSelectAds(ad);
+    setIsOpenContact(true)
+  };
+  const handleCloseContact = () => setIsOpenContact(false);
+
   const handleOpenP = () => setIsOpenP(true);
   const handleCloseP = () => setIsOpenP(false);
   const handleDelete = async () => {
@@ -95,7 +107,14 @@ const ReportActionWindow: React.FC<ChatWindowProps> = ({
       console.error("Error fetching ads", error);
     }
   };
-
+  const truncateDescription = (description: string, charLimit: number) => {
+    const safeMessage = sanitizeHtml(description); 
+    const truncatedMessage =
+    safeMessage.length > charLimit
+      ? `${safeMessage.slice(0, charLimit)}...`
+      : safeMessage;
+    return truncatedMessage;
+  };
   useEffect(() => {
     if (isOpen) {
     fetchAds();
@@ -121,7 +140,7 @@ const ReportActionWindow: React.FC<ChatWindowProps> = ({
         <ScrollArea className="p-2">
           <div className="border rounded-lg shadow-md p-4 dark:bg-[#131B1E] bg-white">
             <h2 className="text-sm font-bold">{ad.data.title}</h2>
-            <p className="text-sm text-gray-600 dark:text-gray-300">
+            <p className="text-sm text-gray-600 dark:text-gray-500">
               Price:{" "}
               <span className="font-semibold">
                 Ksh {ad.data.price.toLocaleString()}
@@ -143,7 +162,9 @@ const ReportActionWindow: React.FC<ChatWindowProps> = ({
             </div>
 
             <p className="mt-1 text-xs text-gray-700 dark:text-gray-300">
-              {ad.data.description}
+             
+        <span dangerouslySetInnerHTML={{ __html:  truncateDescription(ad.data.description, 180) }} />
+        
             </p>
             <p className="text-xs text-gray-500 dark:text-gray-400">
               Condition: {ad.data.condition}
@@ -151,16 +172,31 @@ const ReportActionWindow: React.FC<ChatWindowProps> = ({
 
             {/* Status and Actions */}
             <div className="mt-4 flex justify-between">
-              <span
-                className={`px-3 py-1 text-sm rounded-sm ${
+            <div className="flex gap-1 items-center">
+            <div
+                className={`h-3 w-3 rounded-full ${
                   status === "Active"
-                    ? "bg-green-500 text-white"
-                    : "bg-red-500 text-white"
+                    ? "bg-green-500"
+                    : "bg-red-500"
+                }`}
+              ></div>
+              <span
+                className={`text-sm rounded-sm ${
+                  status === "Active"
+                    ? "text-green-500"
+                    : "text-red-500"
                 }`}
               >
                 {status}
               </span>
+              </div>
               <div className="space-x-2">
+              <button
+                  onClick={() => handleOpenContact(ad)}
+                  className="bg-green-500 text-white px-3 py-1 rounded hover:bg-green-700"
+                >
+                 Contact Seller
+                </button>
                 <button
                   onClick={handleStatusChange}
                   className="bg-blue-500 text-white px-3 py-1 rounded hover:bg-blue-700"
@@ -210,6 +246,7 @@ const ReportActionWindow: React.FC<ChatWindowProps> = ({
 
       {/* Progress Popup */}
       <ProgressPopup isOpen={isOpenP} onClose={handleCloseP} />
+      <ContactSeller isOpen={isOpenContact} ad={selectAds} handleOpenChatId={handleOpenChatId} onClose={handleCloseContact}/>
     </div>
   );
 };

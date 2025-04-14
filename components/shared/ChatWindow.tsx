@@ -71,7 +71,7 @@ const ChatWindow: React.FC<ChatWindowProps> = ({
       {isMobile  ? (
               // Fullscreen Popover for Mobile
       <div className="fixed h-screen inset-0 z-50 bg-white dark:bg-[#222528] dark:text-gray-100 p-0 flex flex-col">
-        <div className="h-[90vh] lg:h-screen flex flex-col">
+        <div className="h-screen flex flex-col">
         <div className="h-[50px] bg-gradient-to-r from-green-600 to-green-600 text-white p-2 rounded-t-lg">
         <div className="flex justify-between w-full">
           <h3 className="font-semibold text-white">{title !=="Home" && (<>{title}</>)}</h3>

@@ -20,7 +20,7 @@ import SettingsIcon from "@mui/icons-material/Settings";
 import BookmarkIcon from "@mui/icons-material/Bookmark";
 import HomeIcon from "@mui/icons-material/Home";
 import SellOutlinedIcon from "@mui/icons-material/SellOutlined";
-
+import ShareOutlinedIcon from "@mui/icons-material/ShareOutlined";
 import { SignedIn, SignedOut } from "@clerk/nextjs";
 import ProgressPopup from "./ProgressPopup";
 type NavItemsProps = {
@@ -48,6 +48,26 @@ const NavItems = ({ userstatus, userId,user, popup, onClose, handleclicklink, ha
   function capitalizeFirstLetter(str: string): string {
     return str.charAt(0).toUpperCase() + str.slice(1);
   }
+  const shareUrl = "https://mapa.co.ke"; // Replace with the URL you want to share
+  
+    const handleShare = async () => {
+      if (navigator.share) {
+        try {
+          await navigator.share({
+            title: "Check out mapa",
+            text: "I found this amazing site for property classification!",
+            url: shareUrl,
+          });
+          console.log("Share was successful.");
+        } catch (error) {
+          console.error("Sharing failed:", error);
+        }
+      } else {
+        // Fallback for browsers that do not support the Web Share API
+        console.log("Share not supported on this browser.");
+        // You can also show a modal or a tooltip with the URL or instructions here.
+      }
+    };
   return (
     <div className="dark:bg-[#131B1E] dark:text-gray-300 bg-white w-full">
       <ul>
@@ -319,10 +339,24 @@ const NavItems = ({ userstatus, userId,user, popup, onClose, handleclicklink, ha
                     </div>
                   </li>
                 </SignedOut>
+                
               </>
             );
           })}
       </ul>
+      <div 
+                  onClick={handleShare}
+                  className={`flex dark:bg-[#2D3236]  dark:hover:bg-gray-800 hover:bg-slate-100 rounded-sm hover:text-green-600 p-3 mb-1 hover:cursor-pointer`}>
+                          <span>
+                            <ShareOutlinedIcon className="w-10 p-1 " />
+                          </span>
+                          <span className="flex-1 text-sm mr-5 hover:no-underline my-auto">
+                          Share
+                        </span>
+                        <span className="text-right my-auto">
+                          <ArrowForwardIosIcon className="w-10 p-1" />
+                        </span>
+                      </div>
       <ProgressPopup isOpen={isOpenP} onClose={handleCloseP} />
     </div>
   );

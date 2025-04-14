@@ -59,20 +59,20 @@ const MobileNav = ({ userstatus, userId,popup,user, onClose, handleOpenSettings,
           // onClick={handleclicklink}
         >
           <SheetTitle>
-            <div className="flex justify-between items-center mb-1">
-            <div className="flex items-center gap-2">
-                <img src="/logo.png" alt="Logo" className="w-8 h-8 rounded-full" />
+            <div className="flex justify-between items-center">
+            <div className="flex items-center gap-1">
+                <img src="/logo.png" alt="Logo" className="w-6 h-6 rounded-full" />
                 <StyledBrandNameG/>
               </div>
               <button
                 onClick={handleclicklink}
-                className="flex justify-center items-center h-12 w-12 text-black dark:text-gray-200 dark:hover:bg-gray-700 hover:bg-gray-200 rounded-full"
+                className="flex justify-center items-center h-10 w-10 text-black dark:text-gray-200 dark:hover:bg-gray-700 hover:bg-gray-200 rounded-full"
               >
                 <CloseOutlinedIcon />
               </button>
             </div>
           </SheetTitle>
-          <Separator className="border" />
+        
           <NavItems
             userstatus={userstatus}
             userId={userId}

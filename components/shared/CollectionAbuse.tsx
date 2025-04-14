@@ -23,6 +23,7 @@ type CollectionProps = {
   totalPages: number;
   urlParamName?: string;
   userId: string;
+  handleOpenChatId:(valu:string)=> void;
 };
 
 const CollectionAbuse = ({
@@ -33,6 +34,7 @@ const CollectionAbuse = ({
   totalPages,
   urlParamName,
   userId,
+  handleOpenChatId,
 }: CollectionProps) => {
   const [selectedOrder, setSelectedOrder] = useState<any | null>(null);
   const pathname = usePathname();
@@ -49,7 +51,7 @@ const CollectionAbuse = ({
   const handleOpen = () => {
     setIsOpen(true);
   };
-  console.log(data);
+  
   const handleClose = () => {
     setIsOpen(false);
   };
@@ -161,8 +163,8 @@ const CollectionAbuse = ({
         <ReportActionWindow
           isOpen={isOpenMethods}
           onClose={handleCloseMethods}
-          ad={selectedDelivery}
-        />
+          ad={selectedDelivery} 
+          handleOpenChatId={handleOpenChatId}        />
       )}
     </div>
   );
