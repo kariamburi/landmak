@@ -40,6 +40,7 @@ interface ChatWindowProps {
   handleOpenSell:()=> void;
   handleCategory:(value:string)=> void;
   handleOpenSearchTab:(value:string)=> void;
+  handleOpenSettings: () => void; 
 }
 
 const SubCategoryWindow: React.FC<ChatWindowProps> = ({
@@ -53,6 +54,7 @@ const SubCategoryWindow: React.FC<ChatWindowProps> = ({
   handleOpenSell,
   handleCategory,
   handleOpenSearchTab,
+  handleOpenSettings,
 }) => {
   const { toast } = useToast();
   const [query, setQuery] = useState("");
@@ -184,6 +186,7 @@ const SubCategoryWindow: React.FC<ChatWindowProps> = ({
               handleOpenSell={handleOpenSell}
               handleOpenChat={handleOpenChat}
               handleOpenSearchTab={handleOpenSearchTab}
+              handleOpenSettings={handleOpenSettings}  
             />
           </div>
         </footer>

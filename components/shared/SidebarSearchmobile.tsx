@@ -203,7 +203,7 @@ const SidebarSearchmobile = ({
                       <Button variant="outline" onClick={HandletogglePopup}>
                       <CloseOutlinedIcon />
                       </Button>
-                    </div>  <ScrollArea className="h-[80vh] w-full dark:bg-[#222528] dark:text-gray-300 bg-gray-200 rounded-t-md p-0">
+                    </div>  <ScrollArea className="h-[95vh] w-full dark:bg-[#222528] dark:text-gray-300 bg-gray-200 rounded-t-md p-0">
         <div className="flex flex-col items-center w-full p-2">
           <div className="dark:bg-[#2D3236] dark:text-gray-300 bg-white text-sm mt-2 border rounded-lg w-full p-1">
             <Accordion type="single" collapsible value={openItem} onValueChange={setOpenItem}>

@@ -119,7 +119,7 @@ const SendMessageSupport = ({
   };
 
   return (
-    <div className="h-auto border w-full bg-white dark:bg-[#2D3236] items-center mb-1">
+    <div className="h-full w-full items-center border bg-white dark:bg-[#2D3236] items-center mb-1">
       <form
         onSubmit={handleSendMessage}
         id="send-message-form"

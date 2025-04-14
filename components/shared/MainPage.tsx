@@ -1209,6 +1209,7 @@ const handleCloseAdView = () => {
       handleCategory={handleCategory}
       handleOpenChat={handleOpenChat}
       handleOpenSearchTab={handleOpenSearchTab}
+      handleOpenSettings={handleOpenSettings}
       userId={userId}
     />
   </div>

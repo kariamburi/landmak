@@ -15,8 +15,8 @@ import {
 import { useEffect, useRef, useState } from "react";
 import React from "react";
 import { UpdateUserParams } from "@/types";
-import { ScrollArea } from "@/components/ui/scroll-area";
-
+//import { ScrollArea } from "@/components/ui/scroll-area";
+import * as ScrollArea from "@radix-ui/react-scroll-area";
 type sidebarProps = {
   displayName: string;
   uid: string;
@@ -148,8 +148,11 @@ const ChatBoxSupport = ({
   }, [messages, uid]);
 
   return (
-    <div>
-      <ScrollArea className="w-full rounded-t-md p-2 h-[70vh] lg:h-[320px] dark:bg-[#2D3236] bg-white border">
+    
+    <ScrollArea.Root className="h-full overflow-hidden">
+    <ScrollArea.Viewport  className="h-[calc(100vh-150px)] lg:h-[335px] dark:bg-[#2D3236] bg-white border">
+  
+    
         {messages.map((message: any) => (
           <div key={message.id}>
             <Message
@@ -168,8 +171,11 @@ const ChatBoxSupport = ({
           </div>
         ))}
         <div ref={messagesEndRef}></div>
-      </ScrollArea>
-    </div>
+        </ScrollArea.Viewport>
+         <ScrollArea.Scrollbar orientation="vertical" />
+      <ScrollArea.Corner />
+    </ScrollArea.Root>
+   
   );
 };
 
