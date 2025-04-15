@@ -11,7 +11,7 @@
     "postbuild": "next-sitemap --config next-sitemap.config.cjs"
   },
   "dependencies": {
-    "@clerk/nextjs": "^5.3.1",
+    "@clerk/nextjs": "^5.7.5",
     "@emotion/react": "^11.13.0",
     "@emotion/styled": "^11.13.0",
     "@fortawesome/fontawesome-svg-core": "^6.6.0",

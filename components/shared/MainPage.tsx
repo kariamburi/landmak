@@ -215,18 +215,12 @@ const MainPage = ({
  
 const viewportRef = useRef<HTMLDivElement | null>(null);
 const lastScrollTop = useRef(0);
-const scrollTimeout = useRef<NodeJS.Timeout | null>(null);
 
-useEffect(() => {
-  const viewport = viewportRef.current;
-  if (!viewport) return;
+  useEffect(() => {
+    const viewport = viewportRef.current;
+    if (!viewport) return;
 
-  const handleScroll = () => {
-    if (scrollTimeout.current) {
-      clearTimeout(scrollTimeout.current);
-    }
-
-    scrollTimeout.current = setTimeout(() => {
+    const handleScroll = () => {
       const currentScrollTop = viewport.scrollTop;
 
       if (currentScrollTop > lastScrollTop.current) {
@@ -238,17 +232,11 @@ useEffect(() => {
       }
 
       lastScrollTop.current = currentScrollTop;
-    }, 100); // Adjust delay (ms) as needed
-  };
+    };
 
-  viewport.addEventListener("scroll", handleScroll);
-  return () => {
-    viewport.removeEventListener("scroll", handleScroll);
-    if (scrollTimeout.current) clearTimeout(scrollTimeout.current);
-  };
-}, []);
-
-
+    viewport.addEventListener("scroll", handleScroll);
+    return () => viewport.removeEventListener("scroll", handleScroll);
+  }, []);
 
   // Close sidebar when clicking outside
   useEffect(() => {
@@ -1011,8 +999,11 @@ const handleCloseAdView = () => {
         
           {/* Header Section */}
           <div className="flex flex-col gap-1 top-0 left-0 w-full bg-gradient-to-b from-green-600 to-green-600 lg:from-white lg:to-white p-1 lg:shadow-md z-10 md:relative md:w-auto md:shadow-none">
-          <div className="p-2 w-full flex flex-col items-center">
-            <div className="w-full justify-between flex items-center">
+          <div
+  className={`p-2 w-full flex flex-col items-center transition-transform duration-300 ${
+    showBottomNav ? "translate-y-0" : "translate-y-full"
+  }`}
+><div className="w-full justify-between flex items-center">
               <div className="flex items-center gap-1">
                 <img src="/logo_white.png" alt="Logo" className="lg:hidden w-8 h-8 rounded-full" />
                 <img src="/logo.png" alt="Logo" className="hidden lg:inline w-8 h-8 rounded-full" />
@@ -1189,11 +1180,11 @@ const handleCloseAdView = () => {
         </div>
             </div>
             </div>
-            <div
-  className={`transition-all duration-300 overflow-hidden ${
-    showBottomNav ? "max-h-[120px] opacity-100" : "max-h-0 opacity-0"
-  }`}
->
+           
+            
+
+
+
         <HeaderMain handleFilter={handleFilter} handleOpenPlan={handleOpenPlan} AdsCountPerRegion={AdsCountPerRegion} queryObject={newqueryObject}
          handleAdEdit={handleAdEdit}
          handleAdView={handleAdView}
@@ -1203,7 +1194,7 @@ const handleCloseAdView = () => {
        {/*  <AppPopup />*/}
        
          
-          </div>
+          
           </div>
 
 

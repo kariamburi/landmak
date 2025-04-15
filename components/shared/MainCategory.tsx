@@ -263,45 +263,30 @@ CollectionProps) => {
 const lastScrollTop = useRef(0);
 const scrollTimeout = useRef<NodeJS.Timeout | null>(null);
 
-useEffect(() => {
-  const timer = setTimeout(() => {
-    const el = scrollRefB.current;
-    if (!el) return;
+  useEffect(() => {
+    const timer = setTimeout(() => {
+      const el = scrollRefB.current;
+      if (el) {
+       
+      const handleScroll = () => {
+      const currentScrollTop = el.scrollTop;
 
-    const handleScroll = () => {
-      if (scrollTimeout.current) {
-        clearTimeout(scrollTimeout.current);
+      if (currentScrollTop > lastScrollTop.current) {
+        // Scrolling down
+        setShowBottomNav(false);
+      } else {
+        // Scrolling up
+        setShowBottomNav(true);
       }
 
-      scrollTimeout.current = setTimeout(() => {
-        const currentScrollTop = el.scrollTop;
-
-        if (currentScrollTop > lastScrollTop.current) {
-          // Scrolling down
-          setShowBottomNav(false);
-        } else {
-          // Scrolling up
-          setShowBottomNav(true);
-        }
-
-        lastScrollTop.current = currentScrollTop;
-      }, 100); // Adjust delay as needed
+      lastScrollTop.current = currentScrollTop;
     };
+        el.addEventListener('scroll', handleScroll);
+      }
+    }, 0);
+    return () => clearTimeout(timer);
+  }, []);
 
-    el.addEventListener('scroll', handleScroll);
-
-    // Clean up scroll listener
-    return () => {
-      el.removeEventListener('scroll', handleScroll);
-      if (scrollTimeout.current) clearTimeout(scrollTimeout.current);
-    };
-  }, 0);
-
-  return () => clearTimeout(timer);
-}, []);
-
-  
-  
    // Close sidebar when clicking outside
    useEffect(() => {
      const handleClickOutside = (e: MouseEvent) => {
@@ -606,7 +591,11 @@ useEffect(() => {
       </Button>
         {/* Header Section */}
         <div className="mb-1 flex flex-col gap-2 top-0 left-0 w-full bg-gradient-to-b from-green-600 to-green-600 lg:from-white lg:to-white p-1 shadow-md z-10 md:relative md:w-auto md:shadow-none">
-  <div className="p-2 w-full flex flex-col items-center">
+        <div
+  className={`p-2 w-full flex flex-col items-center transition-transform duration-300 ${
+    showBottomNav ? "translate-y-0" : "translate-y-full"
+  }`}
+>
     <div className="w-full justify-between flex items-center">
       <div className="flex items-center">
         <div
@@ -824,11 +813,7 @@ useEffect(() => {
       </div>
     </div>
     </div>
-    <div
-  className={`transition-all duration-300 overflow-hidden ${
-    showBottomNav ? "max-h-[120px] opacity-100" : "max-h-0 opacity-0"
-  }`}
->
+   
     <div className="w-full mb-1 lg:hidden">
       <div className="flex w-full mt-0 gap-1 items-center">
         {newqueryObject.category === "Property" && (
@@ -1043,7 +1028,7 @@ useEffect(() => {
                          </> )}
                          </div>              
    
-  </div>
+
 </div>
 
         {/* List Ads Section */}
