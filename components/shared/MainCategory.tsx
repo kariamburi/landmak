@@ -124,6 +124,7 @@ type CollectionProps = {
   handleOpenSafety: () => void;
   handleOpenPerfomance: () => void;
   handleOpenSettings: () => void;
+  handleOpenSearchByTitle: () => void;
   handleOpenShop: (shopId:string) => void;
   handleCategory: (value:string) => void;
   handleOpenSearchTab: (value:string) => void;
@@ -156,6 +157,7 @@ const MainCategory = ({
   handleOpenShop,
   handleCategory,
   handleOpenSearchTab,
+  handleOpenSearchByTitle,
 
 }: // user,
 
@@ -262,7 +264,7 @@ CollectionProps) => {
   const scrollRefB = useRef<HTMLDivElement>(null);
 const lastScrollTop = useRef(0);
 const scrollTimeout = useRef<NodeJS.Timeout | null>(null);
-
+const SCROLL_THRESHOLD = 200; // pixels
   useEffect(() => {
     const timer = setTimeout(() => {
       const el = scrollRefB.current;
@@ -270,15 +272,19 @@ const scrollTimeout = useRef<NodeJS.Timeout | null>(null);
        
       const handleScroll = () => {
       const currentScrollTop = el.scrollTop;
-
-      if (currentScrollTop > lastScrollTop.current) {
+      const scrollDiff = currentScrollTop - lastScrollTop.current;
+  
+      // Ignore small scrolls
+      if (Math.abs(scrollDiff) < SCROLL_THRESHOLD) return;
+  
+      if (scrollDiff > 0) {
         // Scrolling down
         setShowBottomNav(false);
       } else {
         // Scrolling up
         setShowBottomNav(true);
       }
-
+  
       lastScrollTop.current = currentScrollTop;
     };
         el.addEventListener('scroll', handleScroll);
@@ -887,7 +893,7 @@ const scrollTimeout = useRef<NodeJS.Timeout | null>(null);
       </button>
 
       <div className="flex-1">
-        <SearchNow handleFilter={handleFilter} />
+        <SearchNow handleFilter={handleFilter} handleOpenSearchByTitle={handleOpenSearchByTitle}/>
       </div>
 
       {newqueryObject.category === "Property" && (

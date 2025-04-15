@@ -21,7 +21,7 @@ import {
 import MapSearch from "./MapSearch";
 import PropertyMapSearch from "./PropertyMapSearch";
 import DirectionsWalkOutlinedIcon from '@mui/icons-material/DirectionsWalkOutlined';
-export default function HeaderMain({ handleFilter ,handleCategory, handleOpenPlan, handleOpenSell, handleAdView, handleAdEdit, AdsCountPerRegion,queryObject }: { handleOpenPlan:() => void, handleOpenSell:() => void, handleFilter: (value:any) => void, AdsCountPerRegion:any,queryObject:any , handleAdEdit: (id:string) => void, handleCategory: (value:string) => void,
+export default function HeaderMain({ handleFilter ,handleOpenSearchByTitle, handleCategory, handleOpenPlan, handleOpenSell, handleAdView, handleAdEdit, AdsCountPerRegion,queryObject }: { handleOpenSearchByTitle:() => void, handleOpenPlan:() => void, handleOpenSell:() => void, handleFilter: (value:any) => void, AdsCountPerRegion:any,queryObject:any , handleAdEdit: (id:string) => void, handleCategory: (value:string) => void,
   handleAdView: (id:string) => void}) {
   const router = useRouter();
   const [search, setSearch] = useState<string>();
@@ -74,7 +74,7 @@ export default function HeaderMain({ handleFilter ,handleCategory, handleOpenPla
         </button>
         </div>
         <div className="flex-1 hidden lg:inline">
-        <SearchNow handleFilter={handleFilter} />
+        <SearchNow handleFilter={handleFilter} handleOpenSearchByTitle={handleOpenSearchByTitle}/>
         </div>
 
  
@@ -152,7 +152,7 @@ export default function HeaderMain({ handleFilter ,handleCategory, handleOpenPla
                     )}
                     </div>
                      <div className="flex-1 mt-2 lg:hidden">
-        <SearchNow handleFilter={handleFilter} />
+        <SearchNow handleFilter={handleFilter} handleOpenSearchByTitle={handleOpenSearchByTitle}/>
         </div>
 
     </div>

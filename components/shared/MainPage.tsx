@@ -70,6 +70,7 @@ import StyledBrandName from "./StyledBrandName";
 import { getAdById } from "@/lib/actions/dynamicAd.actions";
 import { getUserById } from "@/lib/actions/user.actions";
 import Head from "next/head";
+import SearchByTitle from "./SearchByTitle";
 type CollectionProps = {
   limit: number;
   userId: string;
@@ -134,6 +135,7 @@ const MainPage = ({
  const [isOpenSettings, setIsOpenSettings] = useState(false);
  const [isOpenPerfomance, setIsOpenPerfomance] = useState(false);
  const [isOpenSearchTab, setIsOpenSearchTab] = useState(false);
+ const [isOpenSearchByTitle, setIsOpenSearchByTitle] = useState(false);
  const [CategorySelect, setCategorySelect] = useState('');
  const { toast } = useToast()
  
@@ -211,33 +213,47 @@ const MainPage = ({
 
     return () => window.removeEventListener("resize", handleResize);
   }, []);
+  
+  const SCROLL_THRESHOLD = 200; // pixels
+  let scrollTimeout: NodeJS.Timeout;
+  
   const [showBottomNav, setShowBottomNav] = useState(true);
- 
-const viewportRef = useRef<HTMLDivElement | null>(null);
-const lastScrollTop = useRef(0);
-
+  const viewportRef = useRef<HTMLDivElement | null>(null);
+  const lastScrollTop = useRef(0);
+  
   useEffect(() => {
     const viewport = viewportRef.current;
     if (!viewport) return;
-
+  
     const handleScroll = () => {
       const currentScrollTop = viewport.scrollTop;
-
-      if (currentScrollTop > lastScrollTop.current) {
+      const scrollDiff = currentScrollTop - lastScrollTop.current;
+  
+      clearTimeout(scrollTimeout);
+  
+      // Ignore small scrolls
+      if (Math.abs(scrollDiff) < SCROLL_THRESHOLD) return;
+  
+      if (scrollDiff > 0) {
         // Scrolling down
         setShowBottomNav(false);
       } else {
         // Scrolling up
         setShowBottomNav(true);
       }
-
+  
       lastScrollTop.current = currentScrollTop;
+  
+      // Optional: show nav again if user stops scrolling
+      scrollTimeout = setTimeout(() => {
+        setShowBottomNav(true);
+      }, 200);
     };
-
+  
     viewport.addEventListener("scroll", handleScroll);
     return () => viewport.removeEventListener("scroll", handleScroll);
   }, []);
-
+  
   // Close sidebar when clicking outside
   useEffect(() => {
     const handleClickOutside = (e: MouseEvent) => {
@@ -269,6 +285,12 @@ const lastScrollTop = useRef(0);
     }
   const handleCloseSearchTab = () => {
     setIsOpenSearchTab(false);
+  };
+  const handleCloseSearchByTitle = () => {
+    setIsOpenSearchByTitle(false);
+  };
+  const handleOpenSearchByTitle = () => {
+    setIsOpenSearchByTitle(true);
   };
   const handleClosePerfomance = () => {
     const params = new URLSearchParams(window.location.search);
@@ -1191,6 +1213,7 @@ const handleCloseAdView = () => {
          handleAdView={handleAdView}
          handleCategory={handleCategory}
          handleOpenSell={handleOpenSell}
+         handleOpenSearchByTitle={handleOpenSearchByTitle}
          />
        {/*  <AppPopup />*/}
        
@@ -1319,7 +1342,7 @@ const handleCloseAdView = () => {
     />
   </div>
   
-  </ScrollArea.Viewport>
+</ScrollArea.Viewport>
   <ScrollArea.Scrollbar orientation="vertical" />
       <ScrollArea.Corner />
     </ScrollArea.Root>
@@ -1355,6 +1378,7 @@ const handleCloseAdView = () => {
       handleAdEdit={handleAdEdit}
       handleCategory={handleCategory}
       handleOpenSearchTab={handleOpenSearchTab} 
+      handleOpenSearchByTitle={handleOpenSearchByTitle}
       categoryList={categoryList} 
       subcategoryList={subcategoryList}
       user={user}
@@ -1507,6 +1531,16 @@ const handleCloseAdView = () => {
                 hoveredCategory={hoveredCategory} 
                 handleCategory={handleCategory} 
                 handleHoverCategory={handleHoverCategory}/>
+      <SearchByTitle 
+        isOpen={isOpenSearchByTitle}
+        userId={userId}
+        handleOpenSearchByTitle={handleOpenSearchByTitle}
+        onClose={handleCloseSearchByTitle}
+        handleAdEdit={handleAdEdit}
+        handleAdView={handleAdView}
+      
+        handleOpenPlan={handleOpenPlan}
+        queryObject={queryObject} />
       </div>
   );
 };

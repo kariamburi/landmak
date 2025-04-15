@@ -8,14 +8,13 @@ import SearchOutlinedIcon from "@mui/icons-material/SearchOutlined";
 import CloseOutlinedIcon from "@mui/icons-material/CloseOutlined";
 import DeleteOutlineIcon from "@mui/icons-material/DeleteOutline";
 
-const SearchNow = ({
+const SearchNowTitle = ({
   placeholder = "Search title...",
   handleFilter,
-  handleOpenSearchByTitle,
 }: {
   placeholder?: string;
   handleFilter: (value:any) => void;
-  handleOpenSearchByTitle:()=> void;
+ 
 }) => {
   const [query, setQuery] = useState("");
   const [focus, setFocus] = useState(false);
@@ -115,11 +114,8 @@ const SearchNow = ({
     return () => clearTimeout(delayDebounceFn);
   }, [query]);
   return (
-    <div>
+    <div className="relative border border-gray-300 dark:border-gray-600 flex justify-between items-center dark:bg-[#2D3236] bg-white p-1 rounded-sm w-full">
       
-      <div className="hidden lg:inline">
-      <div className="relative border border-gray-300 dark:border-gray-600 flex justify-between items-center dark:bg-[#2D3236] bg-white p-1 rounded-sm w-full">
-    
       <div className="flex items-center w-full">
         {focus && (
           <div className="text-gray-400">
@@ -157,42 +153,9 @@ const SearchNow = ({
           <SearchOutlinedIcon />
         </button>
       </div>
-      </div>
-</div>
-<div className="lg:hidden">
-<div className="relative border border-gray-300 dark:border-gray-600 flex justify-between items-center dark:bg-[#2D3236] bg-white p-1 rounded-sm w-full">
-    
-      <div className="flex items-center w-full">
-        {focus && (
-          <div className="text-gray-400">
-            <SearchOutlinedIcon />
-          </div>
-        )}
-        <Input
-          type="text"
-          onClick={handleOpenSearchByTitle} 
-          placeholder={placeholder}
-          className="w-full dark:bg-[#2D3236] dark:text-gray-300 cursor-pointer flex-grow rounded-sm p-regular-16 border-0 bg-red outline-offset-0 placeholder:text-grey-500 focus:border-0 focus-visible:ring-0 focus-visible:ring-offset-0"
-        />
-      </div>
 
-      <div>
-        {query && (
-          <button onClick={handleOpenSearchByTitle} className="p-2">
-            <CloseOutlinedIcon />
-          </button>
-        )}
-      </div>
-      <div>
-        <button
-          onClick={handleOpenSearchByTitle}
-          className="flex justify-center items-center h-12 w-12 hover:bg-green-700 bg-green-600 text-white rounded-sm"
-        >
-          <SearchOutlinedIcon />
-        </button>
-      </div>
-      </div>
-      </div>
+      
+
       {/* Search Suggestions Dropdown */}
       {focus && searchHistory.length > 0 && (
         <div className="absolute top-full left-0 w-full bg-white dark:bg-[#131B1E] border border-gray-300 dark:border-gray-700 shadow-md rounded-md mt-1 z-10">
@@ -233,4 +196,4 @@ const SearchNow = ({
   );
 };
 
-export default SearchNow;
+export default SearchNowTitle;
