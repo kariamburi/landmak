@@ -592,8 +592,8 @@ const scrollTimeout = useRef<NodeJS.Timeout | null>(null);
         {/* Header Section */}
         <div className="mb-1 flex flex-col gap-2 top-0 left-0 w-full bg-gradient-to-b from-green-600 to-green-600 lg:from-white lg:to-white p-1 shadow-md z-10 md:relative md:w-auto md:shadow-none">
         <div
-  className={`p-2 w-full flex flex-col items-center transition-transform duration-300 ${
-    showBottomNav ? "translate-y-0" : "translate-y-full"
+  className={`transition-all duration-300 overflow-hidden p-2 w-full flex flex-col items-center ${
+    showBottomNav ? "max-h-[50px] opacity-100" : "max-h-0 opacity-0"
   }`}
 >
     <div className="w-full justify-between flex items-center">
@@ -1034,7 +1034,7 @@ const scrollTimeout = useRef<NodeJS.Timeout | null>(null);
         {/* List Ads Section */}
      
      <ScrollArea.Root className="flex-1 overflow-hidden">
-      <ScrollArea.Viewport ref={scrollRefB} className="h-full overflow-y-auto bg-gray-200 lg:rounded-t-md border">
+      <ScrollArea.Viewport ref={scrollRefB} className="h-full overflow-y-auto bg-gray-200 border">
       
   <section className="p-1 mb-20">
     <div className="flex items-center p-1 w-full justify-between">

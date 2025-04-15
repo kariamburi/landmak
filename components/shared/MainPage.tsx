@@ -1000,10 +1000,11 @@ const handleCloseAdView = () => {
           {/* Header Section */}
           <div className="flex flex-col gap-1 top-0 left-0 w-full bg-gradient-to-b from-green-600 to-green-600 lg:from-white lg:to-white p-1 lg:shadow-md z-10 md:relative md:w-auto md:shadow-none">
           <div
-  className={`p-2 w-full flex flex-col items-center transition-transform duration-300 ${
-    showBottomNav ? "translate-y-0" : "translate-y-full"
+  className={`transition-all duration-300 overflow-hidden p-2 w-full flex flex-col items-center ${
+    showBottomNav ? "max-h-[50px] opacity-100" : "max-h-0 opacity-0"
   }`}
-><div className="w-full justify-between flex items-center">
+>
+  <div className="w-full justify-between flex items-center">
               <div className="flex items-center gap-1">
                 <img src="/logo_white.png" alt="Logo" className="lg:hidden w-8 h-8 rounded-full" />
                 <img src="/logo.png" alt="Logo" className="hidden lg:inline w-8 h-8 rounded-full" />
@@ -1201,7 +1202,7 @@ const handleCloseAdView = () => {
 
         
      <ScrollArea.Root className="flex-1 overflow-hidden">
-      <ScrollArea.Viewport ref={viewportRef}  className="h-full overflow-y-auto bg-gray-200 lg:rounded-t-md border">
+      <ScrollArea.Viewport ref={viewportRef}  className="h-full overflow-y-auto bg-gray-200 lg:rounded-t-0 border">
     
   <div className="lg:hidden p-1">
     <MenuSubmobileMain

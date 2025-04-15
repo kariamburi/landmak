@@ -54,7 +54,7 @@ export default function HeaderMain({ handleFilter ,handleCategory, handleOpenPla
   };
   return (
     <div
-      className="relative flex flex-col w-full"
+      className="relative flex flex-col w-full mb-1"
      
     >
         <div className="flex gap-1 items-center w-full">
