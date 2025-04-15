@@ -110,7 +110,7 @@ type CollectionProps = {
   //AdsCountPerVerifiedFalse: any;
   queryObject: any;
   user: any;
-  viewportRef:any;
+ // viewportRef:any;
   onClose:()=> void;
   handleOpenSell: () => void;
   handleOpenBook: () => void;
@@ -137,7 +137,7 @@ const MainCategory = ({
   emptyTitle,
   emptyStateSubtext,
   user,
-  viewportRef,
+  //viewportRef,
  // AdsCountPerRegion,
   //AdsCountPerVerifiedTrue,
   //AdsCountPerVerifiedFalse,
@@ -258,35 +258,49 @@ CollectionProps) => {
     return () => window.removeEventListener("resize", handleResize);
   }, []);
   const [showBottomNav, setShowBottomNav] = useState(true);
-  //const viewportRef = useRef<HTMLDivElement | null>(null);
- // const popupBRef = useRef<HTMLDivElement | null>(null);
-  const lastScrollTop = useRef(0);
 
-  useEffect(() => {
-    const viewport = viewportRef.current;
-    alert("nice")
-    if (!viewport) return;
-    alert("good")
+  const scrollRefB = useRef<HTMLDivElement>(null);
+const lastScrollTop = useRef(0);
+const scrollTimeout = useRef<NodeJS.Timeout | null>(null);
+
+useEffect(() => {
+  const timer = setTimeout(() => {
+    const el = scrollRefB.current;
+    if (!el) return;
+
     const handleScroll = () => {
-
-      alert("ok")
-      const currentScrollTop = viewport.scrollTop;
-
-      if (currentScrollTop > lastScrollTop.current) {
-        // Scrolling down
-        setShowBottomNav(false);
-      } else {
-        // Scrolling up
-        setShowBottomNav(true);
+      if (scrollTimeout.current) {
+        clearTimeout(scrollTimeout.current);
       }
 
-      lastScrollTop.current = currentScrollTop;
+      scrollTimeout.current = setTimeout(() => {
+        const currentScrollTop = el.scrollTop;
+
+        if (currentScrollTop > lastScrollTop.current) {
+          // Scrolling down
+          setShowBottomNav(false);
+        } else {
+          // Scrolling up
+          setShowBottomNav(true);
+        }
+
+        lastScrollTop.current = currentScrollTop;
+      }, 100); // Adjust delay as needed
     };
 
-    viewport.addEventListener("scroll", handleScroll);
-    return () => viewport.removeEventListener("scroll", handleScroll);
-  }, []);
+    el.addEventListener('scroll', handleScroll);
 
+    // Clean up scroll listener
+    return () => {
+      el.removeEventListener('scroll', handleScroll);
+      if (scrollTimeout.current) clearTimeout(scrollTimeout.current);
+    };
+  }, 0);
+
+  return () => clearTimeout(timer);
+}, []);
+
+  
   
    // Close sidebar when clicking outside
    useEffect(() => {
@@ -815,7 +829,7 @@ CollectionProps) => {
     showBottomNav ? "max-h-[120px] opacity-100" : "max-h-0 opacity-0"
   }`}
 >
-    <div className="w-full lg:hidden">
+    <div className="w-full mb-1 lg:hidden">
       <div className="flex w-full mt-0 gap-1 items-center">
         {newqueryObject.category === "Property" && (
           <div className="flex-1">
@@ -1033,8 +1047,9 @@ CollectionProps) => {
 </div>
 
         {/* List Ads Section */}
+     
      <ScrollArea.Root className="flex-1 overflow-hidden">
-      <ScrollArea.Viewport ref={viewportRef} className="h-full overflow-y-auto bg-gray-200 lg:rounded-t-md border">
+      <ScrollArea.Viewport ref={scrollRefB} className="h-full overflow-y-auto bg-gray-200 lg:rounded-t-md border">
       
   <section className="p-1 mb-20">
     <div className="flex items-center p-1 w-full justify-between">
@@ -1235,7 +1250,7 @@ CollectionProps) => {
 
         <footer>
           <div
-                 className={`lg:hidden fixed bottom-0 left-0 right-0 z-50 transition-transform duration-300 ${
+                 className={`lg:hidden fixed bottom-0 left-0 right-0 transition-transform duration-300 ${
                    showBottomNav ? "translate-y-0" : "translate-y-full"
                  }`}
                >

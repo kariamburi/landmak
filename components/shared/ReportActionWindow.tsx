@@ -120,7 +120,7 @@ const ReportActionWindow: React.FC<ChatWindowProps> = ({
     fetchAds();
     }
   }, [isOpen]);
-
+  const adUrl =process.env.NEXT_PUBLIC_DOMAIN_URL+"?Ad="+ad._id;
   if (!isOpen) return null;
   return (
     <div className="fixed inset-0 flex items-center justify-center bg-gray-800 bg-opacity-50 z-50">
@@ -139,7 +139,14 @@ const ReportActionWindow: React.FC<ChatWindowProps> = ({
         {/* Scrollable Form */}
         <ScrollArea className="p-2">
           <div className="border rounded-lg shadow-md p-4 dark:bg-[#131B1E] bg-white">
-            <h2 className="text-sm font-bold">{ad.data.title}</h2>
+            <h2 className="text-sm font-bold">  <a
+              href={adUrl}
+              target="_blank"
+              rel="noopener noreferrer"
+              className="block mt-2 text-green-500 underline"
+            >
+               {ad.data.title}
+            </a></h2>
             <p className="text-sm text-gray-600 dark:text-gray-500">
               Price:{" "}
               <span className="font-semibold">

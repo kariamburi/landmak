@@ -105,12 +105,12 @@ const Sidebar = ({ userId ,recipientUid, handleOpenChatId}: sidebarProps) => {
   return (
     <div>
       {loading ? (
-        <div className="flex flex-col justify-center w-[350px] p-1">
+        <div className="flex flex-col justify-center w-[300px] p-1">
            <ChatListSkeleton/>
         </div>
       ) : messages.length > 0 ? (
         <>
-          <div className="w-full dark:bg-[#2D3236] bg-white rounded-lg">
+          <div className="dark:bg-[#2D3236] bg-white w-[300px] rounded-lg">
             <ScrollArea className="h-full w-full p-2">
               <ul className="divide-y divide-gray-200 dark:divide-gray-600">
                 {messages.map((message, index) => {

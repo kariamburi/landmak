@@ -152,7 +152,7 @@ const SendMessage = ({
   };
 
   return (
-    <div className="border-t gap-1 p-1 dark:bg-[#2D3236] dark:text-[#F1F3F3] text-black rounded-b-md right-0 bg-white dark:bg-[#131B1E] h-[60px] z-10 flex justify-end items-center">
+    <div className="border-t gap-1 p-1 dark:bg-[#2D3236] dark:text-[#F1F3F3] text-black rounded-b-md right-0 bg-gray-100 dark:bg-[#131B1E] h-[60px] z-10 flex justify-end items-center">
       {recipientUid ? (
         <>
           {image && (

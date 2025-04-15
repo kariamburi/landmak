@@ -212,14 +212,21 @@ const MainPage = ({
     return () => window.removeEventListener("resize", handleResize);
   }, []);
   const [showBottomNav, setShowBottomNav] = useState(true);
-  const viewportRef = useRef<HTMLDivElement | null>(null);
-  const lastScrollTop = useRef(0);
+ 
+const viewportRef = useRef<HTMLDivElement | null>(null);
+const lastScrollTop = useRef(0);
+const scrollTimeout = useRef<NodeJS.Timeout | null>(null);
 
-  useEffect(() => {
-    const viewport = viewportRef.current;
-    if (!viewport) return;
+useEffect(() => {
+  const viewport = viewportRef.current;
+  if (!viewport) return;
 
-    const handleScroll = () => {
+  const handleScroll = () => {
+    if (scrollTimeout.current) {
+      clearTimeout(scrollTimeout.current);
+    }
+
+    scrollTimeout.current = setTimeout(() => {
       const currentScrollTop = viewport.scrollTop;
 
       if (currentScrollTop > lastScrollTop.current) {
@@ -231,11 +238,16 @@ const MainPage = ({
       }
 
       lastScrollTop.current = currentScrollTop;
-    };
+    }, 100); // Adjust delay (ms) as needed
+  };
 
-    viewport.addEventListener("scroll", handleScroll);
-    return () => viewport.removeEventListener("scroll", handleScroll);
-  }, []);
+  viewport.addEventListener("scroll", handleScroll);
+  return () => {
+    viewport.removeEventListener("scroll", handleScroll);
+    if (scrollTimeout.current) clearTimeout(scrollTimeout.current);
+  };
+}, []);
+
 
 
   // Close sidebar when clicking outside
@@ -1327,7 +1339,7 @@ const handleCloseAdView = () => {
                   
                 
                   <div
-        className={`lg:hidden fixed bottom-0 left-0 right-0 z-50 transition-transform duration-300 ${
+        className={`lg:hidden fixed bottom-0 left-0 right-0 transition-transform duration-300 ${
           showBottomNav ? "translate-y-0" : "translate-y-full"
         }`}
       >
@@ -1354,7 +1366,7 @@ const handleCloseAdView = () => {
       categoryList={categoryList} 
       subcategoryList={subcategoryList}
       user={user}
-      viewportRef={viewportRef}/>
+     />
 
       <PopupShop isOpen={isOpenShop} handleOpenReview={handleOpenReview} onClose={handleCloseShop} userId={userId} shopAcc={shopId} userName={userName} userImage={userImage} queryObject={newqueryObject} handleOpenSell={handleOpenSell} handleAdView={handleAdView} handleAdEdit={handleAdEdit} handleOpenAbout={handleOpenAbout} handleOpenTerms={handleOpenTerms} handleOpenPrivacy={handleOpenPrivacy} handleOpenSafety={handleOpenSafety} handleOpenBook={handleOpenBook} handleOpenPlan={handleOpenPlan} handleOpenChat={handleOpenChat} handleOpenChatId={handleOpenChatId} handleOpenSettings={handleOpenSettings}
       handleOpenShop={handleOpenShop}

@@ -698,12 +698,12 @@ export default function Ads({ ad, userId, userImage, userName, onClose,handlePay
                   )}
                   <div className="flex gap-1 items-center no-underline">
                     {ad.data.contact && ad.data.contact === "contact" ? (
-                      <p className="text-lg lg:text-xl font-bold p-1 dark:text-green-500 text-green-950">
+                      <p className="text-lg lg:text-xl font-bold p-1 dark:text-green-500 text-green-600">
                         Contact for price
                       </p>
                     ) : (
                       <>
-                        <span className="text-lg lg:text-xl font-bold w-min rounded-full p-1 dark:text-green-500 text-green-950">
+                        <span className="text-lg lg:text-xl font-bold w-min rounded-full p-1 dark:text-green-500 text-green-600">
                           {formatKsh(ad.data.price)}
                         </span>
                       </>
@@ -775,7 +775,7 @@ export default function Ads({ ad, userId, userImage, userName, onClose,handlePay
               </div>
             </div>
             <div className="flex mb-2 items-center w-full">
-              <p className="text-lg lg:text-2xl font-bold dark:text-gray-300 text-green-950">
+              <p className="text-lg lg:text-2xl font-bold dark:text-gray-300 text-green-600">
                 {ad.data.title}
               </p>
             </div>
@@ -826,7 +826,7 @@ export default function Ads({ ad, userId, userImage, userName, onClose,handlePay
                       key !== "youtube-link" && (
                         <>
                           <div key={key} className="mb-2 md:flex-row">
-                            <div className="dark:text-gray-300 text-green-950 text-sm">
+                            <div className="dark:text-gray-300 text-green-600 text-sm">
                               {value}
                             </div>
                             <div className="dark:text-gray-500 text-gray-600 text-xs">
@@ -843,7 +843,7 @@ export default function Ads({ ad, userId, userImage, userName, onClose,handlePay
             {ad.data.facilities && ad.data.facilities.length > 0 && (
               <>
                 <div className="border-t dark:border-gray-600 border-gray-300 mt-4 mb-4"></div>
-                <p className="mt-5 font-bold dark:text-gray-400 text-green-950">
+                <p className="mt-5 font-bold dark:text-gray-400 text-green-600">
                   Facilities
                 </p>
                 <div className="grid grid-cols-3 lg:grid-cols-5 w-full gap-1 mt-1">
@@ -860,7 +860,7 @@ export default function Ads({ ad, userId, userImage, userName, onClose,handlePay
             {ad.data.amenities && ad.data.amenities.length > 0 && (
               <>
                 <div className="border-t dark:border-gray-600 border-gray-300 mt-4 mb-4"></div>
-                <p className="mt-5 font-bold dark:text-gray-400 text-green-950">
+                <p className="mt-5 font-bold dark:text-gray-400 text-green-600">
                   Amenities
                 </p>
                 <div className="grid grid-cols-3 lg:grid-cols-5 w-full gap-1 mt-1">
@@ -877,7 +877,7 @@ export default function Ads({ ad, userId, userImage, userName, onClose,handlePay
             {ad.data.features && ad.data.features.length > 0 && (
               <>
                 <div className="border-t dark:border-gray-600 border-gray-300 mt-4 mb-4"></div>
-                <p className="mt-5 font-bold dark:text-gray-400 text-green-950">
+                <p className="mt-5 font-bold dark:text-gray-400 text-green-600">
                   Key Features
                 </p>
                 <div className="grid grid-cols-3 lg:grid-cols-5 w-full gap-1 mt-1">
@@ -892,10 +892,10 @@ export default function Ads({ ad, userId, userImage, userName, onClose,handlePay
               </>
             )}
             <div className="border-t dark:border-gray-600 border-gray-300 mt-4 mb-4"></div>
-            <p className="mt-5 font-bold dark:text-gray-400 text-green-950">
+            <p className="mt-5 font-bold dark:text-gray-400 text-green-600">
               Description
             </p>
-            {/* <p className="my-1 text-text-green-950">{ad.data.description}</p>*/}
+            {/* <p className="my-1 text-text-green-600">{ad.data.description}</p>*/}
             <DescriptionComponent description={ad.data.description} />
             
           
@@ -908,7 +908,7 @@ export default function Ads({ ad, userId, userImage, userName, onClose,handlePay
                 <Accordion type="single" collapsible>
                   <AccordionItem value="item-1" className="border-0">
                     <AccordionTrigger>
-                      <div className="mt-5 flex text-green-950 dark:text-gray-400 gap-1 items-center font-bold no-underline">
+                      <div className="mt-5 flex text-green-600 dark:text-gray-400 gap-1 items-center font-bold no-underline">
                         <LocalShippingOutlinedIcon />
                         <div className="font-bold">Delivery Options</div>
                       </div>
@@ -1012,7 +1012,7 @@ export default function Ads({ ad, userId, userImage, userName, onClose,handlePay
                   >
                     <AccordionItem value="item-2" className="border-0">
                       <AccordionTrigger className="border-0">
-                        <div className="mt-0 flex text-green-950 dark:text-gray-400 gap-1 items-center font-bold no-underline">
+                        <div className="mt-0 flex text-green-600 dark:text-gray-400 gap-1 items-center font-bold no-underline">
                           <HelpOutlineOutlinedIcon />
                           <div className="font-bold">About Seller</div>
                         </div>
@@ -1421,12 +1421,12 @@ export default function Ads({ ad, userId, userImage, userName, onClose,handlePay
             <div className="dark:bg-[#2D3236] dark:text-gray-300 bg-white p-5 border rounded-lg overflow-hidden flex flex-col items-center">
               <div className="flex gap-1 items-center no-underline">
                 {ad.data.contact && ad.data.contact === "contact" ? (
-                  <p className="flex text-2xl font-bold  dark;text-green-500 text-green-950">
+                  <p className="flex text-2xl font-bold  dark;text-green-500 text-green-600">
                     Contact for price
                   </p>
                 ) : (
                   <>
-                    <span className="flex gap-1 text-2xl font-bold w-min rounded-full px-4 py-1 dark:text-green-500 text-green-950">
+                    <span className="flex gap-1 text-2xl font-bold w-min rounded-full px-4 py-1 dark:text-green-500 text-green-600">
                       {formatKsh(ad.data.price)}
                     </span>
                   </>
@@ -1772,7 +1772,7 @@ export default function Ads({ ad, userId, userImage, userName, onClose,handlePay
               </li>
 
               <li>
-                <div className="mt-2 transition-colors font-bold text-green-600 hover:text-green-950 hover:cursor-pointer">
+                <div className="mt-2 transition-colors font-bold text-green-600 hover:text-green-600 hover:cursor-pointer">
                   <div
                     onClick={() => {
                       handleOpenSafety();

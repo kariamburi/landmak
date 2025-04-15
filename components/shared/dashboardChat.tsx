@@ -30,54 +30,41 @@ import {
   AccordionTrigger,
 } from "@/components/ui/accordion";
 import { mode } from "@/constants";
-const Sidebar = dynamic(() => import("@/components/shared/Sidebar"), {
-  ssr: false,
-  loading: () => (
-    <div>
-      <div className="w-full lg:w-[300px] h-full flex flex-col items-center justify-center">
-        <Image
-          src="/assets/icons/loading2.gif"
-          alt="loading"
-          width={40}
-          height={40}
-          unoptimized
-        />
-      </div>
-    </div>
-  ),
-});
-const SendMessage = dynamic(() => import("@/components/shared/SendMessage"), {
-  ssr: false,
-  loading: () => (
-    <div>
-      <div className="w-full h-[50px] flex rounded-lg flex-col items-center justify-center">
-        <Image
-          src="/assets/icons/loading2.gif"
-          alt="loading"
-          width={40}
-          height={40}
-          unoptimized
-        />
-      </div>
-    </div>
-  ),
-});
-const ChatBox = dynamic(() => import("@/components/shared/ChatBox"), {
-  ssr: false,
-  loading: () => (
-    <div>
-      <div className="w-full h-[300px] mb-2 rounded-lg flex flex-col items-center justify-center">
-        <Image
-          src="/assets/icons/loading2.gif"
-          alt="loading"
-          width={40}
-          height={40}
-          unoptimized
-        />
-      </div>
-    </div>
-  ),
-});
+import Sidebar from "@/components/shared/Sidebar";
+import SendMessage from "@/components/shared/SendMessage";
+import ChatBox from "@/components/shared/ChatBox";
+
+//const Sidebar = dynamic(() => import(""), {
+//  ssr: false,
+//  loading: () => (
+ //   <div>
+ //     <div className="w-full lg:w-[300px] h-full flex flex-col items-center justify-center">
+ //       <Image
+ //         src="/assets/icons/loading2.gif"
+ //         alt="loading"
+ //         width={40}
+ //        unoptimized
+  //      />
+  //    </div>
+  //  </div>
+  //),
+//});
+//const ChatBox = dynamic(() => import("@/components/shared/ChatBox"), {
+ // ssr: false,
+ // loading: () => (
+   // <div>
+  //</div>    <div className="w-full h-[300px] mb-2 rounded-lg flex flex-col items-center justify-center">
+ //</div>       <Image
+   //       src="/assets/icons/loading2.gif"
+  //        alt="loading"
+//          width={40}
+ //         height={40}
+ //         unoptimized
+   //     />
+ //     </div>
+ //   </div>
+ // ),
+//});
 type payProps = {
   senderName: string;
   senderImage: string;
@@ -147,7 +134,7 @@ const DashboardChat = ({
        if (isDarkMode === null) return null; // Avoid flickering before state is set
      
   return (
-    <div className="h-[100dvh] w-full dark:bg-[#131B1E] text-black dark:text-[#F1F3F3] bg-white lg:bg-gray-200">
+    <div className="h-[100vh] w-full dark:bg-[#131B1E] text-black dark:text-[#F1F3F3] bg-white lg:bg-gray-200">
   {/* Fixed Navbar */}
   <div className="fixed top-0 left-0 w-full z-50">
     <Navbar

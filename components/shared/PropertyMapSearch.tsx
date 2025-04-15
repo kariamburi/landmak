@@ -21,6 +21,8 @@ import {
   StreetViewPanorama,
   useLoadScript,
 } from "@react-google-maps/api";
+import { Icon } from "@iconify/react";
+import Barsscale from "@iconify-icons/svg-spinners/bars-scale"; 
 import PushPinOutlinedIcon from '@mui/icons-material/PushPinOutlined';
 import ClearOutlinedIcon from '@mui/icons-material/ClearOutlined';
 import EscalatorWarningOutlinedIcon from '@mui/icons-material/EscalatorWarningOutlined';
@@ -154,11 +156,11 @@ useEffect(() => {
   const userId="";
   
    return isLoaded ? (  <>
-    <div className="flex w-full h-screen bg-gray-200 p-1">
+    <div className="flex w-full h-screen bg-gray-200 p-0">
     
       {/* Sidebar with Toggle Button */}
       <div
-        className={`bg-gray-200 h-[100vh] shadow-lg transition-transform duration-300 ease-in-out fixed md:relative ${
+        className={`bg-white h-[100vh] shadow-lg transition-transform duration-300 ease-in-out fixed md:relative ${
           showSidebar ? "w-full md:w-1/3 p-1" : "-translate-x-full md:w-0 md:translate-x-0"
         }`}
       >
@@ -254,7 +256,7 @@ useEffect(() => {
       </div>
 
       {/* Map Section with Toggle Button */}
-      <div className={`w-full mt-5 lg:mt-0  relative transition-all duration-300 h-screen ${
+      <div className={`w-full relative transition-all duration-300 h-screen ${
         showSidebar ? "hidden md:block" : "block"
       }`}>
       
@@ -268,8 +270,8 @@ useEffect(() => {
         
       
 
-     <div className="flex flex-col items-center w-full p-0 h-screen">
-     <div className="h-[65px] lg:h-[50px] flex bg-white justify-between items-center p-1 w-full">
+     <div className="flex flex-col items-center w-full p-2 h-screen">
+     <div className="h-[50px] flex bg-white justify-between items-center p-1 w-full">
            <p className="text-sm text-gray-600">Click on the map to set a location.</p>
            <div className="">
                              <Button variant="outline" title="Close" onClick={()=> onClose()} 
@@ -359,7 +361,7 @@ useEffect(() => {
                </GoogleMap>
              </div>
            
-             <div className="h-[90px] lg:h-70px] w-full">
+             <div className="h-70px] p-2 bg-white w-full">
              <label className="block text-gray-700 font-medium mb-0">
                Select Distance: {radius / 1000} km
              </label>
@@ -398,6 +400,6 @@ useEffect(() => {
 
   </>
   ) : (
-    <p>Loading Map...</p>
+    <Icon icon={Barsscale} className="w-6 h-6 text-gray-500" />
   );
 }

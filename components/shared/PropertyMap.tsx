@@ -18,6 +18,8 @@ import {
   StreetViewPanorama,
   useLoadScript,
 } from "@react-google-maps/api";
+import { Icon } from "@iconify/react";
+import Barsscale from "@iconify-icons/svg-spinners/bars-scale"; 
 import PushPinOutlinedIcon from '@mui/icons-material/PushPinOutlined';
 import ClearOutlinedIcon from '@mui/icons-material/ClearOutlined';
 import EscalatorWarningOutlinedIcon from '@mui/icons-material/EscalatorWarningOutlined';
@@ -922,6 +924,6 @@ className="absolute bottom-[90px] lg:bottom-[140px] left-4 z-20 bg-red-600 shado
 </div>
    )} </>
   ) : (
-    <p>Loading Map...</p>
+    <Icon icon={Barsscale} className="w-6 h-6 text-gray-500" />
   );
 }

@@ -7,6 +7,8 @@ import { Button } from "../ui/button";
 import { Checkbox } from "../ui/checkbox";
 import CircularProgress from "@mui/material/CircularProgress";
 import { useMediaQuery } from "react-responsive"; // Detect mobile screens
+import { Icon } from "@iconify/react";
+import Barsscale from "@iconify-icons/svg-spinners/bars-scale"; 
 const GOOGLE_MAPS_API_KEY = process.env.NEXT_PUBLIC_GOOGLEAPIKEY as string;
 const containerStyle = { width: "100%", height: "400px" };
 const defaultCenter = { lat: -1.286389, lng: 36.817223 }; // Default: Nairobi, Kenya
@@ -32,7 +34,7 @@ const LatLngPickerAndShare = ({
   const { isLoaded } = useLoadScript({ googleMapsApiKey: GOOGLE_MAPS_API_KEY, libraries: ["places"] });
   const { suggestions, setValue, value, clearSuggestions } = usePlacesAutocomplete();
   const [error, setError] = useState<string>("");
-  if (!isLoaded) return <div className="h-[80vh] items-center justify-center"><p className="text-center">Loading Map...</p></div>;
+  if (!isLoaded) return <div className="h-[80vh] items-center justify-center"> <Icon icon={Barsscale} className="w-6 h-6 text-gray-500" /></div>;
 
   const handleSelect = async (address: any) => {
     setValue(address, false);

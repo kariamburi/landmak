@@ -22,6 +22,8 @@ import GpsFixedOutlinedIcon from '@mui/icons-material/GpsFixedOutlined';
 import CloseOutlinedIcon from "@mui/icons-material/CloseOutlined";
 import { Button } from "@/components/ui/button";
 import TurnSharpLeftOutlinedIcon from '@mui/icons-material/TurnSharpLeftOutlined';
+import { Icon } from "@iconify/react";
+import Barsscale from "@iconify-icons/svg-spinners/bars-scale"; 
 import {
   AlertDialog,
   AlertDialogAction,
@@ -494,7 +496,8 @@ className="absolute bottom-10 left-4 z-20 bg-green-600 shadow-lg hover:bg-green-
     
     </div>
   ) : (
-    <p>Loading Map...</p>
+    <div className="h-[80vh] items-center justify-center"><Icon icon={Barsscale} className="w-6 h-6 text-gray-500" />
+ </div>
   );
 };
 
