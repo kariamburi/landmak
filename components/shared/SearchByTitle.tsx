@@ -200,7 +200,7 @@ const fetchAds = async (value:string) => {
                 <div className="flex items-center justify-center min-h-[400px] w-full flex-col gap-3 rounded-[14px] bg-grey-50 py-28 text-center">
                 <h3 className="font-bold text-[16px] lg:text-[25px]">No results found</h3>
                 <p className="text-sm lg:text-[16px] text-gray-500">
-                  We couldn't find anything matching your search. <br />
+                  We couldn&apos;t find anything matching your search. <br />
                   Try using different keywords or filters.
                 </p>
               </div>
