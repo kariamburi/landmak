@@ -596,7 +596,7 @@ const SCROLL_THRESHOLD = 200; // pixels
         )}
       </Button>
         {/* Header Section */}
-        <div className="mb-1 flex flex-col gap-0 top-0 left-0 w-full bg-gradient-to-b from-gray-200 to-gray-200 lg:from-white lg:to-white p-0 z-10 md:relative md:w-auto md:shadow-none">
+        <div className="mb-1 flex flex-col gap-0 top-0 left-0 w-full bg-gradient-to-b from-white to-gray-200 lg:from-white lg:to-white p-0 shadow-md z-10 md:relative md:w-auto md:shadow-none">
         <div
   className={`bg-gradient-to-b from-white to-gray-200 lg:from-white lg:to-white transition-all duration-300 overflow-hidden p-2 w-full flex flex-col items-center ${
     showBottomNav ? "max-h-[50px] opacity-100" : "max-h-0 opacity-0"
@@ -820,20 +820,8 @@ const SCROLL_THRESHOLD = 200; // pixels
     </div>
     </div>
    
-    <div className="w-full lg:hidden">
-      <div className="flex p-1 grid gap-1 grid-cols-3 w-full items-center">
-      
-      <button
-        onClick={handleOpenPopupLocation}
-        className="flex text-xs lg:text-base gap-1 items-center justify-center py-4 px-2 border border-gray-300 dark:border-gray-600 bg-white dark:bg-[#2D3236] dark:text-gray-100 rounded-sm hover:bg-gray-100"
-      >
-        <div className="hidden lg:inline">
-           <LocationOnIcon/>
-           </div>
-           <div className="lg:hidden">
-           <LocationOnIcon sx={{ fontSize: 24 }}/>
-           </div> {region}
-      </button>
+    <div className="w-full p-1 lg:hidden">
+      <div className="flex w-full gap-0 items-center">
         {newqueryObject.category === "Property" && (
           <div className="flex-1">
             <TooltipProvider>
@@ -864,7 +852,7 @@ const SCROLL_THRESHOLD = 200; // pixels
           </div>
         )}
 
-        <div className="flex-1 gap-1 items-center">
+        <div className="flex gap-1 items-center">
           <TooltipProvider>
             <Tooltip>
               <TooltipTrigger asChild>
@@ -891,10 +879,10 @@ const SCROLL_THRESHOLD = 200; // pixels
       </div>
     </div>
 
-    <div className="flex w-full p-1 gap-1 justify-center items-center mb-1">
+    <div className="flex w-full p-1 gap-1  justify-center items-center mb-1">
       <button
         onClick={handleOpenPopupLocation}
-        className="hidden lg:inline flex text-xs lg:text-base gap-1 items-center justify-center py-4 px-2 border border-gray-300 dark:border-gray-600 bg-white dark:bg-[#2D3236] dark:text-gray-100 rounded-sm hover:bg-gray-100"
+        className="flex text-xs lg:text-base gap-1 items-center justify-center py-4 px-2 border border-gray-300 dark:border-gray-600 bg-white dark:bg-[#2D3236] dark:text-gray-100 rounded-sm hover:bg-gray-100"
       >
         <div className="hidden lg:inline">
            <LocationOnIcon/>

@@ -73,14 +73,14 @@ export default function HeaderMain({ handleFilter ,handleOpenSearchByTitle, hand
         {region}
         </button>
         </div>
-        <div className="flex-1">
+        <div className="hidden lg:inline flex-1">
         <SearchNow handleFilter={handleFilter} handleOpenSearchByTitle={handleOpenSearchByTitle}/>
         </div>
 
  
 
 
-                <div className="flex lg:hidden">
+                <div className="flex-1 lg:hidden">
                 <TooltipProvider>
                 <Tooltip>
                   <TooltipTrigger asChild>
@@ -151,9 +151,9 @@ export default function HeaderMain({ handleFilter ,handleOpenSearchByTitle, hand
                        
                     )}
                     </div>
-                  {/*    <div className="hidden">
+                      <div className="lg:hidden">
         <SearchNow handleFilter={handleFilter} handleOpenSearchByTitle={handleOpenSearchByTitle}/>
-        </div>*/}
+        </div>
 
     </div>
   );
