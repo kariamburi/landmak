@@ -94,7 +94,7 @@ const SubCategoryWindow: React.FC<ChatWindowProps> = ({
         <div className="flex flex-col items-center w-full h-full">
           <div className="w-full h-full dark:bg-[#2D3236]">
             <Command className="w-full h-[100vh]">
-              <div className="flex text-base justify-between items-center dark:bg-[#131B1E] border-0 border-gray-600">
+              <div className="flex p-2 text-base justify-between items-center dark:bg-[#131B1E] border-0 border-gray-600">
                 <CommandInput placeholder={`Search category`} />
                 <button
                   onClick={onClose}

@@ -151,7 +151,7 @@ export default function HeaderMain({ handleFilter ,handleOpenSearchByTitle, hand
                        
                     )}
                     </div>
-                      <div className="lg:hidden">
+                      <div className="mt-1 lg:hidden">
         <SearchNow handleFilter={handleFilter} handleOpenSearchByTitle={handleOpenSearchByTitle}/>
         </div>
 
