@@ -596,16 +596,16 @@ const SCROLL_THRESHOLD = 200; // pixels
         )}
       </Button>
         {/* Header Section */}
-        <div className="mb-1 flex flex-col gap-2 top-0 left-0 w-full bg-gradient-to-b from-green-600 to-green-600 lg:from-white lg:to-white p-1 shadow-md z-10 md:relative md:w-auto md:shadow-none">
+        <div className="mb-1 flex flex-col gap-0 top-0 left-0 w-full bg-gradient-to-b from-gray-200 to-gray-200 lg:from-white lg:to-white p-0 z-10 md:relative md:w-auto md:shadow-none">
         <div
-  className={`transition-all duration-300 overflow-hidden p-2 w-full flex flex-col items-center ${
+  className={`bg-gradient-to-b from-white to-gray-200 lg:from-white lg:to-white transition-all duration-300 overflow-hidden p-2 w-full flex flex-col items-center ${
     showBottomNav ? "max-h-[50px] opacity-100" : "max-h-0 opacity-0"
   }`}
 >
     <div className="w-full justify-between flex items-center">
       <div className="flex items-center">
         <div
-          className="mr-2 w-5 h-8 text-white lg:text-gray-500 flex items-center justify-center rounded-sm tooltip tooltip-bottom hover:cursor-pointer lg:hover:text-green-600"
+          className="mr-2 w-5 h-8 text-gray-500 lg:text-gray-500 flex items-center justify-center rounded-sm tooltip tooltip-bottom hover:cursor-pointer lg:hover:text-green-600"
           data-tip="Back"
           onClick={() => {
             onClose();
@@ -624,8 +624,8 @@ const SCROLL_THRESHOLD = 200; // pixels
         </div>
 
         <div className="flex items-center gap-2">
-        <img src="/logo_white.png" alt="Logo" className="lg:hidden w-8 h-8 rounded-full" />
-                <img src="/logo.png" alt="Logo" className="hidden lg:inline w-8 h-8 rounded-full" />
+      
+                <img src="/logo.png" alt="Logo" className="w-8 h-8 rounded-full" />
                 
         <StyledBrandName/>
         </div>
@@ -820,8 +820,20 @@ const SCROLL_THRESHOLD = 200; // pixels
     </div>
     </div>
    
-    <div className="w-full mb-1 lg:hidden">
-      <div className="flex w-full mt-0 gap-1 items-center">
+    <div className="w-full lg:hidden">
+      <div className="flex p-1 grid gap-1 grid-cols-3 w-full items-center">
+      
+      <button
+        onClick={handleOpenPopupLocation}
+        className="flex text-xs lg:text-base gap-1 items-center justify-center py-4 px-2 border border-gray-300 dark:border-gray-600 bg-white dark:bg-[#2D3236] dark:text-gray-100 rounded-sm hover:bg-gray-100"
+      >
+        <div className="hidden lg:inline">
+           <LocationOnIcon/>
+           </div>
+           <div className="lg:hidden">
+           <LocationOnIcon sx={{ fontSize: 24 }}/>
+           </div> {region}
+      </button>
         {newqueryObject.category === "Property" && (
           <div className="flex-1">
             <TooltipProvider>
@@ -829,7 +841,7 @@ const SCROLL_THRESHOLD = 200; // pixels
                 <TooltipTrigger asChild>
                   <button
                     onClick={handleOpenPopupMapSearch}
-                    className="flex text-xs gap-2 bg-white text-gray-700 items-center justify-between w-full py-3 px-2 border-gray-300 border rounded-sm hover:bg-gray-200"
+                    className="flex text-xs gap-2 bg-white text-gray-700 items-center justify-between w-full py-3 px-2 border-gray-300 border rounded-sm hover:bg-gray-100"
                   >
                     <div className="flex gap-2 items-center">
                       <Image
@@ -852,13 +864,13 @@ const SCROLL_THRESHOLD = 200; // pixels
           </div>
         )}
 
-        <div className="flex gap-1 items-center">
+        <div className="flex-1 gap-1 items-center">
           <TooltipProvider>
             <Tooltip>
               <TooltipTrigger asChild>
                 <div
                   onClick={togglePopup}
-                  className="flex text-xs bg-white py-4 px-3 cursor-pointer border-gray-300 border rounded-sm text-gray-700 text-sm hover:bg-gray-200 p-1 justify-between items-center"
+                  className="flex text-xs bg-white py-4 px-3 cursor-pointer border-gray-300 border rounded-sm text-gray-700 text-sm hover:bg-gray-100 p-1 justify-between items-center"
                 >
                 
                   <div className="hidden lg:inline">
@@ -879,10 +891,10 @@ const SCROLL_THRESHOLD = 200; // pixels
       </div>
     </div>
 
-    <div className="flex w-full gap-1 mt-0 justify-center items-center mb-1">
+    <div className="flex w-full p-1 gap-1 justify-center items-center mb-1">
       <button
         onClick={handleOpenPopupLocation}
-        className="flex text-xs lg:text-base gap-1 items-center justify-center py-4 px-2 border border-gray-300 dark:border-gray-600 bg-white dark:bg-[#2D3236] dark:text-gray-100 rounded-sm hover:bg-gray-200"
+        className="hidden lg:inline flex text-xs lg:text-base gap-1 items-center justify-center py-4 px-2 border border-gray-300 dark:border-gray-600 bg-white dark:bg-[#2D3236] dark:text-gray-100 rounded-sm hover:bg-gray-100"
       >
         <div className="hidden lg:inline">
            <LocationOnIcon/>
@@ -903,7 +915,7 @@ const SCROLL_THRESHOLD = 200; // pixels
               <TooltipTrigger asChild>
                 <button
                   onClick={handleOpenPopupMapSearch}
-                  className="flex gap-2 text-gray-700 items-center justify-center w-full py-2 px-2 border-gray-300 border rounded-sm hover:bg-gray-200"
+                  className="flex gap-2 text-gray-700 items-center justify-center w-full py-2 px-2 border-gray-300 border rounded-sm hover:bg-gray-100"
                 >
                   <div className="flex gap-2 items-center">
                     <Image

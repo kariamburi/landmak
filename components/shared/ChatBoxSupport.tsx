@@ -150,7 +150,7 @@ const ChatBoxSupport = ({
   return (
     
     <ScrollArea.Root className="h-full overflow-hidden">
-    <ScrollArea.Viewport  className="h-[calc(100vh-150px)] lg:h-[335px] dark:bg-[#2D3236] bg-white border">
+    <ScrollArea.Viewport  className="h-[calc(100vh-160px)] lg:h-[335px] dark:bg-[#2D3236] bg-white border">
   
     
         {messages.map((message: any) => (

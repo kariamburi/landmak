@@ -119,7 +119,7 @@ const SendMessageSupport = ({
   };
 
   return (
-    <div className="h-full w-full items-center border bg-white dark:bg-[#2D3236] items-center mb-1">
+    <div className="h-full w-full items-center border bg-gray-100 dark:bg-[#2D3236] items-center mb-1">
       <form
         onSubmit={handleSendMessage}
         id="send-message-form"
@@ -137,7 +137,7 @@ const SendMessageSupport = ({
                 }
               }}
               onChange={(e) => setValue(e.target.value)}
-              className="flex-1 text-sm lg:text-base dark:bg-[#131B1E] dark:text-[#F1F3F3] text-black p-3 focus:outline-none bg-white rounded-lg"
+              className="flex-1 border text-sm lg:text-base dark:bg-[#131B1E] dark:text-[#F1F3F3] text-black p-3 focus:outline-none bg-white rounded-lg"
               placeholder="Enter your message..."
               rows={1}
               style={{ height: "auto" }}

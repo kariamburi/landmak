@@ -54,7 +54,7 @@ export default function HeaderMain({ handleFilter ,handleOpenSearchByTitle, hand
   };
   return (
     <div
-      className="relative flex flex-col w-full mb-1"
+      className="relative flex flex-col w-full p-1 mb-1"
      
     >
         <div className="flex gap-1 items-center w-full">
@@ -62,25 +62,25 @@ export default function HeaderMain({ handleFilter ,handleOpenSearchByTitle, hand
         <div className="flex">
         <button
         onClick={handleOpenPopup}
-        className="flex text-xs lg:text-base gap-1 items-center justify-center w-full py-4 px-2 border border-gray-300 dark:border-gray-600 bg-white dark:bg-[#2D3236] dark:text-gray-100 rounded-sm hover:bg-gray-200"
+        className="flex text-xs lg:text-base gap-1 items-center justify-center w-full py-4 px-2 border border-gray-300 dark:border-gray-600 bg-white dark:bg-[#2D3236] dark:text-gray-100 rounded-sm hover:bg-gray-100"
         >
            <div className="hidden lg:inline">
            <LocationOnIcon/>
            </div>
            <div className="lg:hidden">
-           <LocationOnIcon sx={{ fontSize: 20 }}/>
+           <LocationOnIcon sx={{ fontSize: 24 }}/>
            </div>
         {region}
         </button>
         </div>
-        <div className="flex-1 hidden lg:inline">
+        <div className="flex-1">
         <SearchNow handleFilter={handleFilter} handleOpenSearchByTitle={handleOpenSearchByTitle}/>
         </div>
 
  
 
 
-                <div className="flex-1 lg:hidden">
+                <div className="flex lg:hidden">
                 <TooltipProvider>
                 <Tooltip>
                   <TooltipTrigger asChild>
@@ -91,7 +91,7 @@ export default function HeaderMain({ handleFilter ,handleOpenSearchByTitle, hand
                    {/*  🗺️ */}
                    <div className="flex gap-3 items-center">
                     
-                    <DirectionsWalkOutlinedIcon sx={{ fontSize: 20 }}/>
+                    <DirectionsWalkOutlinedIcon sx={{ fontSize: 24 }}/>
                     <div className="text-xs lg:text-base flex gap-1 items-center">Virtual Site Visit </div></div><ArrowForwardIosIcon sx={{ fontSize: 14 }}/>
                   </button>
                   </TooltipTrigger>
@@ -151,9 +151,9 @@ export default function HeaderMain({ handleFilter ,handleOpenSearchByTitle, hand
                        
                     )}
                     </div>
-                     <div className="flex-1 mt-2 lg:hidden">
+                  {/*    <div className="hidden">
         <SearchNow handleFilter={handleFilter} handleOpenSearchByTitle={handleOpenSearchByTitle}/>
-        </div>
+        </div>*/}
 
     </div>
   );

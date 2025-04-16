@@ -50,7 +50,7 @@ const MobileNav = ({ userstatus, userId,popup,user, onClose, handleOpenSettings,
             setIsSheetOpen(true);
           }}
         >
-          <div className="flex p-1 text-white lg:text-gray-500 items-center justify-center rounded-full tooltip tooltip-bottom lg:hover:text-green-600 hover:cursor-pointer">
+          <div className="flex p-1 text-green-600 lg:text-gray-500 items-center justify-center rounded-full tooltip tooltip-bottom lg:hover:text-green-600 hover:cursor-pointer">
             <MenuIcon />
           </div>
         </SheetTrigger>

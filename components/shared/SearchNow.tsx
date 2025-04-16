@@ -9,7 +9,7 @@ import CloseOutlinedIcon from "@mui/icons-material/CloseOutlined";
 import DeleteOutlineIcon from "@mui/icons-material/DeleteOutline";
 
 const SearchNow = ({
-  placeholder = "Search title...",
+  placeholder = "Search keywords...",
   handleFilter,
   handleOpenSearchByTitle,
 }: {

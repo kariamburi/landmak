@@ -36,6 +36,7 @@ import { IdynamicAd } from "@/lib/database/models/dynamicAd.model";
 import VerticalCard from "./VerticalCard";
 import Skeleton from "@mui/material/Skeleton";
 import SearchNowTitle from "./SearchNowTitle";
+import { Button } from "../ui/button";
 interface ChatWindowProps {
   isOpen: boolean;
   userId: string;
@@ -61,29 +62,32 @@ const SearchByTitle: React.FC<ChatWindowProps> = ({
 }) => {
   const { toast } = useToast();
  
-const [loading, setLoading] = useState(true);
+const [loading, setLoading] = useState(false);
 //const observer = useRef<IntersectionObserver | null>(null);
  const [data, setAds] = useState<IdynamicAd[]>([]); // Initialize with an empty array
  const [page, setPage] = useState(1);
  const [isInitialLoading, setIsInitialLoading] = useState(true);
   const [newpage, setnewpage] = useState(false);
  const [totalPages, setTotalPages] = useState(1);
- const [newqueryObject, setNewqueryObject] = useState<any>(queryObject);
+ const [query, setQuery] = useState('');
+ const [newqueryObject, setNewqueryObject] = useState<any>([]);
   const observer = useRef<IntersectionObserver | null>(null);
  // Keep the early return after defining hooks
  const handleFilter = (value:any) => {
-   
+  setQuery(value.query);
   setNewqueryObject({
     ...queryObject, // Preserve existing properties
     ...value,
   });
+  setAds([]);
+  setLoading(true);
+  fetchAds(value.query);
   };
-const fetchAds = async () => {
+const fetchAds = async (value:string) => {
     setLoading(true);
     try {
-      
       const Ads = await getAlldynamicAd({
-        queryObject: newqueryObject,
+        queryObject: {query:value},
         page,
         limit: 20,
       });
@@ -113,12 +117,12 @@ const fetchAds = async () => {
     }
   };
 
-  useEffect(() => {
-    if (!newpage) {
-      setPage(1);
-    }
-    fetchAds();
-  }, [page, newqueryObject]);
+   // useEffect(() => {
+   // if (!newpage) {
+   //   setPage(1);
+   // }
+   // fetchAds();
+   // }, [page, newqueryObject]);
 
   const lastAdRef = (node: any) => {
     if (loading) return;
@@ -143,26 +147,29 @@ const fetchAds = async () => {
   return (
     <div className="fixed inset-0 flex items-center justify-center bg-gray-800 bg-opacity-50 z-50">
       <div className="dark:bg-[#2D3236] dark:text-gray-300 bg-gray-200 rounded-lg p-1 lg:p-6 w-full h-full flex flex-col">
-       <button
-                        onClick={onClose}
-                        className="flex justify-center items-center h-12 w-12 text-gray-700 dark:text-gray-200 dark:hover:bg-gray-700 hover:text-green-600 rounded-full"
-                      >
-                        <CloseOutlinedIcon />
-                      </button>
+      
         {/* Header */}
         <div className="flex flex-col items-center w-full h-[90vh]">
-          <div className="w-full h-[60px] dark:bg-[#2D3236]">
-          <SearchNowTitle handleFilter={handleFilter}/>
+         
+          <div className="w-full mt-2 flex h-[60px] dark:bg-[#2D3236]">
+           
+          <SearchNowTitle handleFilter={handleFilter} onClose={onClose}/>
+        
+        
           </div>
         <ScrollArea.Root className="flex-1 overflow-hidden">
         <ScrollArea.Viewport className="h-full overflow-y-auto bg-gray-200 lg:rounded-t-0 border">
             
           
-            {data.length > 0 ? (
-             
+            {data.length > 0 ? (<div className="flex flex-col">
+              <p className="text-sm lg:text-[16px] text-gray-500">
+             {data.length > 0
+               ? `Found ${data.length} results for “${query}”`
+               : `No results found for “${query}”`}
+           </p>
                <Masonry
                   breakpointCols={breakpointColumns}
-                  className="p-1 mt-4 mb-20 lg:mb-0 lg:mt-0 w-full flex gap-2 lg:gap-4 overflow-hidden"
+                  className="p-1 mt-2 mb-20 lg:mb-0 lg:mt-0 w-full flex gap-2 lg:gap-4 overflow-hidden"
                   columnClassName="bg-clip-padding"
                 >
                   {data.map((ad: any, index: number) => {
@@ -188,32 +195,25 @@ const fetchAds = async () => {
                   })}
                </Masonry> 
             
-            ) : (
+               </div>) : (
               !loading && (
                 <div className="flex items-center justify-center min-h-[400px] w-full flex-col gap-3 rounded-[14px] bg-grey-50 py-28 text-center">
-                  <h3 className="font-bold text-[16px] lg:text-[25px]">0 results</h3>
-                  <p className="text-sm lg:p-regular-14">No Search results</p>
-                  
-                </div>
+                <h3 className="font-bold text-[16px] lg:text-[25px]">No results found</h3>
+                <p className="text-sm lg:text-[16px] text-gray-500">
+                  We couldn't find anything matching your search. <br />
+                  Try using different keywords or filters.
+                </p>
+              </div>
+              
               )
             )}
           {loading && (
               <div>
-                {isInitialLoading ? (
-                  <div className="grid grid-cols-2 lg:grid-cols-4 gap-2">
-                    {Array.from({ length: 12 }).map((_, index) => (
-                      <div key={index} className="bg-gray-200 dark:bg-[#2D3236] p-4 rounded-lg shadow-md w-full">
-                        <Skeleton variant="rectangular" width="100%" height={140} />
-                        <Skeleton variant="text" width="80%" height={30} className="mt-2" />
-                        <Skeleton variant="text" width="60%" height={25} />
-                      </div>
-                    ))}
-                  </div>
-                ) : (
+               
                   <div className="w-full min-h-[400px] h-full flex flex-col items-center justify-center">
-                    <Image src="/assets/icons/loading2.gif" alt="loading" width={40} height={40} unoptimized />
+                    <Image src="/assets/icons/loading2.gif" alt="loading" width={40} height={40} unoptimized /><div>Searching..</div>
                   </div>
-                )}
+              
               </div>
             )}
        </ScrollArea.Viewport>

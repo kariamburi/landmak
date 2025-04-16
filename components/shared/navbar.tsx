@@ -78,12 +78,12 @@ export default function Navbar({ userstatus, userId, user, onClose, popup, handl
     setIsOpenP(false);
   };
   return (
-    <div className="h-[60px] items-center flex p-2 lg:p-3 gap-1 w-full border-b bg-gradient-to-b from-green-600 to-green-600 lg:from-white lg:to-white">
+    <div className="h-[60px] items-center flex p-2 lg:p-3 gap-1 w-full border-b bg-gradient-to-b from-white to-gray-200 lg:from-white lg:to-white">
       <div className="flex-1 mt-1">
         <div className="flex items-center">
        
             <div
-              className="mr-2 w-5 h-8 flex text-white lg:text-gray-500 items-center justify-center rounded-sm tooltip tooltip-bottom hover:cursor-pointer lg:hover:text-green-600"
+              className="mr-2 w-5 h-8 flex text-gray-500 lg:text-gray-500 items-center justify-center rounded-sm tooltip tooltip-bottom hover:cursor-pointer lg:hover:text-green-600"
               data-tip="Back"
               onClick={() => {
                 onClose()
@@ -102,8 +102,8 @@ export default function Navbar({ userstatus, userId, user, onClose, popup, handl
             </div>
          
            <div className="flex items-center gap-2">
-           <img src="/logo_white.png" alt="Logo" className="lg:hidden w-8 h-8 rounded-full" />
-                          <img src="/logo.png" alt="Logo" className="hidden lg:inline w-8 h-8 rounded-full" />
+          
+                          <img src="/logo.png" alt="Logo" className="w-8 h-8 rounded-full" />
                           <StyledBrandName/>
               </div>
         

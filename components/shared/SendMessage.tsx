@@ -184,7 +184,7 @@ const SendMessage = ({
               e.currentTarget.style.height = "auto";
               e.currentTarget.style.height = `${e.currentTarget.scrollHeight}px`;
             }}
-            className="input dark:bg-[#2D3236] dark:text-[#F1F3F3] text-black w-full text-sm lg:text-base p-3 focus:outline-none bg-white rounded-r-none rounded-l-lg"
+            className="input border dark:bg-[#2D3236] dark:text-[#F1F3F3] text-black w-full text-sm lg:text-base p-3 focus:outline-none bg-white rounded-r-none rounded-l-lg"
             placeholder="Enter your message..."
             rows={1}
             style={{ height: "auto" }}
