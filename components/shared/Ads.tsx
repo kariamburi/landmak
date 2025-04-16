@@ -775,7 +775,7 @@ export default function Ads({ ad, userId, userImage, userName, onClose,handlePay
               </div>
             </div>
             <div className="flex mb-2 items-center w-full">
-              <p className="text-lg lg:text-2xl font-bold dark:text-gray-300 text-green-600">
+              <p className="text-lg lg:text-2xl font-bold dark:text-gray-300 text-green-900">
                 {ad.data.title}
               </p>
             </div>
@@ -826,7 +826,7 @@ export default function Ads({ ad, userId, userImage, userName, onClose,handlePay
                       key !== "youtube-link" && (
                         <>
                           <div key={key} className="mb-2 md:flex-row">
-                            <div className="dark:text-gray-300 text-green-600 text-sm">
+                            <div className="dark:text-gray-300 text-green-900 text-sm">
                               {value}
                             </div>
                             <div className="dark:text-gray-500 text-gray-600 text-xs">
@@ -843,7 +843,7 @@ export default function Ads({ ad, userId, userImage, userName, onClose,handlePay
             {ad.data.facilities && ad.data.facilities.length > 0 && (
               <>
                 <div className="border-t dark:border-gray-600 border-gray-300 mt-4 mb-4"></div>
-                <p className="mt-5 font-bold dark:text-gray-400 text-green-600">
+                <p className="mt-5 font-bold dark:text-gray-400 text-green-900">
                   Facilities
                 </p>
                 <div className="grid grid-cols-3 lg:grid-cols-5 w-full gap-1 mt-1">
@@ -860,7 +860,7 @@ export default function Ads({ ad, userId, userImage, userName, onClose,handlePay
             {ad.data.amenities && ad.data.amenities.length > 0 && (
               <>
                 <div className="border-t dark:border-gray-600 border-gray-300 mt-4 mb-4"></div>
-                <p className="mt-5 font-bold dark:text-gray-400 text-green-600">
+                <p className="mt-5 font-bold dark:text-gray-400 text-green-900">
                   Amenities
                 </p>
                 <div className="grid grid-cols-3 lg:grid-cols-5 w-full gap-1 mt-1">
@@ -877,7 +877,7 @@ export default function Ads({ ad, userId, userImage, userName, onClose,handlePay
             {ad.data.features && ad.data.features.length > 0 && (
               <>
                 <div className="border-t dark:border-gray-600 border-gray-300 mt-4 mb-4"></div>
-                <p className="mt-5 font-bold dark:text-gray-400 text-green-600">
+                <p className="mt-5 font-bold dark:text-gray-400 text-green-900">
                   Key Features
                 </p>
                 <div className="grid grid-cols-3 lg:grid-cols-5 w-full gap-1 mt-1">
@@ -892,7 +892,7 @@ export default function Ads({ ad, userId, userImage, userName, onClose,handlePay
               </>
             )}
             <div className="border-t dark:border-gray-600 border-gray-300 mt-4 mb-4"></div>
-            <p className="mt-5 font-bold dark:text-gray-400 text-green-600">
+            <p className="mt-5 font-bold dark:text-gray-400 text-green-900">
               Description
             </p>
             {/* <p className="my-1 text-text-green-600">{ad.data.description}</p>*/}
@@ -908,7 +908,7 @@ export default function Ads({ ad, userId, userImage, userName, onClose,handlePay
                 <Accordion type="single" collapsible>
                   <AccordionItem value="item-1" className="border-0">
                     <AccordionTrigger>
-                      <div className="mt-5 flex text-green-600 dark:text-gray-400 gap-1 items-center font-bold no-underline">
+                      <div className="mt-5 flex text-green-900 dark:text-gray-400 gap-1 items-center font-bold no-underline">
                         <LocalShippingOutlinedIcon />
                         <div className="font-bold">Delivery Options</div>
                       </div>
@@ -1012,7 +1012,7 @@ export default function Ads({ ad, userId, userImage, userName, onClose,handlePay
                   >
                     <AccordionItem value="item-2" className="border-0">
                       <AccordionTrigger className="border-0">
-                        <div className="mt-0 flex text-green-600 dark:text-gray-400 gap-1 items-center font-bold no-underline">
+                        <div className="mt-0 flex text-green-900 dark:text-gray-400 gap-1 items-center font-bold no-underline">
                           <HelpOutlineOutlinedIcon />
                           <div className="font-bold">About Seller</div>
                         </div>
