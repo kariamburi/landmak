@@ -154,10 +154,11 @@ const MainPage = ({
     setIsOpenSettings(false);
     setIsOpenPerfomance(false);
     setIsOpenSell(false);
+   // setIsOpenSearchByTitle(false);
     setIsOpenAdView(false);
     setIsOpenAdEdit(false);
     setIsOpenPay(false);
-   setIsOpenCategory(false);
+   //setIsOpenCategory(false);
   };
 
  

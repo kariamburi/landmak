@@ -157,6 +157,43 @@ const SearchNow = ({
           <SearchOutlinedIcon />
         </button>
       </div>
+      
+        {/* Search Suggestions Dropdown */}
+        {focus && searchHistory.length > 0 && (
+        <div className="absolute top-full left-0 w-full bg-white dark:bg-[#131B1E] border border-gray-300 dark:border-gray-700 shadow-md rounded-md mt-1 z-10">
+          {searchHistory.map((item, index) => (
+            <div
+              key={index}
+              className="flex w-full justify-between items-center p-0 cursor-pointer hover:text-green-600 dark:hover:bg-gray-800"
+            >
+              <span
+                onClick={() => handleClick(item)}
+                className="flex-grow gap-1 p-1 items-start"
+              >
+                <div className="flex w-full items-center">
+                  <SearchOutlinedIcon sx={{ fontSize: 16 }} />
+                  {item}
+                </div>
+              </span>
+              <button
+                onClick={() => removeHistoryItem(item)}
+                className="text-gray-500 hover:text-red-500"
+              >
+                <DeleteOutlineIcon fontSize="small" />
+              </button>
+            </div>
+          ))}
+          <button
+            className="w-full text-sm text-gray-500 p-2 hover:bg-gray-200 dark:hover:bg-gray-800"
+            onClick={() => {
+              setSearchHistory([]);
+              localStorage.removeItem("searchHistory");
+            }}
+          >
+            Clear All History
+          </button>
+        </div>
+      )}
       </div>
 </div>
 <div className="lg:hidden">
@@ -193,42 +230,7 @@ const SearchNow = ({
       </div>
       </div>
       </div>
-      {/* Search Suggestions Dropdown */}
-      {focus && searchHistory.length > 0 && (
-        <div className="absolute top-full left-0 w-full bg-white dark:bg-[#131B1E] border border-gray-300 dark:border-gray-700 shadow-md rounded-md mt-1 z-10">
-          {searchHistory.map((item, index) => (
-            <div
-              key={index}
-              className="flex w-full justify-between items-center p-0 cursor-pointer hover:text-green-600 dark:hover:bg-gray-800"
-            >
-              <span
-                onClick={() => handleClick(item)}
-                className="flex-grow gap-1 p-1 items-start"
-              >
-                <div className="flex w-full items-center">
-                  <SearchOutlinedIcon sx={{ fontSize: 16 }} />
-                  {item}
-                </div>
-              </span>
-              <button
-                onClick={() => removeHistoryItem(item)}
-                className="text-gray-500 hover:text-red-500"
-              >
-                <DeleteOutlineIcon fontSize="small" />
-              </button>
-            </div>
-          ))}
-          <button
-            className="w-full text-sm text-gray-500 p-2 hover:bg-gray-200 dark:hover:bg-gray-800"
-            onClick={() => {
-              setSearchHistory([]);
-              localStorage.removeItem("searchHistory");
-            }}
-          >
-            Clear All History
-          </button>
-        </div>
-      )}
+    
     </div>
   );
 };

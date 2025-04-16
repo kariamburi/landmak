@@ -145,7 +145,7 @@ const fetchAds = async (value:string) => {
  
   if (!isOpen) return null;
   return (
-    <div className="fixed inset-0 flex items-center justify-center bg-gray-800 bg-opacity-50 z-50">
+    <div className="fixed inset-0 flex items-center justify-center bg-gray-800 bg-opacity-50 z-20">
       <div className="dark:bg-[#2D3236] dark:text-gray-300 bg-gray-200 rounded-lg p-1 lg:p-6 w-full h-full flex flex-col">
       
         {/* Header */}
