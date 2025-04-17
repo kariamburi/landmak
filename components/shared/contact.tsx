@@ -20,6 +20,7 @@ type chatProps = {
   userName: string;
   userImage: string;
   ad: any;
+  user: any;
   handleOpenReview: (value:any) => void;
   handleOpenChatId: (value:string) => void;
   handleOpenShop: (value:any) => void;
@@ -27,7 +28,7 @@ type chatProps = {
   handleOpenSettings: () => void;
   handlePay: (id:string) => void;
 };
-const Contact = ({ ad, userId, userName, userImage,handlePay, handleOpenReview, handleOpenChatId, handleOpenSettings, handleOpenShop }: chatProps) => {
+const Contact = ({ ad, user, userId, userName, userImage,handlePay, handleOpenReview, handleOpenChatId, handleOpenSettings, handleOpenShop }: chatProps) => {
   const [showphone, setshowphone] = useState(false);
   const [isOpenP, setIsOpenP] = useState(false);
   const handleOpenP = () => {
@@ -72,6 +73,7 @@ const Contact = ({ ad, userId, userName, userImage,handlePay, handleOpenReview, 
         <Verificationmobile
           user={ad.organizer}
           userId={userId}
+          fee={user.fee}
           isAdCreator={isAdCreator}
           handlePayNow={handlePay}
         />

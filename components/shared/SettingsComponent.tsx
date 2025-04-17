@@ -92,6 +92,7 @@ const SettingsComponent = ({userId,user,onClose, handleOpenSearchTab,
                 <div className="flex">
                   <Verification
                     user={user}
+                    fee={user.fee}
                     userId={userId}
                     isAdCreator={isAdCreator}
                     handlePayNow={handlePay}

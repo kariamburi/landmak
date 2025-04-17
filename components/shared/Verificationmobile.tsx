@@ -16,6 +16,7 @@ import { VerificationPackId } from "@/constants";
 interface SettingsProp {
   user: any;
   userId: string;
+  fee:string;
   isAdCreator: boolean;
   handlePayNow: (id:string) => void;
 }
@@ -23,6 +24,7 @@ interface SettingsProp {
 const Verificationmobile: React.FC<SettingsProp> = ({
   user,
   userId,
+  fee,
   isAdCreator,
   handlePayNow,
 }) => {
@@ -106,7 +108,7 @@ const Verificationmobile: React.FC<SettingsProp> = ({
         </p>
         <div className="flex items-center pt-2">
           <button
-            onClick={() => handlePay(VerificationPackId, "Verification", "0", user.fee)}
+            onClick={() => handlePay(VerificationPackId, "Verification", "0", fee)}
             className="flex gap-1 items-center hover:bg-black bg-[#30AF5B] text-white text-xs mt-2 p-1 rounded-lg shadow"
           >
             <CheckCircleIcon sx={{ marginRight: "5px" }} />

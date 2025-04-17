@@ -120,6 +120,7 @@ const AdsComponent = ({
       <div className="dark:bg-[#131B1E] text-black dark:text-[#F1F3F3] max-w-6xl mx-auto mt-[60px]">
         <Ads
           ad={ad}
+          user={user}
           userId={userId || ""}
           userName={userName || ""}
           userImage={userImage || ""}
@@ -155,6 +156,7 @@ const AdsComponent = ({
         <div className="fixed bottom-0 left-0 right-0 dark:bg-[#233338] dark:text-gray-300 dark:lg:bg-transparent bg-gray-200 lg:bg-transparent h-auto  z-10 p-3 shadow-md flex flex-col md:flex-row justify-between items-center">
           <Contact
             ad={ad}
+            user={user}
             userId={userId || ""}
             userName={userName || ""}
             userImage={userImage || ""}

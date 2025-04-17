@@ -264,7 +264,7 @@ CollectionProps) => {
   const scrollRefB = useRef<HTMLDivElement>(null);
 const lastScrollTop = useRef(0);
 const scrollTimeout = useRef<NodeJS.Timeout | null>(null);
-const SCROLL_THRESHOLD = 200; // pixels
+const SCROLL_THRESHOLD = 150; // pixels
   useEffect(() => {
     const timer = setTimeout(() => {
       const el = scrollRefB.current;

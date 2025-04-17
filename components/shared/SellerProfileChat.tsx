@@ -178,6 +178,7 @@ const handlewhatsappClick = () => {
           <div className="m-1">
             <Verification
               user={user}
+              fee={user.fee}
               userId={userId}
               isAdCreator={isAdCreator}
               handlePayNow={handlePay}

@@ -92,6 +92,7 @@ import threeDotsScale from "@iconify-icons/svg-spinners/3-dots-scale"; // Correc
  // Correct import
 type CardProps = {
   ad: any;
+  user:any;
   userId: string;
   userImage: string;
   userName: string;
@@ -117,7 +118,7 @@ function checkPlatform(url: string) {
     return "Unknown Platform";
   }
 }
-export default function Ads({ ad, userId, userImage, userName, onClose,handlePay, handleOpenSafety, handleOpenSell, handleSubCategory, handleOpenReview, handleOpenPlan, handleOpenShop,}: CardProps) {
+export default function Ads({ ad, user, userId, userImage, userName, onClose,handlePay, handleOpenSafety, handleOpenSell, handleSubCategory, handleOpenReview, handleOpenPlan, handleOpenShop,}: CardProps) {
   const [videoAdId, setvideoAdId] = React.useState<string | null>(null);
   const [tiktokvideoAdId, setTiktokvideoAdId] = React.useState<string | null>(null);
   const [selectedIndex, setSelectedIndex] = React.useState<number | null>(null);
@@ -1055,6 +1056,7 @@ export default function Ads({ ad, userId, userImage, userName, onClose,handlePay
                             <SellerProfileCard
                               userId={userId}
                               ad={ad}
+                              fee={user.fee}
                               userImage={userImage}
                               userName={userName} 
                               handleOpenReview={handleOpenReview}
@@ -1620,6 +1622,7 @@ export default function Ads({ ad, userId, userImage, userName, onClose,handlePay
                 <SellerProfileCard
                   userId={userId}
                   ad={ad}
+                  fee={user.fee}
                   userImage={userImage}
                   userName={userName} 
                   handleOpenReview={handleOpenReview}

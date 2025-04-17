@@ -215,7 +215,7 @@ const MainPage = ({
     return () => window.removeEventListener("resize", handleResize);
   }, []);
   
-  const SCROLL_THRESHOLD = 200; // pixels
+  const SCROLL_THRESHOLD = 150; // pixels
   let scrollTimeout: NodeJS.Timeout;
   
   const [showBottomNav, setShowBottomNav] = useState(true);

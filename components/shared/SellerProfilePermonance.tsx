@@ -61,7 +61,7 @@ type chatProps = {
   userId: string;
   userName: string;
   userImage: string;
-  user: IUser;
+  user: any;
   handleOpenShop:(shopId:any) => void;
   handleOpenReview:(value:any) => void;
   handlePay: (id:string) => void;
@@ -120,7 +120,7 @@ const SellerProfilePermonance = ({
             <p className="font-bold">{userName}</p>
           </div>
 
-          <Verification user={user} userId={userId} isAdCreator={true} handlePayNow={handlePay}/>
+          <Verification user={user} fee={user.fee} userId={userId} isAdCreator={true} handlePayNow={handlePay}/>
           <Ratingsmobile recipientUid={userId} user={user} handleOpenReview={handleOpenReview} />
         </div>
       </div>

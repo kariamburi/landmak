@@ -180,6 +180,7 @@ const SellerProfile = ({ userId, loggedId, user, handlePay, handleOpenReview, ha
           <div className="m-1">
             <Verification
               user={user}
+              fee={user.fee}
               userId={userId}
               isAdCreator={isAdCreator}
               handlePayNow={handlePay}
