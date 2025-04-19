@@ -27,6 +27,7 @@ import ToggleTheme from "./toggleTheme";
 import ProgressPopup from "./ProgressPopup";
 import { useState } from "react";
 import { Button } from "../ui/button";
+
 const SignedIn = dynamic(
   () => import("@clerk/nextjs").then((mod) => mod.SignedIn),
   { ssr: false }

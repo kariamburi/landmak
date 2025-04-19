@@ -15,7 +15,7 @@ import ManageAccountsOutlinedIcon from "@mui/icons-material/ManageAccountsOutlin
 import AddCircleOutlineOutlinedIcon from "@mui/icons-material/AddCircleOutlineOutlined";
 import FormatListBulletedOutlinedIcon from "@mui/icons-material/FormatListBulletedOutlined";
 import ArrowForwardIosIcon from "@mui/icons-material/ArrowForwardIos";
-import DiamondIcon from "@mui/icons-material/Diamond";
+
 import SettingsIcon from "@mui/icons-material/Settings";
 import BookmarkIcon from "@mui/icons-material/Bookmark";
 import HomeIcon from "@mui/icons-material/Home";
@@ -23,6 +23,8 @@ import SellOutlinedIcon from "@mui/icons-material/SellOutlined";
 import ShareOutlinedIcon from "@mui/icons-material/ShareOutlined";
 import { SignedIn, SignedOut } from "@clerk/nextjs";
 import ProgressPopup from "./ProgressPopup";
+import { Shield, List ,Bookmark , HelpCircle, Gem , CirclePlus, Users, BarChart, Settings, MessageCircle, Heart, PlusSquare, Home } from 'lucide-react';
+import User from "@/lib/database/models/user.model";
 type NavItemsProps = {
   userstatus: string;
   userId: string;
@@ -97,13 +99,13 @@ const NavItems = ({ userstatus, userId,user, popup, onClose, handleclicklink, ha
                     
                         {link.label === "Home" && (  <div
                         onClick={()=>  {onClose(); handleclicklink();} }
-                        className={`${
+                        className={`items-center ${
                           isActive &&
                           "dark:bg-green-600 dark:text-white bg-green-600 text-white rounded-full"
                         } flex dark:bg-[#2D3236]  dark:hover:bg-gray-800 hover:bg-slate-100 rounded-sm hover:text-green-600 p-3 mb-1 hover:cursor-pointer`}
                       >
                           <span>
-                          <HomeIcon className="w-10 p-1" />
+                          <Home className="w-10 p-1" />
                           </span>
                           <span className="flex-1 text-sm mr-5 hover:no-underline my-auto">
                           {link.label}
@@ -114,13 +116,13 @@ const NavItems = ({ userstatus, userId,user, popup, onClose, handleclicklink, ha
                         )}
                         {link.label === "Sell" && (  <div
                         onClick={()=>  {handleOpenSell(); handleclicklink()}}
-                        className={`${
+                        className={`items-center ${
                           isActive &&
                           "dark:bg-green-600 dark:text-white bg-green-600 text-white rounded-full"
                         } flex dark:bg-[#2D3236]  dark:hover:bg-gray-800 hover:bg-slate-100 rounded-sm hover:text-green-600 p-3 mb-1 hover:cursor-pointer`}
                       >
                           <span>
-                          <SellOutlinedIcon className="w-10 p-1" />
+                          <CirclePlus className="w-10 p-1" />
                         
                           </span> <span className="flex-1 text-sm mr-5 hover:no-underline my-auto">
                           {link.label}
@@ -135,12 +137,12 @@ const NavItems = ({ userstatus, userId,user, popup, onClose, handleclicklink, ha
                         {link.label === "My Shop" && (
                           <div
                           onClick={()=>  {handleOpenShop(user); handleclicklink();}}
-                          className={`${
+                          className={`items-center ${
                             isActive &&
                             "dark:bg-green-600 dark:text-white bg-green-600 text-white rounded-full"
                           } flex dark:bg-[#2D3236]  dark:hover:bg-gray-800 hover:bg-slate-100 rounded-sm hover:text-green-600 p-3 mb-1 hover:cursor-pointer`}
                         > <span> 
-                          <FormatListBulletedOutlinedIcon className="w-10 p-1" />
+                             <List className="w-10 p-1" />
                           </span> <span className="flex-1 text-sm mr-5 hover:no-underline my-auto">
                           {link.label}
                         </span>
@@ -152,14 +154,14 @@ const NavItems = ({ userstatus, userId,user, popup, onClose, handleclicklink, ha
                         )}
                         {link.label === "Chat" && (  <div
                         onClick={()=>  {handleOpenChat(); handleclicklink();}}
-                        className={`${
+                        className={`items-center ${
                           isActive &&
                           "dark:bg-green-600 dark:text-white bg-green-600 text-white rounded-full"
                         } flex dark:bg-[#2D3236]  dark:hover:bg-gray-800 hover:bg-slate-100 rounded-sm hover:text-green-600 p-3 mb-1 hover:cursor-pointer`}
                       >
                           <span>
                             
-                            <CommentOutlinedIcon className="w-10 p-1 " />
+                              <MessageCircle className="w-10 p-1" />
                           </span> <span className="flex-1 text-sm mr-5 hover:no-underline my-auto">
                           {link.label}
                         </span>
@@ -170,13 +172,13 @@ const NavItems = ({ userstatus, userId,user, popup, onClose, handleclicklink, ha
                         )}
                         {link.label === "Performance" && (  <div
                         onClick={()=> { handleOpenPerfomance(); handleclicklink();}}
-                        className={`${
+                        className={`items-center ${
                           isActive &&
                           "dark:bg-green-600 dark:text-white bg-green-600 text-white rounded-full"
                         } flex dark:bg-[#2D3236]  dark:hover:bg-gray-800 hover:bg-slate-100 rounded-sm hover:text-green-600 p-3 mb-1 hover:cursor-pointer`}
                       >
                           <span>
-                            <StackedLineChartOutlinedIcon className="w-10 p-1 " />
+                               <BarChart className="w-10 p-1" />
                           </span>
                           <span className="flex-1 text-sm mr-5 hover:no-underline my-auto">
                           {link.label}
@@ -187,13 +189,13 @@ const NavItems = ({ userstatus, userId,user, popup, onClose, handleclicklink, ha
                         </div>)}
                         {link.label === "Bookmark" && (  <div
                         onClick={()=> {handleOpenBook(); handleclicklink();}}
-                        className={`${
+                        className={`items-center ${
                           isActive &&
                           "dark:bg-green-600 dark:text-white bg-green-600 text-white rounded-full"
                         } flex dark:bg-[#2D3236]  dark:hover:bg-gray-800 hover:bg-slate-100 rounded-sm hover:text-green-600 p-3 mb-1 hover:cursor-pointer`}
                       >
                           <span>
-                            <BookmarkIcon className="w-10 p-1 " />
+                               <Bookmark className="w-10 p-1" />
                           </span> <span className="flex-1 text-sm mr-5 hover:no-underline my-auto">
                           {link.label}
                         </span>
@@ -205,13 +207,13 @@ const NavItems = ({ userstatus, userId,user, popup, onClose, handleclicklink, ha
                         )}
                         {link.label === "Plan" && (  <div
                         onClick={()=>  {handleOpenPlan(); handleclicklink();}}
-                        className={`${
+                        className={`items-center ${
                           isActive &&
                           "dark:bg-green-600 dark:text-white bg-green-600 text-white rounded-full"
                         } flex dark:bg-[#2D3236]  dark:hover:bg-gray-800 hover:bg-slate-100 rounded-sm hover:text-green-600 p-3 mb-1 hover:cursor-pointer`}
                       >
                           <span>
-                            <DiamondIcon className="w-10 p-1 " />
+                            <Gem className="w-10 p-1 " />
                           </span>
                           <span className="flex-1 text-sm mr-5 hover:no-underline my-auto">
                           {link.label}
@@ -221,15 +223,15 @@ const NavItems = ({ userstatus, userId,user, popup, onClose, handleclicklink, ha
                         </span>
                         </div>
                         )}
-                        {link.label === "Settings" && (  <div
+                        {link.label === "Profile" && (  <div
                          onClick={()=>  {handleOpenSettings(); handleclicklink();}}
-                        className={`${
+                        className={`items-center ${
                           isActive &&
                           "dark:bg-green-600 dark:text-white bg-green-600 text-white rounded-full"
                         } flex dark:bg-[#2D3236]  dark:hover:bg-gray-800 hover:bg-slate-100 rounded-sm hover:text-green-600 p-3 mb-1 hover:cursor-pointer`}
                       >
                           <span>
-                            <SettingsIcon className="w-10 p-1 " />
+                               <User className="w-10 p-1" />
                           </span>
                           <span className="flex-1 text-sm mr-5 hover:no-underline my-auto">
                           {link.label}
@@ -243,13 +245,13 @@ const NavItems = ({ userstatus, userId,user, popup, onClose, handleclicklink, ha
                           onClick={()=>  {setIsOpenP(true);
                             //handleclicklink();
                             router.push("/home");}}
-                        className={`${
+                        className={`items-center ${
                           isActive &&
                           "dark:bg-green-600 dark:text-white bg-green-600 text-white rounded-full"
                         } flex dark:bg-[#2D3236]  dark:hover:bg-gray-800 hover:bg-slate-100 rounded-sm hover:text-green-600 p-3 mb-1 hover:cursor-pointer`}
                       >
                           <span>
-                            <ManageAccountsOutlinedIcon className="w-10 p-1 " />
+                               <Shield className="w-10 p-1" />
                           </span>
                           <span className="flex-1 text-sm mr-5 hover:no-underline my-auto">
                           {link.label}
@@ -278,55 +280,55 @@ const NavItems = ({ userstatus, userId,user, popup, onClose, handleclicklink, ha
                       }}
                     >
                       <div
-                        className={`${
+                        className={`items-center ${
                           isActive &&
                           "dark:bg-green-600 dark:text-white bg-green-600 text-white rounded-full"
                         } flex dark:bg-[#2D3236]  dark:hover:bg-gray-800 hover:bg-slate-100 rounded-sm hover:text-green-600 p-3 mb-1 hover:cursor-pointer`}
                       >
                         {link.label === "Home" && (
                           <span>
-                            <HomeIcon className="w-10 p-1 " />
+                              <Home className="w-10 p-1" />
                           </span>
                         )}
                         {link.label === "Sell" && (
                           <span>
-                            <SellOutlinedIcon className="w-10 p-1 " />
+                               <CirclePlus className="w-10 p-1" />
                           </span>
                         )}
                         {link.label === "My Shop" && (
                           <span>
-                            <FormatListBulletedOutlinedIcon className="w-10 p-1 " />
+                            <List className="w-10 p-1 " />
                           </span>
                         )}
                         {link.label === "Chat" && (
                           <span>
-                            <CommentOutlinedIcon className="w-10 p-1 " />
+                              <MessageCircle className="w-10 p-1" />
                           </span>
                         )}
                         {link.label === "Performance" && (
                           <span>
-                            <StackedLineChartOutlinedIcon className="w-10 p-1 " />
+                               <BarChart className="w-10 p-1" />
                           </span>
                         )}
                         {link.label === "Bookmark" && (
                           <span>
-                            <BookmarkIcon className="w-10 p-1 " />
+                               <Bookmark className="w-10 p-1" />
                           </span>
                         )}
                         {link.label === "Plan" && (
                           <span>
-                            <DiamondIcon className="w-10 p-1 " />
+                            <Gem className="w-10 p-1 " />
                           </span>
                         )}
-                        {link.label === "Settings" && (
+                        {link.label === "Profile" && (
                           <span>
-                            <SettingsIcon className="w-10 p-1 " />
+                               <User className="w-10 p-1" />
                           </span>
                         )}
 
                         {link.label === "Admin" && (
                           <span>
-                            <ManageAccountsOutlinedIcon className="w-10 p-1 " />
+                               <Shield className="w-10 p-1" />
                           </span>
                         )}
                         <span className="flex-1 text-sm mr-5 hover:no-underline my-auto">

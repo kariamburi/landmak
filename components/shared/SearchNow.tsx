@@ -40,29 +40,14 @@ const SearchNow = ({
     updatedHistory = updatedHistory.slice(0, 5); // Keep only the latest 5 searches
     setSearchHistory(updatedHistory);
     localStorage.setItem("searchHistory", JSON.stringify(updatedHistory));
-    handleFilter({query:query});
-    //if (searchParams.get("query") !== query) {
-   //   onLoading();
-    //  router.push(
-      //  formUrlQuery({
-      //    params: searchParams.toString(),
-      //    key: "query",
-       //   value: query,
-      //  }),
-      //  { scroll: false }
-      //);
-   // }
+   // handleFilter({query:query});
+   
   };
 
   const handleClear = () => {
     setQuery("");
     handleFilter({query:''});
-   // const newUrl = removeKeysFromQuery({
-    //  params: searchParams.toString(),
-    //  keysToRemove: ["query"],
-    //});
-    // onLoading();
-   // router.push(newUrl, { scroll: false });
+  
   };
 
   const removeHistoryItem = (item: string) => {
@@ -71,46 +56,25 @@ const SearchNow = ({
     localStorage.setItem("searchHistory", JSON.stringify(updatedHistory));
   };
   const handleClick = (qry: string) => {
-    //let newUrl = "";
-   // if (qry && qry !== searchParams.get("query")) {
-      //newUrl = formUrlQuery({
-      //  params: searchParams.toString(),
-       // key: "query",
-     //   value: qry,
-      //});
+   
       
       if (qry){
         setQuery(qry);
         handleFilter({query:qry});
       }
-     
-     // onLoading();
-     // router.push(newUrl, { scroll: false });
-    //}
+    
   };
 
   useEffect(() => {
     const delayDebounceFn = setTimeout(() => {
-      //let newUrl = "";
-
+   
       if (query) {
      
         handleFilter({query:query});
-      //  newUrl = formUrlQuery({
-       //   params: searchParams.toString(),
-       //   key: "query",
-       //   value: query,
-       // });
+     
       } 
-      //else {
-       // newUrl = removeKeysFromQuery({
-       //   params: searchParams.toString(),
-        //  keysToRemove: ["query"],
-       // });
-     // }
-
-      //router.push(newUrl, { scroll: false });
-    }, 300);
+      
+    }, 2000);
 
     return () => clearTimeout(delayDebounceFn);
   }, [query]);
@@ -134,7 +98,6 @@ const SearchNow = ({
             setQuery(e.target.value);
             if (e.target.value === "") {
               handleFilter({query:''});
-              // Add your logic here
             }
           }}
           onFocus={() => setFocus(true)}

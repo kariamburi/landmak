@@ -86,7 +86,7 @@ export default function HeaderMain({ handleFilter ,handleOpenSearchByTitle, hand
                   <TooltipTrigger asChild>
                   <button
                     onClick={handleOpenPopupMap}
-                    className="flex gap-2 text-green-600 bg-white justify-between items-center justify-center w-full py-4 px-2 border-gray-300 border rounded-sm hover:bg-green-100"
+                    className="flex gap-2  bg-white justify-between items-center justify-center w-full py-4 px-2 border-gray-300 border rounded-sm hover:bg-gray-100"
                   >
                    {/*  🗺️ */}
                    <div className="flex gap-3 items-center">
@@ -110,7 +110,7 @@ export default function HeaderMain({ handleFilter ,handleOpenSearchByTitle, hand
                   <TooltipTrigger asChild>
                   <button
                     onClick={handleOpenPopupMap}
-                    className="flex gap-2 text-green-600 items-center justify-center w-full py-4 px-2 border-gray-300 border rounded-sm hover:bg-green-100"
+                    className="flex gap-2 items-center justify-center w-full py-4 px-2 border-gray-300 border rounded-sm hover:bg-gray-100"
                   >
                    {/*  🗺️ */}
                    

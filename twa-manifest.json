@@ -16,13 +16,6 @@
   "iconUrl": "https://mapa.co.ke/assets/icons/icon-512x512.png",
   "maskableIconUrl": "https://mapa.co.ke/assets/icons/icon-512x512.png",
   "splashScreenFadeOutDuration": 300,
-  "splashScreen": {
-    "backgroundColor": "#FFFFFF",
-    "image": "https://mapa.co.ke/assets/icons/icon-512x512.png",
-    "scale": "CENTER_INSIDE",
-    "fadeOutDuration": 300,
-    "duration": 3000
-  },
   "signingKey": {
     "path": "E:\\apps\\LandMak\\android.keystore",
     "alias": "key0"

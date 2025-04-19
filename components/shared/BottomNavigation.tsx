@@ -13,6 +13,8 @@ import ProgressPopup from "./ProgressPopup";
 import { useState } from "react";
 import { DivideSquare } from "lucide-react";
 import PersonOutlineOutlinedIcon from '@mui/icons-material/PersonOutlineOutlined';
+import { Bell, HelpCircle, CirclePlus , User, BarChart, Search , MessageCircle, Heart, PlusSquare, Home } from 'lucide-react';
+
 type navprop = {
   userId: string;
   popup: string;
@@ -43,7 +45,7 @@ const BottomNavigation = ({ userId, popup, handleOpenSearchTab, handleOpenSettin
             }`}
           >
             <span>
-              <HomeIcon />
+              <Home />
             </span>
             <span className="text-xs">Home</span>
           </div>
@@ -61,7 +63,7 @@ const BottomNavigation = ({ userId, popup, handleOpenSearchTab, handleOpenSettin
             }`}
           >
             <span>
-              <SearchOutlinedIcon />
+              <Search  />
             </span>
             <span className="text-xs">Search</span>
           </div>
@@ -82,7 +84,7 @@ const BottomNavigation = ({ userId, popup, handleOpenSearchTab, handleOpenSettin
             }`}
           >
             <span>
-              <AddCircleOutlineOutlinedIcon />
+              <CirclePlus  />
             </span>
             <span className="text-xs">Sell</span>
           </div>
@@ -103,7 +105,7 @@ const BottomNavigation = ({ userId, popup, handleOpenSearchTab, handleOpenSettin
             }`}
           >
             <span>
-              <AddCircleOutlineOutlinedIcon />
+              <CirclePlus />
             </span>
             <span className="text-xs">Sell</span>
           </div>
@@ -125,7 +127,7 @@ const BottomNavigation = ({ userId, popup, handleOpenSearchTab, handleOpenSettin
             >
               <span className="relative inline-block w-6 h-6">
   <div className="absolute inset-0 flex items-center justify-center">
-    <CommentOutlinedIcon />
+    <MessageCircle />
   </div>
   <div className="absolute top-0 right-0">
     <Unreadmessages userId={userId} />
@@ -150,7 +152,7 @@ const BottomNavigation = ({ userId, popup, handleOpenSearchTab, handleOpenSettin
             >
              <span className="relative inline-block w-6 h-6">
   <div className="absolute inset-0 flex items-center justify-center">
-    <CommentOutlinedIcon />
+  <MessageCircle />
   </div>
   <div className="absolute top-0 right-0">
     <Unreadmessages userId={userId} />
@@ -169,7 +171,7 @@ const BottomNavigation = ({ userId, popup, handleOpenSearchTab, handleOpenSettin
           onClick={handleOpenSettings}
         >
           <span>
-            <PersonOutlineOutlinedIcon />
+            <User />
           </span>
           <span className="text-xs">Profile</span>
         </div>

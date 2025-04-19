@@ -345,6 +345,23 @@ export async function getRelatedAdByCategory({
   }
 }
 
+
+export async function SoldStatus(_id: string, shapes: any) {
+  try {
+    await connectToDatabase(); // Connect to the database
+
+    const updateParcelStatus = await DynamicAd.findByIdAndUpdate(
+      _id,
+      { "data.propertyarea.shapes": shapes }, // ✅ Use quotes for nested keys
+      { new: true }
+    );
+
+    return updateParcelStatus;
+  } catch (error) {
+    handleError(error);
+  }
+}
+
 // GET Ad BY ORGANIZER
 export async function getAdByUser({ userId, limit = 20, page, sortby, myshop }: GetAdsByUserParams) {
   try {

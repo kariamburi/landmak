@@ -80,8 +80,10 @@ const [loading, setLoading] = useState(false);
     ...value,
   });
   setAds([]);
+  if(value.query){
   setLoading(true);
   fetchAds(value.query);
+  }
   };
 const fetchAds = async (value:string) => {
     setLoading(true);

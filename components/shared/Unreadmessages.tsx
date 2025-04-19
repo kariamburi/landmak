@@ -12,7 +12,6 @@ type unreadprop = {
 };
 const Unreadmessages = ({ userId }: unreadprop) => {
   const [unreadCount, setUnreadCount] = useState<number>(0);
-  //const [unreadCount, setUnreadCount] = useState<string>("0");
   useEffect(() => {
     const getLastMessagesInConversations = async () => {
       try {

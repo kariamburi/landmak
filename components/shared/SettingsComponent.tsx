@@ -89,15 +89,7 @@ const SettingsComponent = ({userId,user,onClose, handleOpenSearchTab,
                   <SettingsOutlinedIcon />
                   <h3 className="font-bold text-[25px]">Settings</h3>
                 </div>
-                <div className="flex">
-                  <Verification
-                    user={user}
-                    fee={user.fee}
-                    userId={userId}
-                    isAdCreator={isAdCreator}
-                    handlePayNow={handlePay}
-                  />
-                </div>
+                
               </div>
             </section>
             <NotificationPreferences
@@ -121,15 +113,7 @@ const SettingsComponent = ({userId,user,onClose, handleOpenSearchTab,
                    handleOpenPrivacy={handleOpenPrivacy}
                    handleOpenSafety={handleOpenSafety}/> 
         </div>
-        <div className="lg:hidden mt-[65px]">
-          <BottomNavigation userId={userId} 
-          popup={"settings"}
-          onClose={onClose}
-          handleOpenSettings={handleOpenSettings}
-          handleOpenSell={handleOpenSell}
-          handleOpenChat={handleOpenChat}
-          handleOpenSearchTab={handleOpenSearchTab} />
-        </div>
+     
       </footer>
     </ScrollArea>
   );

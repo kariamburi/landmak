@@ -89,6 +89,7 @@ import MappingAds from "./MappingAds";
 import EastOutlinedIcon from '@mui/icons-material/EastOutlined';
 import { Icon } from "@iconify/react";
 import threeDotsScale from "@iconify-icons/svg-spinners/3-dots-scale"; // Correct import
+import PropertyShapesGrid from "./PropertyShapesGrid";
  // Correct import
 type CardProps = {
   ad: any;
@@ -1412,6 +1413,7 @@ export default function Ads({ ad, user, userId, userImage, userName, onClose,han
                   propertyarea={ad.data.propertyarea}
                 
                 />
+                  <PropertyShapesGrid _id={ad._id} userId={userId} organizerId={ad.organizer._id} shapes={ad.data.propertyarea.shapes}/>
               </div>
             </div>
             </>

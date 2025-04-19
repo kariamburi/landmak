@@ -86,7 +86,7 @@ const UserSchema = new Schema({
     fcm: { type: Boolean, default: true },
   },
 });
-delete mongoose.models.User;
+//delete mongoose.models.User;
 const User = models.User || model('User', UserSchema);
 
 export default User;

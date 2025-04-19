@@ -482,6 +482,7 @@ useEffect(() => {
    });
 
    const label = prompt("Enter Label for boundery:") || "Untitled";
+   const status='Available';
  // ✅ Calculate area and store in `newShape`
  let area = 0;
    if (type === "polygon") {
@@ -498,6 +499,7 @@ useEffect(() => {
        area,
        strokeColor: colorConfig.strokeColor,
        fillColor: colorConfig.fillColor,
+       status,
      };
    } else if (type === "rectangle") {
      const bounds = event.overlay.getBounds();
@@ -526,6 +528,7 @@ useEffect(() => {
          area,
          strokeColor: colorConfig.strokeColor,
          fillColor: colorConfig.fillColor,
+         status,
        };
      }
    } else if (type === "circle") {
@@ -543,6 +546,7 @@ useEffect(() => {
        area,
        strokeColor: colorConfig.strokeColor,
        fillColor: colorConfig.fillColor,
+       status,
      };
    }
 
@@ -623,7 +627,7 @@ useEffect(() => {
   };
   const handleClick = (event: google.maps.MapMouseEvent) => {
     if (!event.latLng) return;
-alert("Clicked")
+
     // Create a circle at the clicked position
     new google.maps.Circle({
       strokeColor: "#FF0000",

@@ -116,8 +116,8 @@ export const headerLinks = [
 
   },
   {
-    label: 'Settings',
-    route: '/settings',
+    label: 'Profile',
+    route: '/profile',
 
   }, {
     label: 'Admin',

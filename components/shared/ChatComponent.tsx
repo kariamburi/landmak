@@ -132,15 +132,17 @@ const ChatComponent =  ({senderId,senderName,senderImage,user,onClose, handlePay
          handleOpenPrivacy={handleOpenPrivacy}
          handleOpenSafety={handleOpenSafety}/>
         </div>
-        <div className="lg:hidden mt-[65px]">
-          <BottomNavigation userId={senderId} 
-          popup={"chat"}
-          onClose={onClose}
-          handleOpenSettings={handleOpenSettings}
-          handleOpenSell={handleOpenSell}
-          handleOpenChat={handleOpenChat}
-          handleOpenSearchTab={handleOpenSearchTab} />
-        </div>
+       <div
+                       className={`lg:hidden fixed bottom-0 left-0 right-0 transition-transform duration-300 translate-y-full}`}
+                     >
+                <BottomNavigation userId={senderId} 
+                popup={"chat"}
+                onClose={onClose}
+                handleOpenSettings={handleOpenSettings}
+                handleOpenSell={handleOpenSell}
+                handleOpenChat={handleOpenChat}
+                handleOpenSearchTab={handleOpenSearchTab} />
+              </div>
       </footer>
     </div>
   );

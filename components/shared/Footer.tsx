@@ -42,7 +42,7 @@ const Footer = () => {
                   }}
                   className="cursor-pointer hover:text-emerald-500 "
                 >
-                  About landmak
+                  About mapa
                 </div>
               </li>
 
@@ -81,10 +81,10 @@ const Footer = () => {
             <ul className="space-y-4">
               <li className="transition-colors text-sm hover:text-emerald-600 hover:cursor-pointer">
                 <Link
-                  href="mailto:support@landmak.co.ke"
+                  href="mailto:support@mapa.co.ke"
                   className="no-underline hover:text-emerald-500 "
                 >
-                  support@landmak.co.ke
+                  support@mapa.co.ke
                 </Link>
               </li>
               <li className="transition-colors text-sm hover:text-emerald-600 hover:cursor-pointer">
@@ -123,7 +123,7 @@ const Footer = () => {
             <ul className="space-y-4">
               <li>
                 <Link
-                  href=" https://play.google.com/store/apps/details?id=ke.landmak.app"
+                  href=" https://play.google.com/store/apps/details?id=ke.mapa.app"
                   className="no-underline hover:text-emerald-500 "
                 >
                   <Image
@@ -171,7 +171,7 @@ const Footer = () => {
       <div className="border-t dark:border-gray-700 border-gray-300 p-2 mt-3"></div>
       <div className="flex flex-col items-center justify-center">
         <p className="text-xs dark:text-gray-400 font-bold">
-          {currentYear} LandMak. All Rights reserved.
+          {currentYear} mapa. All Rights reserved.
         </p>
         <p className="text-[8px] dark:text-gray-400 lg:text-xs">
           Powered by{" "}

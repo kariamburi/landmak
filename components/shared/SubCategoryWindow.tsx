@@ -189,6 +189,7 @@ const SubCategoryWindow: React.FC<ChatWindowProps> = ({
               handleOpenSettings={handleOpenSettings}  
             />
           </div>
+          
         </footer>
       </div>
     </div>

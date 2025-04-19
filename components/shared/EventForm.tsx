@@ -58,6 +58,8 @@ import { Icon } from "@iconify/react";
 import Barsscale from "@iconify-icons/svg-spinners/bars-scale"; // Correct import
 import dynamic from "next/dynamic";
 import "react-quill/dist/quill.snow.css";
+import { updateUserPhone } from "@/lib/actions/user.actions";
+import PropertyShapesGrid from "./PropertyShapesGrid";
 const ReactQuill = dynamic(() => import("react-quill"), {
   ssr: false,
   loading: () => (
@@ -162,7 +164,7 @@ type Package = {
 };
 type AdFormProps = {
   userId: string;
- // planId: string;
+  user: any;
   type: string;
   ad?: any;
   adId?: string;
@@ -182,7 +184,7 @@ type AdFormProps = {
 
 const AdForm = ({
   userId,
-  //planId,
+  user,
   type,
   ad,
   adId,
@@ -310,7 +312,9 @@ const AdForm = ({
     const [loadingSub, setLoadingSub] = useState<boolean>(true);
     const [ExpirationDate_, setexpirationDate] = useState(new Date());
     const [activePackage, setActivePackage] = useState<Package | null>(null);
-
+    const [countryCode, setCountryCode] = useState("+254"); // Default country code
+    const [phoneNumber, setPhoneNumber] = useState("");
+  
     useEffect(() => {
       const getCategory = async () => {
         try {
@@ -348,6 +352,7 @@ const AdForm = ({
 
   useEffect(() => {
       if(type === "Create"){
+       
         const fetchData = async () => {
           try {
             setLoadingSub(true);
@@ -388,7 +393,7 @@ const AdForm = ({
           } catch (error) {
             console.error("Failed to fetch data", error);
           } finally {
-         
+           
             setLoadingSub(false);
           }
         };
@@ -473,6 +478,17 @@ const AdForm = ({
       ...formData,
       [field]: value,
     });
+    if(user.phone && type === "Create"){
+      const cleanNumber = user.phone.startsWith('+') ? user.phone.slice(1) : user.phone;
+      const countryCode = cleanNumber.slice(0, 3);
+      const localNumber = cleanNumber.slice(3);
+      setCountryCode('+'+countryCode)
+      setPhoneNumber(localNumber)
+      setFormData({
+        ...formData,
+        phone: user.phone,
+      });
+    }
   };
 
   const handleInputAutoCompleteChange = (field: string, value: any) => {
@@ -574,6 +590,12 @@ const AdForm = ({
           periodPack: periodInput,
           path: "/create",
         });
+
+        if(!user.phone){
+        await updateUserPhone(userId,phone);
+        }
+
+
         setFormData(defaults);
         setFiles([]);
         setSelectedYear("");
@@ -699,9 +721,7 @@ const AdForm = ({
   for (let year = currentYear; year >= 1960; year--) {
     years.push(year.toString());
   }
-  const [countryCode, setCountryCode] = useState("+254"); // Default country code
-  const [phoneNumber, setPhoneNumber] = useState("");
-
+ 
   const formatPhoneNumber = (input: any) => {
     // Remove all non-digit characters
     const cleaned = input.replace(/\D/g, "");
@@ -1692,8 +1712,8 @@ const AdForm = ({
                       <AddLocationAltOutlinedIcon /> Advanced Property Mapping
                     </button>
                   
-                 
-
+                {formData["propertyarea"] && (<><PropertyShapesGrid _id={ad._id} userId={userId} organizerId={userId} shapes={formData["propertyarea"].shapes}/>
+                  </>)} 
                   {showPopupArea && (
                     <div className="fixed inset-0 flex items-center justify-center bg-gray-200 z-50">
                     

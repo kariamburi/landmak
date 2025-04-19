@@ -71,6 +71,8 @@ import { getAdById } from "@/lib/actions/dynamicAd.actions";
 import { getUserById } from "@/lib/actions/user.actions";
 import Head from "next/head";
 import SearchByTitle from "./SearchByTitle";
+import PopupAccount from "./PopupAccount";
+import PopupFaq from "./PopupFaq";
 type CollectionProps = {
   limit: number;
   userId: string;
@@ -126,6 +128,7 @@ const MainPage = ({
  const [isOpenTerms, setIsOpenTerms] = useState(false);
  const [isOpenPrivacy, setIsOpenPrivacy] = useState(false);
  const [isOpenSafety, setIsOpenSafety] = useState(false);
+ const [isOpenFaq, setIsOpenFaq] = useState(false);
  const [isOpenBook, setIsOpenBook] = useState(false);
  const [isOpenPlan, setIsOpenPlan] = useState(false);
  const [isOpenChat, setIsOpenChat] = useState(false);
@@ -133,6 +136,7 @@ const MainPage = ({
  const [isOpenReview, setIsOpenReview] = useState(false);
  const [isOpenShop, setIsOpenShop] = useState(false);
  const [isOpenSettings, setIsOpenSettings] = useState(false);
+ const [isOpenProfile, setIsOpenProfile] = useState(false);
  const [isOpenPerfomance, setIsOpenPerfomance] = useState(false);
  const [isOpenSearchTab, setIsOpenSearchTab] = useState(false);
  const [isOpenSearchByTitle, setIsOpenSearchByTitle] = useState(false);
@@ -154,11 +158,13 @@ const MainPage = ({
     setIsOpenSettings(false);
     setIsOpenPerfomance(false);
     setIsOpenSell(false);
-   // setIsOpenSearchByTitle(false);
+    setIsOpenProfile(false);
     setIsOpenAdView(false);
     setIsOpenAdEdit(false);
     setIsOpenPay(false);
-   //setIsOpenCategory(false);
+    setIsOpenSearchTab(false);
+    setIsOpenFaq(false);
+   
   };
 
  
@@ -277,6 +283,7 @@ const MainPage = ({
  
   const handleOpenSearchTab = (value:string) => {
     handleClose()
+    setIsOpenCategory(false);
     setCategorySelect(value);
     setIsOpenSearchTab(true);
    
@@ -327,6 +334,18 @@ const MainPage = ({
     setIsOpenSettings(true);
     };
 
+    const handleOpenProfile = () => {
+    
+      handleClose();
+      setIsOpenProfile(true);
+      
+    
+    };
+    const handleCloseProfile = () => {
+        handleClose();
+        setIsOpenProfile(false);
+    };
+      
   const handleCloseChatId = () => {
     const params = new URLSearchParams(window.location.search);
     const Profile = params.get("Profile");
@@ -478,6 +497,26 @@ const MainPage = ({
         handleClose();
         setIsOpenSafety(true);
         };
+
+        const handleCloseFaq = () => {
+          const params = new URLSearchParams(window.location.search);
+      const Profile = params.get("Profile");
+      const Ad = params.get("Ad");
+      const action = params.get("action");
+      if(Profile || Ad || action){
+        router.push("/", { scroll: false });
+        setNewqueryObject([])
+      }
+    
+          setIsOpenFaq(false);
+        };
+        const handleOpenFaq = () => {
+          handleClose();
+          setIsOpenFaq(true);
+          };
+
+
+
   const handleCloseAbout = () => {
     const params = new URLSearchParams(window.location.search);
     const Profile = params.get("Profile");
@@ -1021,7 +1060,7 @@ const handleCloseAdView = () => {
         </Button>
         
           {/* Header Section */}
-          <div className="flex flex-col gap-1 top-0 left-0 w-full bg-gradient-to-b from-gray-200 to-gray-200 lg:from-white lg:to-white p-0 lg:shadow-md z-10 md:relative md:w-auto md:shadow-none">
+          <div className="flex flex-col gap-0 top-0 left-0 w-full bg-gradient-to-b from-gray-200 to-gray-200 lg:from-white lg:to-white p-0 lg:shadow-md z-10 md:relative md:w-auto md:shadow-none">
           <div
   className={`bg-gradient-to-b from-white to-gray-200 lg:from-white lg:to-white transition-all duration-300 overflow-hidden p-2 w-full flex flex-col items-center ${
     showBottomNav ? "max-h-[50px] opacity-100" : "max-h-0 opacity-0"
@@ -1228,7 +1267,7 @@ const handleCloseAdView = () => {
      <ScrollArea.Root className="flex-1 overflow-hidden">
       <ScrollArea.Viewport ref={viewportRef}  className="h-full overflow-y-auto bg-gray-200 lg:rounded-t-0 border">
     
-  <div className="lg:hidden p-1">
+  <div className="lg:hidden px-1">
     <MenuSubmobileMain
       categoryList={categoryList}
       subcategoryList={subcategoryList}
@@ -1480,7 +1519,7 @@ const handleCloseAdView = () => {
       user={user}/>
 
 
-      <PopupSettings isOpen={isOpenSettings} onClose={handleCloseSettings} userId={userId} handleOpenSell={handleOpenSell} handleOpenAbout={handleOpenAbout} handleOpenTerms={handleOpenTerms} handleOpenPrivacy={handleOpenPrivacy} handleOpenSafety={handleOpenSafety} handleOpenBook={handleOpenBook} handleOpenPlan={handleOpenPlan} handleOpenChat={handleOpenChat}
+      <PopupSettings isOpen={isOpenProfile} onClose={handleCloseProfile} userId={userId} handleOpenSell={handleOpenSell} handleOpenAbout={handleOpenAbout} handleOpenTerms={handleOpenTerms} handleOpenPrivacy={handleOpenPrivacy} handleOpenSafety={handleOpenSafety} handleOpenBook={handleOpenBook} handleOpenPlan={handleOpenPlan} handleOpenChat={handleOpenChat}
       handleOpenPerfomance={handleOpenPerfomance}
       handleOpenSettings={handleOpenSettings}
       handleCategory={handleCategory}
@@ -1488,6 +1527,22 @@ const handleCloseAdView = () => {
       handleOpenShop={handleOpenShop}
       user={user}
       handleOpenSearchTab={handleOpenSearchTab}/>
+
+     <PopupAccount isOpen={isOpenSettings} onClose={handleCloseSettings} userId={userId} handleOpenSell={handleOpenSell} handleOpenAbout={handleOpenAbout} handleOpenTerms={handleOpenTerms} handleOpenPrivacy={handleOpenPrivacy} handleOpenSafety={handleOpenSafety} handleOpenBook={handleOpenBook} handleOpenPlan={handleOpenPlan} handleOpenChat={handleOpenChat}
+      handleOpenPerfomance={handleOpenPerfomance}
+      handleOpenSettings={handleOpenSettings}
+      handleCategory={handleCategory}
+      handlePay={handlePay}
+      handleOpenShop={handleOpenShop}
+      user={user}
+      handleOpenSearchTab={handleOpenSearchTab}
+      handleOpenProfile={handleOpenProfile}
+      handleOpenFaq={handleOpenFaq}
+      userImage={userImage}
+      userName={userName}
+      handleAdEdit={handleAdEdit}
+      handleAdView={handleAdView}
+      handleOpenReview={handleOpenReview}/>
      
       <PopupPay txtId={txtId} isOpen={isOpenPay} onClose={handleClosePay} userId={userId} userName={userName} handleOpenSell={handleOpenSell} handleOpenAbout={handleOpenAbout} handleOpenTerms={handleOpenTerms} handleOpenPrivacy={handleOpenPrivacy} handleOpenSafety={handleOpenSafety} handleOpenBook={handleOpenBook} handleOpenPlan={handleOpenPlan} handleOpenChat={handleOpenChat}
       handleOpenPerfomance={handleOpenPerfomance}
@@ -1523,6 +1578,13 @@ const handleCloseAdView = () => {
       handleOpenSettings={handleOpenSettings}
       user={user}  
      />
+
+<PopupFaq isOpen={isOpenFaq} onClose={handleCloseFaq} handleOpenAbout={handleOpenAbout} handleOpenTerms={handleOpenTerms} handleOpenPrivacy={handleOpenPrivacy} handleOpenSafety={handleOpenSafety} userId={userId} handleOpenSell={handleOpenSell} handleOpenBook={handleOpenBook} handleOpenPlan={handleOpenPlan} handleOpenChat={handleOpenChat}
+       handleOpenShop={handleOpenShop}
+      handleOpenPerfomance={handleOpenPerfomance}
+      handleOpenSettings={handleOpenSettings}
+      user={user}  
+     />
    <SearchTabWindow 
                 isOpen={isOpenSearchTab}
                 handleSubCategory={handleSubCategory}
@@ -1539,7 +1601,6 @@ const handleCloseAdView = () => {
         onClose={handleCloseSearchByTitle}
         handleAdEdit={handleAdEdit}
         handleAdView={handleAdView}
-      
         handleOpenPlan={handleOpenPlan}
         queryObject={queryObject} />
       </div>

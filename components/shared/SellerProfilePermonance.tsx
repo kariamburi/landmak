@@ -115,7 +115,7 @@ const SellerProfilePermonance = ({
               //router.push(`/shop/${userId}`);
               handleOpenShop(user);
             }}
-            className="cursor-pointer no-underline font-boldm-1"
+            className="cursor-pointer no-underline font-bold m-1"
           >
             <p className="font-bold">{userName}</p>
           </div>
