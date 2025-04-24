@@ -23,8 +23,8 @@ import SellOutlinedIcon from "@mui/icons-material/SellOutlined";
 import ShareOutlinedIcon from "@mui/icons-material/ShareOutlined";
 import { SignedIn, SignedOut } from "@clerk/nextjs";
 import ProgressPopup from "./ProgressPopup";
-import { Shield, List ,Bookmark , HelpCircle, Gem , CirclePlus, Users, BarChart, Settings, MessageCircle, Heart, PlusSquare, Home } from 'lucide-react';
-import User from "@/lib/database/models/user.model";
+import { Shield, List ,Bookmark , User, Gem , CirclePlus, Users, BarChart, Settings, MessageCircle, Heart, PlusSquare, Home } from 'lucide-react';
+
 type NavItemsProps = {
   userstatus: string;
   userId: string;

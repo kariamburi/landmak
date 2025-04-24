@@ -113,7 +113,7 @@ const MainPage = ({
  const [loading, setLoading] = useState(true);
  const [isInitialLoading, setIsInitialLoading] = useState(true);
  const [showPopup, setShowPopup] = useState(false);
- const [isOpenP, setIsOpenP] = useState(false);
+
  const [newqueryObject, setNewqueryObject] = useState<any>(queryObject);
  const [isOpenCategory, setIsOpenCategory] = useState(false);
  const [isOpenSell, setIsOpenSell] = useState(false);
@@ -144,6 +144,15 @@ const MainPage = ({
  const { toast } = useToast()
  
   const router = useRouter();
+  const [isOpenP, setIsOpenP] = useState(false);
+  const handleCloseP = () => {
+    setIsOpenP(false);
+  };
+  const handleOpenP = () => {
+    setIsOpenP(true);
+  };
+  
+ 
   const handleClose = () => {
     setIsOpenAbout(false);
     setIsOpenTerms(false);
@@ -1223,7 +1232,8 @@ const handleCloseAdView = () => {
             <div className="w-8 h-8 flex items-center justify-center rounded-full dark:bg-[#131B1E] dark:hover:bg-[#2D3236] bg-white tooltip tooltip-bottom hover:cursor-pointer">
               <UserButton afterSignOutUrl="/" />
             </div>
-          </SignedIn>
+        </SignedIn>
+  
           <MobileNav userstatus={user.status} userId={userId} user={user}
                   popup={"home"}
                   handleOpenSell={handleOpenSell}
@@ -1255,7 +1265,7 @@ const handleCloseAdView = () => {
          handleOpenSell={handleOpenSell}
          handleOpenSearchByTitle={handleOpenSearchByTitle}
          />
-       {/*  <AppPopup />*/}
+        <AppPopup />
        
          
           
@@ -1405,8 +1415,8 @@ const handleCloseAdView = () => {
                 handleOpenSell={handleOpenSell}
                 handleOpenChat={handleOpenChat}
                 handleOpenSettings={handleOpenSettings}
-                handleOpenSearchTab={handleOpenSearchTab} 
-                                     />
+                handleOpenSearchTab={handleOpenSearchTab}
+                handleOpenP={handleOpenP} />
       </div>
                 </footer>
         </div>
@@ -1603,6 +1613,7 @@ const handleCloseAdView = () => {
         handleAdView={handleAdView}
         handleOpenPlan={handleOpenPlan}
         queryObject={queryObject} />
+           <ProgressPopup isOpen={isOpenP} onClose={handleCloseP} />
       </div>
   );
 };

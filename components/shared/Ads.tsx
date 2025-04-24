@@ -90,6 +90,7 @@ import EastOutlinedIcon from '@mui/icons-material/EastOutlined';
 import { Icon } from "@iconify/react";
 import threeDotsScale from "@iconify-icons/svg-spinners/3-dots-scale"; // Correct import
 import PropertyShapesGrid from "./PropertyShapesGrid";
+import ArrowForwardIosOutlinedIcon from '@mui/icons-material/ArrowForwardIosOutlined';
  // Correct import
 type CardProps = {
   ad: any;
@@ -124,7 +125,7 @@ export default function Ads({ ad, user, userId, userImage, userName, onClose,han
   const [tiktokvideoAdId, setTiktokvideoAdId] = React.useState<string | null>(null);
   const [selectedIndex, setSelectedIndex] = React.useState<number | null>(null);
   const hideAddVideo = userId === ad.organizer._id;
-  const [showGuide, setShowGuide] = useState(false);
+ 
   const [showphone, setshowphone] = useState(false);
   const { toast } = useToast();
   const handleShowPhoneClick = (e: any) => {
@@ -294,7 +295,7 @@ export default function Ads({ ad, user, userId, userImage, userName, onClose,han
     <>
       <div className="text-sm p-0 hidden lg:inline">
         <div className="flex">
-          <div className="mt-4 border hover:text-green-600 dark:hover:bg-[#3E454A] dark:bg-[#2D3236] dark:hover:text-gray-300 dark:text-gray-500 bg-white py-1 px-2 rounded-full mr-2">
+          <div className="mt-2 border text-gray-600 hover:text-green-600 dark:hover:bg-[#3E454A] dark:bg-[#2D3236] dark:hover:text-gray-300 dark:text-gray-500 bg-white py-1 px-2 rounded-sm mr-1">
             <div
               onClick={() => {
                 //setIsOpenP(true);
@@ -303,11 +304,11 @@ export default function Ads({ ad, user, userId, userImage, userName, onClose,han
               }}
             >
               <div className="flex items-center gap-2 cursor-pointer ">
-                <p className="text-xs lg:text-sm"> All Ads</p><EastOutlinedIcon sx={{ fontSize: 14 }}/>
+                <p className="text-xs lg:text-sm"> All Ads</p><ArrowForwardIosOutlinedIcon sx={{ fontSize: 14 }}/>
               </div>
             </div>
           </div>
-          <div className="mt-4 border hover:text-green-600 dark:hover:bg-[#3E454A] dark:bg-[#2D3236] dark:hover:text-gray-300 dark:text-gray-500 bg-white py-1 px-2 rounded-full mr-2">
+          <div className="mt-2 border text-gray-600 hover:text-green-600 dark:hover:bg-[#3E454A] dark:bg-[#2D3236] dark:hover:text-gray-300 dark:text-gray-500 bg-white py-1 px-2 rounded-sm mr-1">
             <div className="flex items-center">
               {ad && (
                 <div
@@ -318,12 +319,12 @@ export default function Ads({ ad, user, userId, userImage, userName, onClose,han
                   className="flex items-center gap-2 cursor-pointer"
                 >
                  
-                  <p className="text-xs lg:text-sm">{ad.data.category}</p><EastOutlinedIcon sx={{ fontSize: 14 }}/>
+                  <p className="text-xs lg:text-sm">{ad.data.category}</p><ArrowForwardIosOutlinedIcon sx={{ fontSize: 14 }}/>
                 </div>
               )}
             </div>
           </div>
-          <div className="mt-4 border hover:text-green-600 dark:hover:bg-[#3E454A] dark:bg-[#2D3236] dark:hover:text-gray-300 bg-white dark:text-gray-500 py-1 px-2 rounded-full mr-2">
+          <div className="mt-2 border text-gray-600 hover:text-green-600 dark:hover:bg-[#3E454A] dark:bg-[#2D3236] dark:hover:text-gray-300 bg-white dark:text-gray-500 py-1 px-2 rounded-sm mr-1">
             <div className="flex items-center">
               {ad && (
                 <div
@@ -334,20 +335,21 @@ export default function Ads({ ad, user, userId, userImage, userName, onClose,han
                   className="flex items-center gap-2 cursor-pointer"
                 >
                  
-                  <p className="text-xs lg:text-sm">{ad.data.subcategory}</p><EastOutlinedIcon sx={{ fontSize: 14 }}/>
+                  <p className="text-xs lg:text-sm">{ad.data.subcategory}</p><ArrowForwardIosOutlinedIcon sx={{ fontSize: 14 }}/>
                 </div>
               )}
             </div>
           </div>
-          <div className="mt-4 border text-gray-700 dark:bg-[#2D3236] dark:text-gray-300 bg-white py-1 px-2 rounded-full">
+          <div className="mt-2 border text-gray-800 dark:bg-[#2D3236] dark:text-gray-300 bg-white py-1 px-2 rounded-sm">
             <div className="flex items-center">
            
               {ad && <p className="text-xs lg:text-sm">{ad.data.title}</p>}
             </div>
           </div>
         </div>
+
       </div>
-      <div className="lg:m-1 space-y-0 lg:flex lg:space-x-0 gap-2">
+      <div className="space-y-0 lg:flex lg:space-x-0 gap-2">
         <div
           className="mt-1 lg:mt-2 relative lg:flex-1 dark:bg-[#2D3236] dark:text-gray-300"
           style={
@@ -1369,51 +1371,13 @@ export default function Ads({ ad, user, userId, userImage, userName, onClose,han
           <>
             <div className="text-l mb-2 rounded-lg">
               <div className="w-full">
-                <div className="justify-between flex p-1 items-center">
-                <p className="lg:mt-5 dark:text-gray-400 font-bold">Property Google Mapping</p>
-                <button
-        onClick={() => setShowGuide(!showGuide)}
-        className="hidden lg:inline px-3 text-xs py-1 text-gray-600 border border-gray-600 bg-white rounded-lg shadow-md hover:bg-gray-600 hover:text-white"
-      >
-        Map Hint?
-      </button>
-      </div>
-      {showGuide && (
-        <div className="absolute z-20 right-1 lg:right-20 mt-2 w-80 bg-gray-100 rounded-lg shadow-md text-gray-700 p-3">
-          <ul className="list-disc text-xs list-inside space-y-1">
-          
-           <li>📏 <span className="font-medium">Property Land Size</span> - Click the drawn area to view estimate area in square meters (m²), acres, or hectares.</li>
-                 <li>📍 <span className="font-medium">Calculate Distance</span> - Find distance from key places like your workplace or shopping centers.</li>
-                 <li>🛣️ <span className="font-medium">Find the Nearest Route</span> - Get directions from your location to the property.</li>
-                 <li>👥 <span className="font-medium">Analyze Population</span> - View demographic insights of the property&apos;s surroundings.</li>
-                 <li>🚗 <span className="font-medium">Check Road Accessibility</span> - See the distance to the nearest tarmac road.</li>
-                 <li>🚏 <span className="font-medium">Locate Public Transport</span> -  Find the closest bus station and distance.</li>
-                 <li>🏫 <span className="font-medium">Nearby Schools</span> - View the number of schools around.</li>
-                 <li>🏥 <span className="font-medium">Healthcare Facilities</span> -  Check hospitals and clinics in the area.</li>
-                 <li>🛍️ <span className="font-medium">Shopping Options</span> - See available shopping malls nearby.</li>
-                 <li>⏳ <span className="font-medium">Saves Time for Both Buyers & Sellers</span> - Only visit the site after you&apos;re satisfied with the property&apos;s location.</li>
-           
-           
-          </ul>
-          <button
-            onClick={() => setShowGuide(false)}
-            className="mt-3 px-3 py-1 bg-red-500 text-white rounded-md hover:bg-red-600"
-          >
-            Close
-          </button>
-      
-        </div>
-      )}
-              
+              <div className="w-full mt-1 rounded-t-lg p-2 bg-white">
+              <p className="text-gray-600 font-bold">Property Location</p>
+              </div>
                 <MappingAds
-                  id={ad.data._id}
-                  title={ad.data.title}
-                  price={ad.data.price}
-                  imageUrls={ad.data.imageUrls}
-                  propertyarea={ad.data.propertyarea}
-                
+                  data={ad.data.propertyarea}
                 />
-                  <PropertyShapesGrid _id={ad._id} userId={userId} organizerId={ad.organizer._id} shapes={ad.data.propertyarea.shapes}/>
+               {/*    <PropertyShapesGrid _id={ad._id} userId={userId} organizerId={ad.organizer._id} shapes={ad.data.propertyarea.shapes}/>*/}
               </div>
             </div>
             </>

@@ -25,8 +25,8 @@ export async function sendEmailNotification(
       <div style="font-family: Arial, sans-serif; max-width: 600px; margin: auto; padding: 20px; background-color: #f7f7f7; border-radius: 8px; color: #333;">
         <div style="text-align: center; margin-bottom: 30px;">
           <span style="display: inline-flex; align-items: center; gap: 8px;">
-            <img src="https://pocketshop.co.ke/logo_green.png" alt="pocketshop Logo" style="height: 30px; width: auto;" />
-            <span style="font-size: 18px; font-weight: bold; color: #064E3B;">PocketShop</span>
+            <img src="https://pocketshop.co.ke/logo.png" alt="pocketshop Logo" style="height: 30px; width: auto;" />
+            <span style="font-size: 20px; font-weight: bold; color: #064E3B;">PocketShop</span>
           </span>
         </div>
 

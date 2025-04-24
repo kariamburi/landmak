@@ -155,22 +155,24 @@ const SendMessage = ({
     <div className="border-t gap-1 p-1 dark:bg-[#2D3236] dark:text-[#F1F3F3] text-black rounded-b-md right-0 bg-gray-100 dark:bg-[#131B1E] h-[60px] z-10 flex justify-end items-center">
       {recipientUid ? (
         <>
-          {image && (
-            <div className="h-32 w-24 right-[50px] fixed bottom-20 bg-white shadow rounded-lg p-1">
-              <button onClick={() => setImg(null)} className="focus:outline-none">
-                <CloseIcon className="m-1" sx={{ fontSize: 24 }} />
-              </button>
-              <Zoom>
-                <Image
-                  src={URL.createObjectURL(image)}
-                  alt="image"
-                  width={50}
-                  height={50}
-                  className="w-full object-center rounded-lg"
-                />
-              </Zoom>
-            </div>
-          )}
+           {image && (
+  <div className="absolute bottom-[70px] right-4 z-30 bg-white dark:bg-[#2D3236] shadow-lg rounded-md p-2 w-32">
+    <div className="flex justify-end">
+      <button onClick={() => setImg(null)} className="text-gray-500 hover:text-red-500">
+        <CloseIcon fontSize="small" />
+      </button>
+    </div>
+    <Zoom>
+      <Image
+        src={URL.createObjectURL(image)}
+        alt="image"
+        width={100}
+        height={100}
+        className="w-full h-auto object-cover rounded"
+      />
+    </Zoom>
+  </div>
+)}
           <textarea
             value={value}
             onChange={(e) => setValue(e.target.value)}

@@ -22,6 +22,7 @@ import Sidebarmain from "@/components/shared/Sidebarmain";
 import { mode } from "@/constants";
 import SellerProfileReviews from "./SellerProfileReviews";
 import SellerProfileChat from "./SellerProfileChat";
+import ProgressPopup from "./ProgressPopup";
 interface AdsProps {
   senderId: string;
   senderName: string;
@@ -50,6 +51,14 @@ const ChatComponent =  ({senderId,senderName,senderImage,user,onClose, handlePay
   handleOpenPerfomance, handleCategory,handleOpenSettings,handleOpenReview,handleOpenChat,handleOpenChatId, handleOpenBook, handleOpenSell, handleOpenPlan, handleOpenAbout,handleOpenTerms,handleOpenPrivacy,handleOpenSafety}:AdsProps) => {
  
   const recipientUid = senderId;
+
+  const [isOpenP, setIsOpenP] = useState(false);
+    const handleCloseP = () => {
+      setIsOpenP(false);
+    };
+    const handleOpenP = () => {
+      setIsOpenP(true);
+    };
   // console.log(senderId);
   const [isDarkMode, setIsDarkMode] = useState<boolean | null>(null);
   
@@ -120,6 +129,7 @@ const ChatComponent =  ({senderId,senderName,senderImage,user,onClose, handlePay
               <Sidebarmain userId={senderId} handleOpenChatId={handleOpenChatId}/>
               </ScrollArea>
               <Toaster />
+               <ProgressPopup isOpen={isOpenP} onClose={handleCloseP} />
             </div>
           </div>
         </div>
@@ -135,13 +145,14 @@ const ChatComponent =  ({senderId,senderName,senderImage,user,onClose, handlePay
        <div
                        className={`lg:hidden fixed bottom-0 left-0 right-0 transition-transform duration-300 translate-y-full}`}
                      >
-                <BottomNavigation userId={senderId} 
-                popup={"chat"}
-                onClose={onClose}
-                handleOpenSettings={handleOpenSettings}
-                handleOpenSell={handleOpenSell}
-                handleOpenChat={handleOpenChat}
-                handleOpenSearchTab={handleOpenSearchTab} />
+                <BottomNavigation userId={senderId}
+          popup={"chat"}
+          onClose={onClose}
+          handleOpenSettings={handleOpenSettings}
+          handleOpenSell={handleOpenSell}
+          handleOpenChat={handleOpenChat}
+          handleOpenSearchTab={handleOpenSearchTab} 
+          handleOpenP={handleOpenP} />
               </div>
       </footer>
     </div>

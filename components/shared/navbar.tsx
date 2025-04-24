@@ -252,7 +252,7 @@ export default function Navbar({ userstatus, userId, user, onClose, popup, handl
 
 <SignedOut>
 <Button  onClick={() => {
-     // setIsOpenP(true);
+      setIsOpenP(true);
       router.push("/sign-in");
     }} variant="default" className="flex bg-green-600 hover:bg-green-700 items-center gap-2">
 <AddOutlinedIcon sx={{ fontSize: 16 }} /> SELL

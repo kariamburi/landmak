@@ -1,6 +1,6 @@
 "use client";
 
-import React, { useEffect, useState } from "react";
+import React, { useEffect, useRef, useState } from "react";
 import dynamic from "next/dynamic";
 import Image from "next/image";
 import Navbar from "@/components/shared/navbar";
@@ -10,7 +10,8 @@ import Contact from "@/components/shared/contact";
 //import CollectionRelated from "@/components/shared/CollectionRelated";
 import { Toaster } from "@/components/ui/toaster";
 import { mode } from "@/constants";
-import { ScrollArea } from "../ui/scroll-area";
+//import { ScrollArea } from "../ui/scroll-area";
+import * as ScrollArea from "@radix-ui/react-scroll-area";
 import CollectionRelated from "@/components/shared/CollectionRelated";
 const CollectionRelateddd = dynamic(
   () => import("@/components/shared/CollectionRelated"),
@@ -85,6 +86,39 @@ const AdsComponent = ({
     handlePay,
 }: AdsProps) => {
     const [isDarkMode, setIsDarkMode] = useState<boolean | null>(null);
+ const [showBottomNav, setShowBottomNav] = useState(true);
+
+  const scrollRefB = useRef<HTMLDivElement>(null);
+const lastScrollTop = useRef(0);
+const scrollTimeout = useRef<NodeJS.Timeout | null>(null);
+const SCROLL_THRESHOLD = 100; // pixels
+  useEffect(() => {
+    const timer = setTimeout(() => {
+      const el = scrollRefB.current;
+      if (el) {
+       
+      const handleScroll = () => {
+      const currentScrollTop = el.scrollTop;
+      const scrollDiff = currentScrollTop - lastScrollTop.current;
+  
+      // Ignore small scrolls
+      if (Math.abs(scrollDiff) < SCROLL_THRESHOLD) return;
+  
+      if (scrollDiff > 0) {
+        // Scrolling down
+        setShowBottomNav(false);
+      } else {
+        // Scrolling up
+        setShowBottomNav(true);
+      }
+  
+      lastScrollTop.current = currentScrollTop;
+    };
+        el.addEventListener('scroll', handleScroll);
+      }
+    }, 0);
+    return () => clearTimeout(timer);
+  }, []);
 
     useEffect(() => {
        const savedTheme = localStorage.getItem("theme") || mode; // Default to "dark"
@@ -105,8 +139,9 @@ const AdsComponent = ({
    
 
   return (
-    <ScrollArea className="h-[100vh] bg-gray-200 p-0 dark:bg-[#131B1E] text-black dark:text-[#F1F3F3]">
-   
+    <ScrollArea.Root className="h-[100vh] bg-gray-200 p-0 dark:bg-[#131B1E] text-black dark:text-[#F1F3F3] overflow-hidden">
+    <ScrollArea.Viewport ref={scrollRefB} className="h-full overflow-y-auto bg-gray-200 border">
+         
       <div className="top-0 z-10 fixed w-full">
                     <Navbar user={user} userstatus={user.status} userId={userId} onClose={onClose} popup={"sell"} handleOpenSell={handleOpenSell} handleOpenBook={handleOpenBook} handleOpenPlan={handleOpenPlan} handleOpenChat={handleOpenChat}
                     handleOpenPerfomance={handleOpenPerfomance}
@@ -152,8 +187,12 @@ const AdsComponent = ({
           <Toaster />
         </div>
 
-        
-        <div className="fixed bottom-0 left-0 right-0 dark:bg-[#233338] dark:text-gray-300 dark:lg:bg-transparent bg-gray-200 lg:bg-transparent h-auto  z-10 p-3 shadow-md flex flex-col md:flex-row justify-between items-center">
+        <div
+                 className={`fixed bottom-0 left-0 right-0 dark:bg-[#233338] dark:text-gray-300 dark:lg:bg-transparent bg-gray-200 lg:bg-transparent h-auto  z-10 p-3 shadow-md flex flex-col md:flex-row justify-between items-center transition-transform duration-300 ${
+                   showBottomNav ? "translate-y-0" : "translate-y-full"
+                 }`}
+               >
+       
           <Contact
             ad={ad}
             user={user}
@@ -177,7 +216,10 @@ const AdsComponent = ({
       handleOpenSafety={handleOpenSafety}/>
           </div>
         </footer>
-      </ScrollArea>
+   </ScrollArea.Viewport>
+       <ScrollArea.Scrollbar orientation="vertical" />
+         <ScrollArea.Corner />
+       </ScrollArea.Root>
   );
 };
 

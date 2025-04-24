@@ -22,6 +22,7 @@ import { IdynamicAd } from "@/lib/database/models/dynamicAd.model";
 import { collection, getDocs, onSnapshot, query, Timestamp, where } from "@firebase/firestore";
 import { db } from "@/lib/firebase";
 import ChatWindow from "./ChatWindow";
+import ProgressPopup from "./ProgressPopup";
 interface Review {
   text: string;
   name: string;
@@ -89,6 +90,13 @@ const AccountComponent = ({userId, user, userName,
     const [totalPages, setTotalPages] = useState(1);
     const isAdCreator = true;
     const [isChatOpen, setChatOpen] = useState(false);
+    const [isOpenP, setIsOpenP] = useState(false);
+      const handleCloseP = () => {
+        setIsOpenP(false);
+      };
+      const handleOpenP = () => {
+        setIsOpenP(true);
+      };
       const toggleChat = () => {
         setChatOpen(!isChatOpen);
       };
@@ -341,7 +349,8 @@ useEffect(() => {
               />
           
           </div>
-          <span className="font-semibold text-lg">{user.firstName} {user.lastName}</span>
+          <div className="flex flex-col">
+          <span className="ml-2 font-semibold text-lg">{user.firstName} {user.lastName}</span>
       <div className="flex">
                         <Verification
                           user={user}
@@ -350,7 +359,7 @@ useEffect(() => {
                           isAdCreator={isAdCreator}
                           handlePayNow={handlePay}
                         />
-                      </div>
+                      </div> </div>
         </div>
         <Settings onClick={()=> handleOpenProfile()} className="h-5 w-5 cursor-pointer hover:text-green-600" />
       </div>
@@ -370,17 +379,18 @@ useEffect(() => {
                   {/*  <Card icon={<Users />} label="Followers" />*/}
                    <Card icon={<HelpCircle />} label="FAQ"  handleClick={handleOpenFaq}/>
                   {/*  <Card icon={<HelpCircle />} label="Game centre" />*/}
-                  
+                  </div>
+                  <div className="grid grid-cols-1  pl-4 pr-4 pb-4">  
     <div  className="cursor-pointer bg-gray-100 dark:bg-gray-800 p-3 rounded-xl flex flex-col justify-between h-20 relative">
     {loadingSub ? (<><Icon icon={Barsscale} className="w-6 h-6 text-gray-500" /></>):(<>
     
       <div className="flex items-center space-x-2">
-      <div><Gem /></div>
-      <div className="text-sm items-center flex gap-1"><div className="h-3 w-3 rounded-full bg-green-600"></div>Active: {planPackage} Plan</div>
+      <div className="hidden lg:inline"><Gem /></div>
+      <div className="text-sm items-center flex gap-1"><div className="h-3 w-3 rounded-full bg-green-600"></div> <div className="hidden lg:inline">Active:</div> {planPackage} Plan</div>
    
     </div>
-   {planPackage !=='Free' && (<><div className="text-xs text-gray-400">{daysRemaining} Days Left</div></>)} 
-   <div className="text-xs text-gray-400">{remainingAds} Ads remaining</div>
+   {planPackage !=='Free' && (<><div className="text-xs text-gray-500">{daysRemaining} Days Left</div></>)} 
+   <div className="text-xs text-gray-500">{remainingAds} Ads remaining</div>
    
    <span  onClick={()=> handleOpenPlan()} className="absolute underline hover:bg-green-700 top-1 right-1 text-xs bg-green-600 text-white px-1.5 py-0.5 rounded-sm"> Upgrade</span>
   
@@ -393,6 +403,7 @@ useEffect(() => {
             
             </div>
             <Toaster />
+             <ProgressPopup isOpen={isOpenP} onClose={handleCloseP} />
           </div>
         </div>
       </div>
@@ -420,13 +431,14 @@ useEffect(() => {
         <div
                  className={`lg:hidden fixed bottom-0 left-0 right-0 transition-transform duration-300 translate-y-full}`}
                >
-          <BottomNavigation userId={userId} 
+          <BottomNavigation userId={userId}
           popup={"settings"}
           onClose={onClose}
           handleOpenSettings={handleOpenSettings}
           handleOpenSell={handleOpenSell}
           handleOpenChat={handleOpenChat}
-          handleOpenSearchTab={handleOpenSearchTab} />
+          handleOpenSearchTab={handleOpenSearchTab} 
+          handleOpenP={handleOpenP} />
         </div>
       </footer>
     </ScrollArea>

@@ -92,6 +92,7 @@ export const createData = async (
     return JSON.parse(JSON.stringify(await populatedResponse));
 
   } catch (error) {
+    console.log(error);
     handleError(error);
   }
 };

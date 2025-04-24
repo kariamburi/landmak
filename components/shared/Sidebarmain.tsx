@@ -166,7 +166,7 @@ const Sidebarmain = ({ userId, handleOpenChatId }: sidebarProps) => {
         </div>
       ) : messages.length > 0 ? (
         <>
-          <div className="w-full dark:bg-[#2D3236] dark:text-gray-100 bg-white rounded-lg">
+          <div className="w-full dark:bg-[#2D3236] mb-10 dark:text-gray-100 bg-white rounded-lg">
             <ScrollArea className="h-full w-full p-2">
               <ul className="divide-y divide-gray-200 dark:divide-gray-600">
                 {messages.map((message, index) => {

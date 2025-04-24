@@ -21,7 +21,7 @@ import SubCategorySelect from "./SubCategorySelect";
 import { Multiselect } from "./Multiselect";
 import AutoComplete from "./AutoComplete";
 import AddOutlinedIcon from "@mui/icons-material/AddOutlined";
-
+import DoneOutlinedIcon from "@mui/icons-material/DoneOutlined";
 
 import {
   FormControl,
@@ -59,7 +59,9 @@ import Barsscale from "@iconify-icons/svg-spinners/bars-scale"; // Correct impor
 import dynamic from "next/dynamic";
 import "react-quill/dist/quill.snow.css";
 import { updateUserPhone } from "@/lib/actions/user.actions";
-import PropertyShapesGrid from "./PropertyShapesGrid";
+
+import CircularProgress from "@mui/material/CircularProgress";
+import MapDrawingTool from "./MapDrawingTool";
 const ReactQuill = dynamic(() => import("react-quill"), {
   ssr: false,
   loading: () => (
@@ -215,7 +217,7 @@ const AdForm = ({
   );
 
   const [showGuide, setShowGuide] = useState(false);
-  // const [formData, setFormData] = useState<Record<string, any>>([]);
+  const [mapData, setMapData] = useState<any>([]);
   // const [selectedCategory, setSelectedCategory] = useState("");
    const [showload, setShowLoad] = useState(true);
 
@@ -288,7 +290,12 @@ const AdForm = ({
   const handleClosePopupArea = () => {
     setShowPopupArea(false);
   };
-  const handleSaveArea = () => {
+  const handleSaveMap = () => {
+  
+    setFormData((prevData) => ({ ...prevData, ["propertyarea"]: mapData }));
+    setShowPopupArea(false);
+  };
+  const handleOnClose = () => {
     setShowPopupArea(false); // Close the popup after saving
   };
   const [selectedCategoryCommand, setSelectedCategoryCommand] = useState<
@@ -309,7 +316,7 @@ const AdForm = ({
     const [Priority_, setpriority] = useState(0);
     const [Adstatus_, setadstatus] = useState("Pending");
     const [color, setColor] = useState("#000000");
-    const [loadingSub, setLoadingSub] = useState<boolean>(true);
+    const [loadingSub, setLoadingSub] = useState<boolean>(false);
     const [ExpirationDate_, setexpirationDate] = useState(new Date());
     const [activePackage, setActivePackage] = useState<Package | null>(null);
     const [countryCode, setCountryCode] = useState("+254"); // Default country code
@@ -339,6 +346,17 @@ const AdForm = ({
             // Update fields if a match is found
             setFields(selectedData ? selectedData.fields : []);
             setFormData(ad.data);
+           
+              const cleanNumber = ad.data.phone.startsWith('+') ? ad.data.phone.slice(1) : ad.data.phone;
+              const countryCode = cleanNumber.slice(0, 3);
+              const localNumber = cleanNumber.slice(3);
+              setCountryCode('+'+countryCode)
+              setPhoneNumber(localNumber)
+              setFormData({
+                ...formData,
+                phone: ad.data.phone,
+              });
+            
           
           }
           setShowLoad(false)
@@ -360,7 +378,8 @@ const AdForm = ({
             const subscriptionData = await getData(userId);
             const packages = await getAllPackages();
             setPackagesList(packages);
-         
+           //console.log(subscriptionData);
+
             if (subscriptionData) {
               setSubscription(subscriptionData);
               const listedAds = subscriptionData.ads || 0;
@@ -371,6 +390,7 @@ const AdForm = ({
               setColor(subscriptionData.currentpack.color);
               setplan(subscriptionData.currentpack.name);
               setplanId(subscriptionData.transaction?.planId || FreePackId);
+             // console.log(subscriptionData);
               const createdAtDate = new Date(subscriptionData.transaction?.createdAt || new Date());
               const periodDays = parseInt(subscriptionData.transaction?.period) || 0;
               const expiryDate = new Date(createdAtDate.getTime() + periodDays * 24 * 60 * 60 * 1000);
@@ -381,7 +401,7 @@ const AdForm = ({
               setadstatus((remainingDays > 0 && (subscriptionData.currentpack.list - listedAds) > 0) || ((subscriptionData.currentpack.list - listedAds) > 0 && subscriptionData.currentpack.name === "Free") ? "Active" : "Pending");
               setActivePackage(
               packages.length > 0
-                ? listedAds > 0 && subscriptionData.currentpack.name === "Free"
+                ? subscriptionData.currentpack.list - listedAds > 0 && subscriptionData.currentpack.name === "Free"
                   ? packages[0]
                   : packages[1]
                 : null
@@ -404,7 +424,7 @@ const AdForm = ({
   const validateForm = async () => {
     //console.log("start: ");
     const validationSchema = createValidationSchema(fields);
-    // console.log("validationSchema: " + validationSchema);
+     console.log(formData);
 
     const result = validationSchema.safeParse(formData);
     // console.log("result:" + result);
@@ -459,6 +479,7 @@ const AdForm = ({
     value: any,
     _id: string
   ) => {
+   
     setSelectedSubCategory(value);
     setSelectedSubCategoryId(_id);
     const selectedData: any = categories.find(
@@ -474,21 +495,25 @@ const AdForm = ({
     setFormData(defaults);
     setFormErrors({});
     setFiles([]);
-    setFormData({
-      ...formData,
-      [field]: value,
-    });
+   
     if(user.phone && type === "Create"){
+
       const cleanNumber = user.phone.startsWith('+') ? user.phone.slice(1) : user.phone;
       const countryCode = cleanNumber.slice(0, 3);
       const localNumber = cleanNumber.slice(3);
       setCountryCode('+'+countryCode)
       setPhoneNumber(localNumber)
       setFormData({
-        ...formData,
+        ...formData, [field]: value,
         phone: user.phone,
       });
+    }else{
+      setFormData({
+        ...formData,
+        [field]: value,
+      });
     }
+    
   };
 
   const handleInputAutoCompleteChange = (field: string, value: any) => {
@@ -566,10 +591,11 @@ const AdForm = ({
           });
           return
         }
-
+     
         const uploadedUrls = await uploadFiles();
+    
         if (!uploadedUrls) return;
-
+      
         const finalData = {
           ...formData,
           imageUrls: uploadedUrls,
@@ -577,20 +603,23 @@ const AdForm = ({
           phone: phone,
         };
         const pricePack = Number(priceInput);
-        const newAd = await createData({
-          userId: userId,
-          subcategory: selectedSubCategoryId,
-          formData: finalData,
-          expirely: ExpirationDate_,
-          priority: Priority_,
-          adstatus: Adstatus_,
-          planId: PlanId,
-          plan: Plan,
-          pricePack: pricePack,
-          periodPack: periodInput,
-          path: "/create",
-        });
-
+      
+     try {
+      const newAd = await createData({
+        userId: userId,
+        subcategory: selectedSubCategoryId,
+        formData: finalData,
+        expirely: ExpirationDate_,
+        priority: Priority_,
+        adstatus: Adstatus_,
+        planId: PlanId,
+        plan: Plan,
+        pricePack: pricePack,
+        periodPack: periodInput,
+        path: "/create",
+      });
+     
+       
         if(!user.phone){
         await updateUserPhone(userId,phone);
         }
@@ -617,6 +646,10 @@ const AdForm = ({
           
           }
         }
+      }catch (error){
+        console.log(error)
+      //  console.log(newAd);
+       }  
         // console.log("Data submitted successfully:", finalData);
       }
       if (type === "Update") {
@@ -1712,19 +1745,30 @@ const AdForm = ({
                       <AddLocationAltOutlinedIcon /> Advanced Property Mapping
                     </button>
                   
-                {formData["propertyarea"] && (<><PropertyShapesGrid _id={ad._id} userId={userId} organizerId={userId} shapes={formData["propertyarea"].shapes}/>
-                  </>)} 
+             
                   {showPopupArea && (
                     <div className="fixed inset-0 flex items-center justify-center bg-gray-200 z-50">
                     
-                         <GoogleMapping name={"propertyarea"}
+                       {/*  <GoogleMapping name={"propertyarea"}
                           onChange={handleInputOnChange}
                           selected={formData["propertyarea"] || []}
-                          onSave={handleSaveArea}/>
-                        </div>
+                          onSave={handleSaveArea}
+                          userId={userId}
+                          _id={ad ? ad._id : ''}/>
+                        */}
                         
-                  
-                     
+                        <MapDrawingTool
+  name="propertyarea"
+  data={formData["propertyarea"] || []}
+  onSave={handleSaveMap}
+  onClose={handleOnClose}
+  onChange={(name, data) => {
+  // console.log("Map data changed:", name, data);
+   setMapData(data);
+    // You can now save this data in your form state or pass to an API
+  }}
+/>
+                  </div>
                   )}
                 </div>
                  
@@ -1743,7 +1787,7 @@ const AdForm = ({
                           </div></>):(<>
             
             
-              <PromoSelection
+             {/* <PromoSelection
                   packagesList={packagesList}
                   packname={Plan}
                   planId={PlanId}
@@ -1753,156 +1797,108 @@ const AdForm = ({
                   priority={Priority_}
                   daysRemaining={daysRemaining}
                   onChange={handlePackageOnChange}
-                />
-                </>)}    
-              </div>
-              {/* 
-              <div className="rounded-lg mt-4 shadow-lg border">
-                <div className="m-3">
-                  <div className="items-center flex">
-                    <h2 className="font-bold text-[25px] p-5">
-                      Promote your ad
-                    </h2>
-                  </div>
+                />*/}
 
-                  {daysRemaining > 0 && listed > 0 ? (
-                    <>
-                      <div className="text-center sm:text-left rounded-lg bg-white p-3 relative">
-                        <div className="flex justify-between">
-                          <div className="flex flex-col">
-                            <div className="font-bold text-lg mt-3">
-                              Plan: {packname}
-                            </div>
-                            <div className="text-xs flex gap-5">
-                              <div className="flex gap-1">
-                                Days remaining:
-                                <div className="font-bold">{daysRemaining}</div>
-                              </div>
-                              <div className="flex gap-1">
-                                Ads Remaining:
-                                <div className="font-bold">{listed}</div>
-                              </div>
-                            </div>
-                          </div>
-                          <Link href="/plan">
-                            <p className="p-2 underline bg-grey-50 text-xs cursor-pointer border-2 border-transparent rounded-sm hover:bg-[#000000]  hover:text-white">
-                              Upgrade Plan
-                            </p>
-                          </Link>
-                        </div>
-
-                        <div className="absolute top-0 left-0 bg-green-500 text-white text-xs py-1 px-3 rounded-bl-lg rounded-tr-lg">
-                          Active
-                        </div>
-                      </div>
-                    </>
-                  ) : (
-                    <>
-                      <div className="text-sm text-grey p-1">
-                        Choose the plan that will work for you
-                      </div>
-                      <div className="grid grid-cols-2 md:grid-cols-2 lg:grid-cols-4 m-1 gap-1">
-                        {packagesList.length > 0 &&
-                          packagesList.map((pack: any, index: any) => {
-                            // const check = packname == pack.name != "Free";
-                            const issamepackage = packname === pack.name;
-                            return (
+<div className="w-full mt-2 p-0 dark:text-gray-100 rounded-lg">
+                    <div className="flex flex-col mb-5">
+                      <p className="text-gray-700 dark:text-gray-300 font-semibold text-xl">
+                        Promote your ad
+                      </p>
+                      <p className="text-gray-600 text-sm dark:text-gray-500">
+                        Choose a promotion type for your ad to post it
+                      </p>
+                    </div>
+                    {/* No Promo */}
+                    <div className="w-full">
+                      {packagesList.length > 0 &&
+                        packagesList.map((pack: any, index: any) => {
+                          // const check = packname == pack.name != "Free";
+                          const issamepackage = Plan === pack.name;
+                          return (
+                            <div
+                              key={index}
+                              className={`mb-2 dark:bg-[#2D3236] border bg-white rounded-lg cursor-pointer ${
+                                activePackage === pack
+                                  ? "bg-[#F2FFF2] border-[#4DCE7A] border-2"
+                                  : ""
+                              }`}
+                            >
+                              {/*  <div
+                                className={`text-lg font-bold rounded-t-md text-white py-2 px-4 mb-4 flex flex-col items-center justify-center`}
+                                  style={{
+                                 backgroundColor:
+                                     activePackage === pack ? "#4DCE7A" : pack.color,
+                                  }}
+              
+                              ></div>*/}
                               <div
-                                key={index}
-                                className={`shadow-md dark:bg-gray-800 border bg-white rounded-xl p-0 cursor-pointer ${
-                                  activePackage === pack
-                                    ? "bg-[#F2FFF2] border-[#4DCE7A] border-2"
-                                    : ""
-                                }`}
                                 onClick={() =>
                                   (!issamepackage && pack.name === "Free") ||
-                                  (issamepackage &&
-                                    pack.name === "Free" &&
-                                    listed === 0)
-                                    ? {}
+                                  (issamepackage && pack.name === "Free" &&  remainingAds === 0)
+                                    ? handleClick(pack)
                                     : handleClick(pack)
                                 }
+                                className="flex justify-between items-center w-full"
                               >
-                                <div
-                                  className={`text-lg font-bold rounded-t-md text-white py-2 px-4 mb-4 flex flex-col items-center justify-center`}
-                                  style={{
-                                    backgroundColor:
-                                      activePackage === pack
-                                        ? "#4DCE7A"
-                                        : pack.color,
-                                  }}
-                                >
-                                  {pack.name}
-                                </div>
                                 <div className="p-3">
+                                  <p className="text-gray-700 font-semibold dark:text-gray-300">
+                                    {pack.name}
+                                  </p>
                                   <ul className="flex flex-col gap-1 p-1">
                                     {pack.features
-                                      .slice(0, 2)
+                                      .slice(0, 1)
                                       .map((feature: any, index: number) => (
-                                        <li
-                                          key={index}
-                                          className="flex items-center gap-1"
-                                        >
-                                          <Image
-                                            src={`/assets/icons/${
-                                              feature.checked
-                                                ? "check"
-                                                : "cross"
-                                            }.svg`}
-                                            alt={
-                                              feature.checked
-                                                ? "check"
-                                                : "cross"
-                                            }
-                                            width={24}
-                                            height={24}
-                                          />
-                                          <p className="text-sm">
-                                            {feature.title}
-                                          </p>
+                                        <li key={index} className="flex items-center gap-1">
+                                          {/*  <Image
+                                          src={`/assets/icons/${
+                                            feature.checked ? "check" : "cross"
+                                          }.svg`}
+                                          alt={feature.checked ? "check" : "cross"}
+                                          width={24}
+                                          height={24}
+                                        />*/}
+                                          <DoneOutlinedIcon />
+                                          <p className="text-sm">{feature.title}</p>
                                         </li>
                                       ))}
                                   </ul>
                                 </div>
+              
                                 <div className="p-3">
                                   <div className="text-gray-600 mb-1">
                                     <div className="flex gap-2 text-sm">
-                                      {daysRemaining > 0 &&
-                                      pack.name === packname ? (
+                                      {daysRemaining > 0 && pack.name === Plan ? (
                                         <>
                                           <div className="p-1 flex-block rounded-full bg-emerald-500">
-                                            <p className="text-white text-xs">
-                                              Active
-                                            </p>
+                                            <p className="text-white text-xs">Active</p>
                                           </div>
                                         </>
                                       ) : (
                                         <>
-                                          {(!issamepackage &&
-                                            pack.name === "Free") ||
+                                          {(!issamepackage && pack.name === "Free") ||
                                           (issamepackage &&
                                             pack.name === "Free" &&
-                                            listed === 0) ? (
+                                            remainingAds === 0) ? (
                                             <div>
-                                              <div className="p-1 items-center justify-center flex rounded-full bg-grey-50">
-                                                <p className="dark:text-gray-500 text-black font-bold text-xs">
+                                            {/*   <div className="p-0 items-center flex rounded-full bg-grey-50">
+                                                <p className="bg-gray-500 border rounded-xl p-2 text-white font-bold text-xs">
                                                   Disabled
                                                 </p>
                                               </div>
-                                              <div className="text-xs text-gray-300 p-1">
-                                                You can&apos;t subscribe to Free
-                                                Package
+                                              <div className="text-xs text-gray-400 p-1">
+                                                You can&apos;t subscribe to Free Package
                                               </div>
+                                              */}
                                             </div>
                                           ) : (
                                             issamepackage &&
                                             pack.name === "Free" &&
-                                            listed > 0 && (
-                                              <div className="p-1 w-full items-center justify-center flex rounded-full bg-emerald-500">
-                                                <p className="text-white text-xs">
-                                                  Active
-                                                </p>
-                                              </div>
+                                            remainingAds > 0 && (
+                                              <>
+                                                {/* <div className="p-1 w-full items-center justify-center flex rounded-full bg-emerald-500">
+                                              <p className="text-white text-xs">Active</p>
+                                            </div>*/}
+                                              </>
                                             )
                                           )}
                                         </>
@@ -1915,31 +1911,26 @@ const AdForm = ({
                                     ) : (
                                       <>
                                         <div className="text-gray-800 font-bold mb-0">
-                                          <ul className="flex flex-col gap-0 py-0">
-                                            {pack.price.map(
-                                              (price: any, index: number) => (
-                                                <li
-                                                  key={index}
-                                                  className={`flex items-center gap-0 ${
-                                                    index !== activeButton
-                                                      ? "hidden"
-                                                      : ""
+                                          <ul className="flex flex-col items-center gap-0 py-0">
+                                            {pack.price.map((price: any, index: number) => (
+                                              <li
+                                                key={index}
+                                                className={`flex items-center gap-0 ${
+                                                  index !== activeButton ? "hidden" : ""
+                                                }`}
+                                              >
+                                                <p
+                                                  className={`font-semibold ${
+                                                    activePackage === pack
+                                                      ? "text-[#30AF5B]"
+                                                      : "text-gray-800 dark:text-gray-400"
                                                   }`}
                                                 >
-                                                  <p
-                                                    className={`text-xs font-bold lg:p-16-regular ${
-                                                      activePackage === pack
-                                                        ? "text-[#30AF5B] "
-                                                        : "text-gray-300"
-                                                    }`}
-                                                  >
-                                                    Ksh{" "}
-                                                    {price.amount.toLocaleString()}
-                                                    / {activeButtonTitle}
-                                                  </p>
-                                                </li>
-                                              )
-                                            )}
+                                                  Ksh {price.amount.toLocaleString()}/{" "}
+                                                  {activeButtonTitle}
+                                                </p>
+                                              </li>
+                                            ))}
                                           </ul>
                                         </div>
                                       </>
@@ -1947,69 +1938,40 @@ const AdForm = ({
                                   </div>
                                 </div>
                               </div>
-                            );
-                          })}
-                      </div>
-
-                      <div className="h-auto md:h-24 p-3 flex flex-col md:flex-row justify-between items-center">
-                     
-                        <div className="flex flex-wrap justify-center md:justify-start items-center mb-4 md:mb-0">
-                          <button
-                            className={`mr-2 mb-2 text-xs w-[80px] lg:w-[90px] lg:text-sm ${
-                              activeButton === 0
-                                ? "bg-gradient-to-b from-[#4DCE7A] to-[#30AF5B] text-white p-2 rounded-full"
-                                : "border border-[#30AF5B] text-[#30AF5B] rounded-full p-2"
-                            }`}
-                            onClick={() => handleButtonClick(0, "1 week")}
-                          >
-                            1 week
-                          </button>
-                          <button
-                            className={`mr-2 mb-2 text-xs w-[80px] lg:w-[90px] lg:text-sm ${
-                              activeButton === 1
-                                ? "bg-gradient-to-b from-[#4DCE7A] to-[#30AF5B] text-white p-2 rounded-full"
-                                : "border border-[#30AF5B] text-[#30AF5B] rounded-full p-2"
-                            }`}
-                            onClick={() => handleButtonClick(1, "1 month")}
-                          >
-                            1 month
-                          </button>
-                          <button
-                            className={`mr-2 mb-2 text-xs w-[80px] lg:w-[90px] lg:text-sm ${
-                              activeButton === 2
-                                ? "bg-gradient-to-b from-[#4DCE7A] to-[#30AF5B] text-white p-2 rounded-full"
-                                : "border border-[#30AF5B] text-[#30AF5B] rounded-full p-2"
-                            }`}
-                            onClick={() => handleButtonClick(2, "3 months")}
-                          >
-                            3 months
-                          </button>
-                          <button
-                            className={`mr-2 mb-2 text-xs w-[80px] lg:w-[90px] lg:text-sm ${
-                              activeButton === 3
-                                ? "bg-gradient-to-b from-[#4DCE7A] to-[#30AF5B] text-white p-2 rounded-full"
-                                : "border border-[#30AF5B] text-[#30AF5B] rounded-full p-2"
-                            }`}
-                            onClick={() => handleButtonClick(3, " 6 months")}
-                          >
-                            6 months
-                          </button>
-                          <button
-                            className={`mr-2 mb-2 text-xs w-[80px] lg:w-[90px] lg:text-sm ${
-                              activeButton === 4
-                                ? "bg-gradient-to-b from-[#4DCE7A] to-[#30AF5B] text-white p-2 rounded-full"
-                                : "border border-[#30AF5B] text-[#30AF5B] rounded-full p-2"
-                            }`}
-                            onClick={() => handleButtonClick(4, " 1 year")}
-                          >
-                            1 year
-                          </button>
-                        </div
-                      </div>
-                    </>
-                  )}
-                </div>
-              </div>*/}
+                              {pack.name !== "Free" && activePackage === pack && (
+                                <>
+                                  <div className="flex flex-wrap justify-end items-center p-2">
+                                    <button
+                                      className={`mr-2 mb-2 text-xs w-[80px] lg:w-[90px] lg:text-sm ${
+                                        activeButton === 0
+                                          ? "bg-gradient-to-b from-[#4DCE7A] to-[#30AF5B] text-white p-2 rounded-full"
+                                          : "border border-[#30AF5B] text-[#30AF5B] rounded-full p-2"
+                                      }`}
+                                      onClick={() => handleButtonClick(0, "1 week")}
+                                    >
+                                      1 week
+                                    </button>
+                                    <button
+                                      className={`mr-2 mb-2 text-xs w-[80px] lg:w-[90px] lg:text-sm ${
+                                        activeButton === 1
+                                          ? "bg-gradient-to-b from-[#4DCE7A] to-[#30AF5B] text-white p-2 rounded-full"
+                                          : "border border-[#30AF5B] text-[#30AF5B] rounded-full p-2"
+                                      }`}
+                                      onClick={() => handleButtonClick(1, "1 month")}
+                                    >
+                                      1 month
+                                    </button>
+                                  </div>
+                                </>
+                              )}
+                            </div>
+                          );
+                        })}
+                    </div>
+                    </div>
+                </>)}    
+              </div>
+            
             </>
           )}
 
@@ -2036,9 +1998,9 @@ const AdForm = ({
       {loading && (<div className="fixed inset-0 flex items-center justify-center bg-black bg-opacity-80 z-50">
             <div className="justify-center items-center dark:text-gray-300 rounded-lg p-1 lg:p-6 w-full md:max-w-3xl lg:max-w-4xl h-[90vh] flex flex-col">
               {/* Header */}
-              <div className="flex gap-1 text-[#D1D5DB] items-center">
-              <CircularProgressWithLabel value={uploadProgress} />
-               {type ==="Update" ? "Updating Ad...":"Creating Ad..."} 
+              <div className="flex font-bold gap-1 text-[#D1D5DB] items-center">
+              
+               {type ==="Update" ? <><CircularProgress  sx={{ color: '#D1D5DB' }}/>Updating Ad...</>:<><CircularProgressWithLabel value={uploadProgress} />Creating Ad...</>} 
               </div>
             </div>
           </div>)} 

@@ -27,15 +27,16 @@ export default async function Home({ searchParams }: SearchParamProps) {
   const subcategoryList = await getAllSubCategories();
   const AdsCountPerRegion = await getAdsCountAllRegion();
   //const resultt = await  removenegotiable();
- //console.log(resultt)
+ //console.log(user)
  
 //const categoryList:any = [];
 //const subcategoryList:any = [];
 //const AdsCountPerRegion:any = [];
   return (
-    <main>
-<MainPage 
-emptyTitle="No Ads Found"
+   <main>
+    
+     <MainPage 
+           emptyTitle="No Ads Found"
             emptyStateSubtext="Come back later"
             collectionType="All_Ads"
             limit={20}

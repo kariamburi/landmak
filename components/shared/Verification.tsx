@@ -162,7 +162,7 @@ const Verification: React.FC<SettingsProp> = ({
               trigger={
                 <p className="text-gray-600 p-1 dark:text-gray-400 dark:bg-[#131B1E] bg-white rounded-sm text-sm cursor-pointer hover:underline">
                   <ShieldOutlinedIcon sx={{ fontSize: 16 }} />
-                  Verified Seller
+                  Unverified Seller
                 </p>
               }
               content={unverifiedContent}

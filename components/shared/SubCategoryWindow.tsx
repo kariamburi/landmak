@@ -178,17 +178,7 @@ const SubCategoryWindow: React.FC<ChatWindowProps> = ({
         </div>
 
         <footer>
-          <div className="lg:hidden mt-0">
-            <BottomNavigation
-              userId={userId}
-              popup={"category"}
-              onClose={onClose}
-              handleOpenSell={handleOpenSell}
-              handleOpenChat={handleOpenChat}
-              handleOpenSearchTab={handleOpenSearchTab}
-              handleOpenSettings={handleOpenSettings}  
-            />
-          </div>
+         
           
         </footer>
       </div>

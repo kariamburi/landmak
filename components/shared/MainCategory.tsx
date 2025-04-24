@@ -95,6 +95,7 @@ import { getAdsCount, getAdsCountPerRegion, getAdsCountPerVerifiedFalse, getAdsC
 import PropertyListSkeleton from "./LocationListSkeleton";
 import FilterSkeleton from "./FilterSkeleton";
 import LocationListSkeleton from "./LocationListSkeleton";
+import ProgressPopup from "./ProgressPopup";
 type CollectionProps = {
   loading: boolean;
   userId: string;
@@ -171,7 +172,7 @@ CollectionProps) => {
    const [AdsCountPerVerifiedFalse, setAdsCountPerVerifiedFalse] = useState<any>([]);
    const [loadingCount, setLoadingCount] = useState<boolean>(true);
  const isMobile = useMediaQuery({ maxWidth: 768 }); // Detect mobile screens
-   
+ 
  useEffect(() => {
     const fetchData = async () => {
       try {
@@ -455,7 +456,6 @@ const SCROLL_THRESHOLD = 150; // pixels
        setIsOpenP(true);
      };
     
-   
      const handleCloseP = () => {
        setIsOpenP(false);
      };
@@ -1233,6 +1233,7 @@ const SCROLL_THRESHOLD = 150; // pixels
       handleOpenSafety={handleOpenSafety}
     />
   </div>
+   <ProgressPopup isOpen={isOpenP} onClose={handleCloseP} />
  </ScrollArea.Viewport>
     <ScrollArea.Scrollbar orientation="vertical" />
       <ScrollArea.Corner />
@@ -1246,14 +1247,14 @@ const SCROLL_THRESHOLD = 150; // pixels
                  }`}
                >
                 <BottomNavigation 
-                          userId={userId} 
-                          popup={"category"}
-                          onClose={onClose} 
-                         handleOpenSell={handleOpenSell}
-                         handleOpenChat={handleOpenChat}
-                         handleOpenSettings={handleOpenSettings}
-                         handleOpenSearchTab={handleOpenSearchTab} 
-                                              />
+                userId={userId}
+                popup={"category"}
+                onClose={onClose}
+                handleOpenSell={handleOpenSell}
+                handleOpenChat={handleOpenChat}
+                handleOpenSettings={handleOpenSettings}
+                handleOpenSearchTab={handleOpenSearchTab} 
+                handleOpenP={handleOpenP}                                              />
                </div>
         </footer>
       </div>

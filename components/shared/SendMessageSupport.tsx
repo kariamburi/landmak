@@ -13,7 +13,9 @@ import React, { useCallback, useEffect, useState } from "react";
 import { useToast } from "@/components/ui/use-toast";
 import { AdminId } from "@/constants";
 import AttachFileOutlinedIcon from "@mui/icons-material/AttachFileOutlined";
-
+import CloseIcon from "@mui/icons-material/Close";
+import Image from "next/image";
+import Zoom from "react-medium-image-zoom";
 type SidebarProps = {
   displayName: string;
   uid: string;
@@ -186,10 +188,23 @@ const SendMessageSupport = ({
       </form>
 
       {image && (
-        <div className="text-xs text-gray-500 px-2">
-          Attached: {image.name}
-        </div>
-      )}
+  <div className="absolute bottom-[110px] right-4 z-30 bg-white dark:bg-[#2D3236] shadow-lg rounded-md p-2 w-32">
+    <div className="flex justify-end">
+      <button onClick={() => setImg(null)} className="text-gray-500 hover:text-red-500">
+        <CloseIcon fontSize="small" />
+      </button>
+    </div>
+    <Zoom>
+      <Image
+        src={URL.createObjectURL(image)}
+        alt="image"
+        width={100}
+        height={100}
+        className="w-full h-auto object-cover rounded"
+      />
+    </Zoom>
+  </div>
+)}
     </div>
   );
 };

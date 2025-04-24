@@ -22,15 +22,13 @@ type navprop = {
   handleOpenSell: () => void;
   handleOpenChat: () => void;
   handleOpenSettings: () => void;
+  handleOpenP: () => void;
   handleOpenSearchTab: (value:string) => void;
 
 };
-const BottomNavigation = ({ userId, popup, handleOpenSearchTab, handleOpenSettings, handleOpenSell, handleOpenChat, onClose }: navprop) => {
+const BottomNavigation = ({ userId, popup, handleOpenP, handleOpenSearchTab, handleOpenSettings, handleOpenSell, handleOpenChat, onClose }: navprop) => {
   const router = useRouter();
   const pathname = usePathname();
- 
-  const isActive = (path: string) => pathname === path;
-  
   return (
     <nav className="dark:bg-[#131B1E] text-black dark:text-[#F1F3F3] bottom-0 z-5 w-full bg-white shadow-md border-t dark:border-gray-700 border-gray-200">
       <div className="flex justify-around py-2 relative">
@@ -94,7 +92,7 @@ const BottomNavigation = ({ userId, popup, handleOpenSearchTab, handleOpenSettin
         <SignedOut>
           <div
             onClick={() => {
-          
+              handleOpenP();
                 router.push("/sign-in");
 
             }}
@@ -142,6 +140,7 @@ const BottomNavigation = ({ userId, popup, handleOpenSearchTab, handleOpenSettin
         <SignedOut>
           <div
             onClick={() => {
+              handleOpenP();
                 router.push("/sign-in");
             }}
           >
@@ -182,6 +181,7 @@ const BottomNavigation = ({ userId, popup, handleOpenSearchTab, handleOpenSettin
             popup === "settings" ? "text-green-600" : "text-gray-600"
           }`}
           onClick={() => {
+            handleOpenP();
             router.push("/sign-in");
         }}
         >
@@ -191,7 +191,7 @@ const BottomNavigation = ({ userId, popup, handleOpenSearchTab, handleOpenSettin
           <span className="text-xs">Profile</span>
         </div>
         </SignedOut>
-
+       
       </div>
      
     </nav>

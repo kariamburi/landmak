@@ -24,7 +24,19 @@ import { MapOutlined, DonutLargeOutlined, SquareOutlined, CircleOutlined } from 
 import AddOutlinedIcon from '@mui/icons-material/AddOutlined';
 import ShowChartOutlinedIcon from '@mui/icons-material/ShowChartOutlined';
 import CropLandscapeOutlinedIcon from '@mui/icons-material/CropLandscapeOutlined';
-
+import DeleteOutlineOutlinedIcon from '@mui/icons-material/DeleteOutlineOutlined';
+import UploadFileOutlinedIcon from '@mui/icons-material/UploadFileOutlined';
+import KeyboardArrowLeftOutlinedIcon from '@mui/icons-material/KeyboardArrowLeftOutlined';
+import KeyboardArrowRightOutlinedIcon from '@mui/icons-material/KeyboardArrowRightOutlined';
+type Shape = {
+  type: string;
+  coordinates: { lat: number; lng: number }[];
+  label: string;
+  area: number;
+  strokeColor: string;
+  fillColor: string;
+  status: "available" | "sold";
+};
 import {
   DropdownMenu,
   DropdownMenuContent,
@@ -40,6 +52,9 @@ import { AlertDialog, AlertDialogAction, AlertDialogCancel, AlertDialogContent, 
 import { Input } from '../ui/input';
 import { DrawerPublic } from './DrawerPublic';
 import { ScrollArea } from '../ui/scroll-area';
+import PropertyShapesGrid from './PropertyShapesGrid';
+import { X } from 'lucide-react';
+import { SoldStatus } from '@/lib/actions/dynamicAd.actions';
 
 const polylineStyles = { 
   Road: { 
@@ -91,32 +106,35 @@ const defaultcenter = {
 };
 const GoogleMapping = ({
   selected,
+  userId,
+  _id,
   name,
   onChange,
   onSave,
 }: {
   selected: any;
   name: string;
+  userId:string;
+  _id:string;
   onChange: (field: string, value: any) => void;
   onSave: () => void;
 }) => {
   const mapRef = useRef<HTMLDivElement>(null);
- // console.log(selected.shapes)
  const [open, setOpen] = useState(false);
  const [customLabel, setCustomLabel] = useState("");
  const [showMappingInfo, setShowMappingInfo] = useState(false);
- 
+ const [uploadPopup, setUploadPopup] = useState(false);
  const [center, setCenter] = useState<any>(selected.location?.coordinates ? {lat:selected.location.coordinates[0], lng:selected.location.coordinates[1]}:defaultcenter);
- 
+ const [showSidebar, setShowSidebar] = useState(false);
   const [map, setMap] = useState<google.maps.Map | null>(null);
   const [drawingManager, setDrawingManager] = useState<google.maps.drawing.DrawingManager | null>(null);
   const [errorMessage, setErrorMessage] = useState("");
   const [error, setError] = useState(false);
-
+  const [selectedShape, setSelectedShape] = useState<google.maps.OverlayView | null>(null);
   const [markerIcons, setMarkerIcons] = useState([]);
   const [selectedOption, setSelectedOption] = useState("Add Line");
   const [selectedPolygon, setSelectedPolygon] = useState<google.maps.Polygon | null>(null);
-
+  //const [selectedShape, setSelectedShape] = useState<any>(null);
   const [strokeColor, setStrokeColor] = useState("#FF0000");
   const [strokeWeight, setStrokeWeight] = useState(3);
   const [strokePattern, setStrokePattern] = useState<number[]>([]);
@@ -134,6 +152,11 @@ const GoogleMapping = ({
   });
   const [markers, setMarkers] = useState<{ lat: number; lng: number; icon: string; color: string; label: string }[]>([]);
   //const [markers, setMarkers] = useState<{ lat: number; lng: number; icon: string; color: string; label: string }[]>(selected.markers?.lenght > 0 ? selected.markers:[]);
+  const [deleteIndex, setDeleteIndex] = useState<number | null>(null);
+  
+  const handleOpenUploadPopup = () => {
+    setUploadPopup(true);
+  };
   const [polylines, setPolylines] = useState<
   { path: { lat: number; lng: number }[]; color: string; width: number; label: string }[]
 >([]);
@@ -168,7 +191,7 @@ const [shapes, setShapes] = useState<any[]>([]);
     const loader = new Loader({
       apiKey: process.env.NEXT_PUBLIC_GOOGLEAPIKEY!,
       version: "weekly",
-      libraries: ["places", "drawing"],
+      libraries: ["places","geometry", "drawing"],
     });
   
     loader.load().then(() => {
@@ -191,7 +214,7 @@ const [shapes, setShapes] = useState<any[]>([]);
       // Initialize Drawing Manager
       const drawingManager = new google.maps.drawing.DrawingManager({
         drawingMode:null,
-        drawingControl: false,
+        drawingControl: true,
         drawingControlOptions: {
           position: google.maps.ControlPosition.TOP_CENTER,
           drawingModes: [
@@ -457,123 +480,142 @@ useEffect(() => {
   };
 
   const handleOverlayComplete = (event: any) => {
-    if (event.type === "marker") return;
-   // ✅ Handle other shapes (polygon, rectangle, circle)
-   if (event.type === "polyline") return;
+    if (event.type === "marker" || event.type === "polyline") return;
 
-   let newShape: any;
-   // Define custom colors for each shape
- const shapeColors = {
-  // polygon: { strokeColor: "#FF5733", fillColor: "#FFBD69" },
-   polygon: { strokeColor: "#33FF57", fillColor: "#C1FFBD" },
-   rectangle: { strokeColor: "#33FF57", fillColor: "#C1FFBD" },
-   //rectangle: { strokeColor: "#33A1FF", fillColor: "#A3D9FF" },
-   circle: { strokeColor: "#33A1FF", fillColor: "#C1FFBD" },
-   polyline: { strokeColor: "#FFC300", fillColor: "" }, // No fill for polylines
- };
-   const type = event.type as keyof typeof shapeColors;
-   const colorConfig = shapeColors[type];
+    let newShape: any;
 
-   event.overlay.setOptions({
-     strokeColor: colorConfig.strokeColor,
-     fillColor: colorConfig.fillColor,
-     fillOpacity: type !== "polyline" ? 0.4 : undefined, // No fill for polylines
-     strokeWeight: 2,
-   });
+    const shapeColors = {
+      polygon: { strokeColor: "#33FF57", fillColor: "#C1FFBD" },
+      rectangle: { strokeColor: "#33FF57", fillColor: "#C1FFBD" },
+      circle: { strokeColor: "#33A1FF", fillColor: "#C1FFBD" },
+      polyline: { strokeColor: "#FFC300", fillColor: "" },
+    };
 
-   const label = prompt("Enter Label for boundery:") || "Untitled";
-   const status='Available';
- // ✅ Calculate area and store in `newShape`
- let area = 0;
-   if (type === "polygon") {
-    const path = event.overlay.getPath().getArray();
-    area = google.maps.geometry.spherical.computeArea(path); // Calculate polygon area
+    const type = event.type as keyof typeof shapeColors;
+    const colorConfig = shapeColors[type];
 
-     newShape = {
-       type,
-       coordinates: event.overlay.getPath().getArray().map((latLng: google.maps.LatLng) => ({
-         lat: latLng.lat(),
-         lng: latLng.lng(),
-       })),
-       label,
-       area,
-       strokeColor: colorConfig.strokeColor,
-       fillColor: colorConfig.fillColor,
-       status,
-     };
-   } else if (type === "rectangle") {
-     const bounds = event.overlay.getBounds();
-     if (bounds) {
-   
+    event.overlay.setOptions({
+      strokeColor: colorConfig.strokeColor,
+      fillColor: colorConfig.fillColor,
+      fillOpacity: type !== "polyline" ? 0.4 : undefined,
+      strokeWeight: 2,
+    });
+    event.overlay.addListener("click", () => {
+      setSelectedShape((prev:any) => {
+        if (prev) prev.setOptions({ strokeOpacity: 1 });
+        event.overlay.setOptions({ strokeOpacity: 0.8 });
+        return event.overlay;
+      });
+    });
+    const label = prompt("Enter Label for boundery:");
+    if (!label) {
+      event.overlay.setMap(null); // Remove the shape from map if user cancels
+      return;
+    }
+
+    const status = "Available";
+    let area = 0;
+
+    if (type === "polygon") {
+      const path = event.overlay.getPath().getArray();
+      area = google.maps.geometry.spherical.computeArea(path);
+
+      newShape = {
+        type,
+        coordinates: path.map((latLng: google.maps.LatLng) => ({
+          lat: latLng.lat(),
+          lng: latLng.lng(),
+        })),
+        label,
+        area,
+        strokeColor: colorConfig.strokeColor,
+        fillColor: colorConfig.fillColor,
+        status,
+      };
+    } else if (type === "rectangle") {
+      const bounds = event.overlay.getBounds();
+      if (bounds) {
         const northEast = bounds.getNorthEast();
         const southWest = bounds.getSouthWest();
-  
-        // Approximate rectangle area using Google Maps geometry functions
+
         const corners = [
           southWest,
           new google.maps.LatLng(southWest.lat(), northEast.lng()),
           northEast,
           new google.maps.LatLng(northEast.lat(), southWest.lng()),
         ];
-        area = google.maps.geometry.spherical.computeArea(corners); // Calculate rectangle area
-       newShape = {
-         type,
-         bounds: {
-           north: bounds.getNorthEast().lat(),
-           east: bounds.getNorthEast().lng(),
-           south: bounds.getSouthWest().lat(),
-           west: bounds.getSouthWest().lng(),
-         },
-         label,
-         area,
-         strokeColor: colorConfig.strokeColor,
-         fillColor: colorConfig.fillColor,
-         status,
-       };
-     }
-   } else if (type === "circle") {
-    const radius = event.overlay.getRadius();
-    area = Math.PI * Math.pow(radius, 2); // Area of a circle formula: πr²
+        area = google.maps.geometry.spherical.computeArea(corners);
 
-     newShape = {
-       type,
-       center: {
-         lat: event.overlay.getCenter().lat(),
-         lng: event.overlay.getCenter().lng(),
-       },
-       radius: event.overlay.getRadius(),
-       label,
-       area,
-       strokeColor: colorConfig.strokeColor,
-       fillColor: colorConfig.fillColor,
-       status,
-     };
-   }
+        newShape = {
+          type,
+          bounds: {
+            north: northEast.lat(),
+            east: northEast.lng(),
+            south: southWest.lat(),
+            west: southWest.lng(),
+          },
+          label,
+          area,
+          strokeColor: colorConfig.strokeColor,
+          fillColor: colorConfig.fillColor,
+          status,
+        };
+      }
+    } else if (type === "circle") {
+      const radius = event.overlay.getRadius();
+      area = Math.PI * Math.pow(radius, 2);
 
-   setShapes((prev) => [...prev, newShape]);
+      newShape = {
+        type,
+        center: {
+          lat: event.overlay.getCenter().lat(),
+          lng: event.overlay.getCenter().lng(),
+        },
+        radius,
+        label,
+        area,
+        strokeColor: colorConfig.strokeColor,
+        fillColor: colorConfig.fillColor,
+        status,
+      };
+    }
+   // event.overlay.addListener("click", () => {
+    //  setSelectedShape(event.overlay);
+    //});
+    setShapes((prev) => [...prev, newShape]);
   };
- 
+  //const deleteSelectedShape = () => {
+    //if (selectedShape) {
+    //  selectedShape.setMap(null);
+   //   setShapes((prev) => prev.filter((shape) => shape.overlay !== selectedShape));
+  //    setSelectedShape(null);
+  //  }
+  //};
   const handlePolylinecomplete = (polyline: any) => {
+    const label = prompt("Enter a label for this line:");
+    if (!label) {
+      polyline.setMap(null); // Remove the line if user cancels
+      return;
+    }
+
     const path = polyline.getPath().getArray().map((latLng: any) => ({
       lat: latLng.lat(),
       lng: latLng.lng(),
     }));
-   
+
     const color = polyline.get("strokeColor");
     const width = polyline.get("strokeWeight");
-   
-    const label = prompt("Enter a label for this line:") || "Unnamed";
-   
-    setPolylines((prevPolylines) => [...prevPolylines, { path, color, width, label }]);
 
-  }
-  
-  // Attach listeners
+    setPolylines((prevPolylines) => [
+      ...prevPolylines,
+      { path, color, width, label },
+    ]);
+  };
+
   drawingManager.addListener("markercomplete", handleMarkerComplete);
   drawingManager.addListener("overlaycomplete", handleOverlayComplete);
   drawingManager.addListener("polylinecomplete", handlePolylinecomplete);
 
-  // Cleanup listeners properly
   return () => {
     google.maps.event.clearListeners(drawingManager, "markercomplete");
     google.maps.event.clearListeners(drawingManager, "overlaycomplete");
@@ -612,7 +654,7 @@ useEffect(() => {
  
   const handleMarkerDragEnd = (event: google.maps.MapMouseEvent) => {
     if (!event.latLng) return; // ✅ Prevents errors if latLng is null
-    alert("Clicked");
+  
     const newLat = event.latLng.lat();
     const newLng = event.latLng.lng();
     
@@ -625,22 +667,7 @@ useEffect(() => {
       map.setCenter({ lat: newLat, lng: newLng });
     }
   };
-  const handleClick = (event: google.maps.MapMouseEvent) => {
-    if (!event.latLng) return;
-
-    // Create a circle at the clicked position
-    new google.maps.Circle({
-      strokeColor: "#FF0000",
-      strokeOpacity: 0.8,
-      strokeWeight: 2,
-      fillColor: "#FF0000",
-      fillOpacity: 0.35,
-      map: map,
-      center: event.latLng,
-      radius: 5, // Small circle
-    });
-  };
-  
+ 
   
  
   const handleMapProperty = () => {
@@ -649,6 +676,7 @@ useEffect(() => {
       setError(true);
       return;
     }
+    //console.log({location: {type: "Point", coordinates:[Number(latitude), Number(longitude)]}, polylines:polylines, markers:markers, shapes:shapes});
     onChange(name, {location: {type: "Point", coordinates:[Number(latitude), Number(longitude)]}, polylines:polylines, markers:markers, shapes:shapes}); // Remove extra []
     onSave();
     // Add Google Maps logic here
@@ -668,18 +696,10 @@ const resetMap = () => {
       position: google.maps.ControlPosition.RIGHT_BOTTOM, // Places zoom control at the bottom-right
     },
   });
-  // Add marker at user's location
-  //const marker = new google.maps.Marker({
-  //  position: {lat:Number(latitude),lng:Number(longitude)},
-   // map: newMap,
-   // draggable: true,
-    //title: "Property Location!",
-  //});
-
- // Initialize Drawing Manager
+  
  const drawingManager = new google.maps.drawing.DrawingManager({
   drawingMode:null,
-  drawingControl: false,
+  drawingControl: true,
   drawingControlOptions: {
     position: google.maps.ControlPosition.TOP_CENTER,
     drawingModes: [
@@ -736,7 +756,7 @@ setLongitude(longitude)
   // Initialize Drawing Manager
   const drawingManager = new google.maps.drawing.DrawingManager({
     drawingMode: null,
-    drawingControl: false,
+    drawingControl: true,
     drawingControlOptions: {
       position: google.maps.ControlPosition.TOP_CENTER,
       drawingModes: [
@@ -771,8 +791,189 @@ setLongitude(longitude)
   setMap(newMap);
 };
 
+const handleFileUpload = (event: React.ChangeEvent<HTMLInputElement>) => {
+  const file = event.target.files?.[0];
+  if (!file) return;
+
+  const reader = new FileReader();
+
+  reader.onload = (e) => {
+    try {
+      const json = JSON.parse(e.target?.result as string);
+      if (!json.features) return;
+
+      const newShapes = json.features.map((feature: any) => {
+        const type = "polygon";
+        const coords = feature.geometry.coordinates?.[0];
+        if (!coords || !Array.isArray(coords)) return null;
+
+        const coordinates = coords.map((coord: number[]) => ({
+          lat: coord[1],
+          lng: coord[0],
+        }));
+
+        const polygonPath = coordinates.map(
+          (coord) => new google.maps.LatLng(coord.lat, coord.lng)
+        );
+        const area = google.maps.geometry.spherical.computeArea(polygonPath);
+
+        const label = feature.properties?.name || "Uploaded Polygon";
+        const status = "available";
+        const strokeColor = "#00FF00";
+        const fillColor = "#C1FFBD";
+
+        return {
+          type,
+          coordinates,
+          label,
+          area,
+          strokeColor,
+          fillColor,
+          status,
+        };
+      }).filter(Boolean); // Remove nulls
+
+      // Update state
+      setShapes((prev) => [...prev, ...newShapes]);
+
+      // Draw on map
+      newShapes.forEach((shapeData: any) => {
+        let shape: google.maps.MVCObject | null = null;
+
+        if (shapeData.type === "polygon") {
+          shape = new google.maps.Polygon({
+            paths: shapeData.coordinates,
+            strokeColor: shapeData.strokeColor,
+            strokeWeight: 2,
+            fillColor: shapeData.fillColor,
+            fillOpacity: 0.5,
+            map: map,
+          });
+        }
+
+        if (shape) {
+          // Calculate InfoWindow center
+          let position: google.maps.LatLng | null = null;
+          if (shape instanceof google.maps.Polygon) {
+            const path = shape.getPath().getArray();
+            if (path.length > 0) {
+              position = path[Math.floor(path.length / 2)];
+            }
+          }
+
+          if (position) {
+            const infoWindow = new google.maps.InfoWindow({
+              content: `
+                <div style="font-size: 14px; font-weight: bold; text-align: center;">
+                  ${shapeData.label}
+                </div>
+                <div style="font-size: 12px; color: gray; text-align: center; margin-top: 5px;">
+                  <strong>Land Area:</strong>
+                  <div>${shapeData.area.toFixed(2)} m²</div>
+                  <div>${(shapeData.area / 10000).toFixed(2)} ha</div>
+                  <div>${(shapeData.area / 4046.86).toFixed(2)} acres</div>
+                </div>
+              `,
+              position,
+            });
+
+            shape.addListener("click", () => {
+              infoWindow.open(map);
+            });
+          }
+        }
+      });
+
+      // ✅ Zoom and center map to all new shapes
+      let centerSet = false;
+      const bounds = new google.maps.LatLngBounds();
+      newShapes.forEach((shapeData: any) => {
+        if (shapeData.coordinates && Array.isArray(shapeData.coordinates)) {
+          shapeData.coordinates.forEach((coord: any) => {
+            if (!centerSet) {
+              setCenter({ lat: coord.lat, lng: coord.lng });
+              setLatitude(coord.lat);
+              setLongitude(coord.lng);
+              centerSet = true;
+            }
+            bounds.extend(new google.maps.LatLng(coord.lat, coord.lng));
+          });
+        }
+      });
+      setUploadPopup(false);
+      if (map) {
+        map.fitBounds(bounds);
+      
+        google.maps.event.addListenerOnce(map, "bounds_changed", () => {
+         
+         // if (map.getZoom() > 18) {
+            map.setZoom(18);
+         // }
+        });
+      }
+
+    } catch (error) {
+      console.error("GeoJSON parse error:", error);
+    }
+  };
+
+  reader.readAsText(file);
+};
+
+
+  const toggleStatus = async (index: number) => {
+    const updatedShape = shapes[index];
+    const newStatus: "available" | "sold" =
+      updatedShape.status === "available" ? "sold" : "available";
+    const newFillColor = newStatus === "sold" ? "#FF6B6B" : "#C1FFBD";
+    const newStrokeColor = newFillColor;
+
+    const updatedShapeList: Shape[] = shapes.map((shape, i) =>
+      i === index
+        ? {
+            ...shape,
+            status: newStatus,
+            fillColor: newFillColor,
+            strokeColor: newStrokeColor,
+          }
+        : shape
+    );
+
+    setShapes(updatedShapeList);
+   
+    try {
+      if (!shapes || shapes.length === 0) {
+        console.warn("Initial shapes are invalid or empty");
+        return;
+      }
+     // const response = await SoldStatus(_id, updatedShapeList);
+    //  if (!response) throw new Error("Failed to update status in MongoDB");
+      
+    } catch (error) {
+      console.error("Error updating status:", error);
+    }
+  };
+
+  const confirmDelete = async (Index:any) => {
+    if (Index === null) return;
+    alert("deletes")
+    const updatedShapeList = shapes.filter((_, i) => i !== Index);
+    setShapes(updatedShapeList);
+ 
+   
+    try {
+     // const response = await SoldStatus(_id, updatedShapeList);
+     // if (!response) throw new Error("Failed to update shapes in MongoDB after deletion");
+    } catch (error) {
+      console.error("Error deleting shape:", error);
+    }
+  };
+  function capitalizeFirstLetter(str: string): string {
+    return str.charAt(0).toUpperCase() + str.slice(1);
+  }
+  
   return (<>
-    <div className="flex flex-col w-full h-[100dvh] space-y-0 p-0">
+    <div className="flex w-full h-[100vh]">
        {error && (
         <AlertDialog open={error} onOpenChange={setError}>
           <AlertDialogContent>
@@ -786,10 +987,167 @@ setLongitude(longitude)
           </AlertDialogContent>
         </AlertDialog>
       )}
+    SHAPES: {shapes.length}
+      {uploadPopup && (
+  <div className="fixed inset-0 flex items-center justify-center bg-gray-900 bg-opacity-50 p-2 z-50">
+    <div className="dark:bg-[#131B1E] dark:text-gray-300 bg-gray-200 rounded-xl p-2 w-full max-w-3xl shadow-lg">
+      
+      {/* Close Button */}
+      <div className="flex justify-end">
+        <Button
+        variant="outline"
+          onClick={() => setUploadPopup(false)}
+          >
+          <CloseOutlinedIcon fontSize="small" />
+        </Button>
+      </div>
+      <div className="flex flex-col gap-2 items-center w-full">
+        <p className='p-2 text-lg'>Upload custom map data</p>
+          <div className="p-2 flex gap-2"><input type="file" accept=".json" onChange={handleFileUpload} className="p-2 border bg-white dark:bg-[#2D3236] dark:text-gray-100 rounded-lg"/></div>
+      </div>
+     
+    </div>
+  </div>
+)}
+    {/* Sidebar with Toggle Button */}
+    <div
+        className={`bg-gray-200 h-[100dvh] shadow-lg transition-transform duration-300 ease-in-out fixed md:relative ${
+          showSidebar ? "w-full md:w-1/3 p-1" : "-translate-x-full md:w-0 md:translate-x-0"
+        }`}
+      >
+      <Button
+              onClick={() => setShowSidebar(!showSidebar)}
+              className="mb-4 md:hidden"
+            >
+              {showSidebar ? "Hide" : "Show"} Sidebar
+            </Button>
+            {showSidebar && (
+          <div className="flex flex-col space-y-2 w-full">
+             <div className="flex justify-between items-center w-full">
+         
+             <div className="p-2 border mt-2 rounded-lg bg-white w-full">
+      <p className="font-font px-3 py-1 rounded-md inline-block mb-2">
+        Property Layouts
+      </p>
+      <ScrollArea className="h-[90vh] overflow-y-auto flex p-0 bg-white rounded-lg">
+    
+       {shapes.length > 0 ? (  <div className="grid grid-cols-2 md:grid-cols-2 gap-2 w-full"> {shapes.map((shape:any, index:number) => (
+          <div
+            key={index}
+            onClick={() => toggleStatus(index)}
+            className="relative h-16 rounded-lg cursor-pointer border border-gray-300 shadow-md"
+            style={{
+              backgroundColor: shape.fillColor,
+              borderColor: shape.strokeColor,
+            }}
+          >
+            <div className="absolute top-2 left-1 text-xs font-semibold text-black bg-white/70 px-2 py-0.5 rounded">
+              {shape.label}
+            </div>
+            <div className="absolute bottom-2 left-1 text-xs text-white bg-black/40 px-2 py-0.5 rounded">
+              {capitalizeFirstLetter(shape.status)}
+            </div>
+            <button
+                    // onClick={confirmDelete(index)}
+                     onClick={(e) => {
+                      e.stopPropagation();
+                      confirmDelete(index);
+                    }}
+                    className="absolute bottom-2 right-1 bg-red-500 hover:bg-red-600 text-white p-1 rounded-full"
+                    title="Delete"
+                  >
+                    <X className="w-4 h-4" />
+                  </button>
+           
+          
+             {/* <AlertDialog.Root>
+                <AlertDialog.Trigger asChild>
+                  <button
+                    onClick={(e) => {
+                      e.stopPropagation();
+                      setDeleteIndex(index);
+                    }}
+                    className="absolute bottom-2 right-1 bg-red-500 hover:bg-red-600 text-white p-1 rounded-full"
+                    title="Delete"
+                  >
+                    <X className="w-4 h-4" />
+                  </button>
+                </AlertDialog.Trigger>
+                <AlertDialog.Portal>
+                  <AlertDialog.Overlay className="fixed inset-0 bg-black/40 z-50" />
+                  <AlertDialog.Content className="fixed top-1/2 left-1/2 z-50 max-w-md w-[90%] -translate-x-1/2 -translate-y-1/2 bg-white rounded-xl shadow-lg p-6">
+                    <AlertDialog.Title className="text-lg font-semibold text-gray-900">
+                      Confirm Deletion
+                    </AlertDialog.Title>
+                    <AlertDialog.Description className="mt-2 text-sm text-gray-700">
+                      Are you sure you want to delete this shape? This action cannot be undone.
+                    </AlertDialog.Description>
 
-      <div className="relative h-[100dvh] w-full">
+                    <div className="mt-4 flex justify-end gap-3">
+                      <AlertDialog.Cancel asChild>
+                        <button className="px-4 py-1.5 rounded-md text-sm border border-gray-300 text-gray-700 hover:bg-gray-100">
+                          Cancel
+                        </button>
+                      </AlertDialog.Cancel>
+                      <AlertDialog.Action asChild>
+                        <button
+                          onClick={confirmDelete}
+                          className="px-4 py-1.5 rounded-md text-sm bg-red-600 text-white hover:bg-red-700"
+                        >
+                          Delete
+                        </button>
+                      </AlertDialog.Action>
+                    </div>
+                  </AlertDialog.Content>
+                </AlertDialog.Portal>
+              </AlertDialog.Root>*/} 
+            
+          </div>
+        ))}</div>):(<>
+         <div className="flex items-center w-full flex-col gap-1 rounded-[14px] bg-grey-50 py-28 text-center">
+            <h3 className="font-semibold mb-2">No Layout</h3>
+              <p className="text-sm text-gray-500">No property layout drawn.</p>
+              </div>
+        
+        </>)}
+      
+      </ScrollArea>
+    </div>
+            </div>
+            </div>)}
+
+      </div>
+       {/* Map Section with Toggle Button */}
+       <div className={`w-full mt-0 lg:mt-0 relative transition-all duration-300 h-[100dvh] ${
+        showSidebar ? "hidden md:block" : "block"
+      }`}>
+     
+         <Button
+          onClick={() => setShowSidebar(!showSidebar)}
+          className="absolute top-1/2 left-4 z-20 md:block bg-white text-gray-700 shadow-lg hover:text-white"
+        >
+         {showSidebar ? (<div className='flex gap-1 items-center'><KeyboardArrowLeftOutlinedIcon/> <div className="text-xs hidden lg:inline">Hide Layout</div></div>) : (<div className='flex gap-1 items-center'><KeyboardArrowRightOutlinedIcon/> <div className="text-xs hidden lg:inline">Show Layout</div></div>)} 
+        </Button>
         <div ref={mapRef} className="w-full h-[100dvh] border lg:rounded-xl lg:shadow-md" />
-        <div className="absolute top-[60px] lg:top-3 left-3 lg:left-[200px] z-10 grid grid-cols-3 flex gap-1">
+        
+        {selectedShape && (
+  <div className="absolute top-1/2 right-1/2 p-2 text-white bg-gray-100 z-5 rounded-md shadow-md">
+    <div className="text-sm">
+    <button
+    onClick={() => {
+      selectedShape.setMap(null); // 🧼 Remove from map
+      setSelectedShape(null);
+      // Optionally remove from shapes array if needed
+    }}
+    className="mt-4 p-2 bg-red-500 text-white rounded"
+  >
+    Delete Selected Shape
+  </button>
+    </div>
+  </div>
+)}
+        
+        <div className="absolute top-[100px] lg:top-3 left-3 lg:left-[200px] z-10 grid grid-cols-4 flex gap-1">
           {/* Dropdown Menu */}
           <DropdownMenu>
             <DropdownMenuTrigger asChild>
@@ -869,6 +1227,11 @@ setLongitude(longitude)
               </DropdownMenuItem>
             </DropdownMenuContent>
           </DropdownMenu>
+
+        
+            <div onClick={() => handleOpenUploadPopup()} className="flex rounded-sm shadow-sm p-1 lg:py-2 lg:px-1 bg-gray-100 hover:bg-gray-200 text-gray-700 gap-1 lg:gap-2 text-xs lg:text-base items-center cursor-pointer"><UploadFileOutlinedIcon/>Import Map</div>
+          
+         
         </div>
 
         <DrawerPublic onChange={handlePropertyLocation} latitude={latitude} longitude={longitude} />
@@ -886,6 +1249,7 @@ setLongitude(longitude)
         >
           <AddOutlinedIcon/>Map Property
         </Button>
+      
         <Button
           onClick={resetMap}
           variant="default"
@@ -893,6 +1257,9 @@ setLongitude(longitude)
         >
           <CloseOutlinedIcon/>Reset Map
         </Button>
+
+      
+
       </div>
     </div>
 
@@ -954,11 +1321,17 @@ setLongitude(longitude)
     </div>
   </div>
 )}
-  
+
+
+
+
+
 </div>
-        </div>
-      </div>
+</div>
+</div>
+     
     )}
+     
 </>
 );
 };

@@ -124,7 +124,7 @@ CollectionProps) => {
  const isAdCreator = userId === shopAcc._id;
  const [listed, setListed] = useState(0);
  useEffect(() => {
- 
+ if(isAdCreator){
     const fetchData = async () => {
       try {
       
@@ -160,7 +160,7 @@ CollectionProps) => {
       }
     }
     fetchData();
-  
+ }
 }, []);
 
 
@@ -234,41 +234,14 @@ CollectionProps) => {
             <div className="w-full">
             
               <div className="flex mt-2 lg:mt-0 gap-1 flex-col border rounded-lg flex justify-center items-center w-full h-full">
-              {loadingSub ? (<> <Icon icon={Barsscale} className="w-6 h-6 text-gray-500" /></>):(<>
+              {isAdCreator && (<>   {loadingSub ? (<> <Icon icon={Barsscale} className="w-6 h-6 text-gray-500" /></>):(<>
 
                              {isAdCreator &&
                              planPackage !== "Free" &&
                              daysRemaining &&
                              daysRemaining > 0 ? (
                                <>
-                                 {/* Green ribbon  <div
-                                   style={{
-                                     backgroundColor: color,
-                                   }}
-                                   className="text-center sm:text-left w-full rounded-lg p-3 text-white relative"
-                                 >
-                                   <div className="flex flex-col">
-                                     <div className="font-bold text-sm mt-4">
-                                       Plan: {planPackage}
-                                     </div>
-                                     <div className="text-xs">
-                                       Days remaining: {daysRemaining}
-                                     </div>
-                                   </div>
-                                 
-                                   <div className="absolute top-0 shadow-lg left-0 bg-green-500 text-white text-xs py-1 px-3 rounded-bl-lg rounded-tr-lg">
-                                     Active
-                                   </div>
-                                   <div 
-                                   //href="/plan"
-                                   onClick={()=> handleOpenPlan()}
-                                   >
-                                     <div className="p-1 items-center flex flex-block text-black underline text-xs cursor-pointer border-2 border-transparent rounded-full hover:bg-[#000000]  hover:text-white">
-                                       <div>Upgrade Plan</div>
-                                     </div>
-                                   </div>
-                                 </div> */}
-
+                                
                                  <div className="flex gap-1 w-full items-center bg-green-100 px-3 py-1 rounded-lg">
                                  <div
                                    style={{
@@ -297,35 +270,12 @@ CollectionProps) => {
     <button  onClick={()=> handleOpenPlan()} className="ml-2 text-green-600 underline">Upgrade</button>
   </div>
 
-                              {/*   <div
-                                   style={{
-                                     backgroundColor: color,
-                                   }}
-                                   className="text-center sm:text-left rounded-lg p-3 text-white relative"
-                                 >
-                                   <div className="flex flex-col">
-                                     <div className="font-bold text-sm mt-4">
-                                       Plan: {planPackage}
-                                     </div>
-                                   </div>
-                                  
-                                   <div className="absolute top-0 shadow-lg left-0 bg-green-500 text-white text-xs py-1 px-3 rounded-bl-lg rounded-tr-lg">
-                                     Active
-                                   </div>
-                                   <div 
-                                  // href="/plan"
-                                  onClick={()=> handleOpenPlan()}
-                                   >
-                                     <div className="p-1 items-center flex flex-block text-black underline text-xs cursor-pointer border-2 border-transparent rounded-full hover:bg-[#000000]  hover:text-white">
-                                       <div>Upgrade Plan</div>
-                                     </div>
-                                   </div>
-                                 </div> */}
+                            
                                </>
                              )}
-                             </>)}
+                             </>)} </>)}
                 <SellerProfile
-                      user={user}
+                      user={shopAcc}
                       loggedId={userId}
                       userId={shopAcc._id}
                       handleOpenReview={handleOpenReview} 
@@ -340,40 +290,14 @@ CollectionProps) => {
           <div className="flex-1 min-h-screen">
           <div className="p-1 lg:hidden">
             <div className="flex flex-col gap-1 w-full ">
-            {loadingSub ? (<>  <Icon icon={Barsscale} className="w-6 h-6 text-gray-500" /></>):(<>
+          {isAdCreator && (<> {loadingSub ? (<>  <Icon icon={Barsscale} className="w-6 h-6 text-gray-500" /></>):(<>
 
                              {isAdCreator &&
                              planPackage !== "Free" &&
                              daysRemaining &&
                              daysRemaining > 0 ? (
                                <>
-                                 {/* Green ribbon  <div
-                                   style={{
-                                     backgroundColor: color,
-                                   }}
-                                   className="text-center sm:text-left w-full rounded-lg p-3 text-white relative"
-                                 >
-                                   <div className="flex flex-col">
-                                     <div className="font-bold text-sm mt-4">
-                                       Plan: {planPackage}
-                                     </div>
-                                     <div className="text-xs">
-                                       Days remaining: {daysRemaining}
-                                     </div>
-                                   </div>
-                                 
-                                   <div className="absolute top-0 shadow-lg left-0 bg-green-500 text-white text-xs py-1 px-3 rounded-bl-lg rounded-tr-lg">
-                                     Active
-                                   </div>
-                                   <div 
-                                   //href="/plan"
-                                   onClick={()=> handleOpenPlan()}
-                                   >
-                                     <div className="p-1 items-center flex flex-block text-black underline text-xs cursor-pointer border-2 border-transparent rounded-full hover:bg-[#000000]  hover:text-white">
-                                       <div>Upgrade Plan</div>
-                                     </div>
-                                   </div>
-                                 </div> */}
+                                
 
                                  <div className="flex gap-1 w-full items-center bg-green-100 px-3 py-1 rounded-lg">
                                  <div
@@ -403,34 +327,11 @@ CollectionProps) => {
     <button  onClick={()=> handleOpenPlan()} className="ml-2 text-green-600 underline">Upgrade</button>
   </div>
 
-                              {/*   <div
-                                   style={{
-                                     backgroundColor: color,
-                                   }}
-                                   className="text-center sm:text-left rounded-lg p-3 text-white relative"
-                                 >
-                                   <div className="flex flex-col">
-                                     <div className="font-bold text-sm mt-4">
-                                       Plan: {planPackage}
-                                     </div>
-                                   </div>
-                                  
-                                   <div className="absolute top-0 shadow-lg left-0 bg-green-500 text-white text-xs py-1 px-3 rounded-bl-lg rounded-tr-lg">
-                                     Active
-                                   </div>
-                                   <div 
-                                  // href="/plan"
-                                  onClick={()=> handleOpenPlan()}
-                                   >
-                                     <div className="p-1 items-center flex flex-block text-black underline text-xs cursor-pointer border-2 border-transparent rounded-full hover:bg-[#000000]  hover:text-white">
-                                       <div>Upgrade Plan</div>
-                                     </div>
-                                   </div>
-                                 </div> */}
+                            
                                </>
                              )}
                              </>)}
-              <SellerProfile user={user} loggedId={userId} userId={shopAcc._id} handleOpenReview={handleOpenReview} handleOpenChatId={handleOpenChatId} handleOpenSettings={handleOpenSettings} handlePay={handlePay}/>
+              <SellerProfile user={shopAcc} loggedId={userId} userId={shopAcc._id} handleOpenReview={handleOpenReview} handleOpenChatId={handleOpenChatId} handleOpenSettings={handleOpenSettings} handlePay={handlePay}/></>)} 
               </div>
             </div>
             <div className="lg:flex-row lg:m-3 justify-center">

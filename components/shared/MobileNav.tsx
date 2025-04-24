@@ -73,7 +73,7 @@ const MobileNav = ({ userstatus, userId,popup,user, onClose, handleOpenSettings,
             </div>
           </SheetTitle>
         
-          <NavItems
+            <NavItems
             userstatus={userstatus}
             userId={userId}
             user={user}
@@ -86,7 +86,7 @@ const MobileNav = ({ userstatus, userId,popup,user, onClose, handleOpenSettings,
             handleOpenShop={handleOpenShop}
             handleOpenPerfomance={handleOpenPerfomance}
             handleOpenSettings={handleOpenSettings} popup={popup}          />
-        {/*   <Separator className="border border-gray-300 dark:border-gray-700" />
+         {/*  <Separator className="border border-gray-300 dark:border-gray-700" />
           <div className="flex text-xs">
             <div className="flex gap-1 w-full dark:text-gray-400 text-gray-600">
               <div className="transition-colors text-[10px] hover:text-emerald-600 hover:cursor-pointer">
