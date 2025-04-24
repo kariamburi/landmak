@@ -1263,14 +1263,14 @@ Radius: {radius / 1000} km
                   <li>📏 <strong>Measure Property Size</strong> - Estimate area in square meters (m²), acres, or hectares.</li>
                   <li>📍 <strong>Calculate Distance</strong> - Find distance from key places like your workplace or shopping centers.</li>
                   <li>🛣️ <strong>Find the Nearest Route</strong> - Get directions from your location to the property.</li>
-                  <li>👥 <strong>Analyze Population</strong> - View demographic insights of the property's surroundings.</li>
+                  <li>👥 <strong>Analyze Population</strong> - View demographic insights of the property&apos;s surroundings.</li>
                   <li>🚗 <strong>Check Road Accessibility</strong> - See the distance to the nearest tarmac road.</li>
                   <li>🚏 <strong>Locate Public Transport</strong> - Find the closest bus station and distance.</li>
                   <li>🏫 <strong>Nearby Schools</strong> - View the number of schools around.</li>
                   <li>🏥 <strong>Healthcare Facilities</strong> - Check hospitals and clinics in the area.</li>
                   <li>🛍️ <strong>Shopping Options</strong> - See available shopping malls nearby.</li>
                   <li>🏡 <strong>View Nearby Property Offers</strong> - Discover other properties available in the same area.</li>
-                  <li>⏳ <strong>Saves Time for Both Buyers & Sellers</strong> - Only visit the site after you're satisfied with the property's location.</li>
+                  <li>⏳ <strong>Saves Time for Both Buyers & Sellers</strong> - Only visit the site after you&apos;re satisfied with the property&apos;s location.</li>
                 </ul>
 
                 <p className="text-sm font-semibold text-gray-700 dark:text-gray-200 mt-4 text-center border-b pb-2">
