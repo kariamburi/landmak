@@ -59,6 +59,8 @@ const ChatComponent =  ({senderId,senderName,senderImage,user,onClose, handlePay
     const handleOpenP = () => {
       setIsOpenP(true);
     };
+
+   
   // console.log(senderId);
   const [isDarkMode, setIsDarkMode] = useState<boolean | null>(null);
   

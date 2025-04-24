@@ -26,9 +26,10 @@ type chatProps = {
   handleOpenShop: (value:any) => void;
   handleOpenPlan: () => void;
   handleOpenSettings: () => void;
+  handleOpenEnquire: () => void;
   handlePay: (id:string) => void;
 };
-const Contact = ({ ad, user, userId, userName, userImage,handlePay, handleOpenReview, handleOpenChatId, handleOpenSettings, handleOpenShop }: chatProps) => {
+const Contact = ({ ad, user, userId, userName, userImage, handleOpenEnquire, handlePay, handleOpenReview, handleOpenChatId, handleOpenSettings, handleOpenShop }: chatProps) => {
   const [showphone, setshowphone] = useState(false);
   const [isOpenP, setIsOpenP] = useState(false);
   const handleOpenP = () => {
@@ -108,12 +109,14 @@ const Contact = ({ ad, user, userId, userName, userImage,handlePay, handleOpenRe
           </SignedOut>
 
           <SignedIn>
-            <ChatButtonBottom
-              ad={ad}
-              userId={userId}
-              userImage={userImage}
-              userName={userName}
-            />
+             <button
+                          className="bg-green-600 hover:bg-green-700 text-white text-xs mt-2 p-2 rounded-lg shadow"
+                          onClick={() => handleOpenEnquire()}
+                        >
+                          <ChatBubbleOutlineOutlinedIcon sx={{ fontSize: 24 }} />
+                          {/*<div className="hidden lg:inline"> Enquire</div>*/}
+                        </button>
+           
           </SignedIn>
           <SignedOut>
             <a href={`/sign-in`}>

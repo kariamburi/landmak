@@ -23,9 +23,10 @@ type chatProps = {
   userName: string;
   userImage: string;
   ad: any;
+  handleCloseEnquire:()=>void;
 };
 
-const ChatButtonBottom = ({ ad, userId, userName, userImage }: chatProps) => {
+const ChatButtonBottom = ({ ad, userId, userName, userImage,handleCloseEnquire }: chatProps) => {
   const [isOpen, setIsOpen] = useState(false);
   const [message, setMessage] = useState("");
   const [isSending, setIsSending] = useState(false); // New state for sending status
@@ -117,7 +118,7 @@ const ChatButtonBottom = ({ ad, userId, userName, userImage }: chatProps) => {
       });
 
       setMessage(""); // Clear the message input
-      setIsOpen(false); // Close the popup
+      handleCloseEnquire(); // Close the popup
     } catch (error) {
       console.error("Error sending message: ", error);
     } finally {
@@ -144,24 +145,14 @@ const ChatButtonBottom = ({ ad, userId, userName, userImage }: chatProps) => {
   };
   return (
     <>
-     
-           <button
-              className="bg-green-600 hover:bg-green-700 text-white text-xs mt-2 p-2 rounded-lg shadow"
-              onClick={() => setIsOpen(true)}
-            >
-              <ChatBubbleOutlineOutlinedIcon sx={{ fontSize: 24 }} />
-              {/*<div className="hidden lg:inline"> Enquire</div>*/}
-            </button>
-    
-      {isOpen && (
-        <div className="fixed inset-0 flex items-center justify-center bg-gray-700 bg-opacity-50 z-50">
+     <div className="fixed inset-0 flex items-center justify-center bg-gray-700 bg-opacity-50 z-50">
           <div className="h-[90vh] dark:bg-[#2D3236] dark:text-[#F1F3F3] bg-white rounded-lg p-6 w-full max-w-md">
          <div className="flex items-center justify-between"> <p className="font-semibold mb-2">{ad.data.title.length > 50
                 ? `${ad.data.title.substring(0, 50)}...`
                 : ad.data.title}</p>
 
 <button
-    onClick={() => setIsOpen(false)}
+    onClick={() => handleCloseEnquire()}
     className="px-4 py-2 dark:text-white rounded hover:text-green-600 focus:outline-none"
     disabled={isSending} // Disable close button while sending
   >
@@ -229,7 +220,7 @@ const ChatButtonBottom = ({ ad, userId, userName, userImage }: chatProps) => {
             </div>
           </div>
         </div>
-      )}
+    
     </>
   );
 };

@@ -13,6 +13,7 @@ import { mode } from "@/constants";
 //import { ScrollArea } from "../ui/scroll-area";
 import * as ScrollArea from "@radix-ui/react-scroll-area";
 import CollectionRelated from "@/components/shared/CollectionRelated";
+import ChatButtonBottom from "./ChatButtonBottom";
 const CollectionRelateddd = dynamic(
   () => import("@/components/shared/CollectionRelated"),
   {
@@ -87,7 +88,13 @@ const AdsComponent = ({
 }: AdsProps) => {
     const [isDarkMode, setIsDarkMode] = useState<boolean | null>(null);
  const [showBottomNav, setShowBottomNav] = useState(true);
-
+ const [isOpenEnquire, setIsOpenEnquire] = useState(false);
+    const handleCloseEnquire = () => {
+      setIsOpenEnquire(false);
+    };
+    const handleOpenEnquire = () => {
+      setIsOpenEnquire(true);
+    };
   const scrollRefB = useRef<HTMLDivElement>(null);
 const lastScrollTop = useRef(0);
 const scrollTimeout = useRef<NodeJS.Timeout | null>(null);
@@ -184,6 +191,13 @@ const SCROLL_THRESHOLD = 100; // pixels
             handleAdEdit={handleAdEdit}
             handleOpenPlan={handleOpenPlan}
           />
+        {isOpenEnquire && (<ChatButtonBottom
+                        ad={ad}
+                        userId={userId}
+                        userImage={userImage}
+                        userName={userName}
+                        handleCloseEnquire={handleCloseEnquire}
+                      />)}   
           <Toaster />
         </div>
 
@@ -195,6 +209,7 @@ const SCROLL_THRESHOLD = 100; // pixels
        
           <Contact
             ad={ad}
+            handleOpenEnquire={handleOpenEnquire}
             user={user}
             userId={userId || ""}
             userName={userName || ""}
@@ -206,6 +221,8 @@ const SCROLL_THRESHOLD = 100; // pixels
             handleOpenSettings={handleOpenSettings} 
             handlePay={handlePay}          />
         </div>
+
+
       </div>
       <footer className="bg-white">
           <div>
