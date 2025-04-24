@@ -706,7 +706,7 @@ polyline.addListener("mouseout", () => {
  
   
 
-  type AmenityType = "school" | "hospital" | "shopping_mall" | "restaurant" | "bank" | "bus_station"; // Add more as needed
+  type AmenityType = "school" | "hospital" | "shopping_mall" | "restaurant" | "bank" | "transit_station"; // Add more as needed
  
  
  
@@ -777,7 +777,7 @@ const handleShowAmenity = (amenityType: AmenityType) => {
       case "shopping_mall": return "/assets/map/mall.png";
       case "restaurant": return "/assets/map/restaurant.png";
       case "bank": return "/assets/map/bank_euro.png";
-      case "bus_station": return "/assets/map/busstop.png";
+      case "transit_station": return "/assets/map/busstop.png";
       default: return "/assets/map/default.png";
     }
   };
@@ -1040,7 +1040,7 @@ const handleFullscreen = () => {
 
         </>)}
   {distance && (
-  <div className="absolute top-20 left-2 p-2 text-white bg-green-600 z-5 rounded-md shadow-md">
+  <div className="absolute top-20 left-2 p-2 text-white bg-green-600 z-5 rounded-md shadow-lg">
     <div className="text-sm">
       <strong>Distance:</strong>
       <div>{distance} km</div>
@@ -1048,7 +1048,7 @@ const handleFullscreen = () => {
   </div>
 )}
 {activeAmenity && amenityCount !== null && (<>
-  <div className="absolute top-20 left-2 p-2 text-white bg-green-600 z-5 rounded-md shadow-md">
+  <div className="absolute top-20 left-2 p-2 text-white bg-green-600 z-5 rounded-md shadow-lg">
  <div className="mt-2 text-sm text-white dark:text-gray-300">
     Found <strong>{amenityCount}</strong> {activeAmenity.replace("_", " ").toLowerCase()}(s) within {radius/1000} km
   </div>
@@ -1094,7 +1094,7 @@ Radius: {radius / 1000} km
     { label: "Malls Nearby", type: "shopping_mall" },
     { label: "Restaurants Nearby", type: "restaurant" },
     { label: "Banks Nearby", type: "bank" },
-    { label: "Bus Stations Nearby", type: "bus_station" },
+    { label: "Bus Stations Nearby", type: "transit_station" },
   ].map(({ label, type }) => (<div key={type}>
    
     <TooltipProvider>
@@ -1119,7 +1119,7 @@ Radius: {radius / 1000} km
       {type ==='shopping_mall' &&(<div><LocalMallOutlinedIcon/> </div>)}
       {type ==='restaurant' &&(<div><RestaurantOutlinedIcon/> </div>)}
       {type ==='bank' &&(<div><AccountBalanceOutlinedIcon/> </div>)}
-      {type ==='bus_station' &&(<div><AirportShuttleOutlinedIcon/> </div>)}
+      {type ==='transit_station' &&(<div><AirportShuttleOutlinedIcon/> </div>)}
       </>)}
     </Button>
       </TooltipTrigger>

@@ -23,7 +23,7 @@ import SellOutlinedIcon from "@mui/icons-material/SellOutlined";
 import ShareOutlinedIcon from "@mui/icons-material/ShareOutlined";
 import { SignedIn, SignedOut } from "@clerk/nextjs";
 import ProgressPopup from "./ProgressPopup";
-import { Shield, List ,Bookmark , User, Gem , CirclePlus, Users, BarChart, Settings, MessageCircle, Heart, PlusSquare, Home } from 'lucide-react';
+import { Shield, List ,Bookmark , User, Gem , CirclePlus, Users, BarChart, Settings, MessageCircle, Heart, PlusSquare, Home, Share2 } from 'lucide-react';
 
 type NavItemsProps = {
   userstatus: string;
@@ -350,7 +350,7 @@ const NavItems = ({ userstatus, userId,user, popup, onClose, handleclicklink, ha
                   onClick={handleShare}
                   className={`flex dark:bg-[#2D3236]  dark:hover:bg-gray-800 hover:bg-slate-100 rounded-sm hover:text-green-600 p-3 mb-1 hover:cursor-pointer`}>
                           <span>
-                            <ShareOutlinedIcon className="w-10 p-1 " />
+                            <Share2 className="w-10 p-1 " />
                           </span>
                           <span className="flex-1 text-sm mr-5 hover:no-underline my-auto">
                           Share

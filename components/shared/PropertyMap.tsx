@@ -425,7 +425,7 @@ useEffect(() => {
  
   
 
-  type AmenityType = "school" | "hospital" | "shopping_mall" | "restaurant" | "bank" | "bus_station"; // Add more as needed
+  type AmenityType = "school" | "hospital" | "shopping_mall" | "restaurant" | "bank" | "transit_station"; // Add more as needed
  
  
  
@@ -493,7 +493,7 @@ const handleShowAmenity = (amenityType: AmenityType) => {
       case "shopping_mall": return "/assets/map/mall.png";
       case "restaurant": return "/assets/map/restaurant.png";
       case "bank": return "/assets/map/bank_euro.png";
-      case "bus_station": return "/assets/map/busstop.png";
+      case "transit_station": return "/assets/map/busstop.png";
       default: return "/assets/map/default.png";
     }
   };
@@ -963,12 +963,22 @@ useEffect(() => {
         </div>
       )}
   <div ref={mapRef} className="w-full h-full rounded-b-xl shadow-md border" />
-   <Button variant="destructive" className="absolute left-2 bottom-[140px]" onClick={deleteAll}>
-          <DeleteOutlineOutlinedIcon/> Delete Drawn
+ 
+  {shapes.length > 0 && (<>  <TooltipProvider>
+                  <Tooltip>
+                    <TooltipTrigger asChild>
+                    <Button variant="destructive" className="absolute left-2 bottom-[140px]" onClick={deleteAll}>
+          <DeleteOutlineOutlinedIcon/> <div className="hidden lg:inline">Delete Drawn</div>
     </Button>
-  <div className="absolute top-1 right-[100px] z-50 flex flex-col space-y-2">
+                    </TooltipTrigger>
+                    <TooltipContent>
+                      <p>Delete Draw Area</p>
+                    </TooltipContent>
+                  </Tooltip>
+                </TooltipProvider></>)}
+  <div className="absolute top-[120px] lg:top-2 left-2 lg:left-[250px] flex flex-col space-y-2">
       {/* Default Button */}
-      <div className="flex gap-1 p-1">
+      <div className="flex flex-col lg:flex-row gap-1 p-0">
      
                 <TooltipProvider>
                   <Tooltip>
@@ -1015,7 +1025,7 @@ useEffect(() => {
                      <Button
           onClick={() => setShowGuide(!showGuide)}
           variant="outline"
-          className="w-10 text-gray-600 absolute top-20 left-2 rounded-full shadow-lg"
+          className="w-10 text-gray-600 absolute top-[60px] left-2 rounded-full shadow-lg"
         >
          <QuestionMarkOutlinedIcon/>
         </Button>
@@ -1027,7 +1037,7 @@ useEffect(() => {
                  </TooltipProvider>
   
   {distance && (
-  <div className="absolute top-20 left-2 p-2 text-white bg-green-600 z-5 rounded-md shadow-md">
+  <div className="absolute top-[60px] left-2 p-2 text-white bg-green-600 z-5 rounded-md shadow-lg">
     <div className="text-sm">
       <strong>Distance:</strong>
       <div>{distance} km</div>
@@ -1035,14 +1045,14 @@ useEffect(() => {
   </div>
 )}
 {activeAmenity && amenityCount !== null && (<>
-  <div className="absolute top-20 left-2 p-2 text-white bg-green-600 z-5 rounded-md shadow-md">
+  <div className="absolute top-[60px] left-2 p-2 text-white bg-green-600 z-5 rounded-md shadow-lg">
  <div className="mt-2 text-sm text-white dark:text-gray-300">
     Found <strong>{amenityCount}</strong> {activeAmenity.replace("_", " ").toLowerCase()}(s) within {radius/1000} km
   </div>
 </div>
   
 
-<div className="absolute rounded-lg p-2 bg-gray-100 bottom-10 left-1/2 mt-4 w-xl flex flex-col gap-2 text-sm">
+<div className="absolute rounded-lg p-2 bg-gray-100 bottom-10 left-1/2 mt-4 flex flex-col gap-2 text-sm">
 <label className="block text-gray-700 font-medium mb-0">
 Radius: {radius / 1000} km
              </label>
@@ -1081,7 +1091,7 @@ Radius: {radius / 1000} km
     { label: "Malls Nearby", type: "shopping_mall" },
     { label: "Restaurants Nearby", type: "restaurant" },
     { label: "Banks Nearby", type: "bank" },
-    { label: "Bus Stations Nearby", type: "bus_station" },
+    { label: "Bus Stations Nearby", type: "transit_station" },
   ].map(({ label, type }) => (<div key={type}>
    
     <TooltipProvider>
@@ -1107,7 +1117,7 @@ Radius: {radius / 1000} km
       {type ==='shopping_mall' &&(<div><LocalMallOutlinedIcon/> </div>)}
       {type ==='restaurant' &&(<div><RestaurantOutlinedIcon/> </div>)}
       {type ==='bank' &&(<div><AccountBalanceOutlinedIcon/> </div>)}
-      {type ==='bus_station' &&(<div><AirportShuttleOutlinedIcon/> </div>)}
+      {type ==='transit_station' &&(<div><AirportShuttleOutlinedIcon/> </div>)}
       </>)}
     </Button>
       </TooltipTrigger>

@@ -13,6 +13,7 @@ import CloseOutlinedIcon from "@mui/icons-material/CloseOutlined";
 import AddOutlinedIcon from '@mui/icons-material/AddOutlined';
 import { DrawerPublic } from "./DrawerPublic";
 import { ScrollArea } from "../ui/scroll-area";
+import FullscreenOutlinedIcon from '@mui/icons-material/FullscreenOutlined';
 import UploadFileOutlinedIcon from '@mui/icons-material/UploadFileOutlined';
 import { AnyAaaaRecord } from "node:dns";
 import {
@@ -144,8 +145,12 @@ export default function MapDrawingTool({ name, data, onChange, onSave, onClose }
         center,
         zoom: 18,
         zoomControl: true,
+        fullscreenControl: false,
         zoomControlOptions: {
           position: google.maps.ControlPosition.RIGHT_BOTTOM, // Places zoom control at the bottom-right
+        },
+        streetViewControlOptions: {
+          position: google.maps.ControlPosition.LEFT_CENTER,
         },
         mapTypeId: "satellite",
       });
@@ -1098,8 +1103,18 @@ polyline.addListener("click", () => {
   const handleOpenUploadPopup = () => {
     setUploadPopup(true);
   };
+  const handleFullscreen = () => {
+    const container = document.getElementById("map-container");
+    if (!container) return;
+  
+    if (!document.fullscreenElement) {
+      container.requestFullscreen?.();
+    } else {
+      document.exitFullscreen?.();
+    }
+  };
   return (
-  <div className="w-full h-[100vh]">
+  <div id="map-container" className="w-full h-[100vh]">
         
         {uploadPopup && (
   <div className="fixed inset-0 flex items-center justify-center bg-gray-900 bg-opacity-50 p-2 z-50">
@@ -1158,7 +1173,7 @@ polyline.addListener("click", () => {
 
   {selectedShape && selectedShapePosition && (
   
-    <div className="absolute z-50 right-1/2 top-1/2 bg-gray-200 p-4 rounded shadow-md min-w-[240px]">
+  <div className="fixed top-1/2 left-1/2 transform -translate-x-1/2 -translate-y-1/2 z-50 bg-gray-200 p-4 rounded shadow-md min-w-[240px]">
       {/* Close Button */}
       <button
         onClick={() => {
@@ -1335,7 +1350,7 @@ polyline.addListener("click", () => {
 
     {markers.length > 0 && 
       (<Button variant="destructive" className="absolute left-2 bottom-[140px] lg:bottom-[190px]" onClick={deleteAllMarkers}>
-          <RoomOutlinedIcon/> Delete All Markers
+          <DeleteOutlineOutlinedIcon/> Delete Markers
       </Button>
       )} 
 
@@ -1356,122 +1371,179 @@ polyline.addListener("click", () => {
 
 
 
-          <Button title="Close" variant ="outline" onClick={() => onClose()} className="absolute top-[100px] lg:top-[65px] right-[10px] z-5">
-            <CloseOutlinedIcon />
-          </Button>
+       
     
 
-  <div className="absolute top-1 right-[50px] z-50 flex flex-col space-y-2">
-    {/* Default Button */}
-    <div className="flex gap-1 p-1">
-    <div className="flex flex-col gap-2">
-  {/* Marker Button */}
-  
-  <TooltipProvider>
-                <Tooltip>
-                  <TooltipTrigger asChild>
-                  <Button
-    onClick={() => setSelectedControl("marker")}
-    variant={selectedControl === "marker" ? "default" : "outline"}
-  >
-    <RoomOutlinedIcon />
-    <div className="hidden lg:inline">Marker</div>
-  </Button>
-                  </TooltipTrigger>
-                  <TooltipContent>
-                    <p>Add Marker</p>
-                  </TooltipContent>
-                </Tooltip>
-              </TooltipProvider>
-  {/* Marker Options - Show only when 'marker' is selected */}
-  {selectedControl === "marker" && (
-    <div className="flex flex-col p-1 border bg-gray-200 border-bg-white rounded-lg gap-2 mb-4">
-      <h3 className="text-sm font-medium text-gray-700">Select Marker Type</h3>
+        <div className="absolute top-2 right-1 z-50 flex flex-col space-y-2 p-2 rounded shadow-md max-h-[90vh] overflow-y-auto">
 
-      <div className="flex items-center gap-4 flex-wrap">
-        <div className="min-w-[200px]">
-          <Select
-            value={selected.label}
-            onValueChange={(value) => {
-              const match = markerOptions.find((opt) => opt.label === value);
-              if (match) {
-                setSelected(match);
-                setSelectedMarkerType(match);
-                selectedMarkerTypeRef.current = match;
-              }
-            }}
-          >
-            <SelectTrigger className="w-full">
-              <SelectValue placeholder="Select marker type" />
-            </SelectTrigger>
-            <SelectContent>
-              {markerOptions.map((opt) => (
-                <SelectItem key={opt.label} value={opt.label}>
-                  <div className="flex items-center gap-2">
-                    <img src={opt.icon} alt={opt.label} className="w-4 h-4" />
-                    {opt.label}
-                  </div>
-                </SelectItem>
-              ))}
-            </SelectContent>
-          </Select>
-        </div>
+{/* Fullscreen Button */}
+<TooltipProvider>
+  <Tooltip>
+    <TooltipTrigger asChild>
+      <Button onClick={handleFullscreen} className="w-14 lg:w-full text-gray-600" variant="outline">
+        <FullscreenOutlinedIcon />
+        <div className="hidden lg:inline">Toggle Fullscreen</div>
+      </Button>
+    </TooltipTrigger>
+    <TooltipContent>
+      <p>Toggle Fullscreen</p>
+    </TooltipContent>
+  </Tooltip>
+</TooltipProvider>
+
+{/* Marker Button */}
+<TooltipProvider>
+  <Tooltip>
+    <TooltipTrigger asChild>
+      <Button
+        className={`w-14 lg:w-full ${
+          selectedControl === "marker" ? "bg-green-600 hover:bg-green-700 text-white" : "text-gray-600"
+        }`}
+        onClick={() => setSelectedControl("marker")}
+        variant={selectedControl === "marker" ? "default" : "outline"}
+      >
+        <RoomOutlinedIcon />
+        <div className="hidden lg:inline">Marker</div>
+      </Button>
+    </TooltipTrigger>
+    <TooltipContent>
+      <p>Add Marker</p>
+    </TooltipContent>
+  </Tooltip>
+</TooltipProvider>
+
+{/* Marker Options - LEFT SIDE */}
+{selectedControl === "marker" && (
+  <div className="fixed top-1 left-[160px] z-40 flex flex-col p-2 border bg-gray-200 border-white rounded-lg gap-2 mb-2 min-w-[250px] max-h-[90vh] overflow-y-auto">
+    <h3 className="text-sm font-medium text-gray-700">Select Marker Type</h3>
+    <div className="flex items-center gap-4 flex-wrap">
+      <div className="min-w-[200px]">
+        <Select
+          value={selected.label}
+          onValueChange={(value) => {
+            const match = markerOptions.find((opt) => opt.label === value);
+            if (match) {
+              setSelected(match);
+              setSelectedMarkerType(match);
+              selectedMarkerTypeRef.current = match;
+            }
+          }}
+        >
+          <SelectTrigger className="w-full">
+            <SelectValue placeholder="Select marker type" />
+          </SelectTrigger>
+          <SelectContent>
+            {markerOptions.map((opt) => (
+              <SelectItem key={opt.label} value={opt.label}>
+                <div className="flex items-center gap-2">
+                  <img src={opt.icon} alt={opt.label} className="w-4 h-4" />
+                  {opt.label}
+                </div>
+              </SelectItem>
+            ))}
+          </SelectContent>
+        </Select>
       </div>
     </div>
-  )}
-</div>
-
-<TooltipProvider>
-                <Tooltip>
-                  <TooltipTrigger asChild>
-                  <Button onClick={() => setSelectedControl("polyline")} variant={selectedControl === "polyline" ? "default" : "outline"}><ShowChartOutlinedIcon/> <div className="hidden lg:inline">Polyline</div></Button>
-                  </TooltipTrigger>
-                  <TooltipContent>
-                    <p>Add Polyline</p>
-                  </TooltipContent>
-                </Tooltip>
-              </TooltipProvider>
-
-              <TooltipProvider>
-                <Tooltip>
-                  <TooltipTrigger asChild>
-                  <Button onClick={() => setSelectedControl("polygon")} variant={selectedControl === "polygon" ? "default" : "outline"}><RectangleOutlinedIcon/><div className="hidden lg:inline">Polygon</div></Button>
-                  </TooltipTrigger>
-                  <TooltipContent>
-                    <p>Add Polygon</p>
-                  </TooltipContent>
-                </Tooltip>
-              </TooltipProvider>
-
-              <TooltipProvider>
-                <Tooltip>
-                  <TooltipTrigger asChild>
-                  <Button onClick={() => setSelectedControl("none")} variant={selectedControl === "none" ? "default" : "outline"}><BlockOutlinedIcon/><div className="hidden lg:inline">Control Off</div></Button>
-                  </TooltipTrigger>
-                  <TooltipContent>
-                    <p>Control Off</p>
-                  </TooltipContent>
-                </Tooltip>
-              </TooltipProvider>
-
-              <TooltipProvider>
-                <Tooltip>
-                  <TooltipTrigger asChild>
-                  <Button onClick={() => handleOpenUploadPopup()} variant={"outline"}><UploadFileOutlinedIcon/><div className="hidden lg:inline">Import</div></Button>
-                  </TooltipTrigger>
-                  <TooltipContent>
-                    <p>Import land subdivisions</p>
-                  </TooltipContent>
-                </Tooltip>
-              </TooltipProvider>
-       
-      
-       
-        
-          
-      </div>
   </div>
+)}
+
+
+{/* Polyline Button */}
+<TooltipProvider>
+  <Tooltip>
+    <TooltipTrigger asChild>
+      <Button
+        onClick={() => setSelectedControl("polyline")}
+        className={`w-14 lg:w-full ${
+          selectedControl === "polyline" ? "bg-green-600 hover:bg-green-700 text-white" : "text-gray-600"
+        }`}
+        variant={selectedControl === "polyline" ? "default" : "outline"}
+      >
+        <ShowChartOutlinedIcon />
+        <div className="hidden lg:inline">Polyline</div>
+      </Button>
+    </TooltipTrigger>
+    <TooltipContent>
+      <p>Add Polyline</p>
+    </TooltipContent>
+  </Tooltip>
+</TooltipProvider>
+
+{/* Polygon Button */}
+<TooltipProvider>
+  <Tooltip>
+    <TooltipTrigger asChild>
+      <Button
+        onClick={() => setSelectedControl("polygon")}
+        className={`w-14 lg:w-full ${
+          selectedControl === "polygon" ? "bg-green-600 hover:bg-green-700 text-white" : "text-gray-600"
+        }`}
+        variant={selectedControl === "polygon" ? "default" : "outline"}
+      >
+        <RectangleOutlinedIcon />
+        <div className="hidden lg:inline">Polygon</div>
+      </Button>
+    </TooltipTrigger>
+    <TooltipContent>
+      <p>Add Polygon</p>
+    </TooltipContent>
+  </Tooltip>
+</TooltipProvider>
+
+{/* Control Off Button */}
+<TooltipProvider>
+  <Tooltip>
+    <TooltipTrigger asChild>
+      <Button
+        onClick={() => setSelectedControl("none")}
+        className={`w-14 lg:w-full ${
+          selectedControl === "none" ? "bg-green-600 hover:bg-green-700 text-white" : "text-gray-600"
+        }`}
+        variant={selectedControl === "none" ? "default" : "outline"}
+      >
+        <BlockOutlinedIcon />
+        <div className="hidden lg:inline">Control Off</div>
+      </Button>
+    </TooltipTrigger>
+    <TooltipContent>
+      <p>Control Off</p>
+    </TooltipContent>
+  </Tooltip>
+</TooltipProvider>
+
+{/* Import Button */}
+<TooltipProvider>
+  <Tooltip>
+    <TooltipTrigger asChild>
+      <Button onClick={handleOpenUploadPopup} className="w-14 lg:w-full" variant="outline">
+        <UploadFileOutlinedIcon />
+        <div className="hidden lg:inline">Import</div>
+      </Button>
+    </TooltipTrigger>
+    <TooltipContent>
+      <p>Import land subdivisions</p>
+    </TooltipContent>
+  </Tooltip>
+</TooltipProvider>
+
+{/* Exit Button */}
+<TooltipProvider>
+  <Tooltip>
+    <TooltipTrigger asChild>
+      <Button onClick={onClose} className="w-14 lg:w-full" variant="outline">
+        <CloseOutlinedIcon />
+        <div className="hidden lg:inline">Exit</div>
+      </Button>
+    </TooltipTrigger>
+    <TooltipContent>
+      <p>Exit</p>
+    </TooltipContent>
+  </Tooltip>
+</TooltipProvider>
 </div>
+</div>
+
 
 
 
