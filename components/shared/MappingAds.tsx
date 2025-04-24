@@ -1095,14 +1095,13 @@ Radius: {radius / 1000} km
     { label: "Restaurants Nearby", type: "restaurant" },
     { label: "Banks Nearby", type: "bank" },
     { label: "Bus Stations Nearby", type: "bus_station" },
-  ].map(({ label, type }) => (
+  ].map(({ label, type }) => (<div key={type}>
    
     <TooltipProvider>
     <Tooltip>
       <TooltipTrigger asChild>
 
       <Button
-      key={type}
       onClick={() => {handleShowAmenity(type as AmenityType); setDistance(''); setSelectedControl("amenity");}}
       variant={activeAmenity === type ? "default" : "outline"}
       className={`w-14 ${
@@ -1130,7 +1129,7 @@ Radius: {radius / 1000} km
     </Tooltip>
   </TooltipProvider>
     
-  ))}
+  </div> ))}
    <TooltipProvider>
                    <Tooltip>
                      <TooltipTrigger asChild>

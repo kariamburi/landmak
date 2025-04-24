@@ -1082,7 +1082,7 @@ Radius: {radius / 1000} km
     { label: "Restaurants Nearby", type: "restaurant" },
     { label: "Banks Nearby", type: "bank" },
     { label: "Bus Stations Nearby", type: "bus_station" },
-  ].map(({ label, type }) => (
+  ].map(({ label, type }) => (<div key={type}>
    
     <TooltipProvider>
     <Tooltip>
@@ -1117,7 +1117,7 @@ Radius: {radius / 1000} km
     </Tooltip>
   </TooltipProvider>
     
-  ))}
+  </div>))}
    <TooltipProvider>
                    <Tooltip>
                      <TooltipTrigger asChild>
