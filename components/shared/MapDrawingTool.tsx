@@ -1414,7 +1414,7 @@ polyline.addListener("click", () => {
 
 {/* Marker Options - LEFT SIDE */}
 {selectedControl === "marker" && (
-  <div className="fixed top-1 left-[160px] z-40 flex flex-col p-2 border bg-gray-200 border-white rounded-lg gap-2 mb-2 min-w-[250px] max-h-[90vh] overflow-y-auto">
+  <div className="fixed top-1 left-2 z-40 flex flex-col p-2 border bg-gray-200 border-white rounded-lg gap-2 mb-2 min-w-[250px] max-h-[90vh] overflow-y-auto">
     <h3 className="text-sm font-medium text-gray-700">Select Marker Type</h3>
     <div className="flex items-center gap-4 flex-wrap">
       <div className="min-w-[200px]">
