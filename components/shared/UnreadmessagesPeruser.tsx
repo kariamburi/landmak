@@ -54,7 +54,7 @@ const UnreadmessagesPeruser = ({ recipientUid, uid }: unreadprop) => {
       });
 
     //console.log("sm:" + unreadCount);
-  }, []);
+  }, [recipientUid, uid]);
   return (
     <div>
       {unreadCount > 0 && (

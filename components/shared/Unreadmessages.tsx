@@ -9,8 +9,9 @@ import {
 import React, { useEffect, useState } from "react";
 type unreadprop = {
   userId: string;
+  popup:string;
 };
-const Unreadmessages = ({ userId }: unreadprop) => {
+const Unreadmessages = ({ userId, popup }: unreadprop) => {
   const [unreadCount, setUnreadCount] = useState<number>(0);
   useEffect(() => {
     const getLastMessagesInConversations = async () => {
@@ -44,7 +45,7 @@ const Unreadmessages = ({ userId }: unreadprop) => {
       .catch((error) => {
         console.error("Error:", error);
       });
-  }, [userId]); // Dependency array including userId
+  }, [userId, popup]); // Dependency array including userId
 
   return (
     <div>

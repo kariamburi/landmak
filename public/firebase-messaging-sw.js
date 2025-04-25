@@ -18,19 +18,52 @@ firebase.initializeApp({
 const messaging = firebase.messaging();
 
 // Handle background messages
-messaging.onBackgroundMessage(function (payload) {
+//messaging.onBackgroundMessage(function (payload) {
+// console.log('Received background message ', payload);
+
+//const notificationTitle = payload.notification.title;
+//const notificationOptions = {
+// body: payload.notification.body,
+// icon: payload.notification.icon || '/logo.png',
+//  data: {
+//    url: payload.data?.url || 'https://mapa.co.ke'
+//  }
+// };
+
+// self.registration.showNotification(notificationTitle, notificationOptions);
+//});
+messaging.onBackgroundMessage(async function (payload) {
   console.log('Received background message ', payload);
 
-  const notificationTitle = payload.notification.title;
-  const notificationOptions = {
-    body: payload.notification.body,
-    icon: payload.notification.icon || '/logo.png',
-    data: {
-      url: payload.data?.url || 'https://mapa.co.ke'
-    }
-  };
+  const allClients = await clients.matchAll({
+    type: 'window',
+    includeUncontrolled: true,
+  });
 
-  self.registration.showNotification(notificationTitle, notificationOptions);
+  let isAppOpen = false;
+
+  for (const client of allClients) {
+    // Check if at least one window is focused and open on your app domain
+    if (client.url.includes('mapa.co.ke') && 'focus' in client) {
+      isAppOpen = true;
+      break;
+    }
+  }
+
+  if (!isAppOpen) {
+    const notificationTitle = payload.notification.title;
+    const notificationOptions = {
+      body: payload.notification.body,
+      icon: payload.notification.icon || '/logo.png',
+      data: {
+        url: payload.data?.url || 'https://mapa.co.ke',
+      },
+    };
+
+    self.registration.showNotification(notificationTitle, notificationOptions);
+  } else {
+    console.log('App is already open — not showing notification.');
+  }
 });
 
 // Handle notification click

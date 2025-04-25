@@ -20,6 +20,14 @@ export default function FCMTokenProvider({ userId }: { userId: string }) {
           console.error("❌ Service Worker registration failed", err);
         });
     }
+    //clear notification when app open
+    if ('serviceWorker' in navigator) {
+      navigator.serviceWorker.ready.then((registration) => {
+        registration.getNotifications().then((notifications) => {
+          notifications.forEach((notification) => notification.close());
+        });
+      });
+    }
   }, []);
 
   useEffect(() => {

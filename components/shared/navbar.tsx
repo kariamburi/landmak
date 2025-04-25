@@ -172,7 +172,7 @@ export default function Navbar({ userstatus, userId, user, onClose, popup, handl
                   <div className="relative flex items-center justify-center">
                     <MessageIcon sx={{ fontSize: 16 }} className="absolute" />
                     <div className="absolute z-10">
-                      <Unreadmessages userId={userId} />
+                      <Unreadmessages userId={userId} popup={popup}/>
                     </div>
                   </div>
                 </TooltipTrigger>
@@ -184,7 +184,7 @@ export default function Navbar({ userstatus, userId, user, onClose, popup, handl
                     className="flex gap-1"
                   >
                     Chats
-                    <Unreadmessages userId={userId} />
+                    <Unreadmessages userId={userId} popup={popup} />
                   </div>
                 </TooltipContent>
               </Tooltip>

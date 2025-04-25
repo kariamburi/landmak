@@ -128,7 +128,7 @@ const BottomNavigation = ({ userId, popup, handleOpenP, handleOpenSearchTab, han
     <MessageCircle />
   </div>
   <div className="absolute top-0 right-0">
-    <Unreadmessages userId={userId} />
+    <Unreadmessages userId={userId} popup={popup}/>
   </div>
 </span>
 
@@ -154,7 +154,7 @@ const BottomNavigation = ({ userId, popup, handleOpenP, handleOpenSearchTab, han
   <MessageCircle />
   </div>
   <div className="absolute top-0 right-0">
-    <Unreadmessages userId={userId} />
+    <Unreadmessages userId={userId} popup={popup} />
   </div>
 </span>
 
