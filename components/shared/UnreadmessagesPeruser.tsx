@@ -2,59 +2,35 @@
 import { db } from "@/lib/firebase";
 import {
   collection,
-  getDocs,
   onSnapshot,
   query,
   where,
 } from "firebase/firestore";
 import React, { useEffect, useState } from "react";
-type unreadprop = {
+
+type UnreadProp = {
   recipientUid: string;
   uid: string;
 };
-const UnreadmessagesPeruser = ({ recipientUid, uid }: unreadprop) => {
+
+const UnreadmessagesPeruser = ({ recipientUid, uid }: UnreadProp) => {
   const [unreadCount, setUnreadCount] = useState<number>(0);
+
   useEffect(() => {
-    const getLastMessagesInConversations = async () => {
-      try {
-        // Initialize an empty object to store last messages
-        const unreadMessages: any = {};
+    const messagesQuery = query(
+      collection(db, "messages"),
+      where("recipientUid", "==", recipientUid),
+      where("uid", "==", uid),
+      where("read", "==", "1") // assuming "1" means unread
+    );
 
-        // Query all messages and order them by createdAt timestamp in descending order
-        const messagesQuery = query(
-          collection(db, "messages"),
-          where("recipientUid", "==", recipientUid),
-          where("uid", "==", uid),
-          where("read", "==", "1")
-        );
+    const unsubscribe = onSnapshot(messagesQuery, (querySnapshot) => {
+      setUnreadCount(querySnapshot.size);
+    });
 
-        // Get all messages
-        const querySnapshot = await getDocs(messagesQuery);
-        let k: number = 0;
-        querySnapshot.forEach((doc) => {
-          const message = doc.data();
-          // unreadMessages[message.id] = message;
-          k = k + 1;
-        });
-        // alert(k);
-        return k;
-      } catch (error) {
-        console.error("Error getting last messages:", error);
-        return 0; // Return empty array in case of error
-      }
-    };
-
-    getLastMessagesInConversations()
-      .then((k) => {
-        //console.log("No messages:", lastMessages.length);
-        setUnreadCount(k);
-      })
-      .catch((error) => {
-        console.error("Error:", error);
-      });
-
-    //console.log("sm:" + unreadCount);
+    return () => unsubscribe(); // clean up listener on unmount
   }, [recipientUid, uid]);
+
   return (
     <div>
       {unreadCount > 0 && (

@@ -33,6 +33,7 @@ import {
 } from "firebase/database";
 import SendChat from "./SendChat";
 import { getUserById } from "@/lib/actions/user.actions";
+import { debounce } from "lodash";
 
 type sidebarProps = {
   displayName: string;
@@ -107,7 +108,10 @@ const SendMessage = ({
         const user = await getUserById(recipientUid);
        if(user.token && user.notifications.fcm){
           const token = user.token;
-          sendNotify(token, `You've got a new message from ${displayName}!`);
+         // sendNotify(token, `You've got a new message from ${displayName}!`);
+          const debouncedNotifyUser = debounce(sendNotify, 1000); // only allow once every second
+          // Then call
+          debouncedNotifyUser(token, `You've got a new message from ${displayName}!`);
         }
       }
 

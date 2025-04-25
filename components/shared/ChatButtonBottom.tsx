@@ -17,6 +17,7 @@ import SendChat from "./SendChat";
 import { updateinquiries } from "@/lib/actions/dynamicAd.actions";
 import { Button } from "../ui/button";
 import sanitizeHtml from "sanitize-html";
+import { debounce } from "lodash";
 let socket: Socket;
 type chatProps = {
   userId: string;
@@ -92,7 +93,11 @@ const ChatButtonBottom = ({ ad, userId, userName, userImage,handleCloseEnquire }
       if(ad.organizer.token && ad.organizer.notifications.fcm){
        
         const inquiryMessage = message;
-        NotifyUser(ad, userId, userName, inquiryMessage)
+       // NotifyUser(ad, userId, userName, inquiryMessage)
+
+const debouncedNotifyUser = debounce(NotifyUser, 1000); // only allow once every second
+// Then call
+debouncedNotifyUser(ad, userId, userName, inquiryMessage);
       }
       if(ad.organizer.notifications.email){
      
