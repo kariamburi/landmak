@@ -1139,7 +1139,7 @@ const handleCloseAdView = () => {
                     <div className="relative flex items-center justify-center">
                       <MessageIcon sx={{ fontSize: 16 }} className="absolute hover:text-green-600" />
                       <div className="absolute z-10">
-                        <Unreadmessages userId={userId} />
+                        <Unreadmessages userId={userId} popup={"home"} />
                       </div>
                     </div>
                   </TooltipTrigger>
@@ -1151,7 +1151,7 @@ const handleCloseAdView = () => {
                       className="flex gap-1"
                     >
                       Chats
-                      <Unreadmessages userId={userId} />
+                      <Unreadmessages userId={userId} popup={"home"}/>
                     </div>
                   </TooltipContent>
                 </Tooltip>
