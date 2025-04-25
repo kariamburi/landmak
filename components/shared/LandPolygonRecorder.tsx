@@ -29,14 +29,15 @@ const calculateLength = (paths: LatLng[]): number => {
 };
 
 const LandPolygonRecorder = ({
-    handleClosePopupBeacon,
-  }: {
-    handleClosePopupBeacon: () => void;
-  }) => {
+  handleClosePopupBeacon,
+}: {
+  handleClosePopupBeacon: () => void;
+}) => {
   const [points, setPoints] = useState<LatLng[]>([]);
   const [center, setCenter] = useState<LatLng | null>(null);
   const [area, setArea] = useState<number | null>(null);
   const [perimeter, setPerimeter] = useState<number | null>(null);
+  const [userLocation, setUserLocation] = useState<LatLng | null>(null);
 
   useEffect(() => {
     if (points.length >= 3 && typeof window !== 'undefined' && window.google) {
@@ -49,27 +50,25 @@ const LandPolygonRecorder = ({
   }, [points]);
 
   useEffect(() => {
-    // Get initial GPS location for map center
-    navigator.geolocation.getCurrentPosition(
+    // Get initial GPS location and start watching
+    const watchId = navigator.geolocation.watchPosition(
       (pos) => {
         const { latitude, longitude } = pos.coords;
-        setCenter({ lat: latitude, lng: longitude });
+        const current = { lat: latitude, lng: longitude };
+        setUserLocation(current);
+        if (!center) setCenter(current); // set initial center
       },
       (err) => console.error('GPS error:', err),
-      { enableHighAccuracy: true }
+      { enableHighAccuracy: true, maximumAge: 1000 }
     );
-  }, []);
+
+    return () => navigator.geolocation.clearWatch(watchId);
+  }, [center]);
 
   const capturePoint = () => {
-    navigator.geolocation.getCurrentPosition(
-      (pos) => {
-        const { latitude, longitude } = pos.coords;
-        const point = { lat: latitude, lng: longitude };
-        setPoints((prev) => [...prev, point]);
-      },
-      (err) => console.error('GPS error:', err),
-      { enableHighAccuracy: true }
-    );
+    if (userLocation) {
+      setPoints((prev) => [...prev, userLocation]);
+    }
   };
 
   const exportGeoJSON = () => {
@@ -106,9 +105,12 @@ const LandPolygonRecorder = ({
     >
       {center && (
         <GoogleMap mapContainerStyle={containerStyle} center={center} zoom={18}>
+          {/* Markers for captured points */}
           {points.map((point, index) => (
             <Marker key={index} position={point} />
           ))}
+
+          {/* Polygon */}
           {points.length >= 3 && (
             <Polygon
               paths={points}
@@ -118,6 +120,22 @@ const LandPolygonRecorder = ({
                 strokeColor: '#00f',
                 strokeWeight: 2,
               }}
+            />
+          )}
+
+          {/* User live location marker */}
+          {userLocation && (
+            <Marker
+              position={userLocation}
+              icon={{
+                path: google.maps.SymbolPath.CIRCLE,
+                scale: 6,
+                fillColor: '#0d6efd',
+                fillOpacity: 1,
+                strokeWeight: 2,
+                strokeColor: '#fff',
+              }}
+              title="Your current location"
             />
           )}
 
@@ -133,7 +151,7 @@ const LandPolygonRecorder = ({
               onClick={handleClosePopupBeacon}
               className="w-full mb-2 bg-gray-600 text-white py-2 rounded"
             >
-            X 
+              ✖ Close
             </button>
             <div className="text-sm text-gray-800">
               <p>Points: {points.length}</p>
