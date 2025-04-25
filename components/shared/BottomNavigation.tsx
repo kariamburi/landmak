@@ -153,9 +153,7 @@ const BottomNavigation = ({ userId, popup, handleOpenP, handleOpenSearchTab, han
   <div className="absolute inset-0 flex items-center justify-center">
   <MessageCircle />
   </div>
-  <div className="absolute top-0 right-0">
-    <Unreadmessages userId={userId} popup={popup} />
-  </div>
+ 
 </span>
 
               <span className="text-xs">Chat</span>
