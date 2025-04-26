@@ -73,7 +73,7 @@ export default function BeaconTracker() {
         position,
         map: mapInstance.current,
         title: 'Me',
-        animation: google.maps.Animation.BOUNCE, // ✅ This goes here
+       // animation: google.maps.Animation.BOUNCE, // ✅ This goes here
         icon: {
           path: google.maps.SymbolPath.CIRCLE,
           scale: 8,
@@ -141,53 +141,52 @@ export default function BeaconTracker() {
   if (!isLoaded) return <p>Loading Map...</p>;
 
   return (
-    <div id="map-container" className="h-[100vh] relative">
-<div className="absolute top-2 right-2 z-5 flex flex-col space-y-2">
-    {/* Default Button */}
-                  <TooltipProvider>
-                   <Tooltip>
-                     <TooltipTrigger asChild>
-                     <Button onClick={handleFullscreen} 
-                     className="w-14 text-gray-600" 
-                     variant={"outline"}><FullscreenOutlinedIcon/></Button>
-                     </TooltipTrigger>
-                     <TooltipContent>
-                       <p>Toggle Fullscreen</p>
-                     </TooltipContent>
-                   </Tooltip>
-                 </TooltipProvider>
-                  <TooltipProvider>
-                                    <Tooltip>
-                                      <TooltipTrigger asChild>
-                                      <Button
-                  onClick={captureBeacon}
-                   className={`w-14 text-gray-600`}
-                   variant={"outline"}
-                 >
-                  📍 Capture Beacon
-                 </Button>
-                                      </TooltipTrigger>
-                                      <TooltipContent>
-                                        <p>📍 Capture Beacon</p>
-                                      </TooltipContent>
-                                    </Tooltip>
-                                  </TooltipProvider>
-                 
-
-                 </div>
-      <div className="w-full h-full rounded-b-xl shadow-md border" ref={mapRef} />
-      {beacons.length > 0 && (
-      <div className="absolute top-20 left-2 p-2 text-white bg-green-600 z-5 rounded-md shadow-lg">
-     <ul className="text-sm">
-        {beacons.map((b, i) => (
-          <li key={i}>
-            {b.name}: {b.lat.toFixed(6)}, {b.lng.toFixed(6)}
-          </li>
-        ))}
-      </ul>
-  </div>
-)}
-     
+    <div id="map-container" className="h-[100vh] w-full relative">
+        <div className="w-full h-full rounded-b-xl shadow-md border" ref={mapRef}></div>
+    <div className="absolute top-2 right-2 z-20 flex flex-col space-y-2">
+      {/* Fullscreen Button */}
+      <TooltipProvider>
+        <Tooltip>
+          <TooltipTrigger asChild>
+            <Button onClick={handleFullscreen} className="w-14 text-gray-600" variant="outline">
+              <FullscreenOutlinedIcon />
+            </Button>
+          </TooltipTrigger>
+          <TooltipContent>
+            <p>Toggle Fullscreen</p>
+          </TooltipContent>
+        </Tooltip>
+      </TooltipProvider>
+  
+      {/* Capture Beacon Button */}
+      <TooltipProvider>
+        <Tooltip>
+          <TooltipTrigger asChild>
+            <Button onClick={captureBeacon} className="w-14 text-gray-600" variant="outline">
+              📍
+            </Button>
+          </TooltipTrigger>
+          <TooltipContent>
+            <p>📍 Capture Beacon</p>
+          </TooltipContent>
+        </Tooltip>
+      </TooltipProvider>
     </div>
+  
+  
+  
+    {beacons.length > 0 && (
+      <div className="absolute top-20 left-2 p-2 text-white bg-green-600 z-5 rounded-md shadow-lg">
+        <ul className="text-sm">
+          {beacons.map((b, i) => (
+            <li key={i}>
+              {b.name}: {b.lat.toFixed(6)}, {b.lng.toFixed(6)}
+            </li>
+          ))}
+        </ul>
+      </div>
+    )}
+  </div>
+  
   );
 }
