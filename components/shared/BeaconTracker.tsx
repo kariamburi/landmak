@@ -2,9 +2,15 @@
 
 import { useLoadScript } from '@react-google-maps/api';
 import { useEffect, useRef, useState } from 'react';
-
+import FullscreenOutlinedIcon from '@mui/icons-material/FullscreenOutlined';
 const GOOGLE_MAPS_API_KEY = process.env.NEXT_PUBLIC_GOOGLEAPIKEY!; // Replace with your API key
-
+import {
+  Tooltip,
+  TooltipContent,
+  TooltipProvider,
+  TooltipTrigger,
+} from "../ui/tooltip";
+import { Button } from '../ui/button';
 type Beacon = {
   name: string;
   lat: number;
@@ -54,24 +60,37 @@ export default function BeaconTracker() {
 
   const updateMap = (position: { lat: number; lng: number }) => {
     if (!window.google || !mapRef.current) return;
-
+  
     if (!mapInstance.current) {
       mapInstance.current = new window.google.maps.Map(mapRef.current, {
         center: position,
-        zoom: 18,
+        zoom: 16,
+        mapTypeId: "satellite",
+        fullscreenControl: false,
       });
-
+  
       userMarker.current = new window.google.maps.Marker({
         position,
         map: mapInstance.current,
         title: 'Me',
-        icon: 'http://maps.google.com/mapfiles/ms/icons/blue-dot.png',
+        animation: google.maps.Animation.BOUNCE, // ✅ This goes here
+        icon: {
+          path: google.maps.SymbolPath.CIRCLE,
+          scale: 8,
+          fillColor: '#4285F4',
+          fillOpacity: 1,
+          strokeWeight: 2,
+          strokeColor: '#ffffff',
+          strokeOpacity: 1,
+        },
       });
+      
     } else {
       mapInstance.current.setCenter(position);
       userMarker.current?.setPosition(position);
     }
   };
+  
 
   const captureBeacon = () => {
     if (!currentPos) return;
@@ -109,22 +128,66 @@ export default function BeaconTracker() {
       });
     }
   };
-
+  const handleFullscreen = () => {
+    const container = document.getElementById("map-container");
+    if (!container) return;
+  
+    if (!document.fullscreenElement) {
+      container.requestFullscreen?.();
+    } else {
+      document.exitFullscreen?.();
+    }
+  };
   if (!isLoaded) return <p>Loading Map...</p>;
 
   return (
-    <div className="space-y-4">
-      <button onClick={captureBeacon} className="btn btn-primary">📍 Capture Beacon</button>
+    <div id="map-container" className="h-[100vh] relative">
+<div className="absolute top-2 right-2 z-5 flex flex-col space-y-2">
+    {/* Default Button */}
+                  <TooltipProvider>
+                   <Tooltip>
+                     <TooltipTrigger asChild>
+                     <Button onClick={handleFullscreen} 
+                     className="w-14 text-gray-600" 
+                     variant={"outline"}><FullscreenOutlinedIcon/></Button>
+                     </TooltipTrigger>
+                     <TooltipContent>
+                       <p>Toggle Fullscreen</p>
+                     </TooltipContent>
+                   </Tooltip>
+                 </TooltipProvider>
+                  <TooltipProvider>
+                                    <Tooltip>
+                                      <TooltipTrigger asChild>
+                                      <Button
+                  onClick={captureBeacon}
+                   className={`w-14 text-gray-600`}
+                   variant={"outline"}
+                 >
+                  📍 Capture Beacon
+                 </Button>
+                                      </TooltipTrigger>
+                                      <TooltipContent>
+                                        <p>📍 Capture Beacon</p>
+                                      </TooltipContent>
+                                    </Tooltip>
+                                  </TooltipProvider>
+                 
 
-      <div className="h-[400px] rounded border" ref={mapRef} />
-
-      <ul className="text-sm">
+                 </div>
+      <div className="w-full h-full rounded-b-xl shadow-md border" ref={mapRef} />
+      {beacons.length > 0 && (
+      <div className="absolute top-20 left-2 p-2 text-white bg-green-600 z-5 rounded-md shadow-lg">
+     <ul className="text-sm">
         {beacons.map((b, i) => (
           <li key={i}>
             {b.name}: {b.lat.toFixed(6)}, {b.lng.toFixed(6)}
           </li>
         ))}
       </ul>
+  </div>
+)}
+     
     </div>
   );
 }
