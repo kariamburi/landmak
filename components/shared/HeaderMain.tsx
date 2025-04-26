@@ -21,8 +21,9 @@ import {
 import MapSearch from "./MapSearch";
 import PropertyMapSearch from "./PropertyMapSearch";
 import DirectionsWalkOutlinedIcon from '@mui/icons-material/DirectionsWalkOutlined';
-import LandPolygonRecorder from "./LandPolygonRecorder";
+import LandPolygonRecorder from "./BeaconTracker";
 import LandTargetNavigator from "./LandTargetNavigator";
+import BeaconTracker from "./BeaconTracker";
 export default function HeaderMain({ handleFilter ,handleOpenSearchByTitle, handleCategory, handleOpenPlan, handleOpenSell, handleAdView, handleAdEdit, AdsCountPerRegion,queryObject }: { handleOpenSearchByTitle:() => void, handleOpenPlan:() => void, handleOpenSell:() => void, handleFilter: (value:any) => void, AdsCountPerRegion:any,queryObject:any , handleAdEdit: (id:string) => void, handleCategory: (value:string) => void,
   handleAdView: (id:string) => void}) {
   const router = useRouter();
@@ -143,32 +144,7 @@ const handleClosePopupBeacon = () => {
                   </TooltipContent>
                 </Tooltip>
               </TooltipProvider>
-                  
                 </div>
-
-                <div className="flex lg:hidden">
-                <TooltipProvider>
-                <Tooltip>
-                  <TooltipTrigger asChild>
-                  <button
-                    onClick={handleOpenPopupLocateBeacon}
-                    className="flex gap-2  bg-white justify-between items-center justify-center w-full py-4 px-2 border-gray-300 border rounded-sm hover:bg-gray-100"
-                  >
-                 
-                   <div className="flex gap-3 items-center">
-                    
-                     {/*  🗺️ */}
-                    <div className="text-xs lg:text-base flex gap-1 items-center">Locate beacon </div></div><ArrowForwardIosIcon sx={{ fontSize: 14 }}/>
-                  </button>
-                  </TooltipTrigger>
-                  <TooltipContent>
-                    <p>Locate land beacon.</p>
-                  </TooltipContent>
-                </Tooltip>
-              </TooltipProvider>
-                  
-                </div>
-                
 
                 <div className="flex hidden lg:inline">
                 <TooltipProvider>
@@ -199,7 +175,7 @@ const handleClosePopupBeacon = () => {
       
         {showPopupBeacon && (
                     <div className="fixed inset-0 flex items-center justify-center bg-gray-200 z-50">
-                      <LandPolygonRecorder handleClosePopupBeacon={handleClosePopupBeacon}/>
+                      <BeaconTracker/>
                     </div>
                      
                   )}
