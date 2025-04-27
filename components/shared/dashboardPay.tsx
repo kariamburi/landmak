@@ -257,7 +257,7 @@ const [isDarkMode, setIsDarkMode] = useState<boolean | null>(null);
                             </div>
                             <div className="flex justify-between w-full items-center">
                               <div className="flex text-[12px] lg:text-xs gap-1 items-center">
-                                Allawable Ads:
+                                Allowable Ads:
                               </div>
                               <div className="flex text-[12px] lg:text-xs font-bold items-center">
                                 {trans[0].planId.list}
@@ -271,7 +271,7 @@ const [isDarkMode, setIsDarkMode] = useState<boolean | null>(null);
                           </div>
                           <div className="flex items-center">
                             <div
-                              className={`flex flex-col text-[12px] lg:text-xs p-1 text-white justify-center items-center w-[70px] rounded-full ${
+                              className={`flex flex-col mt-1 text-[12px] lg:text-xs p-1 text-white justify-center items-center w-[70px] rounded-full ${
                                 pay === "Pending"
                                   ? "bg-yellow-600"
                                   : pay === "Failed"

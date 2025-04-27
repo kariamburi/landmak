@@ -878,7 +878,9 @@ useEffect(() => {
     if (selectedControl !== "route" || !e.latLng) return;
 
     const directionsService = new google.maps.DirectionsService();
-
+    if (directionsRendererRef.current) {
+      directionsRendererRef.current.setMap(null);
+    }
     // Clear any existing route before creating a new one
     const newRenderer = new google.maps.DirectionsRenderer({
       suppressMarkers: false,

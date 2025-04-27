@@ -295,7 +295,7 @@ const HorizontalCardPublic = ({
             {ad.data.region} - {ad.data.area}
           </div>
           {ad.calcDistance && (
-            <div className="flex w-[100px] text-[10px] bg-emerald-100 rounded-lg p-1 text-emerald-700">
+            <div className="flex w-[100px] mt-1 text-[10px] bg-green-100 rounded-lg p-1 text-green-600">
               {Math.round(ad.calcDistance / 100) / 10} KM Away
             </div>
           )}

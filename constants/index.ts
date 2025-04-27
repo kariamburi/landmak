@@ -159,6 +159,11 @@ export const adminLinks = [
     route: '/abused',
 
   }
+  , {
+    label: 'Verification',
+    route: '/verification',
+
+  }
 ]
 export const AdDefaultValues = {
   title: '',

@@ -276,6 +276,7 @@ const HorizontalCard = ({
               
               </div>
             )}
+          
             </div>
         </div>
 
@@ -305,6 +306,11 @@ const HorizontalCard = ({
             <LocationOnIcon sx={{ fontSize: 16 }} />
             {ad.data.region} - {ad.data.area}
           </div>
+          {ad.calcDistance && (
+            <div className="flex w-[130px] text-sm mt-1 fount-bold bg-green-100 rounded-lg p-1 text-green-600">
+              {Math.round(ad.calcDistance / 100) / 10} KM Away
+            </div>
+          )}
           {isAdCreator ? (
             <div className="flex justify-between items-center w-full">
               <div

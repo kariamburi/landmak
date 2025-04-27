@@ -109,9 +109,10 @@ const markerOptions = [
 ];
 
 export default function MapDrawingTool({queryObject, lat, lng, handleCategory, handleOpenPlan, handleOpenSell, onClose, handleAdEdit, handleAdView}:Props) {
-  const [center, setCenter] = useState<any>(lat ? {lat:lat, lng:lng}:defaultcenter);
-  const [latitude, setLatitude] = useState(lat ? lat: "");
-  const [longitude, setLongitude] = useState(lng ? lng: "");
+ 
+  const [center, setCenter] = useState<any>(defaultcenter);
+  const [latitude, setLatitude] = useState("");
+  const [longitude, setLongitude] = useState("");
   const mapRef = useRef<HTMLDivElement>(null);
   const mapInstance = useRef<google.maps.Map | null>(null);
   const drawingManager = useRef<google.maps.drawing.DrawingManager | null>(null);
@@ -591,7 +592,9 @@ useEffect(() => {
     if (selectedControl !== "route" || !e.latLng) return;
 
     const directionsService = new google.maps.DirectionsService();
-
+    if (directionsRendererRef.current) {
+      directionsRendererRef.current.setMap(null);
+    }
     // Clear any existing route before creating a new one
     const newRenderer = new google.maps.DirectionsRenderer({
       suppressMarkers: false,
@@ -812,6 +815,35 @@ useEffect(() => {
     setShapes([]);
   };
   
+
+  useEffect(() => {
+      if (!lat || !lng) return;
+    
+      const interval = setInterval(() => {
+        if (mapInstance.current) {
+          clearInterval(interval);
+          setCenter({ lat, lng });
+          setLatitude(lat);
+          setLongitude(lng);
+          const map = mapInstance.current;
+          const position = { lat:Number(lat), lng:Number(lng) };
+        
+          if (map) {
+            // Move the center and zoom
+            map.setCenter(position);
+            map.setZoom(18);
+            // Move the existing marker if it exists
+            if (markerRef.current) {
+              markerRef.current.setPosition(position);
+            } 
+          }
+        }
+      }, 200); // check every 200ms
+    
+      return () => clearInterval(interval);
+    }, [lat,lng]);
+
+
   return ( 
 <div className="flex w-full h-[100vh]">
     {/* Sidebar with Toggle Button */}

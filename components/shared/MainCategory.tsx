@@ -34,6 +34,7 @@ import {
 import ShareLocationOutlinedIcon from "@mui/icons-material/ShareLocationOutlined";
 import LocationOnIcon from "@mui/icons-material/LocationOn";
 import { useMediaQuery } from "react-responsive"; // Detect mobile screens
+import MyLocationOutlinedIcon from '@mui/icons-material/MyLocationOutlined';
 import {
   Tooltip,
   TooltipContent,
@@ -96,6 +97,8 @@ import PropertyListSkeleton from "./LocationListSkeleton";
 import FilterSkeleton from "./FilterSkeleton";
 import LocationListSkeleton from "./LocationListSkeleton";
 import ProgressPopup from "./ProgressPopup";
+import CircularProgress from "@mui/material/CircularProgress";
+import TravelExploreOutlinedIcon from '@mui/icons-material/TravelExploreOutlined';
 type CollectionProps = {
   loading: boolean;
   userId: string;
@@ -366,11 +369,19 @@ const SCROLL_THRESHOLD = 150; // pixels
         setmaxPrice('')
         setSelectedVerified("all");
          setFormData([]);
-         setNewqueryObject({
-          ...queryObject, // Preserve existing properties
+       
+        const updatedQueryObject = {
+          ...queryObject,
           category: newqueryObject.category.toString(),
           subcategory: newqueryObject.subcategory.toString(),
-        });
+        };
+      
+        // Remove location if it exists
+        if (updatedQueryObject.location) {
+          delete updatedQueryObject.location;
+        }
+      
+        setNewqueryObject(updatedQueryObject);
          setShowPopup(false);
        };
      
@@ -398,11 +409,18 @@ const SCROLL_THRESHOLD = 150; // pixels
      //let newUrl = "";
      if (selectedOption) {
 
-      setNewqueryObject({
-        ...queryObject, // Preserve existing properties
+     
+      const updatedQueryObject = {
+        ...queryObject,
         sortby:selectedOption,
-      });
-
+      };
+    
+      // Remove location if it exists
+      if (updatedQueryObject.location) {
+        delete updatedQueryObject.location;
+      }
+    
+      setNewqueryObject(updatedQueryObject);
       setActiveButton(1);
     
      }
@@ -413,12 +431,21 @@ const SCROLL_THRESHOLD = 150; // pixels
      setactiverange(index);
    
      if (min && max) {
-      setNewqueryObject({
-        ...queryObject, // Preserve existing properties
+  
+      const updatedQueryObject = {
+        ...queryObject,
         category: newqueryObject.category.toString(),
         subcategory: newqueryObject.subcategory.toString(),
         price:min + "-" + max,
-      });
+      };
+    
+      // Remove location if it exists
+      if (updatedQueryObject.location) {
+        delete updatedQueryObject.location;
+      }
+    
+      setNewqueryObject(updatedQueryObject);
+
     };
    };
   
@@ -489,20 +516,56 @@ const SCROLL_THRESHOLD = 150; // pixels
      setShowPopupLocation(false);
    };
    
-   const handleFilter = (value:any) => {
-    setNewqueryObject({
-      ...queryObject, 
+   const handleFilter = (value: any) => {
+    const updatedQueryObject = {
+      ...queryObject,
       category: newqueryObject.category.toString(),
       subcategory: newqueryObject.subcategory.toString(),
       ...value,
-    });
     };
+  
+    // Remove location if it exists
+    if (updatedQueryObject.location) {
+      delete updatedQueryObject.location;
+    }
+  
+    setNewqueryObject(updatedQueryObject);
+  };
+
     const handleResetFilter = (value:any) => {
       setclearQuery(!clearQuery);
       setNewqueryObject({
         ...value,
       });
+
+      
       };
+
+    const [isPicking, setisPicking] = useState(false);
+      const handleNearByProperties = () => {
+        setisPicking(true)
+        if (navigator.geolocation) {
+          navigator.geolocation.getCurrentPosition(
+            (position) => {
+              setNewqueryObject({
+                ...queryObject,
+                location: position.coords.latitude+"/"+position.coords.longitude,
+              });
+           
+            },
+            (error) => {
+              console.error("Error getting location:", error);
+              alert("Unable to retrieve your location. Please enable location services.");
+            }
+          );
+          setisPicking(false)
+        } else {
+          setisPicking(false)
+          alert("Geolocation is not supported by this browser.");
+        }
+      };
+
+
   const [isDarkMode, setIsDarkMode] = useState<boolean | null>(null);
    
        useEffect(() => {
@@ -822,7 +885,32 @@ const SCROLL_THRESHOLD = 150; // pixels
    
     <div className="w-full lg:hidden">
       <div className="flex w-full gap-1 p-1 items-center">
-        {newqueryObject.category === "Property" && (
+        {newqueryObject.category === "Property" && (<>
+           <div className="flex-1">
+           <TooltipProvider>
+             <Tooltip>
+               <TooltipTrigger asChild>
+                 <button
+                   onClick={handleNearByProperties}
+                   className="flex text-xs gap-2 bg-white text-gray-700 items-center justify-between w-full py-3 px-2 border-gray-300 border rounded-sm hover:bg-gray-100"
+                 >
+                   <div className="flex gap-2 items-center">
+                   <MyLocationOutlinedIcon/>
+                      {isPicking ? (<>
+                        Nearby Property <CircularProgress sx={{ color: "gray" }} size={30} />
+                                               </> ):(<>
+                                                Nearby Property
+                                             </>)}
+                   </div>
+                
+                 </button>
+               </TooltipTrigger>
+               <TooltipContent>
+                 <p>Search Near By</p>
+               </TooltipContent>
+             </Tooltip>
+           </TooltipProvider>
+         </div>
           <div className="flex-1">
             <TooltipProvider>
               <Tooltip>
@@ -832,16 +920,17 @@ const SCROLL_THRESHOLD = 150; // pixels
                     className="flex text-xs gap-2 bg-white text-gray-700 items-center justify-between w-full py-3 px-2 border-gray-300 border rounded-sm hover:bg-gray-100"
                   >
                     <div className="flex gap-2 items-center">
-                      <Image
+                     {/*  <Image
                         src={"/assets/icons/travel-distance.png"}
                         alt="icon"
                         className="rounded-full object-cover"
                         width={30}
                         height={30}
-                      />
+                      />*/}
+                        <TravelExploreOutlinedIcon/>
                       Search by Distance
                     </div>
-                    <ArrowForwardIosIcon sx={{ fontSize: 14 }} />
+                   
                   </button>
                 </TooltipTrigger>
                 <TooltipContent>
@@ -850,7 +939,7 @@ const SCROLL_THRESHOLD = 150; // pixels
               </Tooltip>
             </TooltipProvider>
           </div>
-        )}
+          </>)}
 
         <div className="flex gap-1 items-center">
           <TooltipProvider>
@@ -896,26 +985,53 @@ const SCROLL_THRESHOLD = 150; // pixels
         <SearchNow handleFilter={handleFilter} handleOpenSearchByTitle={handleOpenSearchByTitle}/>
       </div>
 
-      {newqueryObject.category === "Property" && (
+      {newqueryObject.category === "Property" && (<>
+           <div className="flex">
+           <TooltipProvider>
+             <Tooltip>
+               <TooltipTrigger asChild>
+                 <button
+                   onClick={handleNearByProperties}
+                   className="flex gap-2 bg-white text-gray-700 items-center justify-between w-full py-4 px-2 border-gray-300 border rounded-sm hover:bg-gray-100"
+                 >
+                   <div className="flex gap-2 items-center">
+                     <MyLocationOutlinedIcon/>
+                     
+                      {isPicking ? (<>
+                                              Nearby Property<CircularProgress sx={{ color: "gray" }} size={30} />
+                                               </> ):(<>
+                                              Nearby Property
+                                             </>)}
+                   </div>
+                  
+                 </button>
+               </TooltipTrigger>
+               <TooltipContent>
+                 <p>Search Near By</p>
+               </TooltipContent>
+             </Tooltip>
+           </TooltipProvider>
+         </div>
         <div className="flex hidden lg:inline">
           <TooltipProvider>
             <Tooltip>
               <TooltipTrigger asChild>
                 <button
                   onClick={handleOpenPopupMapSearch}
-                  className="flex gap-2 text-gray-700 items-center justify-center w-full py-2 px-2 border-gray-300 border rounded-sm hover:bg-gray-100"
+                  className="flex gap-2 text-gray-700 items-center justify-center w-full py-4 px-2 border-gray-300 border rounded-sm hover:bg-gray-100"
                 >
                   <div className="flex gap-2 items-center">
-                    <Image
+                  {/**   <Image
                       src={"/assets/icons/travel-distance.png"}
                       alt="icon"
                       className="rounded-full object-cover"
                       width={40}
                       height={40}
-                    />
+                    />*/}
+                    <TravelExploreOutlinedIcon/>
                     Search by Distance
                   </div>
-                  <ArrowForwardIosIcon sx={{ fontSize: 14 }} />
+                 
                 </button>
               </TooltipTrigger>
               <TooltipContent>
@@ -924,7 +1040,7 @@ const SCROLL_THRESHOLD = 150; // pixels
             </Tooltip>
           </TooltipProvider>
         </div>
-      )}
+        </>)}
 
       <div className="flex gap-1 items-center hidden lg:inline">
         <TooltipProvider>

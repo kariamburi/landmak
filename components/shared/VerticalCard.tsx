@@ -411,7 +411,11 @@ const VerticalCard = ({
             <LocationOnIcon sx={{ fontSize: 14 }} />
             {ad.data.region} - {ad.data.area}
           </div>
-
+          {ad.calcDistance && (
+            <div className="flex text-sm mt-1 fount-bold bg-green-100 rounded-lg p-1 text-green-600">
+              {Math.round(ad.calcDistance / 100) / 10} KM Away
+            </div>
+          )}
           <div
             onClick={() => {
               handleAdView(ad);

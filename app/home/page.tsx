@@ -46,6 +46,7 @@ const Home = async ({ searchParams }: SearchParamProps) => {
   const categories = await getAllCategories();
   const subcategories = await getselectedsubcategories(category);
   const catList = await getselectedCategories();
+  const fee = await getVerifyfee();
 //console.log(reported);
   return (
    
@@ -63,6 +64,7 @@ const Home = async ({ searchParams }: SearchParamProps) => {
           subcategories={subcategories}
           catList={catList}
           reported={reported}
+          vfee={fee}
         />
       
   );

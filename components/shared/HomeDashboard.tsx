@@ -8,7 +8,7 @@ import Typography from "@mui/material/Typography";
 import ArrowForwardIosIcon from "@mui/icons-material/ArrowForwardIos";
 import AdminNavItemsMobile from "@/components/shared/AdminNavItemsMobile";
 import PieChart from "@/components/shared/PieChart";
-import { adminLinks, mode } from "@/constants";
+import { adminLinks, mode, VerificationPackId } from "@/constants";
 import CottageOutlinedIcon from "@mui/icons-material/CottageOutlined";
 import ClassOutlinedIcon from "@mui/icons-material/ClassOutlined";
 import ChecklistOutlinedIcon from "@mui/icons-material/ChecklistOutlined";
@@ -52,7 +52,9 @@ import { Toaster } from "../ui/toaster";
 import CollectionAbuse from "./CollectionAbuse";
 import Navbardashboard from "./Navbardashboard";
 import PopupChatId from "./PopupChatId";
-
+import { updateVerifiesFee } from "@/lib/actions/verifies.actions";
+import { useToast } from "../ui/use-toast";
+import GppGoodOutlinedIcon from '@mui/icons-material/GppGoodOutlined';
 type homeProps = {
   userId: string;
   userName: string;
@@ -67,6 +69,7 @@ type homeProps = {
   subcategories: any;
   catList: any;
   reported:any;
+  vfee:any;
 };
 const HomeDashboard = ({
   userId,
@@ -82,6 +85,7 @@ const HomeDashboard = ({
   subcategories,
   catList,
   reported,
+  vfee,
 }: homeProps) => {
   const router = useRouter();
   const searchParams = useSearchParams();
@@ -92,7 +96,7 @@ const HomeDashboard = ({
   const [startDate, setStartDate] = useState<string | null>(null);
   const [endDate, setEndDate] = useState<string | null>(null);
   const [search, setSearch] = useState("");
-
+  const [fee, setFee] = useState("500");
   const [recipient, setrecipient] = useState<any>([]);
     const [recipientUid, setrecipientUid] = useState('');
     const [shopId, setshopId] = useState<any>([]);
@@ -110,7 +114,7 @@ const HomeDashboard = ({
     const [isOpenSettings, setIsOpenSettings] = useState(false);
     const [isOpenPerfomance, setIsOpenPerfomance] = useState(false);
     const [isOpenSearchTab, setIsOpenSearchTab] = useState(false);
-
+ const { toast } = useToast();
   const handleCloseChatId = () => {
     setrecipientUid('')
     setIsOpenChatId(false);
@@ -186,6 +190,7 @@ const HomeDashboard = ({
     }
   };
   useEffect(() => {
+    setFee(vfee.fee);
     const transactions = async () => {
       const allt = await getallTrans();
       setalltrans(allt);
@@ -212,6 +217,16 @@ const HomeDashboard = ({
   const handleCloseCategory = () => {
     setIsOpenCategory(false);
   };
+ 
+  const handleFee = async () => {
+    await updateVerifiesFee(fee,VerificationPackId);
+    toast({
+      title: "Updated!",
+      description: "Verification fee updated",
+      duration: 5000,
+      className: "bg-[#30AF5B] text-white",
+    });
+    };
   const [isOpen, setIsOpen] = useState(false);
   const handleOpen = () => {
     setIsOpen(true);
@@ -348,6 +363,11 @@ const HomeDashboard = ({
                           <AssistantPhotoOutlinedIcon className="w-10 p-1" />
                         </span>
                       )}
+                        {link.label === "Verification" && (
+                        <span>
+                          <GppGoodOutlinedIcon className="w-10 p-1" />
+                        </span>
+                      )}
                     </span>
 
                     <span className="flex-1 text-xs mr-5 hover:no-underline my-auto">
@@ -416,6 +436,11 @@ const HomeDashboard = ({
                          {link.label === "Abuse" && (
                         <span>
                           <AssistantPhotoOutlinedIcon className="w-10 p-1" />
+                        </span>
+                      )}
+                        {link.label === "Verification" && (
+                        <span>
+                          <GppGoodOutlinedIcon className="w-10 p-1" />
                         </span>
                       )}
                       </span>
@@ -695,6 +720,35 @@ const HomeDashboard = ({
                 />
                 <ScrollBar orientation="horizontal" />
               </ScrollArea>
+            </div>
+          </>
+        )}
+          {activeTab === "Verification" && (
+          <>
+            <div className="container mx-auto p-1 lg:p-4 border rounded-xl">
+              <h1 className="text-2xl font-bold mb-4">
+               Verification fee
+              </h1>
+              <div className="flex flex-col lg:flex-row gap-3">
+              <div className="flex gap-1 flex-col lg:flex-row">
+                      <input
+                        type="text"
+                        placeholder="Fee"
+                        value={fee}
+                        onChange={(e) => setFee(e.target.value)}
+                        className="dark:bg-[#2D3236] bg-white text-xs border p-2 flex rounded-md"
+                      />
+                      <button
+                        type="submit"
+                        onClick={handleFee}
+                        className="text-xs hover:dark:bg-emerald-800 dark:bg-emerald-700 bg-black text-white px-4 py-2 rounded-md hover:bg-gray-800"
+                      >
+                        Update
+                      </button>
+                      
+                    </div>
+              </div>
+            
             </div>
           </>
         )}

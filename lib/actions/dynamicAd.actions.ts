@@ -100,7 +100,7 @@ export const createData = async (
 
 
 // GET ALL Ad
-export async function getAlldynamicAd({ limit = 20, page, queryObject
+export async function getAlldynamicAdXXXX({ limit = 20, page, queryObject
 }: GetAlldynamicAdParams) {
   try {
     await connectToDatabase()
@@ -211,6 +211,131 @@ export async function getAlldynamicAd({ limit = 20, page, queryObject
   }
 }
 
+export async function getAlldynamicAd({ limit = 20, page = 1, queryObject }: GetAlldynamicAdParams) {
+  try {
+    await connectToDatabase();
+
+    const parseCurrencyToNumber = (value: string): number => {
+      return Number(value.replace(/,/g, ""));
+    };
+
+    const isLocationSearch = !!queryObject.location;
+    const conditionsAdstatus = { adstatus: "Active" };
+    const dynamicConditions: any = {};
+
+    let [lat, lng] = ["0", "0"];
+
+    Object.entries(queryObject || {}).forEach(([key, value]) => {
+      if (value) {
+        switch (key) {
+          case "price":
+            const [minPrice, maxPrice] = (value as string).split("-");
+            dynamicConditions["data.price"] = {
+              $gte: parseCurrencyToNumber(minPrice),
+              $lte: parseCurrencyToNumber(maxPrice),
+            };
+            break;
+          case "location":
+            [lat, lng] = (value as string).split("/");
+            break;
+          case "query":
+            dynamicConditions["$or"] = [
+              { "data.title": { $regex: value, $options: "i" } },
+              { "data.description": { $regex: value, $options: "i" } },
+            ];
+            break;
+          case "membership":
+          case "action":
+          case "source":
+          case "Ad":
+          case "Profile":
+          case "sortby":
+            break;
+          default:
+            dynamicConditions[`data.${key}`] = { $regex: value, $options: "i" };
+        }
+      }
+    });
+
+    // Build final conditions
+    let conditions: any = { ...conditionsAdstatus, ...dynamicConditions };
+
+    // Handle membership filter
+    if (queryObject.membership === "verified") {
+      const verifiedUsers = await User.find({ "verified.accountverified": true });
+      const verifiedUserIds = verifiedUsers.map((user) => user._id);
+      conditions.organizer = { $in: verifiedUserIds };
+    } else if (queryObject.membership === "unverified") {
+      const unverifiedUsers = await User.find({ "verified.accountverified": false });
+      const unverifiedUserIds = unverifiedUsers.map((user) => user._id);
+      conditions.organizer = { $in: unverifiedUserIds };
+    }
+
+    // If location search
+    if (isLocationSearch && lat !== "0" && lng !== "0") {
+      const ads = await DynamicAd.aggregate([
+        {
+          $geoNear: {
+            near: { type: "Point", coordinates: [parseFloat(lat), parseFloat(lng)] },
+            spherical: true,
+            distanceField: "calcDistance",
+            query: { ...conditions, "data.propertyarea.location": { $exists: true, $ne: null } },
+            key: "data.propertyarea.location",
+          },
+        },
+        { $skip: (page - 1) * limit },
+        { $limit: limit },
+      ]);
+
+      const populatedAds = await DynamicAd.populate(ads, [
+        { path: "organizer", model: User, select: "_id clerkId email firstName lastName photo businessname aboutbusiness businessaddress latitude longitude businesshours businessworkingdays phone whatsapp website facebook twitter instagram tiktok imageUrl verified" },
+        { path: "subcategory", model: Subcategory, select: "fields" },
+        { path: "plan", model: Packages, select: "_id name color imageUrl" },
+      ]);
+
+      const adCount = await DynamicAd.countDocuments(conditions);
+
+      return {
+        data: JSON.parse(JSON.stringify(populatedAds)),
+        totalPages: Math.ceil(adCount / limit),
+      };
+    }
+
+    // Else normal listing
+    const skipAmount = (page - 1) * limit;
+    let AdQuery: any = DynamicAd.find(conditions)
+      .skip(skipAmount)
+      .limit(limit);
+
+    switch (queryObject.sortby) {
+      case "recommeded":
+      case "new":
+        AdQuery = AdQuery.sort({ priority: -1, createdAt: -1 });
+        break;
+      case "lowest":
+        AdQuery = AdQuery.sort({ priority: -1, "data.price": 1 });
+        break;
+      case "highest":
+        AdQuery = AdQuery.sort({ priority: -1, "data.price": -1 });
+        break;
+      default:
+        AdQuery = AdQuery.sort({ priority: -1, createdAt: -1 });
+    }
+
+    const ads = await populateAd(AdQuery);
+    const adCount = await DynamicAd.countDocuments(conditions);
+
+    return {
+      data: JSON.parse(JSON.stringify(ads)),
+      totalPages: Math.ceil(adCount / limit),
+    };
+  } catch (error) {
+    console.error("Error:", error);
+    throw error;
+  }
+}
+
+
 export async function getListingsNearLocation({ limit = 20, queryObject
 }: GetAlldynamicAdParams) {
   try {
@@ -281,7 +406,7 @@ export async function getListingsNearLocation({ limit = 20, queryObject
         organizer: { $in: unverifiedUserIds },
       };
     }
-    console.log(conditions)
+    //console.log(conditions)
     if (lat !== "0" && lng !== "0") {
 
       const ads = await DynamicAd.aggregate([
