@@ -1,3 +1,5 @@
+'use client';
+
 import { useLoadScript } from '@react-google-maps/api';
 import { useEffect, useRef, useState } from 'react';
 import FullscreenOutlinedIcon from '@mui/icons-material/FullscreenOutlined';
@@ -7,7 +9,6 @@ import { Tooltip, TooltipContent, TooltipProvider, TooltipTrigger } from "../ui/
 import { Button } from '../ui/button';
 import { Icon } from "@iconify/react";
 import Barsscale from "@iconify-icons/svg-spinners/bars-scale"; // Correct import
-
 type Beacon = {
   name: string;
   lat: number;
@@ -40,39 +41,36 @@ export default function BeaconTracker({ onClose }: Props) {
     setExpandedIndex((prev) => (prev === index ? null : index));
   };
 
+ 
   useEffect(() => {
     if (!isLoaded || !navigator.geolocation) return;
 
-    const intervalId = setInterval(() => {
-       navigator.geolocation.watchPosition(
-        (pos) => {
-          const lat = Number(pos.coords.latitude.toFixed(15));
-          const lng = Number(pos.coords.longitude.toFixed(15));
-          const bearing = pos.coords.heading; // This is the bearing
-    
-          const position = { lat, lng, bearing }; // Include bearing here
-          setCurrentPos(position);
-          updateMap(position);
-        },
-        (err) => {
-          // Handle error if needed
-        },
-        {
-          enableHighAccuracy: true,
-          maximumAge: 10000,
-          timeout: 0,
-        }
-      );
-    }, 5000); // Adjust the 5000ms to set the rate (5 seconds)
+    const watchId = navigator.geolocation.watchPosition(
+      (pos) => {
+        const lat = Number(pos.coords.latitude.toFixed(15));
+        const lng = Number(pos.coords.longitude.toFixed(15));
+        
+        const position = { lat, lng };
+        setCurrentPos(position);
+        updateMap(position);
+      },
+      (err) => {
+        //alert("Error: " + err.message);
+      },
+      {
+        enableHighAccuracy: true,
+        maximumAge: 5000,
+        timeout: 5000,
+      }
+    );
 
-    return () => clearInterval(intervalId); // Clean up the interval on component unmount
+    return () => navigator.geolocation.clearWatch(watchId);
   }, [isLoaded]);
 
   const updateMap = (position: { lat: number; lng: number }) => {
     if (!window.google || !mapRef.current) return;
 
     if (!mapInstance.current) {
-      // Initialize the map if not already done
       mapInstance.current = new window.google.maps.Map(mapRef.current, {
         center: position,
         zoom: 16,
@@ -80,28 +78,6 @@ export default function BeaconTracker({ onClose }: Props) {
         fullscreenControl: false,
       });
 
-      // Create custom control for "My Location" button
-      const myLocationControlDiv = document.createElement('div');
-      const myLocationControl = document.createElement('button');
-      myLocationControl.innerHTML = 'My Location';
-      myLocationControl.style.backgroundColor = '#4285F4';
-      myLocationControl.style.color = '#fff';
-      myLocationControl.style.padding = '8px';
-      myLocationControl.style.borderRadius = '4px';
-      myLocationControl.style.cursor = 'pointer';
-
-      myLocationControlDiv.appendChild(myLocationControl);
-
-      // Place the control on the map
-      mapInstance.current.controls[google.maps.ControlPosition.TOP_LEFT].push(myLocationControlDiv);
-
-      myLocationControl.addEventListener('click', () => {
-        if (currentPos) {
-          mapInstance.current?.setCenter(currentPos);
-        }
-      });
-
-      // Place user marker on the map
       userMarker.current = new window.google.maps.Marker({
         position,
         map: mapInstance.current,
@@ -117,13 +93,9 @@ export default function BeaconTracker({ onClose }: Props) {
         },
       });
 
-      mapInstance.current.setCenter(position);
     } else {
-      // Update position of the custom marker
+     // mapInstance.current.setCenter(position);
       userMarker.current?.setPosition(position);
-
-      // Optionally, update map center to the new position
-      mapInstance.current.setCenter(position);
     }
   };
 
@@ -133,7 +105,7 @@ export default function BeaconTracker({ onClose }: Props) {
     const newBeacon = {
       name,
       lat: Number(currentPos.lat.toFixed(15)),
-      lng: Number(currentPos.lng.toFixed(15)),
+      lng: Number(currentPos.lng.toFixed(15))
     };
     setBeacons((prev) => [...prev, newBeacon]);
 
@@ -144,6 +116,7 @@ export default function BeaconTracker({ onClose }: Props) {
     });
 
     beaconMarkers.current.push(marker);
+
     updatePolygon([...beacons, newBeacon]);
   };
 
@@ -219,7 +192,7 @@ export default function BeaconTracker({ onClose }: Props) {
 
     URL.revokeObjectURL(url);
     // ✅ CLEAR the beacons after saving
-    setBeacons([]);
+  setBeacons([]);
   };
 
   if (!isLoaded) return <div>  <Icon icon={Barsscale} className="w-10 h-10 text-gray-500" /></div>;
