@@ -42,6 +42,7 @@ export default function BeaconTracker({ onClose }: Props) {
       (pos) => {
         const lat = Number(pos.coords.latitude.toFixed(15));
         const lng = Number(pos.coords.longitude.toFixed(15));
+        
         const position = { lat, lng };
         setCurrentPos(position);
         updateMap(position);
@@ -51,8 +52,8 @@ export default function BeaconTracker({ onClose }: Props) {
       },
       {
         enableHighAccuracy: true,
-        maximumAge: 1000,
-        timeout: 5000,
+        maximumAge: 10000,
+        timeout: 0,
       }
     );
 
