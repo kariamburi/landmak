@@ -71,6 +71,7 @@ export default function BeaconTracker({ onClose }: Props) {
     if (!window.google || !mapRef.current) return;
 
     if (!mapInstance.current) {
+      // Initialize the map if not already done
       mapInstance.current = new window.google.maps.Map(mapRef.current, {
         center: position,
         zoom: 16,
@@ -78,6 +79,28 @@ export default function BeaconTracker({ onClose }: Props) {
         fullscreenControl: false,
       });
 
+      // Create custom control for "My Location" button
+      const myLocationControlDiv = document.createElement('div');
+      const myLocationControl = document.createElement('button');
+      myLocationControl.innerHTML = 'My Location';
+      myLocationControl.style.backgroundColor = '#4285F4';
+      myLocationControl.style.color = '#fff';
+      myLocationControl.style.padding = '8px';
+      myLocationControl.style.borderRadius = '4px';
+      myLocationControl.style.cursor = 'pointer';
+
+      myLocationControlDiv.appendChild(myLocationControl);
+
+      // Place the control on the map
+      mapInstance.current.controls[google.maps.ControlPosition.TOP_LEFT].push(myLocationControlDiv);
+
+      myLocationControl.addEventListener('click', () => {
+        if (currentPos) {
+          mapInstance.current?.setCenter(currentPos);
+        }
+      });
+
+      // Place user marker on the map
       userMarker.current = new window.google.maps.Marker({
         position,
         map: mapInstance.current,
@@ -92,13 +115,16 @@ export default function BeaconTracker({ onClose }: Props) {
           strokeOpacity: 1,
         },
       });
-
+      
+      mapInstance.current.setCenter(position);
     } else {
-     // mapInstance.current.setCenter(position);
+      // Update position of the custom marker
       userMarker.current?.setPosition(position);
+
+      // Optionally, update map center to the new position
+      mapInstance.current.setCenter(position);
     }
   };
-
   const captureBeacon = () => {
     if (!currentPos) return;
     const name = `Beacon ${beacons.length + 1}`;
