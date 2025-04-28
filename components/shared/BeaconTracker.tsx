@@ -3,22 +3,25 @@
 import { useLoadScript } from '@react-google-maps/api';
 import { useEffect, useRef, useState } from 'react';
 import FullscreenOutlinedIcon from '@mui/icons-material/FullscreenOutlined';
-import { Tooltip, TooltipContent, TooltipProvider, TooltipTrigger } from "../ui/tooltip";
-import { Button } from '../ui/button';
 import AddLocationAltOutlinedIcon from '@mui/icons-material/AddLocationAltOutlined';
 import CloseOutlinedIcon from "@mui/icons-material/CloseOutlined";
+import { Tooltip, TooltipContent, TooltipProvider, TooltipTrigger } from "../ui/tooltip";
+import { Button } from '../ui/button';
+
 type Beacon = {
   name: string;
   lat: number;
   lng: number;
 };
-interface Props { 
+
+interface Props {
   onClose: () => void;
 }
+
 const GOOGLE_MAPS_API_KEY = process.env.NEXT_PUBLIC_GOOGLEAPIKEY!;
 const libraries: ("places" | "geometry" | "drawing")[] = ["places", "geometry", "drawing"];
 
-export default function BeaconTracker({onClose}:Props) {
+export default function BeaconTracker({ onClose }: Props) {
   const { isLoaded } = useLoadScript({
     googleMapsApiKey: GOOGLE_MAPS_API_KEY,
     libraries,
@@ -37,8 +40,8 @@ export default function BeaconTracker({onClose}:Props) {
 
     const watchId = navigator.geolocation.watchPosition(
       (pos) => {
-        const lat = pos.coords.latitude;
-        const lng = pos.coords.longitude;
+        const lat = Number(pos.coords.latitude.toFixed(15));
+        const lng = Number(pos.coords.longitude.toFixed(15));
         const position = { lat, lng };
         setCurrentPos(position);
         updateMap(position);
@@ -91,7 +94,11 @@ export default function BeaconTracker({onClose}:Props) {
   const captureBeacon = () => {
     if (!currentPos) return;
     const name = `Beacon ${beacons.length + 1}`;
-    const newBeacon = { name, lat: currentPos.lat, lng: currentPos.lng };
+    const newBeacon = {
+      name,
+      lat: Number(currentPos.lat.toFixed(15)),
+      lng: Number(currentPos.lng.toFixed(15))
+    };
     setBeacons((prev) => [...prev, newBeacon]);
 
     const marker = new window.google.maps.Marker({
@@ -141,14 +148,16 @@ export default function BeaconTracker({onClose}:Props) {
       alert("At least 3 points are needed to create a polygon.");
       return;
     }
-  
+
     const coordinates = beacons.map((b) => [b.lng, b.lat]);
-  
+
     // Close the polygon by repeating the first point at the end
-    if (coordinates.length > 0 && (coordinates[0][0] !== coordinates[coordinates.length-1][0] || coordinates[0][1] !== coordinates[coordinates.length-1][1])) {
+    if (coordinates.length > 0 &&
+      (coordinates[0][0] !== coordinates[coordinates.length - 1][0] ||
+        coordinates[0][1] !== coordinates[coordinates.length - 1][1])) {
       coordinates.push(coordinates[0]);
     }
-  
+
     const geojson = {
       type: "FeatureCollection",
       features: [
@@ -159,23 +168,22 @@ export default function BeaconTracker({onClose}:Props) {
           },
           geometry: {
             type: "Polygon",
-            coordinates: [coordinates], // Notice double brackets! (array of linear rings)
+            coordinates: [coordinates],
           },
         },
       ],
     };
-  
+
     const blob = new Blob([JSON.stringify(geojson, null, 2)], { type: 'application/json' });
     const url = URL.createObjectURL(blob);
-  
+
     const a = document.createElement('a');
     a.href = url;
     a.download = 'digital_beacons.geojson';
     a.click();
-  
+
     URL.revokeObjectURL(url);
   };
-  
 
   if (!isLoaded) return <p>Loading Map...</p>;
 
@@ -185,7 +193,7 @@ export default function BeaconTracker({onClose}:Props) {
 
       {/* Action Buttons */}
       <div className="absolute top-2 right-2 z-20 flex flex-col space-y-2">
-        
+
         {/* Fullscreen Button */}
         <TooltipProvider>
           <Tooltip>
@@ -205,11 +213,11 @@ export default function BeaconTracker({onClose}:Props) {
           <Tooltip>
             <TooltipTrigger asChild>
               <Button onClick={captureBeacon} className="w-14 text-gray-600" variant="outline">
-                <AddLocationAltOutlinedIcon/>
+                <AddLocationAltOutlinedIcon />
               </Button>
             </TooltipTrigger>
             <TooltipContent>
-              <p><AddLocationAltOutlinedIcon/> Capture Beacon</p>
+              <p>Capture Beacon</p>
             </TooltipContent>
           </Tooltip>
         </TooltipProvider>
@@ -223,27 +231,24 @@ export default function BeaconTracker({onClose}:Props) {
               </Button>
             </TooltipTrigger>
             <TooltipContent>
-              <p>💾 Save to GeoJSON</p>
+              <p>Save to GeoJSON</p>
             </TooltipContent>
           </Tooltip>
         </TooltipProvider>
 
-          <TooltipProvider>
-                           <Tooltip>
-                             <TooltipTrigger asChild>
-                        
-          <Button onClick={()=> onClose()}  variant="outline" className="w-14 text-gray-600">
-              <CloseOutlinedIcon />
-          </Button>
-        
-        
-                             </TooltipTrigger>
-                             <TooltipContent>
-                               <p> Exit</p>
-                             </TooltipContent>
-                           </Tooltip>
-                         </TooltipProvider>
-        
+        {/* Close Button */}
+        <TooltipProvider>
+          <Tooltip>
+            <TooltipTrigger asChild>
+              <Button onClick={() => onClose()} variant="outline" className="w-14 text-gray-600">
+                <CloseOutlinedIcon />
+              </Button>
+            </TooltipTrigger>
+            <TooltipContent>
+              <p>Exit</p>
+            </TooltipContent>
+          </Tooltip>
+        </TooltipProvider>
 
       </div>
 
@@ -253,7 +258,7 @@ export default function BeaconTracker({onClose}:Props) {
           <ul className="text-sm">
             {beacons.map((b, i) => (
               <li key={i}>
-                {b.name}: {b.lat.toFixed(6)}, {b.lng.toFixed(6)}
+                {b.name}: {b.lat.toFixed(15)}, {b.lng.toFixed(15)}
               </li>
             ))}
           </ul>
