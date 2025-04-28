@@ -1131,11 +1131,11 @@ polyline.addListener("click", () => {
       <div className="flex flex-col gap-2 items-center w-full">
         <div className="flex gap-2 items-center">
           <UploadFileOutlinedIcon />
-          <p className="text-lg font-medium">Import Land Subdivisions</p>
+          <p className="text-lg font-medium">Import Digital Beacons GeoJSON</p>
         </div>
         <input 
           type="file" 
-          accept=".json" 
+          accept=".geojson" 
           onChange={handleFileUpload} 
           className="p-2 border bg-white dark:bg-[#2D3236] dark:text-gray-100 rounded-lg w-full" 
         />
@@ -1145,11 +1145,11 @@ polyline.addListener("click", () => {
       <div className="bg-white dark:bg-[#1E2528] rounded-md p-3 text-sm shadow-inner border border-gray-300 dark:border-gray-600">
         <p className="font-semibold mb-1">📄 Sample file:</p>
         <a 
-          href="/subdivision-sample-geojson.json" 
+          href="/digital_beacons.json" 
           download 
           className="text-blue-600 dark:text-blue-400 underline text-sm"
         >
-          Download subdivision-sample-geojson.json
+          Download digital_beacons.json
         </a>
         <pre className="mt-2 overflow-x-auto text-xs max-h-48 bg-gray-100 dark:bg-[#2D3236] p-2 rounded">
 {`{

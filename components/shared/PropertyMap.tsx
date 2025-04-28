@@ -109,7 +109,7 @@ const markerOptions = [
 ];
 
 export default function MapDrawingTool({queryObject, lat, lng, handleCategory, handleOpenPlan, handleOpenSell, onClose, handleAdEdit, handleAdView}:Props) {
- 
+ //const [uploadPopup, setUploadPopup] = useState(false);
   const [center, setCenter] = useState<any>(defaultcenter);
   const [latitude, setLatitude] = useState("");
   const [longitude, setLongitude] = useState("");
@@ -334,7 +334,7 @@ labelMarkersRef.current.push(labelOverlay);
               })
             );
           
-            const currentLabel = matchedShape?.label || label;
+            const currentLabel = matchedShape?.label || 'Field';
             const perimeter = google.maps.geometry.spherical.computeLength(path);
             const areaSqM = google.maps.geometry.spherical.computeArea(path);
             const areaHa = areaSqM / 10000;
@@ -842,11 +842,295 @@ useEffect(() => {
     
       return () => clearInterval(interval);
     }, [lat,lng]);
+    const handleOpenUploadPopup = () => {
+      setLatitude(defaultcenter.lat.toString());
+      setLongitude(defaultcenter.lng.toString());
+      setUploadPopup(true);
+    };
+const handleFileUpload = (event: React.ChangeEvent<HTMLInputElement>) => {
+    if (!mapInstance.current) return;
+    const file = event.target.files?.[0];
+    if (!file) return;
+  
+    const reader = new FileReader();
+  
+    reader.onload = (e) => {
+      try {
+        const json = JSON.parse(e.target?.result as string);
+        if (!json.features) return;
+  
+        const newShapes = json.features.map((feature: any) => {
+          const type = "polygon";
+          const coords = feature.geometry.coordinates?.[0];
+          if (!coords || !Array.isArray(coords)) return null;
+  
+          const coordinates = coords.map((coord: number[]) => ({
+            lat: coord[1],
+            lng: coord[0],
+          }));
+  
+          const polygonPath = coordinates.map(
+            (coord) => new google.maps.LatLng(coord.lat, coord.lng)
+          );
+          const area = google.maps.geometry.spherical.computeArea(polygonPath);
+        
+          const label = feature.properties?.name || "Land";
+          const status = "available";
+          const color = "#00FF00";
+      
+          return {
+            type,
+            coordinates,
+            label,
+            area,
+            color,
+            status,
+          };
+        }).filter(Boolean); // Remove nulls
+  
+        // Update state
+        setShapes((prev) => [...prev, ...newShapes]);
+        setShapeRefs((prev) => [...prev, newShapes]);
+        const sharInfoWindow = new google.maps.InfoWindow();
+          
+      class CustomLabel extends google.maps.OverlayView {
+        div: HTMLDivElement | null = null;
+      
+        constructor(private position: google.maps.LatLngLiteral, private text: string) {
+          super();
+        }
+      
+        onAdd() {
+          this.div = document.createElement("div");
+          this.div.innerHTML = `<div style="background: black; color: white; padding: 4px 8px; border-radius: 4px;">${this.text}</div>`;
+          this.getPanes()?.overlayLayer.appendChild(this.div);
+        }
+      
+        draw() {
+          if (!this.div) return;
+          const projection = this.getProjection();
+          const point = projection.fromLatLngToDivPixel(new google.maps.LatLng(this.position));
+          if (point) {
+            this.div.style.left = point.x + "px";
+            this.div.style.top = point.y + "px";
+            this.div.style.position = "absolute";
+          }
+        }
+      
+        onRemove() {
+          this.div?.remove();
+        }
+      }
+        // Draw on map
+        newShapes.forEach((shapeData: any) => {
+      
+          if (shapeData.type === "polygon") {
+            const polyshape = new google.maps.Polygon({
+              paths: shapeData.coordinates,
+              strokeColor: shapeData.color,
+              strokeWeight: 2,
+              fillColor: shapeData.color,
+              fillOpacity: 0.1,
+              map: mapInstance.current,
+            });
+            shapeOriginalColors.current.set(polyshape, shapeData.color);
+      
+          // Add label marker
+          const bounds = new google.maps.LatLngBounds();
+          shapeData.coordinates.forEach((coord:any) => bounds.extend(coord));
+          const center = bounds.getCenter();
+      
+          
+          shapeOriginalColors.current.set(polyshape, "#00FF00");
+          const path = polyshape.getPath().getArray().map((latlng: any) => ({ lat: latlng.lat(), lng: latlng.lng() }));
+          const perimeter = google.maps.geometry.spherical.computeLength(path);
+          const areaSqM = google.maps.geometry.spherical.computeArea(path);
+          const areaHa = areaSqM / 10000;
+          const areaAcres = areaSqM / 4046.85642;
+        
+          const readablePerimeter = perimeter > 1000
+            ? `${(perimeter / 1000).toFixed(2)} km`
+            : `${perimeter.toFixed(0)} m`;
+        
+        const labelOverlay = new CustomLabel( {
+          lat: center.lat(),
+          lng: center.lng()
+        }, `
+  <div style=" background-color: #00A65A;
+      padding: 6px 10px;
+      color: white;
+      font-size: 12px;
+      border-radius: 4px;
+      box-shadow: 0 2px 6px rgba(0,0,0,0.3);
+      position: absolute;
+      transform: translate(-50%, -50%);
+      white-space: nowrap;">
+                  <div><strong>Perimeter:</strong> ${readablePerimeter}</div>
+                  <div><strong>Area:</strong>
+                    <div>${areaSqM.toFixed(0)} m²</div>
+                    <div>${areaHa.toFixed(2)} ha</div>
+                    <div>${areaAcres.toFixed(2)} acres</div>
+                  </div>
+  </div>
+`);
+labelOverlay.setMap(mapInstance.current!);
+labelMarkersRef.current.push(labelOverlay);
 
+          let infoWindowTimeout: NodeJS.Timeout;
+          
+          polyshape.addListener("click", (e: google.maps.MapMouseEvent) => {
+            sharInfoWindow.close(); // <-- Close existing one
+            const path = polyshape.getPath();
+            const matchedShape = shapesRef.current.find((s) =>
+              s.path.length === path.getLength() &&
+              s.path.every((pt: any, idx: number) => {
+                const shapePt = path.getAt(idx);
+                return pt.lat === shapePt.lat() && pt.lng === shapePt.lng();
+              })
+            );
+          
+            const currentLabel = matchedShape?.label || 'Field';
+            const perimeter = google.maps.geometry.spherical.computeLength(path);
+            const areaSqM = google.maps.geometry.spherical.computeArea(path);
+            const areaHa = areaSqM / 10000;
+            const areaAcres = areaSqM / 4046.85642;
+          
+            const readablePerimeter = perimeter > 1000
+              ? `${(perimeter / 1000).toFixed(2)} km`
+              : `${perimeter.toFixed(0)} m`;
+          
+              sharInfoWindow.setContent(`
+                <div style="font-size: 13px;">
+                  <div><strong>Label:</strong> ${currentLabel}</div>
+                  <div><strong>Perimeter:</strong> ${readablePerimeter}</div>
+                  <div><strong>Area:</strong>
+                    <div>${areaSqM.toFixed(0)} m²</div>
+                    <div>${areaHa.toFixed(2)} ha</div>
+                    <div>${areaAcres.toFixed(2)} acres</div>
+                  </div>
+                </div>
+              `
+            );
+            sharInfoWindow.setPosition(e.latLng!);
+            sharInfoWindow.open(mapInstance.current!);
+            //sharedInfoWindow.open(mapInstance.current!);
+          });
+             
+        
 
+          }
+  
+        
+          
+        });
+  
+        // ✅ Zoom and center map to all new shapes
+        let centerSet = false;
+        const bounds = new google.maps.LatLngBounds();
+        newShapes.forEach((shapeData: any) => {
+          if (shapeData.coordinates && Array.isArray(shapeData.coordinates)) {
+            shapeData.coordinates.forEach((coord: any) => {
+              if (!centerSet) {
+                setCenter({ lat: coord.lat, lng: coord.lng });
+                setLatitude(coord.lat);
+                setLongitude(coord.lng);
+                handlePostLocation(coord.lat.toString(),coord.lng.toString());
+                const map = mapInstance.current;
+                const position = { lat: coord.lat, lng: coord.lng };
+              
+                if (map) {
+                  // Move the center and zoom
+                  map.setCenter(position);
+                  map.setZoom(18);
+                  // Move the existing marker if it exists
+                  if (markerRef.current) {
+                    markerRef.current.setPosition(position);
+                  } 
+                }
+                centerSet = true;
+              }
+              bounds.extend(new google.maps.LatLng(coord.lat, coord.lng));
+            });
+          }
+        });
+        setUploadPopup(false);
+        if (mapInstance.current) {
+          mapInstance.current.fitBounds(bounds);
+        
+          google.maps.event.addListenerOnce(mapInstance.current, "bounds_changed", () => {
+            if (mapInstance.current) {
+          
+            mapInstance.current.setZoom(18);
+              
+            }
+          });
+        }
+        
+  
+      } catch (error) {
+        console.error("GeoJSON parse error:", error);
+      }
+    };
+  
+    reader.readAsText(file);
+  };
   return ( 
 <div className="flex w-full h-[100vh]">
     {/* Sidebar with Toggle Button */}
+        {uploadPopup && (
+      <div className="fixed inset-0 flex items-center justify-center bg-gray-900 bg-opacity-50 p-2 z-50">
+        <div className="dark:bg-[#131B1E] dark:text-gray-300 bg-gray-200 rounded-xl p-4 w-full max-w-xl shadow-lg space-y-4">
+          
+          {/* Close Button */}
+          <div className="flex justify-end">
+            <Button variant="outline" onClick={() => setUploadPopup(false)}>
+              <CloseOutlinedIcon fontSize="small" />
+            </Button>
+          </div>
+    
+          {/* Upload Section */}
+          <div className="flex flex-col gap-2 items-center w-full">
+            <div className="flex gap-2 items-center">
+              <UploadFileOutlinedIcon />
+              <p className="text-lg font-medium">Import Digital Beacons GeoJSON</p>
+            </div>
+            <input 
+              type="file" 
+              accept=".geojson" 
+              onChange={handleFileUpload} 
+              className="p-2 border bg-white dark:bg-[#2D3236] dark:text-gray-100 rounded-lg w-full" 
+            />
+          </div>
+    
+          {/* Sample File Section */}
+          <div className="bg-white dark:bg-[#1E2528] rounded-md p-3 text-sm shadow-inner border border-gray-300 dark:border-gray-600">
+            <p className="font-semibold mb-1">📄 Sample file:</p>
+            <a 
+              href="/digital_beacons.json" 
+              download 
+              className="text-blue-600 dark:text-blue-400 underline text-sm"
+            >
+              Download digital_beacons.json
+            </a>
+            <pre className="mt-2 overflow-x-auto text-xs max-h-48 bg-gray-100 dark:bg-[#2D3236] p-2 rounded">
+    {`{
+      "type": "FeatureCollection",
+      "features": [
+        {
+          "type": "Feature",
+          "properties": { "name": "Plot A" },
+          "geometry": {
+            "type": "Polygon",
+            "coordinates": [[[36.8219, -1.2921], [36.8225, -1.2921], ...]]
+          }
+        }
+      ]
+    }`}
+            </pre>
+          </div>
+        </div>
+      </div>
+    )}
 <div
   className={`bg-white h-[100dvh] shadow-lg transition-transform duration-300 ease-in-out fixed md:relative ${
     showSidebar ? "w-full md:w-1/3 p-1" : "-translate-x-full md:w-0 md:translate-x-0"
@@ -958,6 +1242,8 @@ useEffect(() => {
  <div id="map-container" className={`w-full mt-0 lg:mt-0 relative transition-all duration-300 h-[100vh] ${
   showSidebar ? "hidden md:block" : "block"
 }`}>
+
+
     <Button
             onClick={() => setShowSidebar(!showSidebar)}
             className="absolute bottom-10 lg:bottom-[90px] left-2 z-20 md:block bg-white text-gray-700 shadow-lg hover:text-white"
@@ -1038,7 +1324,8 @@ useEffect(() => {
                   </Tooltip>
                 </TooltipProvider>
   
-               
+               {/* Import Button */}
+
          
         
          
@@ -1263,7 +1550,12 @@ Radius: {radius / 1000} km
       >
         <CloseOutlinedIcon />
       </Button>
-
+     
+      <Button onClick={handleOpenUploadPopup} className="" variant="outline">
+        <UploadFileOutlinedIcon />
+        <div>Import digital beacons</div>
+      </Button>
+   
       {/* Drawer & Info */}
       <div className="flex p-4 flex-col gap-2 text-[#30D32C] items-center">
         <DrawerPublic onChange={handlePropertyLocation} latitude={latitude} longitude={longitude} />

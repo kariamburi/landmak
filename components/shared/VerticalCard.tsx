@@ -197,7 +197,6 @@ const VerticalCard = ({
               <div
                 onClick={() => {
                   handleOpenPlan();
-                 // router.push(`/plan`);
                 }}
               >
                 <div className="flex gap-1 cursor-pointer">{ad.plan.name}</div>
@@ -206,7 +205,7 @@ const VerticalCard = ({
           )}
           {ad.organizer.verified &&
             ad.organizer?.verified[0]?.accountverified === true && (
-              <div className="absolute bg-emerald-100 top-10 right-0 dark:text-emerald-900 text-[10px] py-1 px-1 lg:text-xs lg:py-1 lg:px-3 rounded-bl-lg rounded-tr-lg">
+              <div className="absolute bg-green-100 top-0 right-0 dark:text-green-900 text-[10px] py-1 px-1 lg:text-xs lg:py-1 lg:px-3 rounded-bl-lg rounded-tr-lg">
                 <div className="flex gap-1 cursor-pointer">
                   <VerifiedUserOutlinedIcon sx={{ fontSize: 16 }} />
                   Verified

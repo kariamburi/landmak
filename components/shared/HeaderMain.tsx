@@ -23,6 +23,7 @@ import PropertyMapSearch from "./PropertyMapSearch";
 import DirectionsWalkOutlinedIcon from '@mui/icons-material/DirectionsWalkOutlined';
 import LandPolygonRecorder from "./BeaconTracker";
 import LandTargetNavigator from "./LandTargetNavigator";
+import AddLocationAltOutlinedIcon from '@mui/icons-material/AddLocationAltOutlined';
 import BeaconTracker from "./BeaconTracker";
 export default function HeaderMain({ handleFilter ,handleOpenSearchByTitle, handleCategory, handleOpenPlan, handleOpenSell, handleAdView, handleAdEdit, AdsCountPerRegion,queryObject }: { handleOpenSearchByTitle:() => void, handleOpenPlan:() => void, handleOpenSell:() => void, handleFilter: (value:any) => void, AdsCountPerRegion:any,queryObject:any , handleAdEdit: (id:string) => void, handleCategory: (value:string) => void,
   handleAdView: (id:string) => void}) {
@@ -78,30 +79,89 @@ const handleClosePopupBeacon = () => {
       className="relative flex flex-col w-full p-1 mb-1"
      
     >
-        <div className="flex gap-1 items-center w-full">
-        <div className="flex gap-1 items-center w-full">
-        <div className="flex">
+        <div className="flex gap-1 flex-col items-center w-full">
+        <div className="flex gap-1 items-center w-full lg:hidden">
+        <div className="flex-1">
         <button
         onClick={handleOpenPopup}
         className="flex text-xs lg:text-base gap-1 items-center justify-center w-full py-4 px-2 border border-gray-300 dark:border-gray-600 bg-white dark:bg-[#2D3236] dark:text-gray-100 rounded-sm hover:bg-gray-100"
         >
-           <div className="hidden lg:inline">
-           <LocationOnIcon/>
-           </div>
-           <div className="lg:hidden">
+           
            <LocationOnIcon sx={{ fontSize: 24 }}/>
-           </div>
+         
         {region}
         </button>
         </div>
-        <div className="hidden lg:inline flex-1">
+       
+          <div className="flex-1">
+                <TooltipProvider>
+                <Tooltip>
+                  <TooltipTrigger asChild>
+                  <button
+                    onClick={handleOpenPopupMap}
+                    className="flex gap-2  bg-white items-center justify-center w-full py-4 px-2 border-gray-300 border rounded-sm hover:bg-gray-100"
+                  >
+                   {/*  🗺️ */}
+                   <div className="flex gap-3 items-center">
+                    
+                    <DirectionsWalkOutlinedIcon sx={{ fontSize: 24 }}/>
+                    <div className="text-xs lg:text-base flex gap-1 items-center">Virtual Site Visit </div></div>
+                  </button>
+                  </TooltipTrigger>
+                  <TooltipContent>
+                    <p>Explore the property&apos;s location through a virtual interactive tour.</p>
+                  </TooltipContent>
+                </Tooltip>
+              </TooltipProvider>
+                  
+                </div>
+
+                <div className="flex-1">
+                <TooltipProvider>
+                <Tooltip>
+                  <TooltipTrigger asChild>
+                  <button
+                    onClick={handleOpenPopupBeacon}
+                    className="flex gap-2  bg-white items-center justify-center w-full py-4 px-2 border-gray-300 border rounded-sm hover:bg-gray-100"
+                  >
+                 
+                 <AddLocationAltOutlinedIcon  sx={{ fontSize: 24 }}/>
+                    <div className="text-xs lg:text-base flex gap-1 items-center">Digital beacon </div>
+                  </button>
+                  </TooltipTrigger>
+                  <TooltipContent>
+                    <p>Capture land digital beacon.</p>
+                  </TooltipContent>
+                </Tooltip>
+              </TooltipProvider>
+              </div>
+
+             
+        </div>
+
+
+
+        <div className="w-full hidden lg:inline">
+        <div className="flex gap-1 items-center w-full">
+        <div className="flex hidden lg:inline">
+        <button
+        onClick={handleOpenPopup}
+        className="flex text-xs lg:text-base gap-1 items-center justify-center w-full py-4 px-2 border border-gray-300 dark:border-gray-600 bg-white dark:bg-[#2D3236] dark:text-gray-100 rounded-sm hover:bg-gray-100"
+        >
+         
+           <LocationOnIcon/>
+          
+        {region}
+        </button>
+        </div>
+        <div className="flex-1">
         <SearchNow handleFilter={handleFilter} handleOpenSearchByTitle={handleOpenSearchByTitle}/>
         </div>
 
  
 
 
-                <div className="flex lg:hidden">
+                <div className="flex hidden lg:inline">
                 <TooltipProvider>
                 <Tooltip>
                   <TooltipTrigger asChild>
@@ -113,7 +173,7 @@ const handleClosePopupBeacon = () => {
                    <div className="flex gap-3 items-center">
                     
                     <DirectionsWalkOutlinedIcon sx={{ fontSize: 24 }}/>
-                    <div className="text-xs lg:text-base flex gap-1 items-center">Virtual Site Visit </div></div><ArrowForwardIosIcon sx={{ fontSize: 14 }}/>
+                    <div className="text-xs lg:text-base flex gap-1 items-center">Virtual Site Visit </div></div>
                   </button>
                   </TooltipTrigger>
                   <TooltipContent>
@@ -124,7 +184,7 @@ const handleClosePopupBeacon = () => {
                   
                 </div>
 
-                <div className="flex lg:hidden">
+                <div className="flex hidden lg:inline">
                 <TooltipProvider>
                 <Tooltip>
                   <TooltipTrigger asChild>
@@ -133,10 +193,10 @@ const handleClosePopupBeacon = () => {
                     className="flex gap-2  bg-white justify-between items-center justify-center w-full py-4 px-2 border-gray-300 border rounded-sm hover:bg-gray-100"
                   >
                  
-                   <div className="flex gap-3 items-center">
-                    
+                 
+                    <AddLocationAltOutlinedIcon/>
                      {/*  🗺️ */}
-                    <div className="text-xs lg:text-base flex gap-1 items-center">Digital beacon </div></div><ArrowForwardIosIcon sx={{ fontSize: 14 }}/>
+                    <div className="text-xs lg:text-base flex gap-1 items-center">Digital beacon </div>
                   </button>
                   </TooltipTrigger>
                   <TooltipContent>
@@ -146,36 +206,14 @@ const handleClosePopupBeacon = () => {
               </TooltipProvider>
                 </div>
 
-                <div className="flex hidden lg:inline">
-                <TooltipProvider>
-                <Tooltip>
-                  <TooltipTrigger asChild>
-                  <button
-                    onClick={handleOpenPopupMap}
-                    className="flex gap-2 items-center justify-center w-full py-4 px-2 border-gray-300 border rounded-sm hover:bg-gray-100"
-                  >
-                   {/*  🗺️ */}
-                   
-                    <DirectionsWalkOutlinedIcon/>
-                    <div className="flex gap-1 items-center">Virtual Property Site Visit <ArrowForwardIosIcon sx={{ fontSize: 14 }}/></div>
-                  </button>
-                  </TooltipTrigger>
-                  <TooltipContent>
-                    <p>Explore the property&apos;s location through a virtual interactive tour.</p>
-                  </TooltipContent>
-                </Tooltip>
-              </TooltipProvider>
-                  
-                </div>
-
-
+            </div>
         </div>
 
 
       
         {showPopupBeacon && (
                     <div className="fixed inset-0 flex items-center justify-center bg-gray-200 z-50">
-                      <BeaconTracker/>
+                      <BeaconTracker onClose={handleClosePopupBeacon}/>
                     </div>
                      
                   )}

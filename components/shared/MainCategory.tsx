@@ -892,7 +892,7 @@ const SCROLL_THRESHOLD = 150; // pixels
                <TooltipTrigger asChild>
                  <button
                    onClick={handleNearByProperties}
-                   className="flex text-xs gap-2 bg-white text-gray-700 items-center justify-between w-full py-3 px-2 border-gray-300 border rounded-sm hover:bg-gray-100"
+                   className="flex text-xs gap-2 bg-white text-gray-700 items-center justify-center w-full py-3 px-2 border-gray-300 border rounded-sm hover:bg-gray-100"
                  >
                    <div className="flex gap-2 items-center">
                    <MyLocationOutlinedIcon/>
@@ -917,7 +917,7 @@ const SCROLL_THRESHOLD = 150; // pixels
                 <TooltipTrigger asChild>
                   <button
                     onClick={handleOpenPopupMapSearch}
-                    className="flex text-xs gap-2 bg-white text-gray-700 items-center justify-between w-full py-3 px-2 border-gray-300 border rounded-sm hover:bg-gray-100"
+                    className="flex text-xs gap-2 bg-white text-gray-700 items-center justify-center w-full py-3 px-2 border-gray-300 border rounded-sm hover:bg-gray-100"
                   >
                     <div className="flex gap-2 items-center">
                      {/*  <Image
@@ -941,13 +941,13 @@ const SCROLL_THRESHOLD = 150; // pixels
           </div>
           </>)}
 
-        <div className="flex gap-1 items-center">
+        <div className="flex-1 gap-1 items-center">
           <TooltipProvider>
             <Tooltip>
               <TooltipTrigger asChild>
                 <div
                   onClick={togglePopup}
-                  className="flex text-xs bg-white py-4 px-3 cursor-pointer border-gray-300 border rounded-sm text-gray-700 text-sm hover:bg-gray-100 p-1 justify-between items-center"
+                  className="flex text-xs bg-white py-4 px-3 cursor-pointer border-gray-300 border rounded-sm text-gray-700 text-sm hover:bg-gray-100 p-1 justify-center items-center"
                 >
                 
                   <div className="hidden lg:inline">
@@ -986,7 +986,7 @@ const SCROLL_THRESHOLD = 150; // pixels
       </div>
 
       {newqueryObject.category === "Property" && (<>
-           <div className="flex">
+           <div className="flex hidden lg:inline">
            <TooltipProvider>
              <Tooltip>
                <TooltipTrigger asChild>
