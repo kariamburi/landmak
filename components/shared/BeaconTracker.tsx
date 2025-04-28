@@ -8,7 +8,6 @@ import CloseOutlinedIcon from "@mui/icons-material/CloseOutlined";
 import { Tooltip, TooltipContent, TooltipProvider, TooltipTrigger } from "../ui/tooltip";
 import { Button } from '../ui/button';
 import { Icon } from "@iconify/react";
-import { ChevronDown, ChevronRight } from "lucide-react"; // if using lucide-react
 import Barsscale from "@iconify-icons/svg-spinners/bars-scale"; // Correct import
 type Beacon = {
   name: string;
@@ -192,6 +191,8 @@ export default function BeaconTracker({ onClose }: Props) {
     a.click();
 
     URL.revokeObjectURL(url);
+    // ✅ CLEAR the beacons after saving
+  setBeacons([]);
   };
 
   if (!isLoaded) return <div>  <Icon icon={Barsscale} className="w-10 h-10 text-gray-500" /></div>;
@@ -262,32 +263,17 @@ export default function BeaconTracker({ onClose }: Props) {
       </div>
 
       {/* Displaying Beacons */}
-      <div className="absolute top-20 left-2 p-2 text-white bg-green-600 z-50 rounded-md shadow-lg">
-      <ul className="text-sm space-y-2">
-        {beacons.map((b, i) => (
-          <li
-            key={i}
-            className="cursor-pointer select-none"
-            onClick={() => toggleExpand(i)}
-          >
-            <div className="flex items-center font-semibold">
-              {expandedIndex === i ? (
-                <ChevronDown className="w-4 h-4 mr-1" />
-              ) : (
-                <ChevronRight className="w-4 h-4 mr-1" />
-              )}
-              {b.name}
-            </div>
-            {expandedIndex === i && (
-              <div className="ml-5 text-xs mt-1">
-                <div>Lat: {b.lat.toFixed(15)}</div>
-                <div>Lng: {b.lng.toFixed(15)}</div>
-              </div>
-            )}
-          </li>
-        ))}
-      </ul>
-    </div>
+      {beacons.length > 0 && (
+        <div className="absolute top-20 left-2 p-2 text-white bg-green-600 z-5 rounded-md shadow-lg">
+          <ul className="text-sm">
+            {beacons.map((b, i) => (
+              <li key={i}>
+                {b.name}: {b.lat.toFixed(15)}, {b.lng.toFixed(15)}
+              </li>
+            ))}
+          </ul>
+        </div>
+      )}
     </div>
   );
 }
