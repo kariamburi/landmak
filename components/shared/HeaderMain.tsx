@@ -184,27 +184,7 @@ const handleClosePopupBeacon = () => {
                   
                 </div>
 
-                <div className="flex hidden lg:inline">
-                <TooltipProvider>
-                <Tooltip>
-                  <TooltipTrigger asChild>
-                  <button
-                    onClick={handleOpenPopupBeacon}
-                    className="flex gap-2  bg-white justify-between items-center justify-center w-full py-4 px-2 border-gray-300 border rounded-sm hover:bg-gray-100"
-                  >
-                 
-                 
-                    <AddLocationAltOutlinedIcon/>
-                     {/*  🗺️ */}
-                    <div className="text-xs lg:text-base flex gap-1 items-center">Digital beacon </div>
-                  </button>
-                  </TooltipTrigger>
-                  <TooltipContent>
-                    <p>Capture land digital beacon.</p>
-                  </TooltipContent>
-                </Tooltip>
-              </TooltipProvider>
-                </div>
+                
 
             </div>
         </div>

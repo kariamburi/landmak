@@ -7,7 +7,9 @@ import AddLocationAltOutlinedIcon from '@mui/icons-material/AddLocationAltOutlin
 import CloseOutlinedIcon from "@mui/icons-material/CloseOutlined";
 import { Tooltip, TooltipContent, TooltipProvider, TooltipTrigger } from "../ui/tooltip";
 import { Button } from '../ui/button';
-
+import { Icon } from "@iconify/react";
+import { ChevronDown, ChevronRight } from "lucide-react"; // if using lucide-react
+import Barsscale from "@iconify-icons/svg-spinners/bars-scale"; // Correct import
 type Beacon = {
   name: string;
   lat: number;
@@ -34,7 +36,13 @@ export default function BeaconTracker({ onClose }: Props) {
   const userMarker = useRef<google.maps.Marker>();
   const beaconMarkers = useRef<google.maps.Marker[]>([]);
   const polygonRef = useRef<google.maps.Polygon>();
+  const [expandedIndex, setExpandedIndex] = useState<number | null>(null);
 
+  const toggleExpand = (index: number) => {
+    setExpandedIndex((prev) => (prev === index ? null : index));
+  };
+
+ 
   useEffect(() => {
     if (!isLoaded || !navigator.geolocation) return;
 
@@ -48,7 +56,7 @@ export default function BeaconTracker({ onClose }: Props) {
         updateMap(position);
       },
       (err) => {
-        alert("Error: " + err.message);
+        //alert("Error: " + err.message);
       },
       {
         enableHighAccuracy: true,
@@ -87,7 +95,7 @@ export default function BeaconTracker({ onClose }: Props) {
       });
 
     } else {
-      mapInstance.current.setCenter(position);
+     // mapInstance.current.setCenter(position);
       userMarker.current?.setPosition(position);
     }
   };
@@ -127,7 +135,7 @@ export default function BeaconTracker({ onClose }: Props) {
         strokeOpacity: 0.8,
         strokeWeight: 2,
         fillColor: "#FF0000",
-        fillOpacity: 0.35,
+        fillOpacity: 0.1,
         map: mapInstance.current,
       });
     }
@@ -186,7 +194,7 @@ export default function BeaconTracker({ onClose }: Props) {
     URL.revokeObjectURL(url);
   };
 
-  if (!isLoaded) return <p>Loading Map...</p>;
+  if (!isLoaded) return <div>  <Icon icon={Barsscale} className="w-10 h-10 text-gray-500" /></div>;
 
   return (
     <div id="map-container" className="h-[100vh] w-full relative">
@@ -254,17 +262,32 @@ export default function BeaconTracker({ onClose }: Props) {
       </div>
 
       {/* Displaying Beacons */}
-      {beacons.length > 0 && (
-        <div className="absolute top-20 left-2 p-2 text-white bg-green-600 z-5 rounded-md shadow-lg">
-          <ul className="text-sm">
-            {beacons.map((b, i) => (
-              <li key={i}>
-                {b.name}: {b.lat.toFixed(15)}, {b.lng.toFixed(15)}
-              </li>
-            ))}
-          </ul>
-        </div>
-      )}
+      <div className="absolute top-20 left-2 p-2 text-white bg-green-600 z-50 rounded-md shadow-lg">
+      <ul className="text-sm space-y-2">
+        {beacons.map((b, i) => (
+          <li
+            key={i}
+            className="cursor-pointer select-none"
+            onClick={() => toggleExpand(i)}
+          >
+            <div className="flex items-center font-semibold">
+              {expandedIndex === i ? (
+                <ChevronDown className="w-4 h-4 mr-1" />
+              ) : (
+                <ChevronRight className="w-4 h-4 mr-1" />
+              )}
+              {b.name}
+            </div>
+            {expandedIndex === i && (
+              <div className="ml-5 text-xs mt-1">
+                <div>Lat: {b.lat.toFixed(15)}</div>
+                <div>Lng: {b.lng.toFixed(15)}</div>
+              </div>
+            )}
+          </li>
+        ))}
+      </ul>
+    </div>
     </div>
   );
 }
