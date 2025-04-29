@@ -76,8 +76,8 @@ const Message = ({
   const containsHttpOrHttps = (str: string) => {
     return str.includes("http://") || str.includes("https://");
   };
-  const regex = /PropertyLocation&lat=([0-9.-]+)&lng=([0-9.-]+)/;
-  const match = message.text.match(regex);
+  const regex = /PropertyLocation&coordinates=([\d.,-]+)/;
+const match = message.text.match(regex);
   const [showPopup, setShowPopup] = useState(false);
 
   const handleOpenPopup = () => {
@@ -125,7 +125,7 @@ const Message = ({
                            
                                       <div className="flex flex-col items-center justify-center dark:bg-[#2D3236] bg-gray-200">
                                   
-              <PropertyMap queryObject={queryObject} onClose={handleClosePopup} lat={match[1]} lng={match[2]} 
+              <PropertyMap queryObject={queryObject} onClose={handleClosePopup} coordinates={match[1]}
               handleAdEdit={handleAdEdit}
                handleAdView={handleAdView} 
                handleCategory={handleCategory}

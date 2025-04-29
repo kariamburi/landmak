@@ -139,7 +139,7 @@ const SendMessage = ({
       let imageUrl: string = "";
       const read = "1";
       await addDoc(collection(db, "messages"), {
-        text: `PropertyLocation&lat=${value.lat}&lng=${value.lng}`,
+        text: `PropertyLocation&coordinates=${value}`,
         name: displayName,
         avatar: photoURL,
         createdAt: serverTimestamp(),
@@ -234,24 +234,15 @@ const SendMessage = ({
       )}
 
       {showPopupGps && (
-        <div className="fixed inset-0 flex items-center justify-center bg-gray-800 bg-opacity-90 z-50">
-          <div className="dark:border-gray-600 dark:bg-[#2D3236] dark:text-gray-100 bg-gray-200 p-2 w-full lg:max-w-4xl items-center justify-center rounded-md shadow-md relative">
-            <div className="flex justify-between items-center mb-1">
-              <h1 className="font-bold">Property Google Location</h1>
-              <button
-                onClick={handleClosePopupGps}
-                className="flex justify-center items-center h-12 w-12 text-black dark:text-gray-200 dark:hover:bg-gray-700 hover:bg-black hover:text-white rounded-full"
-              >
-                <CloseOutlinedIcon />
-              </button>
-            </div>
-            <LatLngPickerAndShare
+        <div className="fixed inset-0 flex items-center justify-center bg-gray-200 z-50">
+                              <LatLngPickerAndShare
               name={"gps"}
               onChange={handleInputOnChange}
-              onSave={handleSaveGps}
+              onClose={handleSaveGps}
             />
-          </div>
-        </div>
+                           </div>
+          
+        
       )}
     </div>
   );

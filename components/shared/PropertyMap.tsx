@@ -80,8 +80,7 @@ type Shape = {
 };
 interface Props {
   queryObject: any;
-  lat?: string;
-  lng?: string;
+  coordinates?: string;
   onClose:() => void;
   handleAdEdit: (id:string) => void;
   handleAdView: (id:string) => void;
@@ -108,7 +107,7 @@ const markerOptions = [
   { label: "Police Station", icon: "/assets/map/police.png" },
 ];
 
-export default function MapDrawingTool({queryObject, lat, lng, handleCategory, handleOpenPlan, handleOpenSell, onClose, handleAdEdit, handleAdView}:Props) {
+export default function MapDrawingTool({queryObject, coordinates, handleCategory, handleOpenPlan, handleOpenSell, onClose, handleAdEdit, handleAdView}:Props) {
  //const [uploadPopup, setUploadPopup] = useState(false);
   const [center, setCenter] = useState<any>(defaultcenter);
   const [latitude, setLatitude] = useState("");
@@ -304,18 +303,21 @@ export default function MapDrawingTool({queryObject, lat, lng, handleCategory, h
   <div style=" background-color: #00A65A;
       padding: 6px 10px;
       color: white;
-      font-size: 12px;
+      font-size: 10px;
       border-radius: 4px;
       box-shadow: 0 2px 6px rgba(0,0,0,0.3);
       position: absolute;
       transform: translate(-50%, -50%);
       white-space: nowrap;">
                   <div><strong>Perimeter:</strong> ${readablePerimeter}</div>
-                  <div><strong>Area:</strong>
-                    <div>${areaSqM.toFixed(0)} m²</div>
-                    <div>${areaHa.toFixed(2)} ha</div>
-                    <div>${areaAcres.toFixed(2)} acres</div>
-                  </div>
+                      <div style="display: flex; gap: 4px; align-items: center;">
+  <strong>Area:</strong>
+  <div>${areaSqM.toFixed(0)} m²</div>
+  
+  <div>${areaHa.toFixed(2)} ha</div>
+  
+  <div>${areaAcres.toFixed(2)} acres</div>
+</div>
   </div>
 `);
 labelOverlay.setMap(mapInstance.current!);
@@ -814,39 +816,160 @@ useEffect(() => {
     setShapeRefs([]);
     setShapes([]);
   };
-  
+  const handleOpenUploadPopup = () => {
+    setLatitude(defaultcenter.lat.toString());
+    setLongitude(defaultcenter.lng.toString());
+    setUploadPopup(true);
+  };
 
   useEffect(() => {
-      if (!lat || !lng) return;
-    
-      const interval = setInterval(() => {
-        if (mapInstance.current) {
-          clearInterval(interval);
-          setCenter({ lat, lng });
-          setLatitude(lat);
-          setLongitude(lng);
-          const map = mapInstance.current;
-          const position = { lat:Number(lat), lng:Number(lng) };
-        
-          if (map) {
-            // Move the center and zoom
-            map.setCenter(position);
-            map.setZoom(18);
-            // Move the existing marker if it exists
-            if (markerRef.current) {
-              markerRef.current.setPosition(position);
-            } 
+    if (!coordinates) return;
+  
+    const interval = setInterval(() => {
+      if (mapInstance.current && window.google) {
+        clearInterval(interval);
+  
+        const coordsArray = coordinates.split(',').map(Number);
+        const latLngPairs = [];
+        let centerSet = false;
+        const bounds = new google.maps.LatLngBounds();
+        for (let i = 0; i < coordsArray.length - 1; i += 2) {
+          const lng = coordsArray[i];
+          const lat = coordsArray[i + 1];
+  
+          if (!centerSet) {
+            setCenter({ lat, lng });
+            setLatitude(lat.toString());
+            setLongitude(lng.toString());
+            handlePostLocation(lat.toString(), lng.toString());
+  
+            const map = mapInstance.current;
+            const position = { lat, lng };
+            if (map) {
+              map.setCenter(position);
+              map.setZoom(18);
+              if (markerRef.current) {
+                markerRef.current.setPosition(position);
+              }
+            }
+            centerSet = true;
           }
+  
+          latLngPairs.push({ lat, lng });
+          bounds.extend(new google.maps.LatLng(lat, lng));
         }
-      }, 200); // check every 200ms
+  
+        if (latLngPairs.length > 2) {
+          const map = mapInstance.current;
+  
+          // Optional: clear existing polygon if needed
+          class CustomLabel extends google.maps.OverlayView {
+            div: HTMLDivElement | null = null;
+          
+            constructor(private position: google.maps.LatLngLiteral, private text: string) {
+              super();
+            }
+          
+            onAdd() {
+              this.div = document.createElement("div");
+              this.div.innerHTML = `<div style="background: black; color: white; padding: 4px 8px; border-radius: 4px;">${this.text}</div>`;
+              this.getPanes()?.overlayLayer.appendChild(this.div);
+            }
+          
+            draw() {
+              if (!this.div) return;
+              const projection = this.getProjection();
+              const point = projection.fromLatLngToDivPixel(new google.maps.LatLng(this.position));
+              if (point) {
+                this.div.style.left = point.x + "px";
+                this.div.style.top = point.y + "px";
+                this.div.style.position = "absolute";
+              }
+            }
+          
+            onRemove() {
+              this.div?.remove();
+            }
+          }
+  
+          const polygon = new window.google.maps.Polygon({
+            paths: latLngPairs,
+            strokeColor: "#00FF00",
+            strokeOpacity: 0.8,
+            strokeWeight: 2,
+            fillColor: "#00FF00",
+            fillOpacity: 0.1,
+          });
+  
+          polygon.setMap(map);
+         
+          // Add label marker
+          const bounds = new google.maps.LatLngBounds();
+          latLngPairs.forEach((coord:any) => bounds.extend(coord));
+          const center = bounds.getCenter();
+      
+          
+          shapeOriginalColors.current.set(polygon, "#00FF00");
+          const path = polygon.getPath().getArray().map((latlng: any) => ({ lat: latlng.lat(), lng: latlng.lng() }));
+          const perimeter = google.maps.geometry.spherical.computeLength(path);
+          const areaSqM = google.maps.geometry.spherical.computeArea(path);
+          const areaHa = areaSqM / 10000;
+          const areaAcres = areaSqM / 4046.85642;
+        
+          const readablePerimeter = perimeter > 1000
+            ? `${(perimeter / 1000).toFixed(2)} km`
+            : `${perimeter.toFixed(0)} m`;
+        
+        const labelOverlay = new CustomLabel( {
+          lat: center.lat(),
+          lng: center.lng()
+        }, `
+  <div style=" background-color: #00A65A;
+      padding: 6px 10px;
+      color: white;
+      font-size: 10px;
+      border-radius: 4px;
+      box-shadow: 0 2px 6px rgba(0,0,0,0.3);
+      position: absolute;
+      transform: translate(-50%, -50%);
+      white-space: nowrap;">
+                  <div><strong>Perimeter:</strong> ${readablePerimeter}</div>
+                  <div className="flex w-full items-center gap-x-2">
+  <strong>Area:</strong>
+  <div>${areaSqM.toFixed(0)} m²</div>
+ 
+  <div>${areaHa.toFixed(2)} ha</div>
+
+  <div>${areaAcres.toFixed(2)} acres</div>
+</div>
+</div>
+  </div>
+`);
+labelOverlay.setMap(mapInstance.current!);
+labelMarkersRef.current.push(labelOverlay);
+if (mapInstance.current) {
+   mapInstance.current.fitBounds(bounds);
+ 
+   google.maps.event.addListenerOnce(mapInstance.current, "bounds_changed", () => {
+     if (mapInstance.current) {
+   
+     mapInstance.current.setZoom(18);
+       
+     }
+   });
+ }
+          // Store reference globally to clear later if needed
+         // setShapes((prev) => [...prev, ...polygon]);
+          setShapeRefs((prev) => [...prev, polygon]);
+        }
+  
+      }
+    }, 200);
+  
+    return () => clearInterval(interval);
+  }, [coordinates]);
+  
     
-      return () => clearInterval(interval);
-    }, [lat,lng]);
-    const handleOpenUploadPopup = () => {
-      setLatitude(defaultcenter.lat.toString());
-      setLongitude(defaultcenter.lng.toString());
-      setUploadPopup(true);
-    };
 const handleFileUpload = (event: React.ChangeEvent<HTMLInputElement>) => {
     if (!mapInstance.current) return;
     const file = event.target.files?.[0];
@@ -891,9 +1014,9 @@ const handleFileUpload = (event: React.ChangeEvent<HTMLInputElement>) => {
         // Update state
         setShapes((prev) => [...prev, ...newShapes]);
         setShapeRefs((prev) => [...prev, newShapes]);
-      const sharedInfoWindow = new google.maps.InfoWindow();
+        const sharInfoWindow = new google.maps.InfoWindow();
           
-     {/*  class CustomLabel extends google.maps.OverlayView {
+      class CustomLabel extends google.maps.OverlayView {
         div: HTMLDivElement | null = null;
       
         constructor(private position: google.maps.LatLngLiteral, private text: string) {
@@ -920,7 +1043,7 @@ const handleFileUpload = (event: React.ChangeEvent<HTMLInputElement>) => {
         onRemove() {
           this.div?.remove();
         }
-      }*/}
+      }
         // Draw on map
         newShapes.forEach((shapeData: any) => {
       
@@ -939,95 +1062,42 @@ const handleFileUpload = (event: React.ChangeEvent<HTMLInputElement>) => {
           const bounds = new google.maps.LatLngBounds();
           shapeData.coordinates.forEach((coord:any) => bounds.extend(coord));
           const center = bounds.getCenter();
-          const labelMarker = new google.maps.Marker({
-            position: center,
-            map: mapInstance.current!,
-            label: {
-              text: shapeData.label,
-              color: shapeData.color,
-              fontSize: "14px",
-              fontWeight: "bold",
-            },
-            icon: {
-              path: google.maps.SymbolPath.CIRCLE,
-              scale: 0,
-            },
-            clickable: false,
-            zIndex: google.maps.Marker.MAX_ZINDEX + 1,
-          });
-  
-          labelMarkersRef.current.push(labelMarker);
-  
-          polyshape.addListener("click", (e: google.maps.MapMouseEvent) => {
-            const path = polyshape.getPath();
-            const matchedShape = shapesRef.current.find((s) =>
-              s.path.length === path.getLength() &&
-              s.path.every((pt: any, idx: number) => {
-                const shapePt = path.getAt(idx);
-                return pt.lat === shapePt.lat() && pt.lng === shapePt.lng();
-              })
-            );
-  
-            const currentLabel = matchedShape?.label || shapeData.label;
-            const perimeter = google.maps.geometry.spherical.computeLength(path);
-            const readablePerimeter = perimeter > 1000
-              ? `${(perimeter / 1000).toFixed(2)} km`
-              : `${perimeter.toFixed(0)} m`;
-  
-            const areaSqM = google.maps.geometry.spherical.computeArea(path);
-            const areaHa = areaSqM / 10000;
-            const areaAcres = areaSqM / 4046.85642;
-  
-            const readableArea = `
-              <div>${areaSqM.toFixed(0)} m²</div>
-              <div>${areaHa.toFixed(2)} ha</div>
-              <div>${areaAcres.toFixed(2)} acres</div>
-            `;
-  
-            sharedInfoWindow.setContent(`
-              <div style="font-size: 13px;">
-                <div><strong>Label:</strong> ${currentLabel}</div>
-                <div><strong>Perimeter:</strong> ${readablePerimeter}</div>
-                <div><strong>Area:</strong> ${readableArea}</div>
-              </div>
-            `);
-            sharedInfoWindow.setPosition(e.latLng!);
-            sharedInfoWindow.open(mapInstance.current!);
-  
-            handleShapeClick(polyshape, currentLabel);
-          });
-  
+      
           
-         // shapeOriginalColors.current.set(polyshape, "#00FF00");
-         // const path = polyshape.getPath().getArray().map((latlng: any) => ({ lat: latlng.lat(), lng: latlng.lng() }));
-         // const perimeter = google.maps.geometry.spherical.computeLength(path);
-         // const areaSqM = google.maps.geometry.spherical.computeArea(path);
-         // const areaHa = areaSqM / 10000;
-         // const areaAcres = areaSqM / 4046.85642;
+          shapeOriginalColors.current.set(polyshape, "#00FF00");
+          const path = polyshape.getPath().getArray().map((latlng: any) => ({ lat: latlng.lat(), lng: latlng.lng() }));
+          const perimeter = google.maps.geometry.spherical.computeLength(path);
+          const areaSqM = google.maps.geometry.spherical.computeArea(path);
+          const areaHa = areaSqM / 10000;
+          const areaAcres = areaSqM / 4046.85642;
         
-         // const readablePerimeter = perimeter > 1000
-         //   ? `${(perimeter / 1000).toFixed(2)} km`
-         //   : `${perimeter.toFixed(0)} m`;
+          const readablePerimeter = perimeter > 1000
+            ? `${(perimeter / 1000).toFixed(2)} km`
+            : `${perimeter.toFixed(0)} m`;
         
-    {/*     const labelOverlay = new CustomLabel( {
+        const labelOverlay = new CustomLabel( {
           lat: center.lat(),
           lng: center.lng()
         }, `
   <div style=" background-color: #00A65A;
       padding: 6px 10px;
       color: white;
-      font-size: 12px;
+      font-size: 10px;
       border-radius: 4px;
       box-shadow: 0 2px 6px rgba(0,0,0,0.3);
       position: absolute;
       transform: translate(-50%, -50%);
       white-space: nowrap;">
                   <div><strong>Perimeter:</strong> ${readablePerimeter}</div>
-                  <div><strong>Area:</strong>
-                    <div>${areaSqM.toFixed(0)} m²</div>
-                    <div>${areaHa.toFixed(2)} ha</div>
-                    <div>${areaAcres.toFixed(2)} acres</div>
-                  </div>
+                  <div className="flex w-full items-center gap-x-2">
+  <strong>Area:</strong>
+  <div>${areaSqM.toFixed(0)} m²</div>
+ 
+  <div>${areaHa.toFixed(2)} ha</div>
+
+  <div>${areaAcres.toFixed(2)} acres</div>
+</div>
+</div>
   </div>
 `);
 labelOverlay.setMap(mapInstance.current!);
@@ -1057,13 +1127,17 @@ labelMarkersRef.current.push(labelOverlay);
               : `${perimeter.toFixed(0)} m`;
           
               sharInfoWindow.setContent(`
-                <div style="font-size: 13px;">
+                <div style="font-size: 10px;">
                   <div><strong>Label:</strong> ${currentLabel}</div>
                   <div><strong>Perimeter:</strong> ${readablePerimeter}</div>
-                  <div><strong>Area:</strong>
-                    <div>${areaSqM.toFixed(0)} m²</div>
-                    <div>${areaHa.toFixed(2)} ha</div>
-                    <div>${areaAcres.toFixed(2)} acres</div>
+                       <div style="display: flex; gap: 4px; align-items: center;">
+  <strong>Area:</strong>
+  <div>${areaSqM.toFixed(0)} m²</div>
+  <span>|</span>
+  <div>${areaHa.toFixed(2)} ha</div>
+  <span>|</span>
+  <div>${areaAcres.toFixed(2)} acres</div>
+</div>
                   </div>
                 </div>
               `
@@ -1072,11 +1146,13 @@ labelMarkersRef.current.push(labelOverlay);
             sharInfoWindow.open(mapInstance.current!);
             //sharedInfoWindow.open(mapInstance.current!);
           });
-             */}
+             
         
 
           }
   
+        
+          
         });
   
         // ✅ Zoom and center map to all new shapes
@@ -1115,7 +1191,7 @@ labelMarkersRef.current.push(labelOverlay);
           google.maps.event.addListenerOnce(mapInstance.current, "bounds_changed", () => {
             if (mapInstance.current) {
           
-            mapInstance.current.setZoom(18);
+           // mapInstance.current.setZoom(18);
               
             }
           });

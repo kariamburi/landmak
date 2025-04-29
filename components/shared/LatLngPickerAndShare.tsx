@@ -1,254 +1,351 @@
-"use client";
+'use client';
 
-import { useState } from "react";
-import { GoogleMap, Marker, useLoadScript } from "@react-google-maps/api";
-import usePlacesAutocomplete, { getGeocode, getLatLng } from "use-places-autocomplete";
-import { Button } from "../ui/button";
-import { Checkbox } from "../ui/checkbox";
-import CircularProgress from "@mui/material/CircularProgress";
-import { useMediaQuery } from "react-responsive"; // Detect mobile screens
+import { useLoadScript } from '@react-google-maps/api';
+import { useEffect, useRef, useState } from 'react';
+import FullscreenOutlinedIcon from '@mui/icons-material/FullscreenOutlined';
+import AddLocationAltOutlinedIcon from '@mui/icons-material/AddLocationAltOutlined';
+import CloseOutlinedIcon from "@mui/icons-material/CloseOutlined";
+import { Tooltip, TooltipContent, TooltipProvider, TooltipTrigger } from "../ui/tooltip";
+import { Button } from '../ui/button';
+import { Input } from '../ui/input';
 import { Icon } from "@iconify/react";
-import Barsscale from "@iconify-icons/svg-spinners/bars-scale"; 
-const GOOGLE_MAPS_API_KEY = process.env.NEXT_PUBLIC_GOOGLEAPIKEY as string;
-const containerStyle = { width: "100%", height: "400px" };
-const defaultCenter = { lat: -1.286389, lng: 36.817223 }; // Default: Nairobi, Kenya
-
-const LatLngPickerAndShare = ({
-    name,
-    onChange,
-    onSave,
-  }: {
-    name: string;
-    onChange: (field: string, value: any) => void;
-    onSave: () => void;
-  }) => {
-  const [center, setCenter] = useState(defaultCenter);
-  const [markerPosition, setMarkerPosition] = useState(defaultCenter);
-  const [latitude, setLatitude] = useState("");
-  const [longitude, setLongitude] = useState("");
-  const [isPicking, setisPicking] = useState(false);
-  const isMobile = useMediaQuery({ maxWidth: 768 }); // Detect mobile screens
-      
-  //const [price, setPrice] = useState<number>(0);
-  //const [title, setTitle] = useState("");
-  const { isLoaded } = useLoadScript({ googleMapsApiKey: GOOGLE_MAPS_API_KEY, libraries: ["places"] });
-  const { suggestions, setValue, value, clearSuggestions } = usePlacesAutocomplete();
-  const [error, setError] = useState<string>("");
-  if (!isLoaded) return <div className="h-[80vh] items-center justify-center"> <Icon icon={Barsscale} className="w-6 h-6 text-gray-500" /></div>;
-
-  const handleSelect = async (address: any) => {
-    setValue(address, false);
-    clearSuggestions();
-    try {
-      const results = await getGeocode({ address });
-      const { lat, lng } = await getLatLng(results[0]);
-      setCenter({ lat, lng });
-      setMarkerPosition({ lat, lng });
-      setLatitude(lat.toFixed(6));
-      setLongitude(lng.toFixed(6));
-  
-    } catch (error) {
-      console.error("Error getting geocode:", error);
-    }
-  };
-
-  const handleCoordinateSearch = () => {
-    const lat = parseFloat(latitude);
-    const lng = parseFloat(longitude);
-    if (!isNaN(lat) && !isNaN(lng)) {
-      setCenter({ lat, lng });
-      setMarkerPosition({ lat, lng });
-      setLatitude(lat.toFixed(6));
-      setLongitude(lng.toFixed(6));
-      //onLocationSelect({ lat, lng });
-      
-    }
-  };
-
-  const handleMarkerDragEnd = (event:any) => {
-    const lat = event.latLng.lat();
-    const lng = event.latLng.lng();
-    setMarkerPosition({ lat, lng });
-    setLatitude(lat.toFixed(6));
-    setLongitude(lng.toFixed(6));
-    //onLocationSelect({ lat, lng });
-   
-  };
- // Handle Save
- const handleSave = () => {
-  const lat = parseFloat(latitude);
-  const lon = parseFloat(longitude);
-
-  if (isNaN(lat) || isNaN(lon)) {
-    setError("Latitude and Longitude must be numbers.");
-    return;
-  }
-
-  if (lat < -90 || lat > 90) {
-    setError("Latitude must be between -90 and 90.");
-    return;
-  }
-
-  if (lon < -180 || lon > 180) {
-    setError("Longitude must be between -180 and 180.");
-    return;
-  }
-  
-    onChange(name, { lat: latitude, lng: longitude });
-    onSave();
-  };
-  const handleMyLocation = () => {
-    setisPicking(true)
-    if (navigator.geolocation) {
-      navigator.geolocation.getCurrentPosition(
-        (position) => {
-          const userLocation = {
-            lat: position.coords.latitude,
-            lng: position.coords.longitude,
-          };
-          setCenter(userLocation);
-          setMarkerPosition(userLocation);
-          setLatitude(Number(userLocation.lat).toFixed(6));
-          setLongitude(Number(userLocation.lng).toFixed(6));
-         
-        },
-        (error) => {
-          console.error("Error getting location:", error);
-          alert("Unable to retrieve your location. Please enable location services.");
-        }
-      );
-      setisPicking(false)
-    } else {
-      setisPicking(false)
-      alert("Geolocation is not supported by this browser.");
-    }
-  };
-  return (<>
-      {isMobile ? (
-              // Fullscreen Popover for Mobile
-              <div className="fixed inset-0 z-50 bg-gray-200 dark:bg-[#222528] dark:text-gray-100 p-1 lg:p-4 flex flex-col">
-                <div className="flex mt-[60px] justify-between items-center border-b pb-2">
-                  <h4 className="font-medium text-lg">Share property location</h4>
-                  <Button variant="outline" onClick={() => onSave()}>
-                    Close
-                  </Button>
-                </div>
-                <div className="flex gap-2 flex-col lg:flex-row">
-    <div className="flex-1 gap-2 mb-2">
-    <div className="flex items-center gap-2">
-    <Checkbox id="location" onCheckedChange={handleMyLocation} />
-      <label
-        htmlFor="location"
-        className="text-sm font-medium leading-none peer-disabled:cursor-not-allowed peer-disabled:opacity-70"
-      >
-        Pick my current location
-      </label>
-       {isPicking && (
-                          <CircularProgress sx={{ color: "gray" }} size={30} />
-                        )}
-      </div>
-                  </div>
-      <div className="flex-1 gap-2 mb-2">
-        <input type="text" placeholder="Search by address..." value={value} onChange={(e) => setValue(e.target.value)} className="w-full text-sm dark:bg-[#131B1E] dark:text-gray-300 dark:border-gray-600  p-2 border rounded" />
-        {suggestions.status === "OK" && (
-          <ul className="absolute z-10 text-sm dark:bg-[#131B1E] w-[350px] dark:text-gray-300 dark:border-gray-600 bg-white border rounded mt-1 max-h-40 overflow-auto">
-            {suggestions.data.map((suggestion) => (
-              <li key={suggestion.place_id} className="p-2 cursor-pointer hover:bg-gray-200" onClick={() => handleSelect(suggestion.description)}>
-                {suggestion.description}
-              </li>
-            ))}
-          </ul>
-        )}
-      </div>
-      <div className="flex justify-between">
-      <div className="flex flex-col">
-      
-      <div className="flex w-full gap-2 mb-2">
-        <input type="text" placeholder="Latitude" value={latitude} onChange={(e) => setLatitude(e.target.value)} className="p-2 text-sm w-[100px] lg:w-[150px] dark:bg-[#131B1E] dark:text-gray-300 dark:border-gray-600  border rounded" />
-        <input type="text" placeholder="Longitude" value={longitude} onChange={(e) => setLongitude(e.target.value)} className="p-2 w-[100px] lg:w-[150px] text-sm dark:bg-[#131B1E] dark:text-gray-300 dark:border-gray-600  border rounded" />
-        <Button  variant="default" onClick={handleCoordinateSearch} className="bg-blue-500 text-white rounded">Go</Button>
-        {longitude && longitude && (
-        <Button
-        onClick={handleSave}
-        variant="default"
-        className="bg-green-500 text-white rounded hover:bg-green-600 transition"
-      >
-        Share
-      </Button>) }
-      </div>
-
-      </div>
-    
-        </div></div>
-      <GoogleMap mapContainerStyle={containerStyle} center={center} zoom={17}
-       options={{
-        zoomControl: true, // Enable zoom controls
-        mapTypeControl: true, // Enable map type switch (optional)
-        streetViewControl: true, // Enable Street View control (optional)
-        fullscreenControl: true, // Enable Fullscreen button (optional)
-      }}>
-        <Marker position={markerPosition} draggable onDragEnd={handleMarkerDragEnd} />
-      </GoogleMap>
-                </div>):(
-    <div className="w-full h-[80vh] p-1 dark:bg-[#2D3236] bg-gray-200 rounded-lg">
-    <div className="flex gap-2 flex-col lg:flex-row">
-    <div className="flex-1 gap-2 mb-2">
-    <div className="flex items-center gap-2">
-    <Checkbox id="location" onCheckedChange={handleMyLocation} />
-      <label
-        htmlFor="location"
-        className="text-sm font-medium leading-none peer-disabled:cursor-not-allowed peer-disabled:opacity-70"
-      >
-        Pick my current location
-      </label>
-       {isPicking && (
-                          <CircularProgress sx={{ color: "gray" }} size={30} />
-                        )}
-      </div>
-                  </div>
-      <div className="flex-1 gap-2 mb-2">
-        <input type="text" placeholder="Search by address..." value={value} onChange={(e) => setValue(e.target.value)} className="w-full text-sm dark:bg-[#131B1E] dark:text-gray-300 dark:border-gray-600  p-2 border rounded" />
-        {suggestions.status === "OK" && (
-          <ul className="absolute z-10 text-sm dark:bg-[#131B1E] w-[350px] dark:text-gray-300 dark:border-gray-600 bg-white border rounded mt-1 max-h-40 overflow-auto">
-            {suggestions.data.map((suggestion) => (
-              <li key={suggestion.place_id} className="p-2 cursor-pointer hover:bg-gray-200" onClick={() => handleSelect(suggestion.description)}>
-                {suggestion.description}
-              </li>
-            ))}
-          </ul>
-        )}
-      </div>
-      <div className="flex justify-between">
-      <div className="flex flex-col">
-      
-      <div className="flex w-full gap-2 mb-2">
-        <input type="text" placeholder="Latitude" value={latitude} onChange={(e) => setLatitude(e.target.value)} className="p-2 text-sm w-[150px] dark:bg-[#131B1E] dark:text-gray-300 dark:border-gray-600  border rounded" />
-        <input type="text" placeholder="Longitude" value={longitude} onChange={(e) => setLongitude(e.target.value)} className="p-2 w-[150px] text-sm dark:bg-[#131B1E] dark:text-gray-300 dark:border-gray-600  border rounded" />
-        <Button  variant="default" onClick={handleCoordinateSearch} className="bg-blue-500 text-white rounded">Go</Button>
-        {longitude && longitude && (
-        <Button
-        onClick={handleSave}
-        variant="default"
-        className="bg-green-500 text-white rounded hover:bg-green-600 transition"
-      >
-        Share
-      </Button>) }
-      </div>
-
-      </div>
-    
-        </div></div>
-      <GoogleMap mapContainerStyle={containerStyle} center={center} zoom={17}
-       options={{
-        zoomControl: true, // Enable zoom controls
-        mapTypeControl: true, // Enable map type switch (optional)
-        streetViewControl: true, // Enable Street View control (optional)
-        fullscreenControl: true, // Enable Fullscreen button (optional)
-      }}>
-        <Marker position={markerPosition} draggable onDragEnd={handleMarkerDragEnd} />
-      </GoogleMap>
-    </div>)}
-    </>);
+import Barsscale from "@iconify-icons/svg-spinners/bars-scale";
+import MyLocationOutlinedIcon from '@mui/icons-material/MyLocationOutlined';
+import DeleteOutlineOutlinedIcon from '@mui/icons-material/DeleteOutlineOutlined';
+import ShareOutlinedIcon from '@mui/icons-material/ShareOutlined';
+type Beacon = {
+  name: string;
+  lat: number;
+  lng: number;
 };
 
-export default LatLngPickerAndShare;
+interface Props {
+  name:string,
+  onClose: () => void;
+  onChange: (field: string, value: any) => void;
+}
+
+const GOOGLE_MAPS_API_KEY = process.env.NEXT_PUBLIC_GOOGLEAPIKEY!;
+const libraries: ("places" | "geometry" | "drawing")[] = ["places", "geometry", "drawing"];
+
+export default function LatLngPickerAndShare({ onClose, name, onChange }: Props) {
+  const { isLoaded } = useLoadScript({
+    googleMapsApiKey: GOOGLE_MAPS_API_KEY,
+    libraries,
+  });
+
+  const [currentPos, setCurrentPos] = useState<{ lat: number; lng: number } | null>(null);
+  const [beacons, setBeacons] = useState<Beacon[]>([]);
+  const [manualInput, setManualInput] = useState({ name: '', lat: '', lng: '' });
+  const [manualInputVisible, setManualInputVisible] = useState(false);
+  const mapRef = useRef<HTMLDivElement>(null);
+  const mapInstance = useRef<google.maps.Map>();
+  const userMarker = useRef<google.maps.Marker>();
+  const beaconMarkers = useRef<google.maps.Marker[]>([]);
+  const polygonRef = useRef<google.maps.Polygon>();
+
+  useEffect(() => {
+    if (!isLoaded || !navigator.geolocation) return;
+
+    const watchId = navigator.geolocation.watchPosition(
+      (pos) => {
+        const lat = pos.coords.latitude;
+        const lng = pos.coords.longitude;
+        const position = { lat, lng };
+        setCurrentPos(position);
+        updateMap(position);
+      },
+      (err) => console.error("Error: " + err.message),
+      {
+        enableHighAccuracy: true,
+        maximumAge: 5000,
+        timeout: 5000,
+      }
+    );
+
+    return () => navigator.geolocation.clearWatch(watchId);
+  }, [isLoaded]);
+
+  const updateMap = (position: { lat: number; lng: number }) => {
+    if (!window.google || !mapRef.current) return;
+
+    if (!mapInstance.current) {
+      mapInstance.current = new google.maps.Map(mapRef.current, {
+        center: position,
+        zoom: 16,
+        mapTypeId: "satellite",
+        fullscreenControl: false,
+      });
+
+      userMarker.current = new google.maps.Marker({
+        position,
+        map: mapInstance.current,
+        title: 'Me',
+        icon: {
+          path: google.maps.SymbolPath.CIRCLE,
+          scale: 8,
+          fillColor: '#4285F4',
+          fillOpacity: 1,
+          strokeWeight: 2,
+          strokeColor: '#ffffff',
+        },
+      });
+    } else {
+      userMarker.current?.setPosition(position);
+    }
+  };
+
+  const captureBeacon = () => {
+    if (!currentPos) return;
+    const newBeacon = {
+      name: `Beacon ${beacons.length + 1}`,
+      lat: currentPos.lat,
+      lng: currentPos.lng
+    };
+    addBeacon(newBeacon);
+  };
+
+  const addBeacon = (beacon: Beacon) => {
+    const marker = new google.maps.Marker({
+      position: { lat: beacon.lat, lng: beacon.lng },
+      map: mapInstance.current,
+      title: beacon.name,
+      draggable: true,
+    });
+
+    marker.addListener('dragend', (e:any) => {
+      const updatedBeacons = [...beacons];
+      updatedBeacons[beacons.length] = {
+        ...beacon,
+        lat: e.latLng?.lat() ?? beacon.lat,
+        lng: e.latLng?.lng() ?? beacon.lng,
+      };
+      setBeacons(updatedBeacons);
+      updatePolygon(updatedBeacons);
+    });
+
+    beaconMarkers.current.push(marker);
+    const updatedList = [...beacons, beacon];
+    setBeacons(updatedList);
+    updatePolygon(updatedList);
+  };
+
+  const updatePolygon = (updatedBeacons: Beacon[]) => {
+    if (!mapInstance.current) return;
+    const path = updatedBeacons.map((b) => ({ lat: b.lat, lng: b.lng }));
+    if (polygonRef.current) {
+      polygonRef.current.setPath(path);
+    } else {
+      polygonRef.current = new google.maps.Polygon({
+        paths: path,
+        strokeColor: "#FF0000",
+        strokeOpacity: 0.8,
+        strokeWeight: 2,
+        fillColor: "#FF0000",
+        fillOpacity: 0.1,
+        map: mapInstance.current,
+      });
+    }
+  };
+
+  const handleManualInput = () => {
+    const lat = parseFloat(manualInput.lat);
+    const lng = parseFloat(manualInput.lng);
+    if (isNaN(lat) || isNaN(lng) || !manualInput.name.trim()) {
+      alert("Enter valid name, latitude and longitude");
+      return;
+    }
+    addBeacon({ name: manualInput.name, lat, lng });
+    setManualInput({ name: '', lat: '', lng: '' });
+    // Ensure the polygon is updated with the new beacon
+    updatePolygon([...beacons, { name: manualInput.name, lat, lng }]);
+  };
+
+  const saveBeaconsToGeoJSON = () => {
+    if (beacons.length < 1) {
+      alert("At least 1 location.");
+      return;
+    }
+    const coordinates = beacons.map((b) => [b.lng, b.lat]);
+    if (coordinates[0][0] !== coordinates[coordinates.length - 1][0] ||
+        coordinates[0][1] !== coordinates[coordinates.length - 1][1]) {
+      coordinates.push(coordinates[0]);
+    }
+
+
+    onChange(name, [coordinates]);
+    onClose();
+    //coordinates: [coordinates],
+  };
+  const deleteAll = () => {
+    setBeacons([]);
+    polygonRef.current?.setMap(null);
+    polygonRef.current = undefined;
+    beaconMarkers.current.forEach(marker => marker.setMap(null));
+    beaconMarkers.current = [];
+  }
+  const handleFullscreen = () => {
+    const container = document.getElementById("map-container");
+    if (!container) return;
+    if (!document.fullscreenElement) {
+      container.requestFullscreen?.();
+    } else {
+      document.exitFullscreen?.();
+    }
+  };
+
+  if (!isLoaded) return (
+    <div className="flex justify-center items-center h-full">
+      <Icon icon={Barsscale} className="w-10 h-10 text-gray-500" />
+    </div>
+  );
+
+  return (
+    <div id="map-container" className="h-[90vh] mt-[50px] w-full relative">
+      <div className="w-full h-full rounded-b-xl shadow-md border" ref={mapRef}></div>
+
+      {/* Buttons */}
+      <div className="absolute top-2 right-2 z-20 flex flex-col space-y-2">
+        <TooltipProvider>
+          <Tooltip>
+            <TooltipTrigger asChild>
+              <Button onClick={handleFullscreen} className="w-14 text-gray-600" variant="outline">
+                <FullscreenOutlinedIcon />
+              </Button>
+            </TooltipTrigger>
+            <TooltipContent><p>Toggle Fullscreen</p></TooltipContent>
+          </Tooltip>
+        </TooltipProvider>
+
+        <TooltipProvider>
+          <Tooltip>
+            <TooltipTrigger asChild>
+              <Button onClick={captureBeacon} className="w-14 text-gray-600" variant="outline">
+                <MyLocationOutlinedIcon />
+              </Button>
+            </TooltipTrigger>
+            <TooltipContent><p>Capture Gps Beacon</p></TooltipContent>
+          </Tooltip>
+        </TooltipProvider>
+
+        {/* Add Manual Beacon Button */}
+      <TooltipProvider>
+        <Tooltip>
+          <TooltipTrigger asChild>
+            <Button onClick={() => setManualInputVisible(true)} className="w-14 text-gray-600" variant="outline">
+              <AddLocationAltOutlinedIcon />
+            </Button>
+          </TooltipTrigger>
+          <TooltipContent><p>Add manual beacon</p></TooltipContent>
+        </Tooltip>
+      </TooltipProvider>
+
+        <TooltipProvider>
+          <Tooltip>
+            <TooltipTrigger asChild>
+              <Button onClick={saveBeaconsToGeoJSON} className="w-14 text-gray-600" variant="outline">
+                <ShareOutlinedIcon/>
+              </Button>
+            </TooltipTrigger>
+            <TooltipContent><p>Share Coordinates</p></TooltipContent>
+          </Tooltip>
+        </TooltipProvider>
+        <TooltipProvider>
+          <Tooltip>
+            <TooltipTrigger asChild>
+              <Button onClick={deleteAll} variant="outline" className="w-14 text-gray-600">
+                <DeleteOutlineOutlinedIcon />
+              </Button>
+            </TooltipTrigger>
+            <TooltipContent><p>Delete Beacons</p></TooltipContent>
+          </Tooltip>
+        </TooltipProvider>
+        <TooltipProvider>
+          <Tooltip>
+            <TooltipTrigger asChild>
+              <Button onClick={onClose} variant="outline" className="w-14 text-gray-600">
+                <CloseOutlinedIcon />
+              </Button>
+            </TooltipTrigger>
+            <TooltipContent><p>Exit</p></TooltipContent>
+          </Tooltip>
+        </TooltipProvider>
+      </div>
+
+       {/* Manual Input Form */}
+       {manualInputVisible && (
+        <div className="absolute bottom-10 left-10 z-10 p-4 bg-white shadow-md rounded-md">
+         
+         <div className='flex justify-between items-center'> <h3 className="text-lg font-semibold">Add Manual Beacon</h3>
+          <Button
+                type="button"
+                onClick={() => setManualInputVisible(false)}  // Close the form
+                className="px-4 py-2 bg-gray-400 text-white rounded"
+              >
+                <CloseOutlinedIcon />
+              </Button>
+              </div>
+          <p className='text-sm text-gray-400'>Survey documents or paper maps</p>
+       
+          <form
+            onSubmit={(e) => {
+              e.preventDefault();
+              handleManualInput();
+            }}
+            className="space-y-2"
+          >
+            <div>
+              <label className="block">Beacon Name</label>
+              <input
+                type="text"
+                value={manualInput.name}
+                onChange={(e) => setManualInput({ ...manualInput, name: e.target.value })}
+                className="w-full p-2 border rounded"
+              />
+            </div>
+            <div>
+              <label className="block">Latitude</label>
+              <input
+                type="text"
+                value={manualInput.lat}
+                onChange={(e) => setManualInput({ ...manualInput, lat: e.target.value })}
+                className="w-full p-2 border rounded"
+              />
+            </div>
+            <div>
+              <label className="block">Longitude</label>
+              <input
+                type="text"
+                value={manualInput.lng}
+                onChange={(e) => setManualInput({ ...manualInput, lng: e.target.value })}
+                className="w-full p-2 border rounded"
+              />
+            </div>
+            <div className="flex justify-end space-x-2 mt-2">
+             
+              <button
+                type="submit"
+                className="px-4 py-2 bg-green-600 text-white rounded"
+              >
+                Add Beacon
+              </button>
+            </div>
+          </form>
+        </div>
+      )}
+
+      {/* Beacon List */}
+      {beacons.length > 0 && (
+        <div className="absolute top-20 left-2 p-2 text-white bg-green-600 z-10 rounded-md shadow-lg max-h-[200px] overflow-auto text-sm">
+          <ul>
+            {beacons.map((b, i) => (
+              <li key={i}>
+                {b.name}: {b.lat.toFixed(6)}, {b.lng.toFixed(6)}
+              </li>
+            ))}
+          </ul>
+        </div>
+      )}
+    </div>
+  );
+}

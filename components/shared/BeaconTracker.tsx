@@ -11,6 +11,7 @@ import { Input } from '../ui/input';
 import { Icon } from "@iconify/react";
 import Barsscale from "@iconify-icons/svg-spinners/bars-scale";
 import MyLocationOutlinedIcon from '@mui/icons-material/MyLocationOutlined';
+import DeleteOutlineOutlinedIcon from '@mui/icons-material/DeleteOutlineOutlined';
 type Beacon = {
   name: string;
   lat: number;
@@ -193,7 +194,13 @@ export default function BeaconTracker({ onClose }: Props) {
     beaconMarkers.current.forEach(marker => marker.setMap(null));
     beaconMarkers.current = [];
   };
-
+  const deleteAll = () => {
+    setBeacons([]);
+    polygonRef.current?.setMap(null);
+    polygonRef.current = undefined;
+    beaconMarkers.current.forEach(marker => marker.setMap(null));
+    beaconMarkers.current = [];
+  }
   const handleFullscreen = () => {
     const container = document.getElementById("map-container");
     if (!container) return;
@@ -260,7 +267,16 @@ export default function BeaconTracker({ onClose }: Props) {
             <TooltipContent><p>Save to GeoJSON</p></TooltipContent>
           </Tooltip>
         </TooltipProvider>
-
+        <TooltipProvider>
+          <Tooltip>
+            <TooltipTrigger asChild>
+              <Button onClick={deleteAll} variant="outline" className="w-14 text-gray-600">
+                <DeleteOutlineOutlinedIcon />
+              </Button>
+            </TooltipTrigger>
+            <TooltipContent><p>Delete Beacons</p></TooltipContent>
+          </Tooltip>
+        </TooltipProvider>
         <TooltipProvider>
           <Tooltip>
             <TooltipTrigger asChild>
