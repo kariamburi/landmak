@@ -42,26 +42,33 @@ export default function BeaconTracker({ onClose }: Props) {
   const polygonRef = useRef<google.maps.Polygon>();
 
   useEffect(() => {
-    if (!isLoaded || !navigator.geolocation) return;
-
+    if (!isLoaded) return;
+  
+    const defaultPosition = { lat: -1.2921, lng: 36.8219 }; // Nairobi or any fallback
+    updateMap(defaultPosition);
+  
+    if (!navigator.geolocation) return;
+  
     const watchId = navigator.geolocation.watchPosition(
       (pos) => {
-        const lat = pos.coords.latitude;
-        const lng = pos.coords.longitude;
-        const position = { lat, lng };
+        const position = {
+          lat: pos.coords.latitude,
+          lng: pos.coords.longitude,
+        };
         setCurrentPos(position);
         updateMap(position);
       },
-      (err) => console.error("Error: " + err.message),
+      (err) => console.error("Geolocation Error:", err),
       {
         enableHighAccuracy: true,
         maximumAge: 5000,
         timeout: 5000,
       }
     );
-
+  
     return () => navigator.geolocation.clearWatch(watchId);
   }, [isLoaded]);
+  
 
   const updateMap = (position: { lat: number; lng: number }) => {
     if (!window.google || !mapRef.current) return;

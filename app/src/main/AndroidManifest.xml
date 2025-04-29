@@ -23,8 +23,7 @@
     package="ke.co.mapa.twa">
 
     
-        <uses-permission android:name="android.permission.POST_NOTIFICATIONS"/>
-    
+<uses-permission android:name="android.permission.POST_NOTIFICATIONS"/>
 <uses-permission android:name="android.permission.ACCESS_FINE_LOCATION" />
 <uses-permission android:name="android.permission.ACCESS_COARSE_LOCATION" />
 
@@ -162,6 +161,17 @@
                 android:name="android.support.FILE_PROVIDER_PATHS"
                 android:resource="@xml/filepaths" />
         </provider>
+<!-- IMPORTANT! The service is needed for location delegation -->
+        <service
+            android:name=".ExtraFeaturesService"
+            android:enabled="true"
+            android:exported="true">
+
+            <intent-filter>
+                <action android:name="android.support.customtabs.trusted.TRUSTED_WEB_ACTIVITY_SERVICE"/>
+                <category android:name="android.intent.category.DEFAULT"/>
+            </intent-filter>
+        </service>
 
         <service
             android:name=".DelegationService"
