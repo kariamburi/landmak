@@ -10,7 +10,7 @@ import { Button } from '../ui/button';
 import { Input } from '../ui/input';
 import { Icon } from "@iconify/react";
 import Barsscale from "@iconify-icons/svg-spinners/bars-scale";
-
+import MyLocationOutlinedIcon from '@mui/icons-material/MyLocationOutlined';
 type Beacon = {
   name: string;
   lat: number;
@@ -33,7 +33,7 @@ export default function BeaconTracker({ onClose }: Props) {
   const [currentPos, setCurrentPos] = useState<{ lat: number; lng: number } | null>(null);
   const [beacons, setBeacons] = useState<Beacon[]>([]);
   const [manualInput, setManualInput] = useState({ name: '', lat: '', lng: '' });
-
+  const [manualInputVisible, setManualInputVisible] = useState(false);
   const mapRef = useRef<HTMLDivElement>(null);
   const mapInstance = useRef<google.maps.Map>();
   const userMarker = useRef<google.maps.Marker>();
@@ -51,7 +51,7 @@ export default function BeaconTracker({ onClose }: Props) {
         setCurrentPos(position);
         updateMap(position);
       },
-      (err) => alert("Error: " + err.message),
+      (err) => console.error("Error: " + err.message),
       {
         enableHighAccuracy: true,
         maximumAge: 5000,
@@ -153,6 +153,8 @@ export default function BeaconTracker({ onClose }: Props) {
     }
     addBeacon({ name: manualInput.name, lat, lng });
     setManualInput({ name: '', lat: '', lng: '' });
+    // Ensure the polygon is updated with the new beacon
+    updatePolygon([...beacons, { name: manualInput.name, lat, lng }]);
   };
 
   const saveBeaconsToGeoJSON = () => {
@@ -229,12 +231,24 @@ export default function BeaconTracker({ onClose }: Props) {
           <Tooltip>
             <TooltipTrigger asChild>
               <Button onClick={captureBeacon} className="w-14 text-gray-600" variant="outline">
-                <AddLocationAltOutlinedIcon />
+                <MyLocationOutlinedIcon />
               </Button>
             </TooltipTrigger>
-            <TooltipContent><p>Capture Beacon</p></TooltipContent>
+            <TooltipContent><p>Capture Gps Beacon</p></TooltipContent>
           </Tooltip>
         </TooltipProvider>
+
+        {/* Add Manual Beacon Button */}
+      <TooltipProvider>
+        <Tooltip>
+          <TooltipTrigger asChild>
+            <Button onClick={() => setManualInputVisible(true)} className="w-14 text-gray-600" variant="outline">
+              <AddLocationAltOutlinedIcon />
+            </Button>
+          </TooltipTrigger>
+          <TooltipContent><p>Add manual beacon</p></TooltipContent>
+        </Tooltip>
+      </TooltipProvider>
 
         <TooltipProvider>
           <Tooltip>
@@ -259,26 +273,62 @@ export default function BeaconTracker({ onClose }: Props) {
         </TooltipProvider>
       </div>
 
-      {/* Manual Input Section */}
-      <div className="absolute bottom-2 left-2 bg-white p-3 rounded-md shadow z-20 space-y-2 w-80">
-        <p className="text-sm font-semibold">Manual Input / Edit (override)</p>
-        <Input
-          placeholder="Beacon name"
-          value={manualInput.name}
-          onChange={(e) => setManualInput({ ...manualInput, name: e.target.value })}
-        />
-        <Input
-          placeholder="Latitude"
-          value={manualInput.lat}
-          onChange={(e) => setManualInput({ ...manualInput, lat: e.target.value })}
-        />
-        <Input
-          placeholder="Longitude"
-          value={manualInput.lng}
-          onChange={(e) => setManualInput({ ...manualInput, lng: e.target.value })}
-        />
-        <Button onClick={handleManualInput} className="w-full">Add Manual Beacon</Button>
-      </div>
+       {/* Manual Input Form */}
+       {manualInputVisible && (
+        <div className="absolute top-10 left-10 z-10 p-4 bg-white shadow-md rounded-md">
+          <h3 className="text-lg font-semibold">Add Manual Beacon</h3>
+          <form
+            onSubmit={(e) => {
+              e.preventDefault();
+              handleManualInput();
+            }}
+            className="space-y-2"
+          >
+            <div>
+              <label className="block">Beacon Name</label>
+              <input
+                type="text"
+                value={manualInput.name}
+                onChange={(e) => setManualInput({ ...manualInput, name: e.target.value })}
+                className="w-full p-2 border rounded"
+              />
+            </div>
+            <div>
+              <label className="block">Latitude</label>
+              <input
+                type="text"
+                value={manualInput.lat}
+                onChange={(e) => setManualInput({ ...manualInput, lat: e.target.value })}
+                className="w-full p-2 border rounded"
+              />
+            </div>
+            <div>
+              <label className="block">Longitude</label>
+              <input
+                type="text"
+                value={manualInput.lng}
+                onChange={(e) => setManualInput({ ...manualInput, lng: e.target.value })}
+                className="w-full p-2 border rounded"
+              />
+            </div>
+            <div className="flex justify-end space-x-2 mt-2">
+              <button
+                type="button"
+                onClick={() => setManualInputVisible(false)}  // Close the form
+                className="px-4 py-2 bg-gray-400 text-white rounded"
+              >
+                Cancel
+              </button>
+              <button
+                type="submit"
+                className="px-4 py-2 bg-blue-600 text-white rounded"
+              >
+                Add Beacon
+              </button>
+            </div>
+          </form>
+        </div>
+      )}
 
       {/* Beacon List */}
       {beacons.length > 0 && (
