@@ -277,6 +277,7 @@ export default function BeaconTracker({ onClose }: Props) {
        {manualInputVisible && (
         <div className="absolute top-10 left-10 z-10 p-4 bg-white shadow-md rounded-md">
           <h3 className="text-lg font-semibold">Add Manual Beacon</h3>
+          <p className='text-sm text-gray-400'>Survey documents or paper maps</p>
           <form
             onSubmit={(e) => {
               e.preventDefault();
