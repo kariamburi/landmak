@@ -297,7 +297,7 @@ export default function BeaconTracker({ onClose }: Props) {
           <Button
                 type="button"
                 onClick={() => setManualInputVisible(false)}  // Close the form
-                className="px-4 py-2 bg-gray-400 text-white rounded"
+                className="p-2 text-gray-700"
               >
                 <CloseOutlinedIcon />
               </Button>
