@@ -275,9 +275,19 @@ export default function BeaconTracker({ onClose }: Props) {
 
        {/* Manual Input Form */}
        {manualInputVisible && (
-        <div className="absolute top-10 left-10 z-10 p-4 bg-white shadow-md rounded-md">
-          <h3 className="text-lg font-semibold">Add Manual Beacon</h3>
+        <div className="absolute bottom-10 left-10 z-10 p-4 bg-white shadow-md rounded-md">
+         
+         <div className='flex justify-between items-center'> <h3 className="text-lg font-semibold">Add Manual Beacon</h3>
+          <Button
+                type="button"
+                onClick={() => setManualInputVisible(false)}  // Close the form
+                className="px-4 py-2 bg-gray-400 text-white rounded"
+              >
+                <CloseOutlinedIcon />
+              </Button>
+              </div>
           <p className='text-sm text-gray-400'>Survey documents or paper maps</p>
+       
           <form
             onSubmit={(e) => {
               e.preventDefault();
@@ -313,16 +323,10 @@ export default function BeaconTracker({ onClose }: Props) {
               />
             </div>
             <div className="flex justify-end space-x-2 mt-2">
-              <button
-                type="button"
-                onClick={() => setManualInputVisible(false)}  // Close the form
-                className="px-4 py-2 bg-gray-400 text-white rounded"
-              >
-                Cancel
-              </button>
+             
               <button
                 type="submit"
-                className="px-4 py-2 bg-blue-600 text-white rounded"
+                className="px-4 py-2 bg-green-600 text-white rounded"
               >
                 Add Beacon
               </button>
