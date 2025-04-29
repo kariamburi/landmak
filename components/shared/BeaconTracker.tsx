@@ -47,15 +47,15 @@ export default function BeaconTracker({ onClose }: Props) {
 
     const watchId = navigator.geolocation.watchPosition(
       (pos) => {
-        const lat = Number(pos.coords.latitude.toFixed(15));
-        const lng = Number(pos.coords.longitude.toFixed(15));
+        const lat = pos.coords.latitude;
+        const lng = pos.coords.longitude;
         
         const position = { lat, lng };
         setCurrentPos(position);
         updateMap(position);
       },
       (err) => {
-        //alert("Error: " + err.message);
+        alert("Error: " + err.message);
       },
       {
         enableHighAccuracy: true,
@@ -104,8 +104,8 @@ export default function BeaconTracker({ onClose }: Props) {
     const name = `Beacon ${beacons.length + 1}`;
     const newBeacon = {
       name,
-      lat: Number(currentPos.lat.toFixed(15)),
-      lng: Number(currentPos.lng.toFixed(15))
+      lat: currentPos.lat,
+      lng: currentPos.lng
     };
     setBeacons((prev) => [...prev, newBeacon]);
 
