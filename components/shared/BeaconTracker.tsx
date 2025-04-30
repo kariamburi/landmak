@@ -42,12 +42,7 @@ export default function BeaconTracker({ onClose }: Props) {
   const polygonRef = useRef<google.maps.Polygon>();
 
   useEffect(() => {
-    if (!isLoaded) return;
-  
-    const defaultPosition = { lat: -1.2921, lng: 36.8219 }; // Nairobi or any fallback
-    updateMap(defaultPosition);
-  
-    if (!navigator.geolocation) return;
+    if (!isLoaded || !navigator.geolocation) return;
   
     const watchId = navigator.geolocation.watchPosition(
       (pos) => {
