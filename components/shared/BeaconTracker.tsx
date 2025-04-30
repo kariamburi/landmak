@@ -41,28 +41,46 @@ export default function BeaconTracker({ onClose }: Props) {
   const beaconMarkers = useRef<google.maps.Marker[]>([]);
   const polygonRef = useRef<google.maps.Polygon>();
 
-  useEffect(() => {
-    if (!isLoaded || !navigator.geolocation) return;
-  
-    const watchId = navigator.geolocation.watchPosition(
-      (pos) => {
-        const position = {
-          lat: pos.coords.latitude,
-          lng: pos.coords.longitude,
-        };
-        setCurrentPos(position);
-        updateMap(position);
-      },
-      (err) => console.error("Geolocation Error:", err),
-      {
-        enableHighAccuracy: true,
-        maximumAge: 5000,
-        timeout: 5000,
-      }
-    );
-  
-    return () => navigator.geolocation.clearWatch(watchId);
-  }, [isLoaded]);
+    useEffect(() => {
+      if (!isLoaded || !navigator.geolocation) return;
+    
+      navigator.geolocation.getCurrentPosition(
+        (pos) => {
+          const position = {
+            lat: pos.coords.latitude,
+            lng: pos.coords.longitude,
+          };
+          setCurrentPos(position);
+          updateMap(position);
+        },
+        (err) => console.error("Initial Geolocation Error:", err),
+        {
+          enableHighAccuracy: true,
+          timeout: 5000,
+          maximumAge: 0,
+        }
+      );
+    
+      const watchId = navigator.geolocation.watchPosition(
+        (pos) => {
+          const position = {
+            lat: pos.coords.latitude,
+            lng: pos.coords.longitude,
+          };
+          setCurrentPos(position);
+          updateMap(position);
+        },
+        (err) => console.error("Geolocation Watch Error:", err),
+        {
+          enableHighAccuracy: true,
+          maximumAge: 5000,
+          timeout: 5000,
+        }
+      );
+    
+      return () => navigator.geolocation.clearWatch(watchId);
+    }, [isLoaded]);
+    
   
 
   const updateMap = (position: { lat: number; lng: number }) => {
