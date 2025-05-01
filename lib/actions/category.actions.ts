@@ -107,7 +107,7 @@ export const getActiveCategories = async () => {
     const categories = await Category.aggregate([
       {
         $match: {
-          status: "active" // ✅ Only include active categories
+          name: "Property" // ✅ Only include active categories
         }
       },
       {

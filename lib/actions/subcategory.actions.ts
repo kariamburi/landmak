@@ -133,7 +133,7 @@ export const getAllSubCategories = async () => {
       select: "name imageUrl"
     });
 
-    //  console.log(populatedSubcategories);
+    console.log(populatedSubcategories);
     return JSON.parse(JSON.stringify(populatedSubcategories));
   } catch (error) {
     console.error("Error fetching categories:", error);

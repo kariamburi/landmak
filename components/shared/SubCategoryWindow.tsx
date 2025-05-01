@@ -28,13 +28,14 @@ import {
 import ProgressPopup from "./ProgressPopup";
 import BottomNavigation from "./BottomNavigation";
 import { useToast } from "../ui/use-toast";
+import InitialAvatar from "./InitialAvatar";
 
 interface ChatWindowProps {
   isOpen: boolean;
   onClose: () => void;
   category: string;
   subcategoryList: any;
-  handleSubCategory: (category:string, subcategory:string) => void;
+  handleSubCategory: (category:string, subcategory:string, value?:any) => void;
   userId:string;
   handleOpenChat: () => void;
   handleOpenSell:()=> void;
@@ -72,13 +73,7 @@ const SubCategoryWindow: React.FC<ChatWindowProps> = ({
     setIsOpenP(false);
   };
 
-  const handleQuery = (query: string) => {
-    if (query) {
-      setQuery(query);
-      handleSubCategory(category.toString(), query.toString());
-      onClose();
-    }
-  };
+ 
 
   const totalAdCount = subcategoryList.reduce((sum: any, item: any) => {
     if (item.category.name === category) {
@@ -86,7 +81,7 @@ const SubCategoryWindow: React.FC<ChatWindowProps> = ({
     }
     return sum;
   }, 0);
-
+const adno=0;
   return (
     <div className="fixed inset-0 flex items-center justify-center bg-gray-800 bg-opacity-50 z-50">
       <div className="dark:bg-[#2D3236] dark:text-gray-300 bg-gray-200 rounded-lg p-1 lg:p-6 w-full h-full flex flex-col">
@@ -115,7 +110,70 @@ const SubCategoryWindow: React.FC<ChatWindowProps> = ({
                     </div>
                   }
                 >
-                  {subcategoryList
+
+                    {(() => {
+                    const matchedSubcategory = subcategoryList.find(
+                      (catg: any) => catg.subcategory === category
+                    );
+                    const typeField = matchedSubcategory?.fields.find((f: any) =>
+                      f.name.includes("Type")
+                    );
+                  
+                    return typeField?.options.map((option: any, index: number) => (
+
+                      <CommandItem
+                      key={index}
+                      className="relative p-0 mb-0 cursor-pointer"
+                      onSelect={() => {
+                       // if (sub.adCount > 0) {
+                          handleSubCategory("Property", category, { [typeField.name]: option });
+                          onClose();
+                       // } else {
+                        //  toast({
+                          //  title: "0 Ads",
+                        //    description: (
+                         //     <>
+                         //</>       No ads in <strong>{sub.subcategory}</strong> subcategory
+                         //     </>
+                         //   ),
+                        //  });
+                       // }
+                      }
+                    }
+                    >
+                      <div className="flex border-b border-gray-300 p-0 dark:border-0 w-full gap-0 items-center hover:bg-green-100 dark:bg-[#222528] dark:hover:bg-gray-800">
+                        <div className="flex gap-1 items-center p-3">
+                        <InitialAvatar name={option} color={"#2D3236"} />
+                          <div className="flex text-base flex-col">
+                            <div
+                              className={`w-[300px] font-bold ${
+                                adno > 0 ? "" : "text-gray-500 dark:text-gray-500"
+                              }`}
+                            >
+                             {option}
+                            </div>
+                            <div className="flex text-sm text-gray-500 dark:text-gray-500 gap-1">
+                           0
+                              <div>ads</div>
+                            </div>
+                          </div>
+                        </div>
+                        <div
+                          className={`flex items-center justify-end w-full ${
+                            adno > 0 ? "" : "text-gray-500 dark:text-gray-500"
+                          }`}
+                        >
+                     
+                        </div>
+                      </div>
+                    </CommandItem>
+
+
+    
+                    ));
+                  })()}
+                  
+                {/*   {subcategoryList
                     .filter((cat: any) => cat.category.name === category)
                     .map((sub: any, index: number) => (
                       <CommandItem
@@ -166,11 +224,14 @@ const SubCategoryWindow: React.FC<ChatWindowProps> = ({
                               sub.adCount > 0 ? "" : "text-gray-500 dark:text-gray-500"
                             }`}
                           >
-                         {/*   <ArrowForwardIosIcon sx={{ fontSize: 14 }} /> */}
+                       
                           </div>
                         </div>
                       </CommandItem>
                     ))}
+                    */}
+
+
                 </CommandGroup>
               </CommandList>
             </Command>

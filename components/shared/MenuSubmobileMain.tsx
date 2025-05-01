@@ -13,6 +13,7 @@ import SellOutlinedIcon from "@mui/icons-material/SellOutlined";
 import SubCategoryWindow from "./SubCategoryWindow";
 import { useState } from "react";
 import ProgressPopup from "./ProgressPopup";
+import { useToast } from "../ui/use-toast";
 
 type Subcategory = {
   title: string;
@@ -30,7 +31,7 @@ type Category = {
 type MobileProps = {
   categoryList: Category[];
   subcategoryList: any;
-   handleSubCategory: (category:string, subcategory:string) => void;
+   handleSubCategory: (category:string, subcategory:string, value?:any) => void;
   handleOpenSell: () => void;
   userId:string;
   handleOpenChat: () => void;
@@ -52,7 +53,7 @@ export default function MenuSubmobileMain({
 }: MobileProps) {
   const router = useRouter();
   const searchParams = useSearchParams();
-
+  const { toast } = useToast();
  
   const [isOpen, setIsOpen] = useState(false);
   const [category, setCategory] = useState("");
@@ -100,6 +101,7 @@ export default function MenuSubmobileMain({
             }}
             className="hidden lg:inline h-[120px] bg-emerald-500 text-white flex flex-col items-center justify-center cursor-pointer rounded-sm p-1 border-0 border-emerald-300 hover:bg-emerald-600"
           >
+           
             <div className="flex flex-col items-center text-center justify-center">
               <div className="h-12 w-12 rounded-full p-2">
                 <SellOutlinedIcon />
@@ -108,8 +110,49 @@ export default function MenuSubmobileMain({
             </div>
           </div>
         </SignedOut>
-
-        {categoryList.map((category, index) => (
+        {subcategoryList
+                    .filter((cat: any) => cat.category.name === 'Property')
+                    .map((sub: any, index: number) => (
+          <div
+            key={index} // Using sub.title as a unique key
+            onClick={() => handleOpen(sub.subcategory)}
+           // onClick={() => {
+            //  if (sub.adCount > 0) {
+            //    handleSubCategory('Property', sub.subcategory);
+                
+            //  } else {
+             //   toast({
+             //     title: "0 Ads",
+             //     description: (
+              //      <>
+              //</>        No ads in <strong>{sub.subcategory}</strong> Category
+              //      </>
+              //    ),
+              //  });
+             // }
+           // }}
+            className="h-[120px] dark:bg-[#2D3236] text-black dark:text-[#F1F3F3] bg-white flex flex-col items-center justify-center cursor-pointer rounded-sm p-1 border hover:bg-emerald-100"
+          >
+            <div className="flex flex-col items-center text-center justify-center">
+              <div className="rounded-full dark:bg-[#131B1E] bg-gray-100 p-2">
+                <Image
+                  className="w-12 h-12 object-cover"
+                  src={sub.imageUrl[0]}
+                  alt={sub.subcategory}
+                  width={60}
+                  height={60}
+                />
+              </div>
+              <div className="flex flex-col">
+                <h2 className="text-xs">{sub.subcategory}</h2>
+                <p className="text-xs text-gray-500 dark:text-gray-500">
+                  {sub.adCount} ads
+                </p>
+              </div>
+            </div>
+          </div>
+        ))}
+       {/*  {categoryList.map((category, index) => (
           <div
             key={index} // Using sub.title as a unique key
             // onClick={() => handleCategory(category.name)}
@@ -134,7 +177,7 @@ export default function MenuSubmobileMain({
               </div>
             </div>
           </div>
-        ))}
+        ))}*/}
       </div>
       <SubCategoryWindow
         isOpen={isOpen}

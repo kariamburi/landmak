@@ -882,7 +882,15 @@ const SCROLL_THRESHOLD = 150; // pixels
       </div>
     </div>
     </div>
-   
+    <div className="lg:hidden dark:text-gray-400 text-emerald-950 text-center sm:text-left p-0">
+        {newqueryObject.subcategory ? (
+          <div className="mt-0"> {newqueryObject.subcategory} in Kenya</div>
+        ) : (
+          <div className="mt-0">
+            All {newqueryObject.category} in Kenya
+          </div>
+        )}
+      </div>
     <div className="w-full lg:hidden">
       <div className="flex w-full gap-1 p-1 items-center">
         {newqueryObject.category === "Property" && (<>
