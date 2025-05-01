@@ -114,7 +114,7 @@ type CollectionProps = {
   //AdsCountPerVerifiedFalse: any;
   queryObject: any;
   user: any;
- // viewportRef:any;
+  allAds:any;
   onClose:()=> void;
   handleOpenSell: () => void;
   handleOpenBook: () => void;
@@ -142,7 +142,7 @@ const MainCategory = ({
   emptyTitle,
   emptyStateSubtext,
   user,
-  //viewportRef,
+  allAds,
  // AdsCountPerRegion,
   //AdsCountPerVerifiedTrue,
   //AdsCountPerVerifiedFalse,
@@ -603,26 +603,28 @@ const SCROLL_THRESHOLD = 150; // pixels
       {showSidebar && (
         <div className="flex flex-col space-y-4 h-full">
            <div className="w-full p-0 mt-4">
-                    <CategoryFilterSearch  categoryList={categoryList} handleFilter={handleResetFilter}/>
+                    <SubCategoryFilterSearch category={newqueryObject.category.toString()} categoryList={subcategoryList} handleFilter={handleResetFilter}/>
             </div>
           
-          {/* Categories Section */}
+          {/* Categories Section 
           <ScrollArea.Root className="flex-1 overflow-hidden">
         <ScrollArea.Viewport  className="h-full overflow-y-auto text-sm lg:text-base w-full dark:bg-[#2D3236] bg-white rounded-0 border p-3">
       
-                  
+                */}  
                       <SidebarSearchMain
-                          categoryList={subcategoryList}
+                          subcategoryList={subcategoryList}
                           category={newqueryObject.category}
                           subcategory={newqueryObject.subcategory}
+                          type={(newqueryObject["property-Type"] || newqueryObject["land-Type"]) || ""}
+                          allAds={allAds}
                           handleFilter={handleResetFilter}
                          
                         />
                         
-                      </ScrollArea.Viewport>
+                   {/*    </ScrollArea.Viewport>
                          <ScrollArea.Scrollbar orientation="vertical" />
                            <ScrollArea.Corner />
-                         </ScrollArea.Root>
+                         </ScrollArea.Root>  */}  
         </div>
       )}
     </div>
@@ -696,7 +698,7 @@ const SCROLL_THRESHOLD = 150; // pixels
 
       <div className="hidden lg:inline dark:text-gray-400 text-emerald-950 text-center sm:text-left p-0">
         {newqueryObject.subcategory ? (
-          <div className="mt-0"> {newqueryObject.subcategory} in Kenya</div>
+          <div className="mt-0"> {newqueryObject.subcategory} {"("+newqueryObject["property-Type"]+")" || "("+newqueryObject["land-Type"]+")" || ""} in Kenya</div>
         ) : (
           <div className="mt-0">
             All {newqueryObject.category} in Kenya
@@ -884,7 +886,7 @@ const SCROLL_THRESHOLD = 150; // pixels
     </div>
     <div className="lg:hidden dark:text-gray-400 text-emerald-950 text-center sm:text-left p-0">
         {newqueryObject.subcategory ? (
-          <div className="mt-0"> {newqueryObject.subcategory} in Kenya</div>
+           <div className="mt-0"> {newqueryObject.subcategory} {"("+newqueryObject["property-Type"]+")" || "("+newqueryObject["land-Type"]+")" || ""} in Kenya</div>
         ) : (
           <div className="mt-0">
             All {newqueryObject.category} in Kenya
@@ -1222,7 +1224,7 @@ const SCROLL_THRESHOLD = 150; // pixels
     </div>
 
     <div>
-      {newqueryObject.subcategory === "Cars, Vans & Pickups" && (
+  {/*   {newqueryObject.subcategory === "Cars, Vans & Pickups" && (
         <div className="mb-1 w-full dark:bg-[#2D3236] dark:text-gray-300 flex flex-col rounded-lg p-0">
           <div className="grid grid-cols-4 lg:grid-cols-7 justify-between gap-1 m-0">
             <div
@@ -1299,7 +1301,7 @@ const SCROLL_THRESHOLD = 150; // pixels
             </div>
           </div>
         </div>
-      )}
+      )} 
 
       {newqueryObject.subcategory && (
         <div className="w-full dark:bg-[#2D3236] dark:text-gray-300 flex flex-col rounded-lg mb-1">
@@ -1311,7 +1313,7 @@ const SCROLL_THRESHOLD = 150; // pixels
             handleFilter={handleFilter}
           />
         </div>
-      )}
+      )} */} 
     </div>
 
     <CollectionSearch

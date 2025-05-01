@@ -34,6 +34,7 @@ type MobileProps = {
    handleSubCategory: (category:string, subcategory:string, value?:any) => void;
   handleOpenSell: () => void;
   userId:string;
+  allAds:any;
   handleOpenChat: () => void;
   handleCategory:(value:string)=> void;
   handleOpenSearchTab:(value:string)=> void;
@@ -45,6 +46,7 @@ export default function MenuSubmobileMain({
   subcategoryList,
   handleSubCategory,
   userId,
+  allAds,
   handleOpenChat,
   handleOpenSell,
   handleCategory,
@@ -183,6 +185,7 @@ export default function MenuSubmobileMain({
         isOpen={isOpen}
         onClose={handleClose}
         category={category}
+        allAds={allAds}
         subcategoryList={subcategoryList}
         userId={userId}
         handleSubCategory={handleSubCategory}

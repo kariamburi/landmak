@@ -37,7 +37,7 @@ import React from "react";
 type sidebarProps = {
   categoryList: any;
   category: string;
-  onLoading: () => void;
+  onLoading?: () => void;
   handleFilter:(value:any) => void;
 };
 
@@ -78,7 +78,7 @@ sidebarProps) => {
           <div className="py-2 px-2 rounded-sm border border-gray-300 dark:border-gray-600 dark:bg-[#2D3236] dark:text-gray-100 items-start w-full rounded-lg cursor-pointer border">
             <div className="flex flex-col">
               <label className="text-sm font-medium dark:text-gray-400 text-gray-500">
-                Subcategory
+                Category
               </label>
               <div className="dark:text-gray-100 text-black text-base">
                 {searchParams.get("subcategory") ? (

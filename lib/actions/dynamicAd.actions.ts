@@ -10,7 +10,7 @@ import Packages from "../database/models/packages.model"
 import Bookmark from "../database/models/bookmark.model"
 //import Ad from "../database/models/ad.model"
 
-import DynamicAd from "../database/models/dynamicAd.model"
+import DynamicAd, { IdynamicAd } from "../database/models/dynamicAd.model"
 import User from "../database/models/user.model"
 import { createTransaction } from "./transactions.actions"
 import Subcategory from "../database/models/subcategory.model"
@@ -1041,7 +1041,7 @@ export const getAdsCountPerVerifiedTrue = async (category: string, subcategory: 
       }
     ]);
 
-    console.log(AdsCountPerVerified);
+    //console.log(AdsCountPerVerified);
 
     return JSON.parse(JSON.stringify(AdsCountPerVerified));
   } catch (error) {
@@ -1190,5 +1190,21 @@ export async function deleteAd({ adId, deleteImages, path }: DeleteAdParams) {
     if (deletedAd) revalidatePath(path)
   } catch (error) {
     handleError(error)
+  }
+}
+
+
+export async function getAllAds() {
+  try {
+    await connectToDatabase();
+    const allAds = await DynamicAd.find({ adstatus: "Active" });
+
+
+    // Safely return the count for the given subcategory and type
+    return JSON.parse(JSON.stringify(allAds));;
+
+  } catch (error) {
+    handleError(error);
+    return 0;
   }
 }

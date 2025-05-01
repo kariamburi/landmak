@@ -239,6 +239,7 @@ const AdForm = ({
   const { startUpload } = useUploadThing("imageUploader");
   let uploadedImageUrl: string[] = [];
   const [showPopup, setShowPopup] = useState(false);
+  
   const modules = {
     toolbar: [
      // [{ header: "1" }, { header: "2" }, { font: [] }],
@@ -335,7 +336,12 @@ const AdForm = ({
             return acc;
           }, []);
   
-          setSelectedCategoryCommand(uniqueCategories);
+        // ✅ Filter only "Property" category
+    const propertyCategory = uniqueCategories.filter(
+      (cat:any) => cat.category.name === "Property"
+    );
+
+    setSelectedCategoryCommand(propertyCategory);
   
           if (type === "Update") {
             const selectedData: any = categories.find(

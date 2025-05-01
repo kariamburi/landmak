@@ -247,7 +247,7 @@ const CollectionSearch = ({
       
       {loading && (
         <div>
-          <div className="w-full mt-10 lg:min-h-[200px] flex flex-col items-center justify-center">
+          <div className="w-full mt-10 lg:min-h-[300px] flex flex-col items-center justify-center">
             <Image
               src="/assets/icons/loading2.gif"
               alt="loading"

@@ -81,17 +81,6 @@ const handleClosePopupBeacon = () => {
     >
         <div className="flex gap-1 flex-col items-center w-full">
         <div className="flex gap-1 items-center w-full lg:hidden">
-        <div className="flex-1">
-        <button
-        onClick={handleOpenPopup}
-        className="flex text-xs lg:text-base gap-1 items-center justify-center w-full py-4 px-2 border border-gray-300 dark:border-gray-600 bg-white dark:bg-[#2D3236] dark:text-gray-100 rounded-sm hover:bg-gray-100"
-        >
-           
-           <LocationOnIcon sx={{ fontSize: 24 }}/>
-         
-        {region}
-        </button>
-        </div>
        
           <div className="flex-1">
                 <TooltipProvider>
@@ -141,9 +130,9 @@ const handleClosePopupBeacon = () => {
 
 
 
-        <div className="w-full hidden lg:inline">
+        <div className="w-full">
         <div className="flex gap-1 items-center w-full">
-        <div className="flex hidden lg:inline">
+        <div className="flex">
         <button
         onClick={handleOpenPopup}
         className="flex text-xs lg:text-base gap-1 items-center justify-center w-full py-4 px-2 border border-gray-300 dark:border-gray-600 bg-white dark:bg-[#2D3236] dark:text-gray-100 rounded-sm hover:bg-gray-100"
@@ -223,9 +212,7 @@ const handleClosePopupBeacon = () => {
                        
                     )}
                     </div>
-                      <div className="mt-1 lg:hidden">
-        <SearchNow handleFilter={handleFilter} handleOpenSearchByTitle={handleOpenSearchByTitle}/>
-        </div>
+                      
 
     </div>
   );

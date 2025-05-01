@@ -4,7 +4,7 @@ import { getUserById } from "@/lib/actions/user.actions";
 import { Toaster } from "@/components/ui/toaster";
 import { getActiveCategories } from "@/lib/actions/category.actions";
 import { getAllSubCategories, removenegotiable } from "@/lib/actions/subcategory.actions";
-import { getAdsCountAllRegion } from "@/lib/actions/dynamicAd.actions";
+import { getAdsCountAllRegion, getAllAds } from "@/lib/actions/dynamicAd.actions";
 import MainPage from "@/components/shared/MainPage";
 
 export default async function Home({ searchParams }: SearchParamProps) {
@@ -26,8 +26,8 @@ export default async function Home({ searchParams }: SearchParamProps) {
   const categoryList = await getActiveCategories();
   const subcategoryList = await getAllSubCategories();
   const AdsCountPerRegion = await getAdsCountAllRegion();
-  //const resultt = await  removenegotiable();
- //console.log(user)
+  const allAds = await  getAllAds();
+  console.log(allAds)
  
 //const categoryList:any = [];
 //const subcategoryList:any = [];
@@ -47,7 +47,8 @@ export default async function Home({ searchParams }: SearchParamProps) {
             queryObject={queryObject}
             categoryList={categoryList}
             subcategoryList={subcategoryList}
-            AdsCountPerRegion={AdsCountPerRegion}/>
+            AdsCountPerRegion={AdsCountPerRegion}
+            allAds={allAds}/>
       
           <Toaster />
       

@@ -29,12 +29,14 @@ import ProgressPopup from "./ProgressPopup";
 import BottomNavigation from "./BottomNavigation";
 import { useToast } from "../ui/use-toast";
 import InitialAvatar from "./InitialAvatar";
+import { countAdsBySubcategoryAndType } from "./MainPage";
 
 interface ChatWindowProps {
   isOpen: boolean;
   onClose: () => void;
   category: string;
   subcategoryList: any;
+  allAds:any;
   handleSubCategory: (category:string, subcategory:string, value?:any) => void;
   userId:string;
   handleOpenChat: () => void;
@@ -50,6 +52,7 @@ const SubCategoryWindow: React.FC<ChatWindowProps> = ({
   onClose,
   subcategoryList,
   userId,
+  allAds,
   handleSubCategory,
   handleOpenChat,
   handleOpenSell,
@@ -147,20 +150,20 @@ const adno=0;
                           <div className="flex text-base flex-col">
                             <div
                               className={`w-[300px] font-bold ${
-                                adno > 0 ? "" : "text-gray-500 dark:text-gray-500"
+                                countAdsBySubcategoryAndType(allAds, category,typeField.name, option) > 0 ? "" : "text-gray-500 dark:text-gray-500"
                               }`}
                             >
                              {option}
                             </div>
                             <div className="flex text-sm text-gray-500 dark:text-gray-500 gap-1">
-                           0
+                            {countAdsBySubcategoryAndType(allAds, category, typeField.name, option)}
                               <div>ads</div>
                             </div>
                           </div>
                         </div>
                         <div
                           className={`flex items-center justify-end w-full ${
-                            adno > 0 ? "" : "text-gray-500 dark:text-gray-500"
+                            countAdsBySubcategoryAndType(allAds, category, typeField.name, option) > 0 ? "" : "text-gray-500 dark:text-gray-500"
                           }`}
                         >
                      

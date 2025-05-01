@@ -75,6 +75,39 @@ import PopupAccount from "./PopupAccount";
 import PopupFaq from "./PopupFaq";
 import PropertyMap from "./PropertyMap";
 import InitialAvatar from "./InitialAvatar";
+type Ad = {
+  data?: {
+    subcategory?: string;
+    [key: string]: any;
+  };
+};
+
+export function countAdsBySubcategoryAndType(
+  allAds: Ad[],
+  subcategory: string,
+  typeFieldName: string,
+  typeValue: string
+): number {
+  const adCountLookup: Record<string, Record<string, number>> = {};
+
+  allAds.forEach((ad) => {
+    const adSubcategory = ad.data?.subcategory;
+    const adType = ad.data?.[typeFieldName];
+
+    if (adSubcategory && adType) {
+      if (!adCountLookup[adSubcategory]) {
+        adCountLookup[adSubcategory] = {};
+      }
+      if (!adCountLookup[adSubcategory][adType]) {
+        adCountLookup[adSubcategory][adType] = 0;
+      }
+      adCountLookup[adSubcategory][adType]++;
+    }
+  });
+
+  return adCountLookup?.[subcategory]?.[typeValue] || 0;
+}
+
 type CollectionProps = {
   limit: number;
   userId: string;
@@ -83,6 +116,7 @@ type CollectionProps = {
   queryObject: any;
   urlParamName?: string;
   user: any;
+  allAds:any;
   userName: string;
   userImage: string;
   categoryList: any;
@@ -104,6 +138,7 @@ const MainPage = ({
   categoryList,
   subcategoryList,
   AdsCountPerRegion,
+  allAds,
 }: CollectionProps) => {
  // const isAdCreator = pathname === "/ads/";
  const [newpage, setnewpage] = useState(false);
@@ -920,7 +955,7 @@ const handleCloseAdView = () => {
                   key={index}
                   onClick={() => {
                     if (sub.adCount > 0) {
-                      handleCategory(sub.subcategory);
+                      handleSubCategory('Property',sub.subcategory);
                     } else {
                       toast({
                         title: "0 Ads",
@@ -934,7 +969,7 @@ const handleCloseAdView = () => {
                     }
                   }}
                   onMouseEnter={() => setHoveredCategory(sub.subcategory)}
-                  className={`relative text-black dark:text-[#F1F3F3] flex flex-col items-center justify-center cursor-pointer p-1 border-b dark:border-gray-600 dark:hover:bg-[#131B1E] hover:bg-green-100 ${
+                  className={`relative text-black dark:text-[#F1F3F3] flex flex-col items-center justify-center cursor-pointer p-2 border-b dark:border-gray-600 dark:hover:bg-[#131B1E] hover:bg-green-100 ${
                     hoveredCategory === sub.subcategory
                       ? "bg-green-100 dark:bg-[#131B1E]"
                       : "dark:bg-[#2D3236] bg-white"
@@ -1130,7 +1165,7 @@ const handleCloseAdView = () => {
         <span className="flex-1 text-sm hover:no-underline my-auto">
           <div className="flex flex-col">
             <h2 className="text-xs font-bold">{option}</h2>
-            <p className="text-xs text-gray-500 dark:text-gray-500">0 ads</p>
+            <p className="text-xs text-gray-500 dark:text-gray-500">{countAdsBySubcategoryAndType(allAds, hoveredCategory, typeField.name, option)} ads</p>
           </div>
         </span>
       </div>
@@ -1372,6 +1407,7 @@ const handleCloseAdView = () => {
       handleOpenSearchTab={handleOpenSearchTab}
       handleOpenSettings={handleOpenSettings}
       userId={userId}
+      allAds={allAds}
     />
   </div>
 
@@ -1516,6 +1552,7 @@ const handleCloseAdView = () => {
       categoryList={categoryList} 
       subcategoryList={subcategoryList}
       user={user}
+      allAds={allAds}
      />
 
       <PopupShop isOpen={isOpenShop} handleOpenReview={handleOpenReview} onClose={handleCloseShop} userId={userId} shopAcc={shopId} userName={userName} userImage={userImage} queryObject={newqueryObject} handleOpenSell={handleOpenSell} handleAdView={handleAdView} handleAdEdit={handleAdEdit} handleOpenAbout={handleOpenAbout} handleOpenTerms={handleOpenTerms} handleOpenPrivacy={handleOpenPrivacy} handleOpenSafety={handleOpenSafety} handleOpenBook={handleOpenBook} handleOpenPlan={handleOpenPlan} handleOpenChat={handleOpenChat} handleOpenChatId={handleOpenChatId} handleOpenSettings={handleOpenSettings}
