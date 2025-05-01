@@ -191,8 +191,8 @@ export default function BeaconTracker({ onClose }: Props) {
         coordinates[0][1] !== coordinates[coordinates.length - 1][1]) {
       coordinates.push(coordinates[0]);
     }
-    const encoded = encodeURIComponent(JSON.stringify(coordinates));
-    const url = `https://mapa.co.ke/?coordinates=${encoded}`;
+    //const encoded = encodeURIComponent(JSON.stringify(coordinates));
+    const url = `https://mapa.co.ke/?coordinates=${coordinates}`;
   
     try {
       const qrDataURL = await QRCode.toDataURL(url);
