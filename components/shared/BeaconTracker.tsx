@@ -12,6 +12,10 @@ import { Icon } from "@iconify/react";
 import Barsscale from "@iconify-icons/svg-spinners/bars-scale";
 import MyLocationOutlinedIcon from '@mui/icons-material/MyLocationOutlined';
 import DeleteOutlineOutlinedIcon from '@mui/icons-material/DeleteOutlineOutlined';
+import QrCode2OutlinedIcon from '@mui/icons-material/QrCode2Outlined';
+import FileDownloadOutlinedIcon from '@mui/icons-material/FileDownloadOutlined';
+import QRCode from 'qrcode';
+import { DropdownMenu, DropdownMenuContent, DropdownMenuItem, DropdownMenuTrigger } from '../ui/dropdown-menu';
 type Beacon = {
   name: string;
   lat: number;
@@ -177,8 +181,41 @@ export default function BeaconTracker({ onClose }: Props) {
     // Ensure the polygon is updated with the new beacon
     updatePolygon([...beacons, { name: manualInput.name, lat, lng }]);
   };
+  const saveQRcode = async () => {
+    if (beacons.length < 3) {
+      alert("At least 3 points are needed to create a polygon.");
+      return;
+    }
+    const coordinates = beacons.map((b) => [b.lng, b.lat]);
+    if (coordinates[0][0] !== coordinates[coordinates.length - 1][0] ||
+        coordinates[0][1] !== coordinates[coordinates.length - 1][1]) {
+      coordinates.push(coordinates[0]);
+    }
+    const encoded = encodeURIComponent(JSON.stringify(coordinates));
+    const url = `https://mapa.co.ke/?coordinates=${encoded}`;
+  
+    try {
+      const qrDataURL = await QRCode.toDataURL(url);
+  
+      // Create download link
+      const link = document.createElement('a');
+      link.href = qrDataURL;
+      link.download = 'mapa-qr-code.png';
+      document.body.appendChild(link);
+      link.click();
+      document.body.removeChild(link);
+      setBeacons([]);
+      polygonRef.current?.setMap(null);
+      polygonRef.current = undefined;
+      beaconMarkers.current.forEach(marker => marker.setMap(null));
+      beaconMarkers.current = [];
+    } catch (err) {
+      console.error('Failed to generate QR code', err);
+    }
 
+  }
   const saveBeaconsToGeoJSON = () => {
+  
     if (beacons.length < 3) {
       alert("At least 3 points are needed to create a polygon.");
       return;
@@ -277,17 +314,30 @@ export default function BeaconTracker({ onClose }: Props) {
         </Tooltip>
       </TooltipProvider>
 
-        <TooltipProvider>
-          <Tooltip>
-            <TooltipTrigger asChild>
-              <Button onClick={saveBeaconsToGeoJSON} className="w-14 text-gray-600" variant="outline">
-                💾
-              </Button>
-            </TooltipTrigger>
-            <TooltipContent><p>Save to GeoJSON</p></TooltipContent>
-          </Tooltip>
-        </TooltipProvider>
-        <TooltipProvider>
+      <TooltipProvider>
+  <Tooltip>
+    <DropdownMenu>
+      <TooltipTrigger asChild>
+        <DropdownMenuTrigger asChild>
+          <Button className="w-14 text-gray-600" variant="outline">
+            💾
+          </Button>
+        </DropdownMenuTrigger>
+      </TooltipTrigger>
+      <TooltipContent><p>Save</p></TooltipContent>
+
+      <DropdownMenuContent align="end">
+        <DropdownMenuItem onClick={saveBeaconsToGeoJSON}>
+        <FileDownloadOutlinedIcon/>Save as GeoJSON
+        </DropdownMenuItem>
+        <DropdownMenuItem onClick={saveQRcode}>
+       <QrCode2OutlinedIcon/> Save as QR Code
+        </DropdownMenuItem>
+      </DropdownMenuContent>
+    </DropdownMenu>
+  </Tooltip>
+</TooltipProvider>
+<TooltipProvider>
           <Tooltip>
             <TooltipTrigger asChild>
               <Button onClick={deleteAll} variant="outline" className="w-14 text-gray-600">

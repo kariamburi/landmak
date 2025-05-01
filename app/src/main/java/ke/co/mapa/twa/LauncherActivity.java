@@ -28,8 +28,6 @@ import androidx.core.content.ContextCompat;
 public class LauncherActivity
         extends com.google.androidbrowserhelper.trusted.LauncherActivity {
 
-    private static final int LOCATION_PERMISSION_REQUEST_CODE = 1001;
-
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -40,30 +38,12 @@ public class LauncherActivity
             setRequestedOrientation(ActivityInfo.SCREEN_ORIENTATION_UNSPECIFIED);
         }
 
-        // Request location permission if not granted
-        if (ContextCompat.checkSelfPermission(this, Manifest.permission.ACCESS_FINE_LOCATION)
-                != PackageManager.PERMISSION_GRANTED) {
-
-            ActivityCompat.requestPermissions(
-                    this,
-                    new String[]{Manifest.permission.ACCESS_FINE_LOCATION},
-                    LOCATION_PERMISSION_REQUEST_CODE
-            );
+        if (checkSelfPermission(android.Manifest.permission.ACCESS_FINE_LOCATION) != PackageManager.PERMISSION_GRANTED) {
+            requestPermissions(new String[]{android.Manifest.permission.ACCESS_FINE_LOCATION}, 1);
         }
     }
 
-    @Override
-    public void onRequestPermissionsResult(int requestCode, String[] permissions, int[] grantResults) {
-        super.onRequestPermissionsResult(requestCode, permissions, grantResults); // Don't forget this!
-        if (requestCode == LOCATION_PERMISSION_REQUEST_CODE) {
-            if (grantResults.length > 0 && grantResults[0] == PackageManager.PERMISSION_GRANTED) {
-                // Permission granted - ready for location delegation
-            } else {
-                // Permission denied - show rationale or disable location features
-            }
-        }
-    }
-
+   
     @Override
     protected Uri getLaunchingUrl() {
         return super.getLaunchingUrl();

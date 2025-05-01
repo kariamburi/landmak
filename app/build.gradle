@@ -209,7 +209,7 @@ dependencies {
         implementation 'com.google.androidbrowserhelper:androidbrowserhelper:2.5.0'
    
         implementation 'androidx.browser:browser:1.7.0' // or latest
-       implementation 'com.google.androidbrowserhelper:locationdelegation:1.0.0'
+      
 
 
 }

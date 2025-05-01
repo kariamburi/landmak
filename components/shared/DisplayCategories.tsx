@@ -78,6 +78,14 @@ const DisplayCategories = ({ categories }: catProps) => {
                     />
                   </div>
                   <h2 className="text-sm font-bold">{category.name}</h2>
+                
+                  <p
+  className={`text-sm font-medium ${
+    category?.status === "inactive" ? "text-red-500" : "text-green-600"
+  }`}
+>
+  {category?.status || "active"}
+</p>
                 </div>
                 <div className="flex flex-col gap-2">
                   <button

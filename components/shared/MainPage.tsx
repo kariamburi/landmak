@@ -73,6 +73,7 @@ import Head from "next/head";
 import SearchByTitle from "./SearchByTitle";
 import PopupAccount from "./PopupAccount";
 import PopupFaq from "./PopupFaq";
+import PropertyMap from "./PropertyMap";
 type CollectionProps = {
   limit: number;
   userId: string;
@@ -140,11 +141,17 @@ const MainPage = ({
  const [isOpenPerfomance, setIsOpenPerfomance] = useState(false);
  const [isOpenSearchTab, setIsOpenSearchTab] = useState(false);
  const [isOpenSearchByTitle, setIsOpenSearchByTitle] = useState(false);
+ const [showPopupMap, setShowPopupMap] = useState(false);
+ const [coordinates, setCoordinates] = useState('');
  const [CategorySelect, setCategorySelect] = useState('');
  const { toast } = useToast()
  
   const router = useRouter();
   const [isOpenP, setIsOpenP] = useState(false);
+  
+  const handleClosePopupMap = () => {
+    setShowPopupMap(false);
+  };
   const handleCloseP = () => {
     setIsOpenP(false);
   };
@@ -183,6 +190,7 @@ const MainPage = ({
       const id = params.get("Ad");
       const Profile = params.get("Profile");
       const action = params.get("action");
+      const coordinates = params.get("coordinates");
   
       if (id) {
         const ad = await getAdById(id);
@@ -205,6 +213,14 @@ const MainPage = ({
         setIsOpenChat(true);
       } else {
         setIsOpenChat(false);
+      }
+
+      if (coordinates) {
+       
+        setCoordinates(coordinates)
+        setShowPopupMap(true);
+      } else {
+        setShowPopupMap(false);
       }
     };
   
@@ -1595,6 +1611,27 @@ const handleCloseAdView = () => {
       handleOpenSettings={handleOpenSettings}
       user={user}  
      />
+
+ {showPopupMap && (
+                                  <div className="fixed inset-0 flex items-center justify-center bg-gray-200 z-50">
+                                    <div className="dark:border-gray-600 dark:bg-[#2D3236] dark:text-gray-100 bg-gray-200 p-2 w-full items-center justify-center relative">
+                           
+                                      <div className="flex flex-col items-center justify-center dark:bg-[#2D3236] bg-gray-200">
+                                  
+              <PropertyMap queryObject={queryObject} onClose={handleClosePopupMap} coordinates={coordinates}
+              handleAdEdit={handleAdEdit}
+               handleAdView={handleAdView} 
+               handleCategory={handleCategory}
+               handleOpenSell={handleOpenSell}
+              handleOpenPlan={handleOpenPlan}/>
+                                      </div>
+                                      
+                                    </div>
+                                  </div>
+                                   
+                                )}
+
+
    <SearchTabWindow 
                 isOpen={isOpenSearchTab}
                 handleSubCategory={handleSubCategory}

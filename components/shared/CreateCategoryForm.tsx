@@ -36,6 +36,7 @@ const CreateCategoryForm = ({ category, type }: CategoryProps) => {
             ...formData,
             name: category.name,
             imageUrl: category.imageUrl[0],
+            status: category.status || "active",
           });
         }
       } catch (error) {
@@ -43,6 +44,7 @@ const CreateCategoryForm = ({ category, type }: CategoryProps) => {
       }
     };
     getCategory();
+    setFormData({ ...formData, ['status']: 'active' });
   }, []);
   const uploadFiles = async () => {
     const uploadedUrls: string[] = [];
@@ -79,7 +81,6 @@ const CreateCategoryForm = ({ category, type }: CategoryProps) => {
           ...formData,
           imageUrl: uploadedUrls,
         };
-
         await createCategory({
           formData: finalData,
           path: pathname,
@@ -139,6 +140,17 @@ const CreateCategoryForm = ({ category, type }: CategoryProps) => {
               required
             />
           </div>
+          <div className="mb-4">
+  <label className="block">Status</label>
+  <select
+    value={formData["status"]}
+    onChange={(e) => handleInputChange("status", e.target.value)}
+    className="border rounded-lg p-2 w-full dark:bg-[#2D3236] bg-white"
+  >
+    <option value="active">Active</option>
+    <option value="inactive">Inactive</option>
+  </select>
+</div>
           <div className="mb-4">
             <IconUploader
               onFieldChange={(url) => handleInputChange("imageUrl", url)} // Pass the updated imageUrl back to the form

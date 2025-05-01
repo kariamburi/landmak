@@ -162,16 +162,16 @@
                 android:resource="@xml/filepaths" />
         </provider>
 <!-- IMPORTANT! The service is needed for location delegation -->
-        <service
-            android:name=".ExtraFeaturesService"
-            android:enabled="true"
-            android:exported="true">
+       <service
+    android:name=".ExtraFeaturesService"
+    android:enabled="true"
+    android:exported="true"
+    android:permission="androidx.browser.trusted.BROWSABLE_TRUSTED_WEB_ACTIVITY_SERVICE">
 
-            <intent-filter>
-                <action android:name="android.support.customtabs.trusted.TRUSTED_WEB_ACTIVITY_SERVICE"/>
-                <category android:name="android.intent.category.DEFAULT"/>
-            </intent-filter>
-        </service>
+    <intent-filter>
+        <action android:name="androidx.browser.trusted.TRUSTED_WEB_ACTIVITY_SERVICE"/>
+    </intent-filter>
+</service>
 
         <service
             android:name=".DelegationService"
