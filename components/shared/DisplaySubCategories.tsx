@@ -22,8 +22,7 @@ type subcatProps = {
   subcategories: any;
 };
 const DisplaySubCategories = ({ subcategories }: subcatProps) => {
-   const [categoryNameNew, setCategoryNameNew] = useState('');
-   const [subcategoryNameNew, setSubcategoryNameNew] = useState('');
+  
   const [status, setStatus] = useState("");
   const [editingCategory, setEditingCategory] = useState<any>(null);
   const [editFields, setEditFields] = useState<any>([]);
@@ -133,45 +132,7 @@ const DisplaySubCategories = ({ subcategories }: subcatProps) => {
     }
   };
   
-  const handleCreateNew = async () => {
-    try {
-      setStatus("Creating new...");
-      let imageUrl: any = [];
-      if (iconUrl) {
-        imageUrl = await uploadFiles();
-      } 
-
-      const categoryName = categoryNameNew;
-      const subcategoryName = subcategoryNameNew;
-      const categoryId = categoryNameNew;
-     
-      await createSubCategory(
-              categoryId,
-              subcategoryName,
-              imageUrl,
-              editFields
-            );
-      setStatus("");
-      toast({
-        title: "Created",
-        description: "Category created successfully.",
-        duration: 5000,
-        className: "bg-[#30AF5B] text-white",
-      });
-      setEditingCategory(null);
-      // fetchCategories();
-      setIconUrl("");
-    } catch (error) {
-      console.error("Error saving edits:", error);
-      // setStatus("Failed to save edits. Please try again.");
-      toast({
-        variant: "destructive",
-        title: "Failed!",
-        description: "Failed to save edits. Please try again..",
-        duration: 5000,
-      });
-    }
-  };
+  
   const handleCancelEdit = () => {
     setEditingCategory(null);
     setEditFields([]);
@@ -210,20 +171,7 @@ const DisplaySubCategories = ({ subcategories }: subcatProps) => {
                     {category.category.name}
                     {")"}
                   </h2>
-                  <input
-        type="text"
-        placeholder="Category Id"
-        value={categoryNameNew}
-        onChange={(e) => setCategoryNameNew(e.target.value)}
-        className="border p-2 rounded w-full"
-      />
-      <input
-        type="text"
-        placeholder="Subcategory Name"
-        value={subcategoryNameNew}
-        onChange={(e) => setSubcategoryNameNew(e.target.value)}
-        className="border p-2 rounded w-full"
-      />
+               
                   <div className="mb-4">
                     <IconUploader
                       onFieldChange={(url) => handleIconInput("imageUrl", url)} // Pass the updated imageUrl back to the form
@@ -378,13 +326,7 @@ const DisplaySubCategories = ({ subcategories }: subcatProps) => {
                         <DoneOutlinedIcon /> Save Changes
                       </div>
                     </button>
-                    <button
-                      onClick={handleCreateNew}
-                      className="bg-black hover:bg-gray-600 
-    dark:bg-gray-700 dark:hover:bg-gray-600 text-[#F1F3F3] p-2 rounded-lg"
-                    >
-                      Create New
-                    </button>
+                   
                     <button
                       onClick={handleCancelEdit}
                       className="bg-black hover:bg-gray-600 

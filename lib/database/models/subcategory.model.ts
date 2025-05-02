@@ -5,7 +5,7 @@ export interface ICategory extends Document {
   category: string;
   subcategory: string;
   imageUrl: string[];
-  fields:any;
+  fields: any;
 }
 const fieldSchema = new Schema({
   name: String,
@@ -20,7 +20,7 @@ const SubcategorySchema = new Schema({
   imageUrl: { type: [String], required: true },
   fields: [fieldSchema], // Fields associated with this category
 })
-//delete mongoose.models.Subcategory;
+delete mongoose.models.Subcategory;
 const Subcategory = models.Subcategory || model('Subcategory', SubcategorySchema);
 
 export default Subcategory;

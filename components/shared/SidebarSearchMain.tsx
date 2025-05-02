@@ -68,26 +68,57 @@ import InitialAvatar from "./InitialAvatar";
 import { countAdsBySubcategoryAndType } from "./MainPage";
 type sidebarProps = {
   category: string;
-  subcategoryList: any;
-  subcategory: string;
-  allAds:any;
-  type:string;
+  categoryList?: any;
+  subcategory?: string;
   handleFilter:(value:any) => void;
 };
 const SidebarSearchMain = ({
   category,
-  subcategoryList,
+  categoryList,
   subcategory,
-  type,
   handleFilter,
-  allAds,
 }: sidebarProps) => {
-  const [query, setQuery] = useState(type);
-  const selectedCategory = subcategoryList.find(
-    (cat: any) => cat.subcategory ===   subcategory
+  const [query, setQuery] = useState(subcategory);
+ 
+  // Usage
+  const handleQuery = (index: number, query: string) => {
+
+    handleFilter({
+          category: category.toString(),
+           subcategory: query.toString(),
+        });
+        setQuery(query);
+  };
+
+  const [isOpen, setIsOpen] = useState(false);
+
+  const openDialog = () => {
+    setIsOpen(true);
+  };
+
+  const closeDialog = () => {
+    setIsOpen(false);
+  };
+  
+
+
+  const selectedCategory = categoryList.find(
+    (cat: any) => cat.category.name === category
   );
-  const totalAdCount = selectedCategory ? selectedCategory.adCount : 0;
-  const categoryImageUrl = selectedCategory ? selectedCategory.imageUrl[0] : "";
+  const totalAdCount = categoryList.reduce((sum: any, item: any) => {
+    if (item.category.name === category) {
+      return sum + item.adCount;
+    }
+    return sum;
+  }, 0);
+
+  //const totalAdCount = selectedCategory ? selectedCategory.adCount : 0;
+  const categoryImageUrl = selectedCategory
+    ? selectedCategory.category.imageUrl[0]
+    : "";
+ 
+  const filteredList =
+    categoryList?.filter((cat: any) => cat.category.name === category) || [];
  const viewportRef_ = useRef<HTMLDivElement | null>(null);
   const [showScrollUp, setShowScrollUp] = useState(false);
 
@@ -120,21 +151,21 @@ const SidebarSearchMain = ({
           <div className="flex flex-col text-sm rounded-t-lg w-full">
             <div className="flex p-2 w-full justify-between gap-1 items-center mt-1 mb-1 border-gray-300 dark:border-gray-600">
          
-              {selectedCategory && (
+            {selectedCategory && (
                 <>
-                  <div className="flex text-base font-bold gap-1 items-center">
-                    <div className="rounded-full dark:bg-[#131B1E] bg-white">
+                  <div className="flex gap-1 items-center">
+                    <div className="rounded-full dark:bg-[#131B1E] bg-white p-1">
                       <Image
                         className="h-7 w-8 object-cover"
                         src={categoryImageUrl}
                         alt={
-                          selectedCategory ? selectedCategory.subcategory: ""
+                          selectedCategory ? selectedCategory.category.name : ""
                         }
                         width={60}
                         height={60}
                       />
                     </div>
-                    {selectedCategory ? selectedCategory.subcategory : ""}
+                    {selectedCategory ? selectedCategory.category.name : ""}
                   </div>
                 </>
               )}
@@ -168,65 +199,11 @@ const SidebarSearchMain = ({
                            ref={viewportRef_}
                            className="h-full overflow-y-auto text-sm lg:text-base w-full dark:bg-[#2D3236] bg-white rounded-t-md border p-4">
                         
-  {(() => {
-  const matchedSubcategory = subcategoryList.find(
-    (catg: any) => catg.subcategory === subcategory
-  );
-  const typeField = matchedSubcategory?.fields.find((f: any) =>
-    f.name.includes("Type")
-  );
-
-
-  return typeField?.options.map((option: any, index: number) => (
-    <div
-      key={index}
-    //  className="relative dark:bg-[#2D3236] text-black dark:text-[#F1F3F3] bg-white flex flex-col items-center justify-center cursor-pointer p-1 border-b dark:hover:dark:bg-[#131B1E] hover:bg-emerald-100 border-b dark:border-gray-600"
-      className={`p-2 border-b rounded-sm dark:border-gray-600 flex items-center w-full justify-between text-sm cursor-pointer dark:hover:bg-[#131B1E] dark:hover:text-white hover:bg-green-100 ${
-        query === option
-          ? "bg-green-200 hover:bg-green-200"
-          : "dark:bg-[#2D3236] bg-white"
-      }`}
-      onClick={() =>
-        {handleFilter({category:category, subcategory:subcategory, ...{ [typeField.name]: option }});
-        setQuery(option);
-      }
-      }
-    >
-      <div className="flex gap-1 items-center mb-1 w-full">
-        <span>
-          <InitialAvatar name={option} color={"#2D3236"} />
-        </span>
-        <span className="flex-1 text-sm hover:no-underline my-auto">
-          <div className="flex flex-col">
-            <h2 className="text-xs font-bold">{option}</h2>
-            <p className="text-xs text-gray-500 dark:text-gray-500">{countAdsBySubcategoryAndType(allAds, subcategory, typeField.name, option)} ads</p>
-          </div>
-        </span>
-      </div>
-    </div>
-  ));
-})()}
- </ScrollArea.Viewport>
-     <ScrollArea.Scrollbar orientation="vertical" />
-      <ScrollArea.Corner />
-    </ScrollArea.Root>
-  <div className="absolute bottom-1 left-1/2 z-50 flex flex-col gap-2">
-    {!showScrollUp && (
-          <button
-            onClick={() => scrollBy(300)}
-            className="bg-gray-100 text-black p-0 h-10 w-10 rounded-full shadow"
-          >
-           <KeyboardArrowDownOutlinedIcon/>
-          </button>
-        )}
-       
-      </div>
-      </div>
-        {/*    {filteredList.map((sub: any, index: number) => (
+                        {filteredList.map((sub: any, index: number) => (
               <div
                 key={index}
                 onClick={() => handleQuery(index, sub.subcategory)}
-                className={`border-b rounded-sm dark:border-gray-600 flex items-center w-full justify-between p-0 mb-0 text-sm cursor-pointer dark:hover:bg-[#131B1E] dark:hover:text-white hover:bg-green-100 ${
+                className={`border-b rounded-sm dark:border-gray-600 flex items-center w-full justify-between p-1 mb-0 text-sm cursor-pointer dark:hover:bg-[#131B1E] dark:hover:text-white hover:bg-green-100 ${
                   query === sub.subcategory
                     ? "bg-green-200 hover:bg-green-200"
                     : "dark:bg-[#2D3236] bg-white"
@@ -257,7 +234,27 @@ const SidebarSearchMain = ({
             
               </div>
             ))}
-            */} 
+ </ScrollArea.Viewport>
+     <ScrollArea.Scrollbar orientation="vertical" />
+      <ScrollArea.Corner />
+    </ScrollArea.Root>
+  <div className="absolute bottom-1 left-1/2 z-50 flex flex-col gap-2">
+    {!showScrollUp && (
+          <button
+            onClick={() => scrollBy(300)}
+            className="bg-gray-100 text-black p-0 h-10 w-10 rounded-full shadow"
+          >
+           <KeyboardArrowDownOutlinedIcon/>
+          </button>
+        )}
+       
+      </div>
+      </div>
+       
+         
+
+
+
          
           </div>
         </div>

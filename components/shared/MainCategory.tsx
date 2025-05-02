@@ -114,7 +114,6 @@ type CollectionProps = {
   //AdsCountPerVerifiedFalse: any;
   queryObject: any;
   user: any;
-  allAds:any;
   onClose:()=> void;
   handleOpenSell: () => void;
   handleOpenBook: () => void;
@@ -142,7 +141,6 @@ const MainCategory = ({
   emptyTitle,
   emptyStateSubtext,
   user,
-  allAds,
  // AdsCountPerRegion,
   //AdsCountPerVerifiedTrue,
   //AdsCountPerVerifiedFalse,
@@ -603,7 +601,7 @@ const SCROLL_THRESHOLD = 150; // pixels
       {showSidebar && (
         <div className="flex flex-col space-y-4 h-full">
            <div className="w-full p-0 mt-4">
-                    <SubCategoryFilterSearch category={newqueryObject.category.toString()} categoryList={subcategoryList} handleFilter={handleResetFilter}/>
+            <CategoryFilterSearch categoryList={categoryList} handleFilter={handleResetFilter}/>
             </div>
           
           {/* Categories Section 
@@ -612,11 +610,9 @@ const SCROLL_THRESHOLD = 150; // pixels
       
                 */}  
                       <SidebarSearchMain
-                          subcategoryList={subcategoryList}
+                          categoryList={subcategoryList}
                           category={newqueryObject.category}
                           subcategory={newqueryObject.subcategory}
-                          type={(newqueryObject["property-Type"] || newqueryObject["land-Type"]) || ""}
-                          allAds={allAds}
                           handleFilter={handleResetFilter}
                          
                         />

@@ -56,8 +56,55 @@ export async function getCategoryById(categoryId: string) {
     handleError(error)
   }
 }
-
 export const getAllCategories = async () => {
+  try {
+    await connectToDatabase();
+
+    const categories = await Category.aggregate([
+      {
+        $match: {
+          status: "active" // ✅ Only include active categories
+        }
+      },
+      {
+        $lookup: {
+          from: "dynamicads",
+          let: { categoryName: "$name" },
+          pipeline: [
+            {
+              $match: {
+                $expr: {
+                  $and: [
+                    { $eq: ["$data.category", "$$categoryName"] },
+                    { $eq: ["$adstatus", "Active"] }
+                  ]
+                }
+              }
+            }
+          ],
+          as: "dynamicads"
+        }
+      },
+      {
+        $addFields: {
+          adCount: { $size: "$dynamicads" }
+        }
+      },
+      {
+        $project: {
+          dynamicads: 0
+        }
+      }
+    ]);
+
+    return JSON.parse(JSON.stringify(categories));
+  } catch (error) {
+    console.error("Error fetching categories:", error);
+    handleError(error);
+  }
+};
+
+export const getAllCategoriesdd = async () => {
   try {
     await connectToDatabase();
 
@@ -107,7 +154,10 @@ export const getActiveCategories = async () => {
     const categories = await Category.aggregate([
       {
         $match: {
-          name: "Property" // ✅ Only include active categories
+          $and: [
+            { status: { $exists: true } },
+            { status: "Active" }
+          ]
         }
       },
       {
@@ -140,13 +190,14 @@ export const getActiveCategories = async () => {
         }
       }
     ]);
-
+    console.log(categories);
     return JSON.parse(JSON.stringify(categories));
   } catch (error) {
     console.error("Error fetching categories:", error);
     handleError(error);
   }
 };
+
 
 export const getselectedCategories = async () => {
   try {
@@ -214,5 +265,43 @@ export async function deleteCategory({ categoryId, categoryImage, path }: Delete
     handleError(error)
   }
 }
+
+// DELETE
+const categories = [
+  'New builds',
+  'Houses & Apartments for Rent',
+  'Houses & Apartments for Sale',
+  'Land & Plots for Rent',
+  'Land & Plots for Sale',
+  'Commercial Property for Rent',
+  'Commercial Property for Sale',
+  'Event Centres, Venues & Workstations',
+  'Short Let Property',
+  'Special Listings',
+  'Property Services',
+];
+
+export async function seedCategories() {
+  try {
+    await connectToDatabase()
+
+    for (const name of categories) {
+      const existing = await Category.findOne({ name });
+      if (!existing) {
+        await Category.create({
+          name,
+          imageUrl: ['https://utfs.io/f/3de9a577-01a9-474b-8607-562fbcfac5c7-dm6s54.png'], // You can update this later if needed
+          status: 'active', // Default status
+        });
+        console.log(`Created category: ${name}`);
+      } else {
+        console.log(`Category already exists: ${name}`);
+      }
+    }
+  } catch (error) {
+    handleError(error)
+  }
+}
+
 
 

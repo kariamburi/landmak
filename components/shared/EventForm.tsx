@@ -336,12 +336,25 @@ const AdForm = ({
             return acc;
           }, []);
   
-        // ✅ Filter only "Property" category
-    const propertyCategory = uniqueCategories.filter(
-      (cat:any) => cat.category.name === "Property"
-    );
+     // ✅ Filter only "Property" and "Land" categories (example)
+const allowedCategories = [
+  "New builds",
+   "Houses & Apartments for Rent",
+   "Houses & Apartments for Sale",
+    "Land & Plots for Rent",
+  "Land & Plots for Sale",
+   "Commercial Property for Rent",
+   "Commercial Property for Sale",
+    "Event Centres, Venues & Workstations",
+  "Short Let Property",
+   "Special Listings",
+    "Property Services"];
 
-    setSelectedCategoryCommand(propertyCategory);
+const filteredCategories = uniqueCategories.filter(
+  (cat: any) => allowedCategories.includes(cat.category.name)
+);
+
+setSelectedCategoryCommand(filteredCategories);
   
           if (type === "Update") {
             const selectedData: any = categories.find(

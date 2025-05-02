@@ -2,8 +2,8 @@ import { SearchParamProps } from "@/types";
 import { auth } from "@clerk/nextjs/server";
 import { getUserById } from "@/lib/actions/user.actions";
 import { Toaster } from "@/components/ui/toaster";
-import { getActiveCategories } from "@/lib/actions/category.actions";
-import { getAllSubCategories, removenegotiable } from "@/lib/actions/subcategory.actions";
+import { getAllCategories, seedCategories } from "@/lib/actions/category.actions";
+import { duplicateSubcategories, getAllSubCategories, migrateFieldOptions, removenegotiable, reverseFieldOptions } from "@/lib/actions/subcategory.actions";
 import { getAdsCountAllRegion, getAllAds } from "@/lib/actions/dynamicAd.actions";
 import MainPage from "@/components/shared/MainPage";
 
@@ -23,11 +23,12 @@ export default async function Home({ searchParams }: SearchParamProps) {
   if (userId) {
     user = await getUserById(userId);
   }
-  const categoryList = await getActiveCategories();
+  const categoryList = await getAllCategories();
   const subcategoryList = await getAllSubCategories();
   const AdsCountPerRegion = await getAdsCountAllRegion();
-  const allAds = await  getAllAds();
-  console.log(allAds)
+  //const allAds = await  getAllAds();
+  //const migration = await duplicateSubcategories();
+ //console.log(categoryList)
  
 //const categoryList:any = [];
 //const subcategoryList:any = [];
@@ -48,7 +49,7 @@ export default async function Home({ searchParams }: SearchParamProps) {
             categoryList={categoryList}
             subcategoryList={subcategoryList}
             AdsCountPerRegion={AdsCountPerRegion}
-            allAds={allAds}/>
+         />
       
           <Toaster />
       

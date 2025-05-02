@@ -116,7 +116,6 @@ type CollectionProps = {
   queryObject: any;
   urlParamName?: string;
   user: any;
-  allAds:any;
   userName: string;
   userImage: string;
   categoryList: any;
@@ -138,7 +137,7 @@ const MainPage = ({
   categoryList,
   subcategoryList,
   AdsCountPerRegion,
-  allAds,
+  
 }: CollectionProps) => {
  // const isAdCreator = pathname === "/ads/";
  const [newpage, setnewpage] = useState(false);
@@ -784,20 +783,8 @@ const handleCloseAdView = () => {
   
   };
 };
-  const handleSubCategory = (category: string, subcategory: string, value?:any ) => {
-    if (category && subcategory && value) {
-      handleClose();
-      setNewqueryObject({
-       ...queryObject, // Preserve existing properties
-       category: category.toString(),
-       subcategory: subcategory.toString(),
-       ...value,});
-       setHoveredCategory(null);
-       setIsOpenCategory(true);
-       setIsOpenAdView(false);
-       setIsOpenSell(false);
-    }else{
-
+  const handleSubCategory = (category: string, subcategory: string) => {
+    
     if (category && subcategory) {
       handleClose();
    setNewqueryObject({
@@ -818,7 +805,7 @@ const handleCloseAdView = () => {
          setIsOpenAdView(false);
          setIsOpenSell(false);
     }
-    }
+    
   }
   };
 
@@ -948,79 +935,8 @@ const handleCloseAdView = () => {
         >
           <div className="w-full">
           
-                      {subcategoryList
-                    .filter((cat: any) => cat.category.name === 'Property')
-                    .map((sub: any, index: number) => (
-                <div
-                  key={index}
-                  onClick={() => {
-                    if (sub.adCount > 0) {
-                      handleSubCategory('Property',sub.subcategory);
-                    } else {
-                      toast({
-                        title: "0 Ads",
-                        description: (
-                          <>
-                            No ads in <strong>{sub.subcategory}</strong> category
-                          </>
-                        ),
-                        //action: <ToastAction altText="Goto schedule to undo">Undo</ToastAction>,
-                      });
-                    }
-                  }}
-                  onMouseEnter={() => setHoveredCategory(sub.subcategory)}
-                  className={`relative text-black dark:text-[#F1F3F3] flex flex-col items-center justify-center cursor-pointer p-2 border-b dark:border-gray-600 dark:hover:bg-[#131B1E] hover:bg-green-100 ${
-                    hoveredCategory === sub.subcategory
-                      ? "bg-green-100 dark:bg-[#131B1E]"
-                      : "dark:bg-[#2D3236] bg-white"
-                  } `}
-                >
-                  <div className={`flex gap-1 items-center mb-1 h-full w-full`}>
-                    <span>
-                      <div className="rounded-full dark:bg-[#131B1E] bg-gray-200 p-1">
-                        <Image
-                          className="w-6 h-6 object-cover"
-                          src={sub.imageUrl[0]}
-                          alt={sub.subcategory}
-                          width={60}
-                          height={60}
-                        />
-                      </div>
-                    </span>
-                    <span className="flex-1 text-sm hover:no-underline my-auto">
-                      <div className="flex flex-col">
-                        <h2
-                          className={`text-xs font-bold ${
-                            sub.adCount > 0
-                              ? ""
-                              : "text-gray-500 dark:text-gray-500"
-                          } `}
-                        >
-                          {sub.subcategory}
-                        </h2>
-                        <p
-                          className={`text-xs text-gray-500 dark:text-gray-500`}
-                        >
-                          {sub.adCount} ads
-                        </p>
-                      </div>
-                    </span>
-                    <span
-                      className={`text-right my-auto ${
-                        sub.adCount > 0
-                          ? ""
-                          : "text-gray-500 dark:text-gray-500"
-                      } `}
-                    >
-                      <ArrowForwardIosIcon sx={{ fontSize: 16 }} />
-                    </span>
-                  </div>
-                 
-                </div>
-              ))}
-
-        
-             {/*  {categoryList.map((category: any, index: number) => (
+              
+             {categoryList.map((category: any, index: number) => (
                 <div
                   key={index}
                   onClick={() => {
@@ -1039,7 +955,7 @@ const handleCloseAdView = () => {
                     }
                   }}
                   onMouseEnter={() => setHoveredCategory(category.name)}
-                  className={`relative text-black dark:text-[#F1F3F3] flex flex-col items-center justify-center cursor-pointer p-1 border-b dark:border-gray-600 dark:hover:bg-[#131B1E] hover:bg-green-100 ${
+                  className={`relative text-black dark:text-[#F1F3F3] flex flex-col items-center justify-center cursor-pointer p-2 border-b dark:border-gray-600 dark:hover:bg-[#131B1E] hover:bg-green-100 ${
                     hoveredCategory === category.name
                       ? "bg-green-100 dark:bg-[#131B1E]"
                       : "dark:bg-[#2D3236] bg-white"
@@ -1047,7 +963,7 @@ const handleCloseAdView = () => {
                 >
                   <div className={`flex gap-1 items-center mb-1 h-full w-full`}>
                     <span>
-                      <div className="rounded-full dark:bg-[#131B1E] bg-gray-200 p-1">
+                      <div className="rounded-full dark:bg-[#131B1E] bg-gray-200 p-2">
                         <Image
                           className="w-6 h-6 object-cover"
                           src={category.imageUrl[0]}
@@ -1089,7 +1005,7 @@ const handleCloseAdView = () => {
                 </div>
               ))}
 
-*/}
+
 
            
           </div>
@@ -1133,46 +1049,68 @@ const handleCloseAdView = () => {
         }`}
       >
        
-        {hoveredCategory && (
+       {hoveredCategory && (
         <div
-          className={`absolute w-64 top-20 z-20 dark:bg-[#2D3236] bg-white p-1 shadow-lg transition-all duration-300`}
+          className={`absolute w-64 top-20 z-20 dark:bg-[#2D3236] bg-white p-2 shadow-lg transition-all duration-300`}
           onMouseEnter={() => setHoveredCategory(hoveredCategory)}
           onMouseLeave={() => setHoveredCategory(null)}
         >
           <ScrollArea.Root>
       <ScrollArea.Viewport className="h-[450px] w-full">
-       <div className="p-2 border-b text-sm w-full justify-center">{hoveredCategory}</div> 
-       {(() => {
-  const matchedSubcategory = subcategoryList.find(
-    (catg: any) => catg.subcategory === hoveredCategory
-  );
-  const typeField = matchedSubcategory?.fields.find((f: any) =>
-    f.name.includes("Type")
-  );
-
-  return typeField?.options.map((option: any, index: number) => (
-    <div
-      key={index}
-      className="relative dark:bg-[#2D3236] text-black dark:text-[#F1F3F3] bg-white flex flex-col items-center justify-center cursor-pointer p-1 border-b dark:hover:dark:bg-[#131B1E] hover:bg-emerald-100 border-b dark:border-gray-600"
-      onClick={() =>
-        handleSubCategory("Property", hoveredCategory, { [typeField.name]: option })
-      }
-    >
-      <div className="flex gap-1 items-center mb-1 w-full">
-        <span>
-          <InitialAvatar name={option} color={"#2D3236"} />
-        </span>
-        <span className="flex-1 text-sm hover:no-underline my-auto">
-          <div className="flex flex-col">
-            <h2 className="text-xs font-bold">{option}</h2>
-            <p className="text-xs text-gray-500 dark:text-gray-500">{countAdsBySubcategoryAndType(allAds, hoveredCategory, typeField.name, option)} ads</p>
-          </div>
-        </span>
-      </div>
-    </div>
-  ));
-})()}
-
+            {subcategoryList
+              .filter((cat: any) => cat.category.name === hoveredCategory)
+              .map((sub: any, index: number) => (
+                <div
+                  key={index}
+                  className="relative dark:bg-[#2D3236] text-black dark:text-[#F1F3F3] bg-white flex flex-col items-center justify-center cursor-pointer p-1 border-b dark:hover:dark:bg-[#131B1E] hover:bg-emerald-100 border-b dark:border-gray-600"
+                  onClick={() => {
+                    if (sub.adCount > 0) {
+                      handleSubCategory(hoveredCategory, sub.subcategory);
+                    } else {
+                      toast({
+                        title: "0 Ads",
+                        description: (
+                          <>
+                            No ads in <strong>{sub.subcategory}</strong> subcategory
+                          </>
+                        ),
+                        //action: <ToastAction altText="Goto schedule to undo">Undo</ToastAction>,
+                      });
+                    }
+                  }}
+                >
+                  <div className="flex gap-1 items-center mb-1 w-full">
+                    <span>
+                      <div className="rounded-full dark:bg-[#131B1E] bg-gray-200 p-2">
+                        <Image
+                          className="h-6 w-6 object-cover"
+                          src={sub.imageUrl[0] || ""}
+                          alt={sub.subcategory}
+                          width={60}
+                          height={60}
+                        />
+                      </div>
+                    </span>
+                    <span className="flex-1 text-sm hover:no-underline my-auto">
+                      <div className="flex flex-col">
+                        <h2
+                          className={`text-xs font-bold ${
+                            sub.adCount > 0
+                              ? ""
+                              : "text-gray-500 dark:text-gray-500"
+                          } `}
+                        >
+                          {sub.subcategory}
+                        </h2>
+                        <p className="text-xs text-gray-500 dark:text-gray-500">
+                          {sub.adCount} ads
+                        </p>
+                      </div>
+                    </span>
+                  </div>
+                
+                </div>
+              ))}
         </ScrollArea.Viewport>
       <ScrollArea.Scrollbar orientation="vertical" />
       <ScrollArea.Corner />
@@ -1407,7 +1345,7 @@ const handleCloseAdView = () => {
       handleOpenSearchTab={handleOpenSearchTab}
       handleOpenSettings={handleOpenSettings}
       userId={userId}
-      allAds={allAds}
+     
     />
   </div>
 
@@ -1552,7 +1490,6 @@ const handleCloseAdView = () => {
       categoryList={categoryList} 
       subcategoryList={subcategoryList}
       user={user}
-      allAds={allAds}
      />
 
       <PopupShop isOpen={isOpenShop} handleOpenReview={handleOpenReview} onClose={handleCloseShop} userId={userId} shopAcc={shopId} userName={userName} userImage={userImage} queryObject={newqueryObject} handleOpenSell={handleOpenSell} handleAdView={handleAdView} handleAdEdit={handleAdEdit} handleOpenAbout={handleOpenAbout} handleOpenTerms={handleOpenTerms} handleOpenPrivacy={handleOpenPrivacy} handleOpenSafety={handleOpenSafety} handleOpenBook={handleOpenBook} handleOpenPlan={handleOpenPlan} handleOpenChat={handleOpenChat} handleOpenChatId={handleOpenChatId} handleOpenSettings={handleOpenSettings}
