@@ -185,7 +185,7 @@ const SidebarSearchMain = ({
                   {showScrollUp && (
                       <button
                         onClick={() => scrollBy(-300)}
-                        className="bg-gray-100 text-black h-10 w-10 p-0 rounded-full shadow"
+                        className="bg-gray-200 text-black h-10 w-10 p-0 rounded-full shadow"
                       >
                          <KeyboardArrowUpOutlinedIcon/>
                       </button>
@@ -242,7 +242,7 @@ const SidebarSearchMain = ({
     {!showScrollUp && (
           <button
             onClick={() => scrollBy(300)}
-            className="bg-gray-100 text-black p-0 h-10 w-10 rounded-full shadow"
+            className="bg-gray-200 text-black p-0 h-10 w-10 rounded-full shadow"
           >
            <KeyboardArrowDownOutlinedIcon/>
           </button>

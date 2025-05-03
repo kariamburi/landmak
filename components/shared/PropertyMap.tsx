@@ -300,12 +300,12 @@ export default function MapDrawingTool({queryObject, coordinates, handleCategory
           lat: center.lat(),
           lng: center.lng()
         }, `
-  <div style=" background-color: #00A65A;
+  <div style=" background-color: rgba(0, 0, 0, 0.3);
       padding: 6px 10px;
       color: white;
       font-size: 10px;
       border-radius: 4px;
-      box-shadow: 0 2px 6px rgba(0,0,0,0.3);
+     
       position: absolute;
       transform: translate(-50%, -50%);
       white-space: nowrap;">
@@ -924,12 +924,12 @@ useEffect(() => {
           lat: center.lat(),
           lng: center.lng()
         }, `
-  <div style=" background-color: #00A65A;
+  <div style=" background-color: rgba(0, 0, 0, 0.3);
       padding: 6px 10px;
       color: white;
       font-size: 10px;
       border-radius: 4px;
-      box-shadow: 0 2px 6px rgba(0,0,0,0.3);
+     
       position: absolute;
       transform: translate(-50%, -50%);
       white-space: nowrap;">
@@ -1079,12 +1079,12 @@ const handleFileUpload = (event: React.ChangeEvent<HTMLInputElement>) => {
           lat: center.lat(),
           lng: center.lng()
         }, `
-  <div style=" background-color: #00A65A;
+  <div style=" background-color: rgba(0, 0, 0, 0.3);
       padding: 6px 10px;
       color: white;
       font-size: 10px;
       border-radius: 4px;
-      box-shadow: 0 2px 6px rgba(0,0,0,0.3);
+     
       position: absolute;
       transform: translate(-50%, -50%);
       white-space: nowrap;">

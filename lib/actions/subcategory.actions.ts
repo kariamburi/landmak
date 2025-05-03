@@ -332,7 +332,55 @@ export async function duplicateSubcategories() {
   }
 }
 
-// UPDATE
+
+export async function syncSubcategoryImages(baseCategoryId: string) {
+  try {
+    await connectToDatabase();
+    const categoryObjectId = new mongoose.Types.ObjectId(baseCategoryId);
+
+    // Step 1: Find all subcategories with the given category ID
+    const baseSubcategories = await Subcategory.find({ category: categoryObjectId });
+
+    for (const baseSub of baseSubcategories) {
+      const { subcategory, imageUrl } = baseSub;
+
+      // Step 2: Update other subcategories with the same subcategory name but different category
+      await Subcategory.updateMany(
+        {
+          subcategory,
+          category: { $ne: categoryObjectId },
+        },
+        {
+          $set: { imageUrl },
+        }
+      );
+    }
+
+    console.log('✅ Image URLs updated for matching subcategories in different categories.');
+  } catch (error) {
+    console.error('❌ Duplication error:', error);
+  } finally {
+    // Optionally disconnect if this runs standalone
+    // await mongoose.disconnect();
+  }
+}
+
+export async function updateSub() {
+  try {
+    await connectToDatabase();
+    const categoryObjectId = new mongoose.Types.ObjectId("6814717bb897ffdf7bac70b5");
+    const baseSubcategories = await Subcategory.updateOne(
+      { _id: categoryObjectId },
+      { $set: { subcategory: "Construction & Technical Services" } }
+    )
+    console.log('✅ UPDATED.');
+  } catch (error) {
+    console.error('❌ Duplication error:', error);
+  } finally {
+    // Optionally disconnect if this runs standalone
+    // await mongoose.disconnect();
+  }
+}
 
 
 

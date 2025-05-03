@@ -32,6 +32,30 @@ const DisplaySubCategories = ({ subcategories }: subcatProps) => {
   const [oldurl, setOldurl] = useState("");
   const { startUpload } = useUploadThing("imageUploader");
   const { toast } = useToast();
+  const [subcategoriesData, setSelectedCategoryCommand] = useState<any>([]);
+
+ 
+useEffect(() => {
+    // ✅ Filter only "Property" and "Land" categories (example)
+ const allowedCategories = [
+  "New builds",
+   "Houses & Apartments for Rent",
+   "Houses & Apartments for Sale",
+    "Land & Plots for Rent",
+  "Land & Plots for Sale",
+   "Commercial Property for Rent",
+   "Commercial Property for Sale",
+    "Event Centres, Venues & Workstations",
+  "Short Let Property",
+   "Special Listings",
+    "Property Services"];
+
+const filteredCategories = subcategories.filter(
+  (cat: any) => allowedCategories.includes(cat.category.name)
+);
+
+setSelectedCategoryCommand(filteredCategories);
+  }, []);
 
   const uploadFiles = async () => {
     const uploadedUrls: string[] = [];
@@ -154,11 +178,11 @@ const DisplaySubCategories = ({ subcategories }: subcatProps) => {
         </p>
       )}
 
-      {subcategories.length === 0 ? (
+      {subcategoriesData.length === 0 ? (
         <p>No categories available.</p>
       ) : (
         <div className="text-sm space-y-4 grid grid-cols-1 lg:grid-cols-2 gap-1">
-          {subcategories.map((category: any) => (
+          {subcategoriesData.map((category: any) => (
             <div
               key={category._id}
               className="border rounded-lg p-1 shadow-sm bg-white dark:bg-[#131B1E] text-black dark:text-[#F1F3F3]"

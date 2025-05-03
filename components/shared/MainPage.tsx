@@ -913,7 +913,7 @@ const handleCloseAdView = () => {
       {showScrollUp && (
           <button
             onClick={() => scrollBy(-300)}
-            className="bg-gray-100 text-black h-10 w-10 p-0 rounded-full shadow"
+            className="bg-gray-200 text-black h-10 w-10 p-0 rounded-full shadow"
           >
              <KeyboardArrowUpOutlinedIcon/>
           </button>
@@ -1022,7 +1022,7 @@ const handleCloseAdView = () => {
     {!showScrollUp && (
           <button
             onClick={() => scrollBy(300)}
-            className="bg-gray-100 text-black p-0 h-10 w-10 rounded-full shadow"
+            className="bg-gray-200 text-black p-0 h-10 w-10 rounded-full shadow"
           >
            <KeyboardArrowDownOutlinedIcon/>
           </button>
@@ -1051,10 +1051,11 @@ const handleCloseAdView = () => {
        
        {hoveredCategory && (
         <div
-          className={`absolute w-64 top-20 z-20 dark:bg-[#2D3236] bg-white p-2 shadow-lg transition-all duration-300`}
+          className={`flex flex-col absolute w-64 top-20 z-20 dark:bg-[#2D3236] bg-white p-2 shadow-lg transition-all duration-300`}
           onMouseEnter={() => setHoveredCategory(hoveredCategory)}
           onMouseLeave={() => setHoveredCategory(null)}
         >
+          <div className="text-sm font-bold w-full p-2 text-gray-600">{hoveredCategory}</div>
           <ScrollArea.Root>
       <ScrollArea.Viewport className="h-[450px] w-full">
             {subcategoryList

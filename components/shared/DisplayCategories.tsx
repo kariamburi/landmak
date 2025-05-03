@@ -42,6 +42,7 @@ const DisplayCategories = ({ categories }: catProps) => {
 
   const handleOpenCategory = (category: ICategory) => {
     setSelectedCategory(category);
+   // alert(category.name)
     setIsOpenCategory(true);
   };
 

@@ -27,10 +27,12 @@ const CreateCategoryForm = ({ category, type }: CategoryProps) => {
   const { toast } = useToast();
   const { startUpload } = useUploadThing("imageUploader");
   useEffect(() => {
+  
     const getCategory = async () => {
       try {
         if (type === "Update" && category) {
           // Update fields if a match is found
+          
           setOldurl(category.imageUrl[0]);
           setFormData({
             ...formData,
@@ -44,7 +46,7 @@ const CreateCategoryForm = ({ category, type }: CategoryProps) => {
       }
     };
     getCategory();
-    setFormData({ ...formData, ['status']: 'active' });
+    //setFormData({ ...formData, ['status']: 'active' });
   }, []);
   const uploadFiles = async () => {
     const uploadedUrls: string[] = [];

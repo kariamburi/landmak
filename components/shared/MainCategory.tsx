@@ -1297,7 +1297,7 @@ const SCROLL_THRESHOLD = 150; // pixels
             </div>
           </div>
         </div>
-      )} 
+      )} */} 
 
       {newqueryObject.subcategory && (
         <div className="w-full dark:bg-[#2D3236] dark:text-gray-300 flex flex-col rounded-lg mb-1">
@@ -1309,7 +1309,7 @@ const SCROLL_THRESHOLD = 150; // pixels
             handleFilter={handleFilter}
           />
         </div>
-      )} */} 
+      )} 
     </div>
 
     <CollectionSearch
