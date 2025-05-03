@@ -29,7 +29,7 @@ export function DrawerPublic({
   }: {
     latitude:string,
     longitude:string,
-    selectedCategory:string;
+    selectedCategory?:string;
     onChange: (lat: string, lng: string) => void;
   }) {
     const [mapLink, setMapLink] = useState("");
@@ -126,7 +126,7 @@ export function DrawerPublic({
         variant="default"
         className="absolute hidden lg:inline bottom-10 left-2 z-20"
       >
-        📍 {selectedCategory ==='Property Services'? (<>My Location</>):(<>Property:</>)} ({Number(latitude).toFixed(2)}, {Number(longitude).toFixed(2)})
+        📍 {(selectedCategory && selectedCategory ==='Property Services') ? (<>My Location</>):(<>Property:</>)} ({Number(latitude).toFixed(2)}, {Number(longitude).toFixed(2)})
       </Button>
     ) : (
       <Button
@@ -134,7 +134,7 @@ export function DrawerPublic({
         variant="default"
         className="text-white bg-green-600 hover:bg-green-700"
       >
-        <AddOutlinedIcon /> Add {selectedCategory ==='Property Services'? (<>My Location</>):(<>Property</>)} coordinates
+        <AddOutlinedIcon /> Add {(selectedCategory && selectedCategory ==='Property Services')? (<>My Location</>):(<>Property</>)} coordinates
       </Button>
     )}
   </DrawerTrigger>
@@ -142,16 +142,16 @@ export function DrawerPublic({
   <DrawerContent>
     <div className="mx-auto w-full max-w-md">
       <DrawerHeader>
-        <DrawerTitle>📍 {selectedCategory ==='Property Services'? (<>My Location</>):(<>Property</>)} Location</DrawerTitle>
+        <DrawerTitle>📍 {(selectedCategory && selectedCategory ==='Property Services')? (<>My Location</>):(<>Property</>)} Location</DrawerTitle>
         <DrawerDescription>
-        {selectedCategory ==='Property Services'? (<>Set your location for visibility.</>):(<>Set your property location in order to draw land boundaries and feature markers.</>)}
+        {(selectedCategory && selectedCategory ==='Property Services')? (<>Set your location for visibility.</>):(<>Set your property location in order to draw land boundaries and feature markers.</>)}
         </DrawerDescription>
       </DrawerHeader>
 
       <div className="px-4">
         <div className="flex justify-between items-center w-full">
           {!latitude || !longitude ? (
-            <div className="text-gray-500 p-1">Set  {selectedCategory ==='Property Services'? (<>My</>):(<>Property</>)} location</div>
+            <div className="text-gray-500 p-1">Set  {(selectedCategory && selectedCategory ==='Property Services')? (<>My</>):(<>Property</>)} location</div>
           ) : (
             <div className="grid grid-cols-2 items-center">
               <div className="flex gap-1 mb-3 items-center">
