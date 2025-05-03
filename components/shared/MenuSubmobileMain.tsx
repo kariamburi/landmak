@@ -13,7 +13,7 @@ import SellOutlinedIcon from "@mui/icons-material/SellOutlined";
 import SubCategoryWindow from "./SubCategoryWindow";
 import { useState } from "react";
 import ProgressPopup from "./ProgressPopup";
-
+import AddOutlinedIcon from '@mui/icons-material/AddOutlined';
 type Subcategory = {
   title: string;
 };
@@ -81,11 +81,11 @@ export default function MenuSubmobileMain({
             onClick={() => {
               handleOpenSell();
             }}
-            className="hidden lg:inline h-[140px] bg-emerald-500 text-white flex flex-col items-center justify-center cursor-pointer rounded-sm p-1 border-0 border-emerald-300 hover:bg-emerald-600"
+            className="h-[140px] bg-green-600 text-white flex flex-col items-center justify-center cursor-pointer rounded-sm p-1 border-0 border-emerald-300 hover:bg-emerald-600"
           >
             <div className="flex flex-col items-center text-center justify-center">
               <div className="h-12 w-12 rounded-full p-2">
-                <SellOutlinedIcon />
+              <AddOutlinedIcon/> 
               </div>
               <h2 className="text-lg font-bold">SELL</h2>
             </div>
