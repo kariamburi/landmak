@@ -1706,7 +1706,7 @@ export default function Ads({ ad, user, userId, userImage, userName, onClose,han
           Verify the Seller
         </p>
         <p>
-          Always check the seller's profile, history, and contact details. Be cautious of listings from users without verified details or reviews.
+          Always check the seller&apos;s profile, history, and contact details. Be cautious of listings from users without verified details or reviews.
         </p>
       </div>
     </li>
