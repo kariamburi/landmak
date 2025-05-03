@@ -40,6 +40,7 @@ export const createData = async (
   {
     userId,
     subcategory,
+    category,
     formData,
     expirely,
     priority,
@@ -64,6 +65,7 @@ export const createData = async (
       adstatus,
       organizer: userId,
       subcategory,
+      category,
       plan: planId,
     });
 
@@ -787,7 +789,7 @@ export async function updateBanAll(phone: string, adstatus: string) {
 
 
 // UPDATE
-export async function updateAd(userId: string, _id: string, formData: any) {
+export async function updateAd(userId: string, _id: string, selectedCategoryId: string, selectedSubCategoryId: string, formData: any) {
   try {
     await connectToDatabase();
 
@@ -798,7 +800,7 @@ export async function updateAd(userId: string, _id: string, formData: any) {
 
     await DynamicAd.findByIdAndUpdate(
       _id,
-      { data: formData },
+      { data: formData, category: selectedCategoryId, subcategory: selectedSubCategoryId },
       { new: true }
     );
 

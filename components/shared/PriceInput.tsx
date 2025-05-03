@@ -101,7 +101,7 @@ const PriceInput = ({
       {priceType === "specify" && (
         <div className="flex flex-col">
           <div className="mt-3 flex gap-2 items-center border dark:border-gray-600 rounded-lg p-2 w-full">
-            <span className="flex text-gray-600 dark:text-gray-300 font-medium ">
+            <span className="flex text-gray-600 dark:text-gray-300 font-medium">
               KSh
             </span>
             <input
@@ -112,7 +112,7 @@ const PriceInput = ({
                 setPrice(parseCurrencyToNumber(e.target.value));
               }}
               placeholder="Price*"
-              className="flex-1 dark:bg-[#2D3236] outline-none border-none p-1"
+              className="flex-1 dark:bg-[#2D3236] outline-none border-none p-0"
             />
             <select
               value={unit}

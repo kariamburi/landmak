@@ -117,7 +117,9 @@ export default function MenuType({
           </>
         ) : (
           <>
-            {type.slice(0, 7).map((option: any) => (
+        
+            {type.map((option: any) => (
+               // {type.slice(0, 7).map((option: any) => (
               <div
                 onClick={(e) => onSearch(option)}
                 key={option} // Always good to have a unique key prop

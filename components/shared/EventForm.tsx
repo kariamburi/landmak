@@ -212,8 +212,11 @@ const AdForm = ({
   const [selectedSubCategory, setSelectedSubCategory] = useState(
     ad ? ad.data.subcategory : ""
   );
+  const [selectedCategoryId, setSelectedCategoryId] = useState(
+    ad ? ad.category : ""
+  );
   const [selectedSubCategoryId, setSelectedSubCategoryId] = useState(
-    ad ? ad.subcategory._id : ""
+    ad ? ad.subcategory : ""
   );
 
   const [showGuide, setShowGuide] = useState(false);
@@ -357,12 +360,15 @@ const filteredCategories = uniqueCategories.filter(
 setSelectedCategoryCommand(filteredCategories);
   
           if (type === "Update") {
+           
             const selectedData: any = categories.find(
               (category: any) =>
                 category.category.name === selectedCategory &&
                 category.subcategory === selectedSubCategory
             );
             // Update fields if a match is found
+           
+            setSelectedCategoryId(selectedData.category._id)
             setFields(selectedData ? selectedData.fields : []);
             setFormData(ad.data);
            
@@ -483,8 +489,9 @@ setSelectedCategoryCommand(filteredCategories);
     setFormData({ ...formData, [field]: value });
   };
 
-  const handleInputCategoryChange = (field: string, value: any) => {
+  const handleInputCategoryChange = (field: string, value: any, _id:string) => {
     setSelectedCategory(value);
+    setSelectedCategoryId(_id);
     setSelectedSubCategory("");
     setSelectedSubCategoryId("");
     setFields([]);
@@ -627,6 +634,7 @@ setSelectedCategoryCommand(filteredCategories);
       const newAd = await createData({
         userId: userId,
         subcategory: selectedSubCategoryId,
+        category: selectedCategoryId,
         formData: finalData,
         expirely: ExpirationDate_,
         priority: Priority_,
@@ -697,7 +705,7 @@ setSelectedCategoryCommand(filteredCategories);
           phone: phone,
         };
         const _id = ad._id;
-        const updatedAd = await updateAd(userId, _id, finalData);
+        const updatedAd = await updateAd(userId, _id, selectedCategoryId,selectedSubCategoryId, finalData);
 
         setFormData(defaults);
         setFiles([]);

@@ -73,6 +73,7 @@ export type UpdateUserSetingsParams = {
 export type CreateAdShopParams = {
   userId: string
   subcategory: string
+  category: string
   planId: string
   plan: string
   pricePack: number

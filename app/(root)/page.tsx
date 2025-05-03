@@ -3,7 +3,7 @@ import { auth } from "@clerk/nextjs/server";
 import { getUserById } from "@/lib/actions/user.actions";
 import { Toaster } from "@/components/ui/toaster";
 import { getAllCategories, seedCategories } from "@/lib/actions/category.actions";
-import { duplicateSubcategories, getAllSubCategories, migrateFieldOptions, removenegotiable, reverseFieldOptions, syncSubcategoryImages, updateSub } from "@/lib/actions/subcategory.actions";
+import { duplicateSubcategories, getAllSubCategories, migrateFieldOptions, removenegotiable, reverseFieldOptions, syncSubcategoryImages, updateSub, updatethisCategory } from "@/lib/actions/subcategory.actions";
 import { getAdsCountAllRegion, getAllAds } from "@/lib/actions/dynamicAd.actions";
 import MainPage from "@/components/shared/MainPage";
 
@@ -26,9 +26,9 @@ export default async function Home({ searchParams }: SearchParamProps) {
   const categoryList = await getAllCategories();
   const subcategoryList = await getAllSubCategories();
   const AdsCountPerRegion = await getAdsCountAllRegion();
-  //const update = await  updateSub();
+ // const udate = await  updatethisCategory();
   //const migration = await syncSubcategoryImages("68144b998d7305e3676767a0");
-  //console.log(subcategoryList);
+ // console.log(udate)
  
 //const categoryList:any = [];
 //const subcategoryList:any = [];

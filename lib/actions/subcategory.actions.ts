@@ -34,6 +34,8 @@ export const createSubCategory = async (categoryId: string, subcategoryName: str
     handleError(error)
   }
 }
+
+
 export async function updateCategory(_id: string, categoryId: string, subcategoryName: string, imageUrl: any, oldurl: any, editFields: any) {
   try {
     await connectToDatabase()
@@ -91,6 +93,7 @@ export const getselectedsubcategories = async (categoryId: string) => {
     handleError(error)
   }
 }
+
 export const getAllSubCategories = async () => {
   try {
     await connectToDatabase();
@@ -99,14 +102,15 @@ export const getAllSubCategories = async () => {
       {
         $lookup: {
           from: "dynamicads",
-          let: { subcategoryName: "$subcategory" },
+          let: { subcategoryName: "$subcategory", catId: "$category" },
           pipeline: [
             {
               $match: {
                 $expr: {
                   $and: [
-                    { $eq: ["$data.subcategory", "$$subcategoryName"] }, // Match subcategory
-                    { $eq: ["$adstatus", "Active"] } // Match active ads
+                    { $eq: ["$data.subcategory", "$$subcategoryName"] },
+                    { $eq: ["$category", "$$catId"] },
+                    { $eq: ["$adstatus", "Active"] }
                   ]
                 }
               }
@@ -117,30 +121,29 @@ export const getAllSubCategories = async () => {
       },
       {
         $addFields: {
-          adCount: { $size: "$dynamicads" } // Count active ads
+          adCount: { $size: "$dynamicads" }
         }
       },
       {
         $project: {
-          dynamicads: 0 // Exclude dynamicAds field from the output
+          dynamicads: 0
         }
       }
     ]);
 
-    // Populate category names for each subcategory
     const populatedSubcategories = await Subcategory.populate(subcategories, {
       path: "category",
       model: Category,
       select: "name imageUrl"
     });
 
-    // console.log(populatedSubcategories);
     return JSON.parse(JSON.stringify(populatedSubcategories));
   } catch (error) {
-    console.error("Error fetching categories:", error);
+    console.error("Error fetching subcategories:", error);
     handleError(error);
   }
 };
+
 
 // DELETE
 export async function deleteCategory(categoryId: string, iconUrl: string) {
@@ -273,18 +276,18 @@ export const reverseFieldOptions = async () => {
 
 
 // Original subcategory ID to clone from
-const originalSubcategoryId = '679ce9921bf247a8de8f8958';
+const originalSubcategoryId = '68146886b897ffdf7baa12fd';
 
 // New subcategories with new names and category IDs 
 
 const newSubcategories = [
-  { name: 'Real Estate Agents', categoryId: '68144ba68d7305e36767a573' },
-  { name: 'Surveyors / Valuers', categoryId: '68144ba68d7305e36767a573' },
-  { name: 'Property Managers', categoryId: '68144ba68d7305e36767a573' },
-  { name: 'Legal Services (Title, Deed, Lease)', categoryId: '68144ba68d7305e36767a573' },
-  { name: 'Building Contractors', categoryId: '68144ba68d7305e36767a573' },
-  { name: 'Interior Designers', categoryId: '68144ba68d7305e36767a573' },
-  { name: 'Mortgage & Financing Services', categoryId: '68144ba68d7305e36767a573' },
+  { name: 'Warehouse', categoryId: '68144b998d7305e3676767a0' },
+  // { name: 'Surveyors / Valuers', categoryId: '68144ba68d7305e36767a573' },
+  // { name: 'Property Managers', categoryId: '68144ba68d7305e36767a573' },
+  // { name: 'Legal Services (Title, Deed, Lease)', categoryId: '68144ba68d7305e36767a573' },
+  //{ name: 'Building Contractors', categoryId: '68144ba68d7305e36767a573' },
+  //{ name: 'Interior Designers', categoryId: '68144ba68d7305e36767a573' },
+  //{ name: 'Mortgage & Financing Services', categoryId: '68144ba68d7305e36767a573' },
 ];
 
 
@@ -381,6 +384,22 @@ export async function updateSub() {
     // await mongoose.disconnect();
   }
 }
+export async function updatethisCategory(_id = '6816164c064246f5e800b2b4', categoryId = '68144b998d7305e3676767a0') {
+  try {
+    await connectToDatabase()
+    const updatedCat = await Subcategory.findByIdAndUpdate(
+      _id,
+      {
+        category: categoryId,
+      },
+      { new: true }
+    )
 
+
+    return JSON.parse(JSON.stringify(updatedCat))
+  } catch (error) {
+    handleError(error)
+  }
+}
 
 

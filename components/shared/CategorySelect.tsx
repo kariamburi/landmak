@@ -28,7 +28,7 @@ const CategorySelect = ({
 }: {
   selected: string | null;
   data: any;
-  onChange: (field: string, value: string) => void;
+  onChange: (field: string, value: string, _id:string) => void;
 }) => {
   const isMobile = useMediaQuery({ maxWidth: 768 }); // Detect mobile screens
   const [open, setOpen] = useState(false);
@@ -73,7 +73,7 @@ const CategorySelect = ({
                     <CommandItem
                       key={category._id}
                       onSelect={() => {
-                        onChange("category", category.category.name);
+                        onChange("category", category.category.name, category._id);
                         setOpen(false);
                       }}
                       className="p-3 cursor-pointer hover:bg-gray-200 dark:hover:bg-gray-800 rounded"
@@ -122,7 +122,7 @@ const CategorySelect = ({
                   <CommandItem
                     key={category._id}
                     onSelect={() => {
-                      onChange("category", category.category.name);
+                      onChange("category", category.category.name, category._id);
                       setOpen(false);
                     }}
                     className="p-3 cursor-pointer hover:bg-gray-200 dark:hover:bg-gray-800 rounded"

@@ -220,6 +220,8 @@ const MainPage = ({
 
  
   useEffect(() => {
+
+    console.log(subcategoryList);
     const fetchData = async () => {
       const params = new URLSearchParams(window.location.search);
       const id = params.get("Ad");

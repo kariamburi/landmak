@@ -694,7 +694,7 @@ const SCROLL_THRESHOLD = 150; // pixels
 
       <div className="hidden lg:inline dark:text-gray-400 text-emerald-950 text-center sm:text-left p-0">
         {newqueryObject.subcategory ? (
-          <div className="mt-0"> {newqueryObject.subcategory} {"("+newqueryObject["property-Type"]+")" || "("+newqueryObject["land-Type"]+")" || ""} in Kenya</div>
+          <div className="mt-0"> {newqueryObject.subcategory} in Kenya</div>
         ) : (
           <div className="mt-0">
             All {newqueryObject.category} in Kenya
@@ -880,9 +880,9 @@ const SCROLL_THRESHOLD = 150; // pixels
       </div>
     </div>
     </div>
-    <div className="lg:hidden dark:text-gray-400 text-emerald-950 text-center sm:text-left p-0">
+    <div className="lg:hidden dark:text-gray-400 text-emerald-950 sm:text-left p-0">
         {newqueryObject.subcategory ? (
-           <div className="mt-0"> {newqueryObject.subcategory} {"("+newqueryObject["property-Type"]+")" || "("+newqueryObject["land-Type"]+")" || ""} in Kenya</div>
+           <div className="mt-0"> in Kenya</div>
         ) : (
           <div className="mt-0">
             All {newqueryObject.category} in Kenya
