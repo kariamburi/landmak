@@ -134,7 +134,7 @@ export function DrawerPublic({
         variant="default"
         className="text-white bg-green-600 hover:bg-green-700"
       >
-        <AddOutlinedIcon /> Add {(selectedCategory && selectedCategory ==='Property Services')? (<>My Location</>):(<>Property</>)} coordinates
+        <AddOutlinedIcon /> Add {(selectedCategory && selectedCategory ==='Property Services')? (<>My Location</>):(<>Property coordinates</>)} 
       </Button>
     )}
   </DrawerTrigger>
@@ -142,7 +142,7 @@ export function DrawerPublic({
   <DrawerContent>
     <div className="mx-auto w-full max-w-md">
       <DrawerHeader>
-        <DrawerTitle>📍 {(selectedCategory && selectedCategory ==='Property Services')? (<>My Location</>):(<>Property</>)} Location</DrawerTitle>
+        <DrawerTitle>📍 {(selectedCategory && selectedCategory ==='Property Services')? (<>My Location</>):(<>Property Location</>)} </DrawerTitle>
         <DrawerDescription>
         {(selectedCategory && selectedCategory ==='Property Services')? (<>Set your location for visibility.</>):(<>Set your property location in order to draw land boundaries and feature markers.</>)}
         </DrawerDescription>

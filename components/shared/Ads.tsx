@@ -1695,66 +1695,73 @@ export default function Ads({ ad, user, userId, userImage, userName, onClose,han
             </div>
          
         
-          <div className="mt-3 border dark:bg-[#2D3236] dark:text-gray-300  bg-white p-2 text-sm rounded-lg overflow-hidden">
-            <div className="font-bold text-lg text-center">Safety tips</div>
+            <div className="mt-3 border dark:bg-[#2D3236] dark:text-gray-300 bg-white p-2 text-sm rounded-lg overflow-hidden">
+  <div className="font-bold text-lg text-center">Safety Tips for Buyers</div>
 
-            <ol>
-              <li>
-                <div className="text-sm">
-                  <p className="font-bold flex gap-2 text-sm">
-                    <CheckCircleIcon sx={{ fontSize: 14 }} />
-                    Research the Seller
-                  </p>
-                  <p>
-                    Before contacting a seller, research their profile and
-                    reviews if available. Be cautious of sellers with little to
-                    no history on the platform.
-                  </p>
-                </div>
-              </li>
+  <ol>
+    <li>
+      <div className="text-sm">
+        <p className="font-bold flex gap-2 text-sm">
+          <CheckCircleIcon sx={{ fontSize: 14 }} />
+          Verify the Seller
+        </p>
+        <p>
+          Always check the seller's profile, history, and contact details. Be cautious of listings from users without verified details or reviews.
+        </p>
+      </div>
+    </li>
 
-              <li>
-                <div className="mt-2 gap-2 text-sm">
-                  <p className="font-bold flex gap-2 text-sm">
-                    <CheckCircleIcon sx={{ fontSize: 14 }} /> Inspect the
-                    Vehicle
-                  </p>
-                  <p>
-                    Always inspect the vehicle in person before making a
-                    purchase. Ensure that the vehicle is in the condition
-                    described in the listing.
-                  </p>
-                </div>
-              </li>
+    <li>
+      <div className="mt-2 gap-2 text-sm">
+        <p className="font-bold flex gap-2 text-sm">
+          <CheckCircleIcon sx={{ fontSize: 14 }} />
+          Inspect the Property
+        </p>
+        <p>
+          Schedule a physical visit to the property before making any payments. Ensure all details match the listing description and ask questions about ownership.
+        </p>
+      </div>
+    </li>
 
-              <li>
-                <div className="gap-2 mt-2 text-sm">
-                  <p className="font-bold flex gap-2 text-sm">
-                    <CheckCircleIcon sx={{ fontSize: 14 }} /> Meet in Safe
-                    Locations
-                  </p>
-                  <p>
-                    Arrange to meet the seller in a public place. Avoid secluded
-                    areas and always choose a location where you feel safe.
-                  </p>
-                </div>
-              </li>
+    <li>
+      <div className="gap-2 mt-2 text-sm">
+        <p className="font-bold flex gap-2 text-sm">
+          <CheckCircleIcon sx={{ fontSize: 14 }} />
+          Meet in Safe Locations
+        </p>
+        <p>
+          When meeting with the seller or their agent, choose public or secure places. Consider bringing someone along for added safety.
+        </p>
+      </div>
+    </li>
 
-              <li>
-                <div className="mt-2 transition-colors font-bold text-green-600 hover:text-green-600 hover:cursor-pointer">
-                  <div
-                    onClick={() => {
-                      handleOpenSafety();
-                     // router.push("/safety");
-                    }}
-                    className="cursor-pointer hover:text-green-500 "
-                  >
-                    Read more....
-                  </div>
-                </div>
-              </li>
-            </ol>
-          </div>
+    <li>
+      <div className="gap-2 mt-2 text-sm">
+        <p className="font-bold flex gap-2 text-sm">
+          <CheckCircleIcon sx={{ fontSize: 14 }} />
+          Avoid Advance Payments
+        </p>
+        <p>
+          Never send money before seeing the property or signing official documents. Use secure payment channels and demand proof of ownership.
+        </p>
+      </div>
+    </li>
+
+    <li>
+      <div className="mt-2 font-bold text-green-600 hover:text-green-500 hover:cursor-pointer">
+        <div
+          onClick={() => {
+            handleOpenSafety();
+            // router.push("/safety");
+          }}
+        >
+          Read more...
+        </div>
+      </div>
+    </li>
+  </ol>
+</div>
+
 
 
           <div className="mt-3 border dark:bg-[#2D3236] dark:text-gray-300  bg-white p-2 text-sm rounded-lg overflow-hidden">

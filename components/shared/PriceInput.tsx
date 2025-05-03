@@ -100,8 +100,8 @@ const PriceInput = ({
       {/* Price Input Field (Shown only if "Specify price" is selected) */}
       {priceType === "specify" && (
         <div className="flex flex-col">
-          <div className="mt-3 flex items-center border dark:border-gray-600 rounded-lg p-2 w-full">
-            <span className="text-gray-600 dark:text-gray-300 font-medium mr-2">
+          <div className="mt-3 flex gap-2 items-center border dark:border-gray-600 rounded-lg p-2 w-full">
+            <span className="flex text-gray-600 dark:text-gray-300 font-medium ">
               KSh
             </span>
             <input
@@ -120,12 +120,12 @@ const PriceInput = ({
                 onChange("unit", e.target.value);
                 setUnit(e.target.value);
               }}
-              className="ml-2 outline-none dark:text-gray-300 dark:bg-[#2D3236] text-gray-600 bg-transparent cursor-pointer"
+              className="flex outline-none dark:text-gray-300 dark:bg-[#2D3236] text-gray-600 bg-transparent cursor-pointer"
             >
               <option value="per service">per service</option>
               <option value="per hour">per hour</option>
               <option value="per day">per day</option>
-              <option value="per piece">per piece</option>
+              
             </select>
           </div>
 

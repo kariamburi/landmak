@@ -1360,7 +1360,7 @@ polyline.addListener("click", () => {
           variant="default"
           className="absolute bottom-[90px] lg:bottom-[140px] left-2 z-5 bg-green-600 hover:bg-green-700 text-white px-4 py-2 rounded"
         >
-          <AddOutlinedIcon/>Map Property
+          <AddOutlinedIcon/> {(selectedCategory && selectedCategory ==='Property Services')? (<>Save Location</>):(<>Save Property Map</>)}
         </Button>
 
         <Button variant="destructive" className="absolute left-2 bottom-10 lg:bottom-[90px]" onClick={deleteAll}>
