@@ -1,7 +1,8 @@
 import { useState } from "react";
 import { Button } from "@/components/ui/button";
 import { Copy, Share2 } from "lucide-react";
-
+import QRCode from 'qrcode';
+import QrCode2OutlinedIcon from '@mui/icons-material/QrCode2Outlined';
 const CopyShareAdLink = ({ _id, titleId }: { _id: string, titleId:string }) => {
   const [copied, setCopied] = useState(false);
 
@@ -27,14 +28,34 @@ const adUrl =process.env.NEXT_PUBLIC_DOMAIN_URL+"?"+titleId+"="+_id;
       alert("Sharing is not supported on this device.");
     }
   };
+const saveQRcode = async () => {
+  
+    try {
+      const qrDataURL = await QRCode.toDataURL(adUrl);
+  
+      // Create download link
+      const link = document.createElement('a');
+      link.href = qrDataURL;
+      link.download = 'mapa-qr-code.png';
+      document.body.appendChild(link);
+      link.click();
+      document.body.removeChild(link);
+    
+    } catch (err) {
+      console.error('Failed to generate QR code', err);
+    }
 
+  }
   return (
     <div className="w-full flex gap-1 items-center justify-between">
-      <Button onClick={handleCopy} variant="outline" className="flex items-center gap-2">
-        <Copy size={16} /> {copied ? "Copied!" : "Copy "+titleId+" Link"}
+      <Button onClick={handleCopy} variant="outline" className="flex items-center gap-1">
+        <Copy /> {copied ? "Copied!" : "Copy Link"}
       </Button>
-      <Button onClick={handleShare} variant="outline" className="flex items-center gap-2">
-        <Share2 size={16} /> Share {titleId} Link
+      <Button onClick={saveQRcode} variant="outline" className="flex items-center gap-1">
+        <QrCode2OutlinedIcon /> QRcode
+      </Button>
+      <Button onClick={handleShare} variant="outline" className="flex items-center gap-1">
+        <Share2 /> Share
       </Button>
     </div>
   );

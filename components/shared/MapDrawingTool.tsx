@@ -57,6 +57,7 @@ type Shape = {
 };
 interface Props {
   name: string;
+  selectedCategory:string;
   data: {
     location: Location;
     polylines: Polyline[];
@@ -93,7 +94,7 @@ const markerOptions = [
   { label: "Police Station", icon: "/assets/map/police.png" },
 ];
 
-export default function MapDrawingTool({ name, data, onChange, onSave, onClose }: Props) {
+export default function MapDrawingTool({ name, selectedCategory, data, onChange, onSave, onClose }: Props) {
    const [center, setCenter] = useState<any>(data.location?.coordinates ? {lat:data.location.coordinates[0], lng:data.location.coordinates[1]}:defaultcenter);
    const [latitude, setLatitude] = useState(data.location?.coordinates ? data.location.coordinates[0]: '');
    const [longitude, setLongitude] = useState(data.location?.coordinates ? data.location.coordinates[1]: '');
@@ -160,7 +161,7 @@ export default function MapDrawingTool({ name, data, onChange, onSave, onClose }
         position: center,
         map,
         draggable: true,
-        title: "Initial Location",
+        title: "Location",
       });
 
       marker.addListener("dragend", () => {
@@ -1367,7 +1368,7 @@ polyline.addListener("click", () => {
         </Button>
         
 
-        <DrawerPublic onChange={handlePropertyLocation} latitude={latitude.toString()} longitude={longitude.toString()} />
+        <DrawerPublic onChange={handlePropertyLocation} selectedCategory={selectedCategory} latitude={latitude.toString()} longitude={longitude.toString()} />
 
 
 
@@ -1566,15 +1567,17 @@ polyline.addListener("click", () => {
           onChange={handlePropertyLocation}
           latitude={latitude.toString()}
           longitude={longitude.toString()}
+          selectedCategory={selectedCategory}
         />
 
         {/* Toggle Mapping Info */}
-        <button
+   {selectedCategory !== "Property Services" && (<>
+   <button
           onClick={() => setShowMappingInfo(!showMappingInfo)}
           className="text-green-600 underline mt-2 text-xs px-4 py-2 rounded-md hover:text-green-700 transition"
         >
           Benefits of using the Advanced Property Mapping Tool?
-        </button>
+        </button></>)}
       </div>
 
       {/* Mapping Info Modal */}

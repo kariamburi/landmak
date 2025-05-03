@@ -1761,7 +1761,9 @@ setSelectedCategoryCommand(filteredCategories);
                    <button
                       onClick={handleOpenPopupArea}
                       className="py-3 w-full px-1 rounded-sm text-green-600 bg-green-100 border border-green-600 hover:bg-green-200">
-                      <AddLocationAltOutlinedIcon /> Advanced Property Mapping
+                      <AddLocationAltOutlinedIcon /> 
+                      
+                      {selectedCategory ==="Property Services" ? (<> Google Map location</>):(<>Advanced Property Mapping</>)}
                     </button>
                   
              
@@ -1778,6 +1780,7 @@ setSelectedCategoryCommand(filteredCategories);
                         
                         <MapDrawingTool
   name="propertyarea"
+  selectedCategory={selectedCategory}
   data={formData["propertyarea"] || []}
   onSave={handleSaveMap}
   onClose={handleOnClose}

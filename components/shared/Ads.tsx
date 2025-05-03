@@ -1386,7 +1386,7 @@ export default function Ads({ ad, user, userId, userImage, userName, onClose,han
           <div className="hidden lg:inline">
             
             
-            <div className="dark:bg-[#2D3236] dark:text-gray-300 bg-white p-5 border rounded-lg overflow-hidden flex flex-col items-center">
+            <div className="dark:bg-[#2D3236] dark:text-gray-300 bg-white p-2 border rounded-lg overflow-hidden flex flex-col items-center">
               <div className="flex gap-1 items-center no-underline">
                 {ad.data.contact && ad.data.contact === "contact" ? (
                   <p className="flex text-2xl font-bold  dark;text-green-500 text-green-600">
@@ -1598,7 +1598,7 @@ export default function Ads({ ad, user, userId, userImage, userName, onClose,han
             </div>
          
           </div>
-          <div className="mt-3 border dark:bg-[#2D3236] dark:text-gray-300  bg-white p-5 text-sm rounded-lg overflow-hidden">
+          <div className="mt-3 border dark:bg-[#2D3236] dark:text-gray-300 bg-white p-2 text-sm rounded-lg overflow-hidden">
               <div className="flex justify-between">
 
 
@@ -1637,7 +1637,7 @@ export default function Ads({ ad, user, userId, userImage, userName, onClose,han
             </div>
 
 
-            <div className="mt-3 border dark:bg-[#2D3236] dark:text-gray-300  bg-white p-5 text-sm rounded-lg overflow-hidden">
+            <div className="mt-3 border dark:bg-[#2D3236] dark:text-gray-300 bg-white p-2 text-sm rounded-lg overflow-hidden">
               <div className="flex justify-between">
 
            < CopyShareAdLink _id={ad._id} titleId={"Ad"}/>
@@ -1647,7 +1647,7 @@ export default function Ads({ ad, user, userId, userImage, userName, onClose,han
             </div>
 
 
-          <div className="mt-3 border dark:bg-[#2D3236] dark:text-gray-300  bg-white p-5 text-sm rounded-lg overflow-hidden">
+          <div className="mt-3 border dark:bg-[#2D3236] dark:text-gray-300  bg-white p-2 text-sm rounded-lg overflow-hidden">
               <div className="flex justify-between">
               <SignedIn>
               <Button onClick={handleOpenPopupAv} variant="outline" className="flex text-blue-600 items-center gap-1">
@@ -1695,7 +1695,7 @@ export default function Ads({ ad, user, userId, userImage, userName, onClose,han
             </div>
          
         
-          <div className="mt-3 border dark:bg-[#2D3236] dark:text-gray-300  bg-white p-5 text-sm rounded-lg overflow-hidden">
+          <div className="mt-3 border dark:bg-[#2D3236] dark:text-gray-300  bg-white p-2 text-sm rounded-lg overflow-hidden">
             <div className="font-bold text-lg text-center">Safety tips</div>
 
             <ol>
@@ -1757,7 +1757,7 @@ export default function Ads({ ad, user, userId, userImage, userName, onClose,han
           </div>
 
 
-          <div className="mt-3 border dark:bg-[#2D3236] dark:text-gray-300  bg-white p-5 text-sm rounded-lg overflow-hidden">
+          <div className="mt-3 border dark:bg-[#2D3236] dark:text-gray-300  bg-white p-2 text-sm rounded-lg overflow-hidden">
               <div className="flex justify-between">
 
             <SignedIn>
