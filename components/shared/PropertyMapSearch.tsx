@@ -177,10 +177,10 @@ useEffect(() => {
         {showSidebar && (
           <div className="flex flex-col space-y-1">
              <div className="flex justify-between items-center w-full">
-             <h2 className="p-1 text-lg border-b w-full">Nearby Properties</h2></div>
+             <h2 className="p-1 text-lg border-b w-full">Nearby {NewqueryObject.category==='Property services' ? (<>Service Providers</>):(<>Properties</>)}</h2></div>
 
       {data?.length > 0 ? (<>
-      <h3 className="font-semibold mb-2">Properties within {radius / 1000} km</h3>
+      <h3 className="font-semibold mb-2">{NewqueryObject.category==='Property services' ? (<>Service Providers</>):(<>Properties</>)} within {radius / 1000} km</h3>
           <ScrollArea className="h-[90vh] overflow-y-auto flex p-0 bg-white rounded-lg">
             <ul className="w-full h-full">
             {data.map((ad: any) => (
@@ -204,8 +204,8 @@ useEffect(() => {
         loading === false && (
           <>
             <div className="flex items-center wrapper  w-full flex-col gap-1 rounded-[14px] bg-grey-50 py-28 text-center">
-            <h3 className="font-semibold mb-2">Properties within {radius / 1000} km</h3>
-              <p className="text-sm text-gray-500">No properties found in this range.</p>
+            <h3 className="font-semibold mb-2">{NewqueryObject.category==='Property services' ? (<>Service Providers</>):(<>Properties</>)} within {radius / 1000} km</h3>
+              <p className="text-sm text-gray-500">No {NewqueryObject.category==='Property services' ? (<>Service Providers</>):(<>Properties</>)} found in this range.</p>
                <SignedIn>
               
               <Button onClick={() => {
@@ -238,7 +238,7 @@ useEffect(() => {
       {loading && (
         <div>
           <div className="w-full mt-10 h-full flex flex-col items-center justify-center">
-          <h3 className="font-semibold mb-2">Properties within {radius / 1000} km</h3>
+          <h3 className="font-semibold mb-2">{NewqueryObject.category==='Property services' ? (<>Service Providers</>):(<>Properties</>)} within {radius / 1000} km</h3>
             <Image
               src="/assets/icons/loading2.gif"
               alt="loading"
@@ -265,7 +265,7 @@ useEffect(() => {
           onClick={() => setShowSidebar(!showSidebar)}
           className="absolute text-xs lg:text-base bottom-[180px] lg:bottom-[90px] left-3 z-10 md:block bg-green-600 text-white shadow-lg hover:bg-green-700"
         >
-         {showSidebar ? (<><KeyboardArrowLeftOutlinedIcon/> Hide Nearby Properties</>) : (<><KeyboardArrowRightOutlinedIcon/> Show Nearby Properties</>)} 
+         {showSidebar ? (<><KeyboardArrowLeftOutlinedIcon/> Hide Nearby {NewqueryObject.category==='Property services' ? (<>Service Providers</>):(<>Properties</>)}</>) : (<><KeyboardArrowRightOutlinedIcon/> Show Nearby {NewqueryObject.category==='Property services' ? (<>Service Providers</>):(<>Properties</>)}</>)} 
         </Button>
         
       

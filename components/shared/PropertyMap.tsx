@@ -2,7 +2,7 @@ import React, { useEffect, useRef, useState } from "react";
 import { Loader } from "@googlemaps/js-api-loader";
 import { Button } from "../ui/button";
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "../ui/select";
-import { InfoWindow, OverlayView } from "@react-google-maps/api";
+import { InfoWindow, OverlayView, useLoadScript } from "@react-google-maps/api";
 import DeleteOutlineOutlinedIcon from '@mui/icons-material/DeleteOutlineOutlined';
 import RoomOutlinedIcon from '@mui/icons-material/RoomOutlined';
 import DoneOutlinedIcon from '@mui/icons-material/DoneOutlined';
@@ -154,15 +154,13 @@ export default function MapDrawingTool({queryObject, coordinates, handleCategory
     polylinesRef.current = polylines;
   }, [polylines]);
   
-  useEffect(() => {
-    const loader = new Loader({
-      apiKey: process.env.NEXT_PUBLIC_GOOGLEAPIKEY!,
-      version: "weekly",
+   const { isLoaded } = useLoadScript({
+      googleMapsApiKey: process.env.NEXT_PUBLIC_GOOGLEAPIKEY!,
       libraries: ["drawing", "geometry","places"],
     });
-
-    loader.load().then(() => {
-      if (!mapRef.current) return;
+    
+  useEffect(() => {
+    if (!isLoaded || !mapRef.current) return;
       const map = new google.maps.Map(mapRef.current, {
         center,
         zoom: 16,
@@ -370,9 +368,9 @@ labelMarkersRef.current.push(labelOverlay);
           setShapeRefs((prev) => [...prev, event.overlay]);
         }
       });
-    });
+    //});
 
-  }, []);
+  }, [isLoaded]);
 useEffect(() => {
     if (!drawingManager.current) return;
     const modeMap:any = {
@@ -1206,7 +1204,13 @@ labelMarkersRef.current.push(labelOverlay);
     reader.readAsText(file);
   };
   return ( 
-<div className="flex w-full h-[100vh]">
+<div className="flex w-full h-[100vh] relative">
+{!isLoaded && (
+    <div className="absolute inset-0 z-10 flex items-center justify-center bg-white/70">
+      <div className="animate-spin rounded-full h-8 w-8 border-t-2 border-b-2 border-gray-800" />
+      <span className="ml-2 text-gray-700 font-medium">Loading map...</span>
+    </div>
+  )}
     {/* Sidebar with Toggle Button */}
         {uploadPopup && (
       <div className="fixed inset-0 flex items-center justify-center bg-gray-900 bg-opacity-50 p-2 z-50">

@@ -2,7 +2,7 @@ import React, { useEffect, useRef, useState } from "react";
 import { Loader } from "@googlemaps/js-api-loader";
 import { Button } from "../ui/button";
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "../ui/select";
-import { InfoWindow, OverlayView } from "@react-google-maps/api";
+import { InfoWindow, OverlayView, useLoadScript } from "@react-google-maps/api";
 import DeleteOutlineOutlinedIcon from '@mui/icons-material/DeleteOutlineOutlined';
 import RoomOutlinedIcon from '@mui/icons-material/RoomOutlined';
 import DoneOutlinedIcon from '@mui/icons-material/DoneOutlined';
@@ -97,7 +97,6 @@ const markerOptions = [
 
 export default function MapDrawingTool({ data }: Props) {
    const [center, setCenter] = useState<any>(data.location?.coordinates ? {lat:data.location.coordinates[0], lng:data.location.coordinates[1]}:defaultcenter);
-  
    const mapRef = useRef<HTMLDivElement>(null);
   const mapInstance = useRef<google.maps.Map | null>(null);
   const drawingManager = useRef<google.maps.drawing.DrawingManager | null>(null);
@@ -136,15 +135,17 @@ export default function MapDrawingTool({ data }: Props) {
     polylinesRef.current = polylines;
   }, [polylines]);
   
-  useEffect(() => {
-    const loader = new Loader({
-      apiKey: process.env.NEXT_PUBLIC_GOOGLEAPIKEY!,
-      version: "weekly",
-      libraries: ["drawing", "geometry","places"],
-    });
 
-    loader.load().then(() => {
-      if (!mapRef.current) return;
+  const { isLoaded } = useLoadScript({
+    googleMapsApiKey: process.env.NEXT_PUBLIC_GOOGLEAPIKEY!,
+    libraries: ["drawing", "geometry","places"],
+  });
+
+
+
+  useEffect(() => {
+    if (!isLoaded || !mapRef.current) return;
+
       const map = new google.maps.Map(mapRef.current, {
         center,
         zoom: 16,
@@ -167,7 +168,7 @@ export default function MapDrawingTool({ data }: Props) {
         position: center,
         map,
         draggable: true,
-        title: "Property Location",
+        title: "Location",
       });
 
       markerRef.current = marker;
@@ -444,9 +445,9 @@ polyline.addListener("mouseout", () => {
           setShapeRefs((prev) => [...prev, event.overlay]);
         }
       });
-    });
-
-  }, []);
+   // });
+  
+  }, [isLoaded]);
 
   const handleShapeClick = (shape: google.maps.Polygon | google.maps.Polyline, label: string = "") => {
     if (selectedShape === shape) {
@@ -989,6 +990,12 @@ const handleFullscreen = () => {
   
   return ( 
   <div id="map-container" className="h-[100vh] relative">
+     {!isLoaded && (
+    <div className="absolute inset-0 z-10 flex items-center justify-center bg-white/70">
+      <div className="animate-spin rounded-full h-8 w-8 border-t-2 border-b-2 border-gray-800" />
+      <span className="ml-2 text-gray-700 font-medium">Loading map...</span>
+    </div>
+  )}
     {showGuide && (
         <div className="absolute z-50 top-10 left-2  mt-2 w-80 bg-gray-100 rounded-lg shadow-md text-gray-700 p-3">
          <div className="flex justify-end p-1 items-center w-full">

@@ -418,6 +418,7 @@ export default function Ads({ ad, user, userId, userImage, userName, onClose,han
   </button>
 </div>
 
+
 <div
   className={`rounded-0 p-2 flex flex-col ${
     (inputMode === "Video" && checkPlatform(ad.data["youtube-link"]) === "TikTok") ? " bg-white" : " bg-[#131B1E]"

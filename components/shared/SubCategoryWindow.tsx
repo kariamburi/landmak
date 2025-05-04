@@ -111,7 +111,7 @@ const SubCategoryWindow: React.FC<ChatWindowProps> = ({
                   heading={
                     <div className="flex mb-2 text-sm gap-1 items-center text-gray-500 dark:text-gray-400">
                       {totalAdCount} results for{" "}
-                      <p className="text-black dark:text-white font-bold">{category}</p> in Kenya
+                      <p className="text-black dark:text-white font-bold">{category}</p>
                     </div>
                   }
                 >

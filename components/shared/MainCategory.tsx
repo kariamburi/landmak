@@ -694,11 +694,12 @@ const SCROLL_THRESHOLD = 150; // pixels
 
       <div className="hidden lg:inline dark:text-gray-400 text-emerald-950 text-center sm:text-left p-0">
         {newqueryObject.subcategory ? (
-          <div className="mt-0"> {newqueryObject.subcategory} in Kenya</div>
+          <div className="flex gap-1 items-center"> <div className="font-bold"> {newqueryObject.subcategory}{"(s)"}</div> in Kenya</div>
         ) : (
-          <div className="mt-0">
-            All {newqueryObject.category} in Kenya
-          </div>
+         
+             <div className="flex gap-1 items-center">All <div className="font-bold"> {newqueryObject.category}</div> in Kenya</div>
+            
+         
         )}
       </div>
 
@@ -881,17 +882,18 @@ const SCROLL_THRESHOLD = 150; // pixels
     </div>
     </div>
     <div className="lg:hidden dark:text-gray-400 text-emerald-950 sm:text-left p-0">
-        {newqueryObject.subcategory ? (
-           <div className="mt-0"> in Kenya</div>
+    {newqueryObject.subcategory ? (
+          <div className="ml-2 flex gap-1 items-center"> <div className="font-bold"> {newqueryObject.subcategory}{"(s)"}</div> in Kenya</div>
         ) : (
-          <div className="mt-0">
-            All {newqueryObject.category} in Kenya
-          </div>
+         
+             <div className="ml-2 flex gap-1 items-center">All <div className="font-bold"> {newqueryObject.category}</div> in Kenya</div>
+            
+         
         )}
       </div>
     <div className="w-full lg:hidden">
       <div className="flex w-full gap-1 p-1 items-center">
-        {newqueryObject.category === "Property" && (<>
+      
            <div className="flex-1">
            <TooltipProvider>
              <Tooltip>
@@ -903,9 +905,9 @@ const SCROLL_THRESHOLD = 150; // pixels
                    <div className="flex gap-2 items-center">
                    <MyLocationOutlinedIcon/>
                       {isPicking ? (<>
-                        Nearby Property <CircularProgress sx={{ color: "gray" }} size={30} />
+                        Nearby {newqueryObject.category ==='Property Services' ? (<>Service Provider</>):(<>Property</>)} <CircularProgress sx={{ color: "gray" }} size={30} />
                                                </> ):(<>
-                                                Nearby Property
+                                                Nearby {newqueryObject.category ==='Property Services' ? (<>Service Provider</>):(<>Property</>)}
                                              </>)}
                    </div>
                 
@@ -945,7 +947,7 @@ const SCROLL_THRESHOLD = 150; // pixels
               </Tooltip>
             </TooltipProvider>
           </div>
-          </>)}
+        
 
         <div className="flex-1 gap-1 items-center">
           <TooltipProvider>
@@ -991,7 +993,7 @@ const SCROLL_THRESHOLD = 150; // pixels
         <SearchNow handleFilter={handleFilter} handleOpenSearchByTitle={handleOpenSearchByTitle}/>
       </div>
 
-      {newqueryObject.category === "Property" && (<>
+  
            <div className="flex hidden lg:inline">
            <TooltipProvider>
              <Tooltip>
@@ -1004,9 +1006,9 @@ const SCROLL_THRESHOLD = 150; // pixels
                      <MyLocationOutlinedIcon/>
                      
                       {isPicking ? (<>
-                                              Nearby Property<CircularProgress sx={{ color: "gray" }} size={30} />
+                                              Nearby {newqueryObject.category ==='Property Services' ? (<>Service Provider</>):(<>Property</>)} <CircularProgress sx={{ color: "gray" }} size={30} />
                                                </> ):(<>
-                                              Nearby Property
+                                              Nearby {newqueryObject.category ==='Property Services' ? (<>Service Provider</>):(<>Property</>)}
                                              </>)}
                    </div>
                   
@@ -1046,7 +1048,7 @@ const SCROLL_THRESHOLD = 150; // pixels
             </Tooltip>
           </TooltipProvider>
         </div>
-        </>)}
+      
 
       <div className="flex gap-1 items-center hidden lg:inline">
         <TooltipProvider>
