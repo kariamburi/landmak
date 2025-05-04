@@ -48,7 +48,7 @@ const saveQRcode = async () => {
   }
   return (
     <div className="w-full flex gap-1 items-center justify-between">
-      <Button onClick={handleCopy} variant="outline" className="flex items-center gap-1">
+    {/* <Button onClick={handleCopy} variant="outline" className="flex items-center gap-1">
         <Copy /> {copied ? "Copied!" : "Copy Link"}
       </Button>
       <Button onClick={saveQRcode} variant="outline" className="flex items-center gap-1">
@@ -56,7 +56,16 @@ const saveQRcode = async () => {
       </Button>
       <Button onClick={handleShare} variant="outline" className="flex items-center gap-1">
         <Share2 /> Share
-      </Button>
+      </Button> */} 
+     <div onClick={handleCopy} className="flex cursor-pointer p-2 border rounded-sm items-center gap-1 hover:bg-green-100">
+        <Copy /> {copied ? "Copied!" : "Copy Link"}
+      </div>
+      <div onClick={saveQRcode} className="flex cursor-pointer p-2 border rounded-sm items-center gap-1 hover:bg-green-100">
+        <QrCode2OutlinedIcon /> QRcode
+      </div>
+      <div onClick={handleShare} className="flex cursor-pointer p-2 border rounded-sm items-center gap-1 hover:bg-green-100">
+        <Share2 /> Share
+      </div> 
     </div>
   );
 };
