@@ -160,6 +160,36 @@ const PrivacyComponent =  ({userId,user, handleOpenPerfomance,
   
             <p className="mb-4">We may update this Privacy Policy from time to time. Please review it periodically.</p>
   
+            <h2 className="text-xl font-semibold mt-6 mb-2">
+                6. Account Deletion Policy
+              </h2>
+
+              <p className="mb-4">
+                If you choose to delete your account, please note the following:
+              </p>
+              <ul className="list-disc list-inside ml-6 mb-4">
+                <li>
+                  Your account information and data will be permanently deleted
+                  and cannot be recovered.
+                </li>
+                <li>
+                  You will no longer have access to any data or content
+                  associated with your account.
+                </li>
+                <li>
+                  Any property listings you have posted will be removed from the
+                  website.
+                </li>
+                <li>
+                  To delete your account: Go to &quot;Manage Account &quot; in
+                  your account settings. Select the &quot;Security&quot; tab.
+                  Click on the &quot;Delete Account&quot; button.
+                </li>
+                <li>
+                  Please contact our support team if you need assistance with
+                  account deletion.
+                </li>
+              </ul>
             <p className="mt-4">For any questions about this Privacy Policy, please contact us at <strong>support@mapa.co.ke</strong>.</p>
           </div>
         </div>
