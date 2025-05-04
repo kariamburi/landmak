@@ -100,7 +100,7 @@ const PriceInput = ({
       {/* Price Input Field (Shown only if "Specify price" is selected) */}
       {priceType === "specify" && (
         <div className="flex flex-col">
-          <div className="mt-3 flex gap-2 items-center border dark:border-gray-600 rounded-lg p-2 w-full">
+          <div className="mt-3 flex gap-1 items-center border dark:border-gray-600 rounded-lg py-2 px-1 w-full">
             <span className="flex text-gray-600 dark:text-gray-300 font-medium">
               KSh
             </span>

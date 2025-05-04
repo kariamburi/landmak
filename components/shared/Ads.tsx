@@ -350,7 +350,7 @@ export default function Ads({ ad, user, userId, userImage, userName, onClose,han
 
       </div>
       <div className="space-y-0 lg:flex lg:space-x-0 gap-2">
-        <div
+  <div
           className="mt-1 lg:mt-2 relative lg:flex-1 dark:bg-[#2D3236] dark:text-gray-300"
           style={
             ad.plan.name !== "Free"
@@ -381,222 +381,205 @@ export default function Ads({ ad, user, userId, userImage, userName, onClose,han
                 </div>
               </div>
             )}
-  <div className="grid grid-cols-3 mb-0 flex gap-1">
-  <button
-    title="Ad Pictures"
-    onClick={() => setInputMode("Images")}
-    className={`p-3 flex gap-2 justify-center items-center text-[10px] lg:text-xs lg:rounded-tl-xl ${
-      inputMode === "Images"
-        ? "text-white bg-[#131B1E] dark:text-white"
-        : "bg-green-600 text-white"
-    }`}
-  >
-    <LocalSeeOutlinedIcon sx={{ fontSize: 16 }} /> Pictures
-  </button>
- 
-  <button
-    title="Ad Video"
-    onClick={() => setInputMode("Video")}
-    className={`p-3 flex gap-2 justify-center items-center text-[10px] lg:text-xs ${
-      inputMode === "Video"
-        ? "text-white bg-[#131B1E] dark:text-white"
-        : "bg-green-600 text-white"
-    }`}
-  >
-    <YouTubeIcon sx={{ fontSize: 16 }} /> Video
-  </button>
-  <button
-    title="Ad 3D Virtual"
-    onClick={() => setInputMode("Virtual")}
-    className={`p-3 flex gap-2 justify-center items-center text-[10px] lg:text-xs lg:rounded-tr-xl ${
-      inputMode === "Virtual"
-        ? "text-white bg-[#131B1E] dark:text-white"
-        : "bg-green-600 text-white"
-    }`}
-  >
-    <ThreeDRotationOutlinedIcon sx={{ fontSize: 16 }} />3D Virtual Tour
-  </button>
-</div>
+  <div className="p-0">
+  {/* Top Tab Buttons */}
+  <div className="rounded-t-xl overflow-hidden">
+    <div className="grid grid-cols-3 gap-1">
+      <button
+        title="Ad Pictures"
+        onClick={() => setInputMode("Images")}
+        className={`h-12 p-3 flex gap-2 justify-center items-center text-[10px] lg:text-xs ${
+          inputMode === "Images"
+            ? "text-white bg-[#131B1E] dark:text-white"
+            : "bg-green-600 hover:bg-green-700 text-white"
+        } rounded-tl-xl`}
+      >
+        <LocalSeeOutlinedIcon sx={{ fontSize: 16 }} /> Pictures
+      </button>
 
+      <button
+        title="Ad Video"
+        onClick={() => setInputMode("Video")}
+        className={`h-12 p-3 flex gap-2 justify-center items-center text-[10px] lg:text-xs ${
+          inputMode === "Video"
+            ? "text-white bg-[#131B1E] dark:text-white"
+            : "bg-green-600 hover:bg-green-700 text-white"
+        }`}
+      >
+        <YouTubeIcon sx={{ fontSize: 16 }} /> Video
+      </button>
 
-<div
-  className={`rounded-0 p-2 flex flex-col ${
-    (inputMode === "Video" && checkPlatform(ad.data["youtube-link"]) === "TikTok") ? " bg-white" : " bg-[#131B1E]"
-  }`}
-  >
-  {/* Video Section */}
+      <button
+        title="Ad 3D Virtual"
+        onClick={() => setInputMode("Virtual")}
+        className={`h-12 p-3 flex gap-2 justify-center items-center text-[10px] lg:text-xs ${
+          inputMode === "Virtual"
+            ? "text-white bg-[#131B1E] dark:text-white"
+            : "bg-green-600 hover:bg-green-700 text-white"
+        } rounded-tr-xl`}
+      >
+        <ThreeDRotationOutlinedIcon sx={{ fontSize: 16 }} /> 3D Virtual Tour
+      </button>
+    </div>
+  </div>
+
+  {/* Content Sections */}
   <div
-    className={`flex items-center justify-center w-full min-h-[400px] ${
-      inputMode === "Video" ? "block" : "hidden"
+    className={`rounded-0 p-2 flex flex-col ${
+      inputMode === "Video" && checkPlatform(ad.data["youtube-link"]) === "TikTok"
+        ? "bg-white"
+        : "bg-[#131B1E]"
     }`}
   >
-    {ad.data["youtube-link"] ? (
-      <>
-        {checkPlatform(ad.data["youtube-link"]) === "TikTok" ? (
+    {/* Video */}
+    <div
+      className={`flex items-center justify-center w-full min-h-[400px] ${
+        inputMode === "Video" ? "block" : "hidden"
+      }`}
+    >
+      {ad.data["youtube-link"] ? (
+        checkPlatform(ad.data["youtube-link"]) === "TikTok" ? (
           <TikTokEmbed videoUrl={ad.data["youtube-link"]} />
         ) : (
           <YouTubePlayer videoUrl={ad.data["youtube-link"]} />
-        )}
-      </>
-    ):(<div className="flex flex-col h-full items-center justify-center dark:text-gray-400 text-gray-600"><VideocamOffOutlinedIcon/> No video available for this ad</div>)}
-  </div>
-  <div className={`flex items-center justify-center w-full min-h-[400px] ${inputMode === "Virtual" ? "block" : "hidden"}`}>
+        )
+      ) : (
+        <div className="flex flex-col h-full items-center justify-center dark:text-gray-400 text-gray-600">
+          <VideocamOffOutlinedIcon />
+          No video available for this ad
+        </div>
+      )}
+    </div>
 
-  {ad.data["virtualTourLink"] ? (
-      <>
-       <VirtualTour virtualTourLink={ad.data["virtualTourLink"]}/>
-      </>
-    ):(<div className="flex flex-col h-full items-center justify-center dark:text-gray-400 text-gray-600"><ViewInArOutlinedIcon/> No 3D Virtual Property Tour for this Ad</div>)}
-  </div>
-  {/* Images Section */}
-  <div className={`${inputMode === "Images" ? "block" : "hidden"}`}>
-  <div className={`relative`}>
-     <Carousel
-              setApi={setApi}
-              plugins={[plugin.current as any]}
-              className="w-full"
-            >
-              <CarouselContent>
-                {ad.data.imageUrls.map((image: string, index: number) => (
-                  <CarouselItem key={index}>
-                    <div className="relative h-[400px] lg:h-[500px] w-full">
-                     
-                       {isLoading && (
-                                              <div 
-                                             
-                                               className="absolute inset-0 flex justify-center items-center bg-[#000000] bg-opacity-50">
-                                                <Icon icon={threeDotsScale} className="w-6 h-6 text-gray-500" />
-                                              </div>
-                                            )}
-                      <Zoom>
-                        <Image
-                          src={image}
-                          alt={`Image ${index + 1}`}
-                          layout="fill" // Ensures the image scales to the parent container
-                          className={`object-contain cursor-pointer ${
-                            isLoading ? "opacity-0" : "opacity-100"
-                          } transition-opacity duration-300`}
-                          onLoadingComplete={() => setIsLoading(false)}
-                          placeholder="empty" // Optional placeholder before loading
-                        />
-                      </Zoom>
+    {/* Virtual Tour */}
+    <div
+      className={`flex items-center justify-center w-full min-h-[400px] ${
+        inputMode === "Virtual" ? "block" : "hidden"
+      }`}
+    >
+      {ad.data["virtualTourLink"] ? (
+        <VirtualTour virtualTourLink={ad.data["virtualTourLink"]} />
+      ) : (
+        <div className="flex flex-col h-full items-center justify-center dark:text-gray-400 text-gray-600">
+          <ViewInArOutlinedIcon />
+          No 3D Virtual Property Tour for this Ad
+        </div>
+      )}
+    </div>
+
+    {/* Image Carousel */}
+    <div className={`${inputMode === "Images" ? "block" : "hidden"}`}>
+      <div className="relative">
+        <Carousel setApi={setApi} plugins={[plugin.current as any]} className="w-full">
+          <CarouselContent>
+            {ad.data.imageUrls.map((image: string, index: number) => (
+              <CarouselItem key={index}>
+                <div className="relative h-[400px] lg:h-[500px] w-full">
+                  {isLoading && (
+                    <div className="absolute inset-0 flex justify-center items-center bg-black bg-opacity-50">
+                      <Icon icon={threeDotsScale} className="w-6 h-6 text-gray-500" />
                     </div>
-                  </CarouselItem>
-                ))}
-              </CarouselContent>
-              <CarouselPrevious className="h-[50px] w-[50px] ml-20 font-bold border-0 text-white bg-white bg-opacity-50 p-2" />
-              <CarouselNext className="h-[50px] w-[50px] mr-20 font-bold border-0 bg-white bg-opacity-50 text-white p-2" />
-            </Carousel>
-            <div className="flex gap-1 absolute bottom-0 right-0 items-center text-white text-[10px] lg:text-xs m-1 p-0 focus:outline-none">
-              <div className="flex pr-2 pl-2 h-10 rounded-sm items-center bg-black bg-opacity-50">
-                Slide {current} of {count}
-              </div>
-              <div
-                className="p-1 cursor-pointer rounded-sm shadow"
-                onClick={togglePopup}
-              >
-                <Image
-                  src="/assets/icons/expand.png"
-                  alt="logo"
-                  className="w-8 ml-5 hover:cursor-pointer"
-                  width={36}
-                  height={36}
-                />
-              </div>
-            </div>
-            <div className="flex gap-1 absolute bottom-0 left-0 text-white text-xs m-1 p-0 focus:outline-none">
-              <div
-                className="p-1 cursor-pointer rounded-sm"
-                onClick={handlePlay}
-              >
-                {autoplayEnabled ? (
-                  <Image
-                    src="/assets/icons/pause.png"
-                    alt="logo"
-                    className="w-8 ml-5 hover:cursor-pointer"
-                    width={36}
-                    height={36}
-                  />
-                ) : (
-                  <Image
-                    src="/assets/icons/play.png"
-                    alt="logo"
-                    className="w-8 ml-5 hover:cursor-pointer"
-                    width={36}
-                    height={36}
-                  />
-                )}
-              </div>
-            </div>
-            
-            {ad.organizer.verified &&
-              ad.organizer.verified[0].accountverified === true && (
-                <div className="hidden lg:inline absolute bg-green-100 top-0 right-0 text-xs py-1 px-3 rounded-bl-lg">
-                  <div className="flex gap-1 cursor-pointer">
-                    {" "}
-                    <VerifiedUserOutlinedIcon sx={{ fontSize: 16 }} />
-                    Verified
-                  </div>
+                  )}
+                  <Zoom>
+                    <Image
+                      src={image}
+                      alt={`Image ${index + 1}`}
+                      layout="fill"
+                      className={`object-contain cursor-pointer ${
+                        isLoading ? "opacity-0" : "opacity-100"
+                      } transition-opacity duration-300`}
+                      onLoadingComplete={() => setIsLoading(false)}
+                      placeholder="empty"
+                    />
+                  </Zoom>
                 </div>
-              )}
-          </div>
-          <div className="flex space-x-1">
-            <Carousel
-              setApi={setApi2}
-              opts={{
-                align: "start",
-              }}
-              className="w-full ml-2 mr-2 mt-1"
-            >
-              <CarouselContent>
-                {ad.data.imageUrls.map((image: string, index: number) => (
-                  <CarouselItem
-                    key={index}
-                    className="rounded-lg basis-1/3 lg:basis-1/6 pl-5 lg:pr-0"
-                  >
-                    <div
-                      style={{
-                        border:
-                          selectedIndex === index
-                            ? "3px solid black"
-                            : "3px solid transparent",
-                      }}
-                      className="p-0 w-full rounded-lg"
-                    >
-                      <span key={index} onClick={() => handleImageClick(index)}>
-                        <div className="relative">
-                         
-  {isLoadingsmall && (
-                                              <div 
-                                             
-                                               className="absolute inset-0 flex justify-center items-center bg-[#000000] bg-opacity-50">
-                                                <Icon icon={threeDotsScale} className="w-6 h-6 text-gray-500" />
-                                              </div>
-                                            )}
-                          <Image
-                            src={image}
-                            alt={`Image ${index + 1}`}
-                            width={244} // Adjust width to match the `w-36` Tailwind class
-                            height={196} // Adjust height to match the `h-24` Tailwind class
-                            className={`h-[100px] rounded-lg bg-opacity-40 object-cover cursor-pointer border-2 border-transparent hover:border-green-500 ${
-                              isLoadingsmall ? "opacity-0" : "opacity-100"
-                            } transition-opacity duration-300`}
-                            onLoadingComplete={() => setIsLoadingsmall(false)}
-                            placeholder="empty" // Optional: you can use "empty" if you want a placeholder before loading
-                          />
-                        </div>
-                      </span>
-                    </div>
-                  </CarouselItem>
-                ))}
-              </CarouselContent>
+              </CarouselItem>
+            ))}
+          </CarouselContent>
+          <CarouselPrevious className="h-[50px] w-[50px] ml-20 font-bold border-0 text-white bg-white bg-opacity-50 p-2" />
+          <CarouselNext className="h-[50px] w-[50px] mr-20 font-bold border-0 bg-white bg-opacity-50 text-white p-2" />
+        </Carousel>
 
-              <CarouselPrevious className="md:h-10 md:w-10 lg:h-10 lg:w-10 ml-10 font-bold text-white border-2 bg-black bg-opacity-80 p-2" />
-              <CarouselNext className="md:h-10 md:w-10 lg:h-10 lg:w-10 mr-10 font-bold bg-black border-2 bg-opacity-80 text-white p-2" />
-            </Carousel>
+        {/* Slide Count and Controls */}
+        <div className="flex gap-1 absolute bottom-0 right-0 items-center text-white text-[10px] lg:text-xs m-1 p-0">
+          <div className="flex pr-2 pl-2 h-10 rounded-sm items-center bg-black bg-opacity-50">
+            Slide {current} of {count}
+          </div>
+          <div className="p-1 cursor-pointer rounded-sm shadow" onClick={togglePopup}>
+            <Image
+              src="/assets/icons/expand.png"
+              alt="Expand"
+              className="w-8 ml-5 hover:cursor-pointer"
+              width={36}
+              height={36}
+            />
+          </div>
+        </div>
+
+        <div className="flex gap-1 absolute bottom-0 left-0 text-white text-xs m-1 p-0">
+          <div className="p-1 cursor-pointer rounded-sm" onClick={handlePlay}>
+            {autoplayEnabled ? (
+              <Image src="/assets/icons/pause.png" alt="Pause" className="w-8 ml-5" width={36} height={36} />
+            ) : (
+              <Image src="/assets/icons/play.png" alt="Play" className="w-8 ml-5" width={36} height={36} />
+            )}
+          </div>
+        </div>
+
+        {ad.organizer?.verified?.[0]?.accountverified && (
+          <div className="hidden lg:inline absolute bg-green-100 top-0 right-0 text-xs py-1 px-3 rounded-bl-lg">
+            <div className="flex gap-1 items-center cursor-pointer">
+              <VerifiedUserOutlinedIcon sx={{ fontSize: 16 }} />
+              Verified
             </div>
+          </div>
+        )}
+      </div>
+
+      {/* Thumbnail Navigation */}
+      <div className="flex space-x-1">
+        <Carousel setApi={setApi2} opts={{ align: "start" }} className="w-full ml-2 mr-2 mt-1">
+          <CarouselContent>
+            {ad.data.imageUrls.map((image: string, index: number) => (
+              <CarouselItem key={index} className="rounded-lg basis-1/3 lg:basis-1/6 pl-5 lg:pr-0">
+                <div
+                  style={{
+                    border: selectedIndex === index ? "3px solid black" : "3px solid transparent",
+                  }}
+                  className="p-0 w-full rounded-lg"
+                >
+                  <span key={index} onClick={() => handleImageClick(index)}>
+                    <div className="relative">
+                      {isLoadingsmall && (
+                        <div className="absolute inset-0 flex justify-center items-center bg-black bg-opacity-50">
+                          <Icon icon={threeDotsScale} className="w-6 h-6 text-gray-500" />
+                        </div>
+                      )}
+                      <Image
+                        src={image}
+                        alt={`Image ${index + 1}`}
+                        width={244}
+                        height={196}
+                        className={`h-[100px] rounded-lg object-cover cursor-pointer border-2 hover:border-green-500 ${
+                          isLoadingsmall ? "opacity-0" : "opacity-100"
+                        } transition-opacity duration-300`}
+                        onLoadingComplete={() => setIsLoadingsmall(false)}
+                        placeholder="empty"
+                      />
+                    </div>
+                  </span>
+                </div>
+              </CarouselItem>
+            ))}
+          </CarouselContent>
+          <CarouselPrevious className="md:h-10 md:w-10 lg:h-10 lg:w-10 ml-10 font-bold text-white border-2 bg-black bg-opacity-80 p-2" />
+          <CarouselNext className="md:h-10 md:w-10 lg:h-10 lg:w-10 mr-10 font-bold bg-black border-2 bg-opacity-80 text-white p-2" />
+        </Carousel>
+      </div>
+    </div>
   </div>
 </div>
+
           {/* Popup for displaying all images */}
           {showPopup && (
             <div className="bg-black fixed top-0 left-0 w-full min-h-screen flex justify-center items-center z-50">
@@ -656,6 +639,9 @@ export default function Ads({ ad, user, userId, userImage, userName, onClose,han
               </div>
             </div>
           )}
+
+
+
 
           {/* Ad details */}
           <div className="p-3 lg:rounded-b-xl bg-white">

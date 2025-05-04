@@ -149,7 +149,7 @@ const SidebarSearchMain = ({
         <div className="w-full dark:bg-[#2D3236] bg-white rounded-lg">
        
           <div className="flex flex-col text-sm rounded-t-lg w-full">
-            <div className="flex p-2 w-full justify-between gap-1 items-center mt-1 mb-1 border-gray-300 dark:border-gray-600">
+            <div className="flex p-2 w-full flex-col gap-1 items-center mt-1 mb-1 border-gray-300 dark:border-gray-600">
          
             {selectedCategory && (
                 <>
@@ -165,16 +165,18 @@ const SidebarSearchMain = ({
                         height={60}
                       />
                     </div>
-                    {selectedCategory ? selectedCategory.category.name : ""}
+                  
+                    <div className="flex flex-col">
+                  <div className="font-bold">  {selectedCategory ? selectedCategory.category.name : ""}</div>
+                <div className="text-sm dark:text-gray-500 text-gray-500">
+                {"("}{totalAdCount} ads{")"}
+                </div>
+              </div>
                   </div>
                 </>
               )}
 
-              <div className="flex border-l pl-2 gap-1 items-center">
-                <div className="text-sm dark:text-gray-500 text-gray-500">
-                {totalAdCount} ads
-                </div>
-              </div>
+              
             </div>
           </div>
           <div>

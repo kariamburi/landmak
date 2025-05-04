@@ -403,16 +403,46 @@ const SCROLL_THRESHOLD = 150; // pixels
      const toggleChat = () => {
        setChatOpen(!isChatOpen);
      };
+     const [isPicking, setisPicking] = useState(false);
+     const handleNearByProperties = () => {
+       setisPicking(true)
+       if (navigator.geolocation) {
+         navigator.geolocation.getCurrentPosition(
+           (position) => {
+             setNewqueryObject({
+               ...newqueryObject,
+               location: position.coords.latitude+"/"+position.coords.longitude,
+             });
+          //console.log({
+          //  ...newqueryObject,
+          //  location: position.coords.latitude+"/"+position.coords.longitude,
+         // });
+           },
+           (error) => {
+             console.error("Error getting location:", error);
+             alert("Unable to retrieve your location. Please enable location services.");
+           }
+         );
+         setisPicking(false)
+       } else {
+         setisPicking(false)
+         alert("Geolocation is not supported by this browser.");
+       }
+     };
+
    const handleSortChange = (selectedOption: string) => {
      //let newUrl = "";
      if (selectedOption) {
 
-     
+     if(selectedOption === 'nearby'){
+
+      handleNearByProperties();
+      setActiveButton(1);
+     }else{
       const updatedQueryObject = {
-        ...queryObject,
+        ...newqueryObject,
         sortby:selectedOption,
       };
-    
       // Remove location if it exists
       if (updatedQueryObject.location) {
         delete updatedQueryObject.location;
@@ -420,7 +450,7 @@ const SCROLL_THRESHOLD = 150; // pixels
     
       setNewqueryObject(updatedQueryObject);
       setActiveButton(1);
-    
+    }
      }
     
    };
@@ -539,30 +569,7 @@ const SCROLL_THRESHOLD = 150; // pixels
       
       };
 
-    const [isPicking, setisPicking] = useState(false);
-      const handleNearByProperties = () => {
-        setisPicking(true)
-        if (navigator.geolocation) {
-          navigator.geolocation.getCurrentPosition(
-            (position) => {
-              setNewqueryObject({
-                ...queryObject,
-                location: position.coords.latitude+"/"+position.coords.longitude,
-              });
-           
-            },
-            (error) => {
-              console.error("Error getting location:", error);
-              alert("Unable to retrieve your location. Please enable location services.");
-            }
-          );
-          setisPicking(false)
-        } else {
-          setisPicking(false)
-          alert("Geolocation is not supported by this browser.");
-        }
-      };
-
+   
 
   const [isDarkMode, setIsDarkMode] = useState<boolean | null>(null);
    
@@ -894,7 +901,7 @@ const SCROLL_THRESHOLD = 150; // pixels
     <div className="w-full lg:hidden">
       <div className="flex w-full gap-1 p-1 items-center">
       
-           <div className="flex-1">
+        {/*   <div className="flex-1">
            <TooltipProvider>
              <Tooltip>
                <TooltipTrigger asChild>
@@ -918,7 +925,8 @@ const SCROLL_THRESHOLD = 150; // pixels
                </TooltipContent>
              </Tooltip>
            </TooltipProvider>
-         </div>
+         </div>*/}
+
           <div className="flex-1">
             <TooltipProvider>
               <Tooltip>
@@ -994,7 +1002,7 @@ const SCROLL_THRESHOLD = 150; // pixels
       </div>
 
   
-           <div className="flex hidden lg:inline">
+        {/*    <div className="flex hidden lg:inline">
            <TooltipProvider>
              <Tooltip>
                <TooltipTrigger asChild>
@@ -1020,6 +1028,7 @@ const SCROLL_THRESHOLD = 150; // pixels
              </Tooltip>
            </TooltipProvider>
          </div>
+         */}
         <div className="flex hidden lg:inline">
           <TooltipProvider>
             <Tooltip>
@@ -1029,13 +1038,7 @@ const SCROLL_THRESHOLD = 150; // pixels
                   className="flex gap-2 text-gray-700 items-center justify-center w-full py-4 px-2 border-gray-300 border rounded-sm hover:bg-gray-100"
                 >
                   <div className="flex gap-2 items-center">
-                  {/**   <Image
-                      src={"/assets/icons/travel-distance.png"}
-                      alt="icon"
-                      className="rounded-full object-cover"
-                      width={40}
-                      height={40}
-                    />*/}
+                
                     <TravelExploreOutlinedIcon/>
                     Search by Distance
                   </div>
@@ -1195,7 +1198,9 @@ const SCROLL_THRESHOLD = 150; // pixels
       <div className="flex gap-1 items-center">
         <div className="rounded-sm dark:bg-[#2D3236] bg-white border py-1 px-2 z-5 flex items-center">
           <div className="text-[#30AF5B]">
-            <SwapVertIcon />
+          {isPicking && (<>
+                      <CircularProgress sx={{ color: "gray" }} size={30} />
+                                               </> )} <SwapVertIcon />
           </div>
           <Select onValueChange={handleSortChange}>
             <SelectTrigger className="lg:w-[200px] dark:text-gray-300 text-gray-700 dark:bg-[#2D3236] border-0 rounded-full">
@@ -1204,6 +1209,7 @@ const SCROLL_THRESHOLD = 150; // pixels
             <SelectContent className="dark:bg-[#222528]">
               <SelectGroup>
                 <SelectItem value="recommeded">Recommended first</SelectItem>
+                <SelectItem value="nearby">Nearby {newqueryObject.category ==='Property Services' ? (<>Service Provider</>):(<>Properties</>)}</SelectItem>
                 <SelectItem value="new">Newest first</SelectItem>
                 <SelectItem value="lowest">Lowest price first</SelectItem>
                 <SelectItem value="highest">Highest price first</SelectItem>
