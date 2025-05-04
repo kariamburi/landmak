@@ -221,14 +221,13 @@ const MainPage = ({
  
   useEffect(() => {
 
-    console.log(subcategoryList);
     const fetchData = async () => {
       const params = new URLSearchParams(window.location.search);
       const id = params.get("Ad");
       const Profile = params.get("Profile");
       const action = params.get("action");
       const coordinates = params.get("coordinates");
-  
+      const PrivacyPolicy = params.get("PrivacyPolicy");
       if (id) {
         const ad = await getAdById(id);
         setadId(ad);
@@ -258,6 +257,11 @@ const MainPage = ({
         setShowPopupMap(true);
       } else {
         setShowPopupMap(false);
+      }
+      if (PrivacyPolicy) {
+        setIsOpenPrivacy(true);
+      } else {
+        setIsOpenPrivacy(false);
       }
     };
   
@@ -367,7 +371,9 @@ const MainPage = ({
     const Profile = params.get("Profile");
     const Ad = params.get("Ad");
     const action = params.get("action");
-    if(Profile || Ad || action){
+    const coordinates = params.get("coordinates");
+    const PrivacyPolicy = params.get("PrivacyPolicy");
+    if(Profile || Ad || action || coordinates || PrivacyPolicy){
       router.push("/", { scroll: false });
       setNewqueryObject([])
     }
@@ -384,7 +390,9 @@ const MainPage = ({
     const Profile = params.get("Profile");
     const Ad = params.get("Ad");
     const action = params.get("action");
-    if(Profile || Ad || action){
+    const coordinates = params.get("coordinates");
+    const PrivacyPolicy = params.get("PrivacyPolicy");
+    if(Profile || Ad || action || coordinates || PrivacyPolicy){
       router.push("/", { scroll: false });
       setNewqueryObject([])
     }
@@ -413,7 +421,9 @@ const MainPage = ({
     const Profile = params.get("Profile");
     const Ad = params.get("Ad");
     const action = params.get("action");
-    if(Profile || Ad || action){
+    const coordinates = params.get("coordinates");
+    const PrivacyPolicy = params.get("PrivacyPolicy");
+    if(Profile || Ad || action || coordinates || PrivacyPolicy){
       router.push("/", { scroll: false });
       setNewqueryObject([])
     }
@@ -432,7 +442,9 @@ const MainPage = ({
     const Profile = params.get("Profile");
     const Ad = params.get("Ad");
     const action = params.get("action");
-    if(Profile || Ad || action){
+    const coordinates = params.get("coordinates");
+    const PrivacyPolicy = params.get("PrivacyPolicy");
+    if(Profile || Ad || action || coordinates || PrivacyPolicy){
       router.push("/", { scroll: false });
       setNewqueryObject([])
     }
@@ -451,7 +463,9 @@ const MainPage = ({
     const Profile = params.get("Profile");
     const Ad = params.get("Ad");
     const action = params.get("action");
-    if(Profile || Ad || action){
+    const coordinates = params.get("coordinates");
+    const PrivacyPolicy = params.get("PrivacyPolicy");
+    if(Profile || Ad || action || coordinates || PrivacyPolicy){
       router.push("/", { scroll: false });
       setNewqueryObject([])
     }
@@ -469,7 +483,9 @@ const MainPage = ({
     const Profile = params.get("Profile");
     const Ad = params.get("Ad");
     const action = params.get("action");
-    if(Profile || Ad || action){
+   const coordinates = params.get("coordinates");
+    const PrivacyPolicy = params.get("PrivacyPolicy");
+    if(Profile || Ad || action || coordinates || PrivacyPolicy){
       router.push("/", { scroll: false });
       setNewqueryObject([])
     }
@@ -485,7 +501,9 @@ const MainPage = ({
     const Profile = params.get("Profile");
     const Ad = params.get("Ad");
     const action = params.get("action");
-    if(Profile || Ad || action){
+   const coordinates = params.get("coordinates");
+    const PrivacyPolicy = params.get("PrivacyPolicy");
+    if(Profile || Ad || action || coordinates || PrivacyPolicy){
       router.push("/", { scroll: false });
       setNewqueryObject([]);
     }
@@ -501,7 +519,9 @@ const MainPage = ({
     const Profile = params.get("Profile");
     const Ad = params.get("Ad");
     const action = params.get("action");
-    if(Profile || Ad || action){
+   const coordinates = params.get("coordinates");
+    const PrivacyPolicy = params.get("PrivacyPolicy");
+    if(Profile || Ad || action || coordinates || PrivacyPolicy){
       router.push("/", { scroll: false });
       setNewqueryObject([])
     }
@@ -518,7 +538,9 @@ const MainPage = ({
     const Profile = params.get("Profile");
     const Ad = params.get("Ad");
     const action = params.get("action");
-    if(Profile || Ad || action){
+   const coordinates = params.get("coordinates");
+    const PrivacyPolicy = params.get("PrivacyPolicy");
+    if(Profile || Ad || action || coordinates || PrivacyPolicy){
       router.push("/", { scroll: false });
       setNewqueryObject([])
     }
@@ -533,7 +555,9 @@ const MainPage = ({
     const Profile = params.get("Profile");
     const Ad = params.get("Ad");
     const action = params.get("action");
-    if(Profile || Ad || action){
+   const coordinates = params.get("coordinates");
+    const PrivacyPolicy = params.get("PrivacyPolicy");
+    if(Profile || Ad || action || coordinates || PrivacyPolicy){
       router.push("/", { scroll: false });
       setNewqueryObject([])
     }
@@ -548,7 +572,9 @@ const MainPage = ({
     const Profile = params.get("Profile");
     const Ad = params.get("Ad");
     const action = params.get("action");
-    if(Profile || Ad || action){
+   const coordinates = params.get("coordinates");
+    const PrivacyPolicy = params.get("PrivacyPolicy");
+    if(Profile || Ad || action || coordinates || PrivacyPolicy){
       router.push("/", { scroll: false });
       setNewqueryObject([])
     }
@@ -565,7 +591,9 @@ const MainPage = ({
       const Profile = params.get("Profile");
       const Ad = params.get("Ad");
       const action = params.get("action");
-      if(Profile || Ad || action){
+     const coordinates = params.get("coordinates");
+    const PrivacyPolicy = params.get("PrivacyPolicy");
+    if(Profile || Ad || action || coordinates || PrivacyPolicy){
         router.push("/", { scroll: false });
         setNewqueryObject([])
       }
@@ -584,7 +612,9 @@ const MainPage = ({
     const Profile = params.get("Profile");
     const Ad = params.get("Ad");
     const action = params.get("action");
-    if(Profile || Ad || action){
+   const coordinates = params.get("coordinates");
+    const PrivacyPolicy = params.get("PrivacyPolicy");
+    if(Profile || Ad || action || coordinates || PrivacyPolicy){
       router.push("/", { scroll: false });
       setNewqueryObject([])
     }
@@ -607,7 +637,9 @@ const handlePay = (id:string) => {
     const Profile = params.get("Profile");
     const Ad = params.get("Ad");
     const action = params.get("action");
-    if(Profile || Ad || action){
+   const coordinates = params.get("coordinates");
+    const PrivacyPolicy = params.get("PrivacyPolicy");
+    if(Profile || Ad || action || coordinates || PrivacyPolicy){
       router.push("/", { scroll: false });
       setNewqueryObject([])
     }
@@ -619,7 +651,9 @@ const handleCloseAdEdit = () => {
     const Profile = params.get("Profile");
     const Ad = params.get("Ad");
     const action = params.get("action");
-    if(Profile || Ad || action){
+   const coordinates = params.get("coordinates");
+    const PrivacyPolicy = params.get("PrivacyPolicy");
+    if(Profile || Ad || action || coordinates || PrivacyPolicy){
       router.push("/", { scroll: false });
       setNewqueryObject([])
     }
@@ -651,7 +685,9 @@ const handleCloseAdView = () => {
     const Profile = params.get("Profile");
     const Ad = params.get("Ad");
     const action = params.get("action");
-    if(Profile || Ad || action){
+   const coordinates = params.get("coordinates");
+    const PrivacyPolicy = params.get("PrivacyPolicy");
+    if(Profile || Ad || action || coordinates || PrivacyPolicy){
       router.push("/", { scroll: false });
     }
     setNewqueryObject([])
@@ -668,7 +704,9 @@ const handleCloseAdView = () => {
     const Profile = params.get("Profile");
     const Ad = params.get("Ad");
     const action = params.get("action");
-    if(Profile || Ad || action){
+   const coordinates = params.get("coordinates");
+    const PrivacyPolicy = params.get("PrivacyPolicy");
+    if(Profile || Ad || action || coordinates || PrivacyPolicy){
       router.push("/", { scroll: false });
       setNewqueryObject([])
     }

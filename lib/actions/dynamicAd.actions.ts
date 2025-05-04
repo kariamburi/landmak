@@ -138,6 +138,8 @@ export async function getAlldynamicAdXXXX({ limit = 20, page, queryObject
             break;
           case 'action':
             break;
+          case 'PrivacyPolicy':
+            break;
           case 'source':
             break;
           case 'Ad':
@@ -249,6 +251,7 @@ export async function getAlldynamicAd({ limit = 20, page = 1, queryObject }: Get
           case "membership":
           case "action":
           case "coordinates":
+          case "PrivacyPolicy":
           case "source":
           case "Ad":
           case "Profile":
@@ -377,6 +380,8 @@ export async function getListingsNearLocation({ limit = 20, queryObject
           case 'membership':
             break;
           case 'action':
+            break;
+          case 'PrivacyPolicy':
             break;
           case 'source':
             break;
