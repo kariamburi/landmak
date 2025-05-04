@@ -32,14 +32,14 @@ const AppPopup = () => {
     <div className="fixed inset-0 flex items-center justify-center bg-black bg-opacity-50 z-50">
       <div className="bg-white rounded-lg shadow-lg p-6 max-w-xs text-center">
         <h2 className="text-lg font-semibold text-gray-800 mb-4">
-          Download the LandMak App
+          Download the mapa App
         </h2>
         <p className="text-gray-600 mb-4">
-          Get a better experience by using the LandMak mobile app!
+          Get a better experience by using the mapa mobile app!
         </p>
 
         <a
-          href="https://play.google.com/store/apps/details?id=ke.landmak.app"
+          href="https://play.google.com/store/apps/details?id=ke.co.mapa.twa"
           target="_blank"
           rel="noopener noreferrer"
           className="bg-black text-white px-4 py-2 rounded-full hover:bg-gray-700 transition-colors duration-300 inline-block mb-4 flex items-center justify-center"
