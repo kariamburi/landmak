@@ -190,7 +190,7 @@ const PrivacyComponent =  ({userId,user, handleOpenPerfomance,
                   account deletion.
                 </li>
               </ul>
-            <p className="mt-4">For any questions about this Privacy Policy, please contact us at <strong>support@mapa.co.ke</strong>.</p>
+            <p className="mt-4">For any questions about this Privacy Policy, please contact us at <strong><a href="mailto:support@PocketShop.co.ke" className="text-green-600 hover:underline">support@mapa.co.ke</a></strong>.</p>
           </div>
         </div>
       </div>
