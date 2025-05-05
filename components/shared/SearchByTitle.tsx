@@ -148,7 +148,7 @@ const fetchAds = async (value:string) => {
   if (!isOpen) return null;
   return (
     <div className="fixed inset-0 flex items-center justify-center bg-gray-800 bg-opacity-50 z-20">
-      <div className="dark:bg-[#2D3236] dark:text-gray-300 bg-gray-200 rounded-lg p-1 lg:p-6 w-full h-full flex flex-col">
+      <div className="dark:bg-[#2D3236] dark:text-gray-300 bg-[#e4ebeb] rounded-lg p-1 lg:p-6 w-full h-full flex flex-col">
       
         {/* Header */}
         <div className="flex flex-col items-center w-full h-[90vh]">
@@ -160,7 +160,7 @@ const fetchAds = async (value:string) => {
         
           </div>
         <ScrollArea.Root className="flex-1 overflow-hidden">
-        <ScrollArea.Viewport className="h-full overflow-y-auto bg-gray-200 lg:rounded-t-0 border">
+        <ScrollArea.Viewport className="h-full overflow-y-auto bg-[#e4ebeb] lg:rounded-t-0 border">
             
           
             {data.length > 0 ? (<div className="flex flex-col">

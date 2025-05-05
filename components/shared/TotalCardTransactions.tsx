@@ -19,7 +19,7 @@ const TotalCardTransactions = ({ title, count, value }: PieChartProps) => {
   return (
     <div className="flex flex-1 items-center justify-between dark:bg-[#2D3236] dark:text-gray-300 bg-gray-100 p-4 rounded-lg min-h-[110px] w-fit">
       <div className="flex flex-col gap-1">
-        <div className="flex items-center gap-2  dark:text-gray-200 text-gray-500 text-sm">
+        <div className="flex items-center gap-2  dark:text-[#e4ebeb] text-gray-500 text-sm">
           <div className={`h-3 w-3 rounded-full ${getStatusStyles()}`}></div>
           <div className="text-xs lg:text-sm">{title}</div>
         </div>

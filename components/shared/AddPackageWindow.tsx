@@ -37,7 +37,7 @@ const AddPackageWindow: React.FC<ChatWindowProps> = ({
         <div className="flex justify-end items-center mb-1">
           <button
             onClick={onClose}
-            className="flex justify-center items-center h-12 w-12 text-black dark:text-gray-200 dark:hover:bg-gray-700 hover:bg-black hover:text-white rounded-full"
+            className="flex justify-center items-center h-12 w-12 text-black dark:text-[#e4ebeb] dark:hover:bg-gray-700 hover:bg-black hover:text-white rounded-full"
           >
             <CloseOutlinedIcon />
           </button>

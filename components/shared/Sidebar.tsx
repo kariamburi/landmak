@@ -112,7 +112,7 @@ const Sidebar = ({ userId ,recipientUid, handleOpenChatId}: sidebarProps) => {
         <>
           <div className="dark:bg-[#2D3236] bg-white w-[300px] rounded-lg">
             <ScrollArea className="h-full w-full p-2">
-              <ul className="divide-y divide-gray-200 dark:divide-gray-600">
+              <ul className="divide-y divide-[#e4ebeb] dark:divide-gray-600">
                 {messages.map((message, index) => {
                   //const isActive = pathname === "/chat/" + message.uid;
                   let formattedCreatedAt = "";

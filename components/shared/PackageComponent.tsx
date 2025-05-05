@@ -102,7 +102,7 @@ const PackageComponent =  ({userId,user, onClose,handlePay, handleOpenAbout,hand
     
  
   return (
-    <ScrollArea className="h-[100vh] bg-gray-200 dark:bg-[#131B1E] text-black dark:text-[#F1F3F3]">
+    <ScrollArea className="h-[100vh] bg-[#e4ebeb] dark:bg-[#131B1E] text-black dark:text-[#F1F3F3]">
       
       <div className="top-0 z-10 fixed w-full">
         <Navbar user={user} userstatus={user.status} userId={userId} onClose={onClose} popup={"plan"} handleOpenPlan={handleOpenPlan} handleOpenSell={handleOpenSell} handleOpenBook={handleOpenBook} handleOpenChat={handleOpenChat}

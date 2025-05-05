@@ -173,7 +173,7 @@ export function DrawerPublic({
               key={mode}
               onClick={() => setInputMode(mode)}
               className={`border p-2 text-sm rounded-md ${
-                inputMode === mode ? "bg-green-600 text-white" : "bg-gray-200 text-gray-700"
+                inputMode === mode ? "bg-green-600 text-white" : "bg-[#e4ebeb] text-gray-700"
               }`}
             >
               {capitalizeFirstLetter(mode)}

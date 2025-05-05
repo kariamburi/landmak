@@ -89,7 +89,7 @@ const SubCategoryWindow: React.FC<ChatWindowProps> = ({
 
   return (
     <div className="fixed inset-0 flex items-center justify-center bg-gray-800 bg-opacity-50 z-50">
-      <div className="dark:bg-[#2D3236] dark:text-gray-300 bg-gray-200 rounded-lg p-1 lg:p-6 w-full h-full flex flex-col">
+      <div className="dark:bg-[#2D3236] dark:text-gray-300 bg-[#e4ebeb] rounded-lg p-1 lg:p-6 w-full h-full flex flex-col">
         {/* Header */}
         <div className="flex flex-col items-center w-full h-full">
           <div className="w-full h-full dark:bg-[#2D3236]">
@@ -98,7 +98,7 @@ const SubCategoryWindow: React.FC<ChatWindowProps> = ({
                 <CommandInput placeholder={`Search category`} />
                 <button
                   onClick={onClose}
-                  className="flex justify-center items-center h-12 w-12 text-gray-700 dark:text-gray-200 dark:hover:bg-gray-700 hover:text-green-600 rounded-full"
+                  className="flex justify-center items-center h-12 w-12 text-gray-700 dark:text-[#e4ebeb] dark:hover:bg-gray-700 hover:text-green-600 rounded-full"
                 >
                   <CloseOutlinedIcon />
                 </button>

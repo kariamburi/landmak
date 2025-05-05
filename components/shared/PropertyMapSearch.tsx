@@ -156,7 +156,7 @@ useEffect(() => {
   const userId="";
   
    return isLoaded ? (  <>
-    <div className="flex w-full h-screen bg-gray-200 p-0">
+    <div className="flex w-full h-screen bg-[#e4ebeb] p-0">
     
       {/* Sidebar with Toggle Button */}
       <div

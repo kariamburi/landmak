@@ -305,7 +305,7 @@ const PromoSelection = ({
             className={`px-4 py-1 rounded-full ${
               selectedPromo === "7 days"
                 ? "bg-green-500 text-white"
-                : "bg-gray-200 text-gray-700"
+                : "bg-[#e4ebeb] text-gray-700"
             }`}
             onClick={() => setSelectedPromo("7 days")}
           >
@@ -315,7 +315,7 @@ const PromoSelection = ({
             className={`px-4 py-1 rounded-full ${
               selectedPromo === "30 days"
                 ? "bg-green-500 text-white"
-                : "bg-gray-200 text-gray-700"
+                : "bg-[#e4ebeb] text-gray-700"
             }`}
             onClick={() => setSelectedPromo("30 days")}
           >
@@ -336,7 +336,7 @@ const PromoSelection = ({
           className={`px-4 py-1 rounded-full mt-2 ${
             selectedPromo === "1 month"
               ? "bg-green-500 text-white"
-              : "bg-gray-200 text-gray-700"
+              : "bg-[#e4ebeb] text-gray-700"
           }`}
           onClick={() => setSelectedPromo("1 month")}
         >

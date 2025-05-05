@@ -68,7 +68,7 @@ export function Multiselect({
                 {features.map((feature: any) => (
                   <li
                     key={feature}
-                    className="text-base flex items-center p-2 cursor-pointer hover:bg-gray-200 dark:hover:bg-gray-800 rounded"
+                    className="text-base flex items-center p-2 cursor-pointer hover:bg-[#e4ebeb] dark:hover:bg-gray-800 rounded"
                   >
                     <input
                       type="checkbox"
@@ -111,7 +111,7 @@ export function Multiselect({
                 {features.map((feature: any) => (
                   <li
                     key={feature}
-                    className="flex items-center p-2 cursor-pointer hover:bg-gray-200 dark:hover:bg-gray-800 rounded"
+                    className="flex items-center p-2 cursor-pointer hover:bg-[#e4ebeb] dark:hover:bg-gray-800 rounded"
                   >
                     <input
                       type="checkbox"

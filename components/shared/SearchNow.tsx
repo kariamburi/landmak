@@ -147,7 +147,7 @@ const SearchNow = ({
             </div>
           ))}
           <button
-            className="w-full text-sm text-gray-500 p-2 hover:bg-gray-200 dark:hover:bg-gray-800"
+            className="w-full text-sm text-gray-500 p-2 hover:bg-[#e4ebeb] dark:hover:bg-gray-800"
             onClick={() => {
               setSearchHistory([]);
               localStorage.removeItem("searchHistory");

@@ -953,7 +953,7 @@ const handleCloseAdView = () => {
       {showScrollUp && (
           <button
             onClick={() => scrollBy(-300)}
-            className="bg-gray-200 text-black h-10 w-10 p-0 rounded-full shadow"
+            className="bg-[#e4ebeb] text-black h-10 w-10 p-0 rounded-full shadow"
           >
              <KeyboardArrowUpOutlinedIcon/>
           </button>
@@ -1003,7 +1003,7 @@ const handleCloseAdView = () => {
                 >
                   <div className={`flex gap-1 items-center mb-1 h-full w-full`}>
                     <span>
-                      <div className="rounded-full dark:bg-[#131B1E] bg-gray-200 p-2">
+                      <div className="rounded-full dark:bg-[#131B1E] bg-[#e4ebeb] p-2">
                         <Image
                           className="w-6 h-6 object-cover"
                           src={category.imageUrl[0]}
@@ -1062,7 +1062,7 @@ const handleCloseAdView = () => {
     {!showScrollUp && (
           <button
             onClick={() => scrollBy(300)}
-            className="bg-gray-200 text-black p-0 h-10 w-10 rounded-full shadow"
+            className="bg-[#e4ebeb] text-black p-0 h-10 w-10 rounded-full shadow"
           >
            <KeyboardArrowDownOutlinedIcon/>
           </button>
@@ -1122,7 +1122,7 @@ const handleCloseAdView = () => {
                 >
                   <div className="flex gap-1 items-center mb-1 w-full">
                     <span>
-                      <div className="rounded-full dark:bg-[#131B1E] bg-gray-200 p-2">
+                      <div className="rounded-full dark:bg-[#131B1E] bg-[#e4ebeb] p-2">
                         <Image
                           className="h-6 w-6 object-cover"
                           src={sub.imageUrl[0] || ""}
@@ -1167,16 +1167,16 @@ const handleCloseAdView = () => {
         </Button>
         
           {/* Header Section */}
-          <div className="flex flex-col gap-0 top-0 left-0 w-full bg-gradient-to-b from-gray-200 to-gray-200 lg:from-white lg:to-white p-0 lg:shadow-md z-10 md:relative md:w-auto md:shadow-none">
+          <div className="flex flex-col gap-0 top-0 left-0 w-full bg-gradient-to-b from-[#e4ebeb] to-[#e4ebeb] lg:from-white lg:to-white p-0 lg:shadow-md z-10 md:relative md:w-auto md:shadow-none">
           <div
-  className={`bg-gradient-to-b from-white to-gray-200 lg:from-white lg:to-white transition-all duration-300 overflow-hidden p-2 w-full flex flex-col items-center ${
-    showBottomNav ? "max-h-[50px] opacity-100" : "max-h-0 opacity-0"
+  className={`bg-gradient-to-b from-green-600 to-green-600 lg:from-white justify-center pl-2 pr-2 h-[60px] lg:to-white transition-all duration-300 overflow-hidden w-full flex flex-col items-center ${
+    showBottomNav ? "max-h-[60px] opacity-100" : "max-h-0 opacity-0"
   }`}
 >
-  <div className="w-full justify-between flex items-center">
+  <div className="w-full h-full justify-between flex items-center">
               <div className="flex items-center gap-1">
-                
-                <img src="/logo.png" alt="Logo" className="w-8 h-8 rounded-full" />
+                <img src="/logo_white.png" alt="Logo" className="w-8 h-8 lg:hidden rounded-full" />
+                <img src="/logo.png" alt="Logo" className="w-8 h-8 hidden lg:inline rounded-full"/>
                 <StyledBrandName/>
               </div>
 
@@ -1184,7 +1184,7 @@ const handleCloseAdView = () => {
             <div className="flex items-center gap-2">
             <SignedIn>
             <div
-              className="w-8 h-8 flex items-center justify-center rounded-full dark:bg-[#131B1E] dark:hover:bg-[#2D3236] bg-gray-200 hover:bg-gray-300 emerald-500 tooltip tooltip-bottom hover:cursor-pointer"
+              className="w-8 h-8 flex items-center justify-center rounded-full dark:bg-[#131B1E] dark:hover:bg-[#2D3236] bg-[#e4ebeb] hover:bg-gray-300 emerald-500 tooltip tooltip-bottom hover:cursor-pointer"
               data-tip="Messages"
               onClick={() => {
                 handleOpenBook();
@@ -1193,7 +1193,7 @@ const handleCloseAdView = () => {
               <TooltipProvider>
                 <Tooltip>
                   <TooltipTrigger asChild>
-                    <BookmarkIcon sx={{ fontSize: 16 }} className="hover:text-green-600"/>
+                    <BookmarkIcon sx={{ fontSize: 16 }} className=""/>
                   </TooltipTrigger>
                   <TooltipContent>
                     <p>Bookmark</p>
@@ -1204,7 +1204,7 @@ const handleCloseAdView = () => {
             </SignedIn>
             <SignedOut>
                      <div
-                        className="w-8 h-8 flex items-center justify-center rounded-full dark:bg-[#131B1E] dark:hover:bg-[#2D3236] bg-gray-200 hover:bg-gray-300 tooltip tooltip-bottom hover:cursor-pointer"
+                        className="w-8 h-8 flex items-center justify-center rounded-full dark:bg-[#131B1E] dark:hover:bg-[#2D3236] bg-[#e4ebeb] hover:bg-gray-300 tooltip tooltip-bottom hover:cursor-pointer"
                         data-tip="Messages"
                         onClick={() => {
                           setIsOpenP(true);
@@ -1225,7 +1225,7 @@ const handleCloseAdView = () => {
             </SignedOut>
             <SignedIn>
             <div
-              className="w-8 h-8 flex items-center justify-center rounded-full dark:bg-[#131B1E] dark:hover:bg-[#2D3236] bg-gray-200 hover:bg-gray-300 tooltip tooltip-bottom hover:cursor-pointer"
+              className="w-8 h-8 flex items-center justify-center rounded-full dark:bg-[#131B1E] dark:hover:bg-[#2D3236] bg-[#e4ebeb] hover:bg-gray-300 tooltip tooltip-bottom hover:cursor-pointer"
               data-tip="Messages"
               onClick={() => {
                 handleOpenChat();
@@ -1235,7 +1235,7 @@ const handleCloseAdView = () => {
                 <Tooltip>
                   <TooltipTrigger asChild>
                     <div className="relative flex items-center justify-center">
-                      <MessageIcon sx={{ fontSize: 16 }} className="absolute hover:text-green-600" />
+                      <MessageIcon sx={{ fontSize: 16 }} className="absolute " />
                       <div className="absolute z-10">
                         <Unreadmessages userId={userId} popup={"home"} />
                       </div>
@@ -1280,7 +1280,7 @@ const handleCloseAdView = () => {
 
 
             <div
-              className="w-8 h-8 flex items-center justify-center rounded-full dark:bg-[#131B1E] dark:hover:bg-[#2D3236] bg-gray-200 hover:bg-gray-300 tooltip tooltip-bottom hover:cursor-pointer"
+              className="w-8 h-8 flex items-center justify-center rounded-full dark:bg-[#131B1E] dark:hover:bg-[#2D3236] bg-[#e4ebeb] hover:bg-gray-300 tooltip tooltip-bottom hover:cursor-pointer"
               data-tip="Messages"
               onClick={() => {
                 handleOpenPlan();
@@ -1289,7 +1289,7 @@ const handleCloseAdView = () => {
               <TooltipProvider>
                 <Tooltip>
                   <TooltipTrigger asChild>
-                    <DiamondIcon sx={{ fontSize: 16 }} className="hover:text-green-600"/>
+                    <DiamondIcon sx={{ fontSize: 16 }} className=""/>
                   </TooltipTrigger>
                   <TooltipContent>
                     <p>Premium Services</p>
@@ -1373,7 +1373,7 @@ const handleCloseAdView = () => {
 
         
      <ScrollArea.Root className="flex-1 overflow-hidden">
-      <ScrollArea.Viewport ref={viewportRef}  className="h-full overflow-y-auto bg-gray-200 lg:rounded-t-0 border">
+      <ScrollArea.Viewport ref={viewportRef}  className="h-full overflow-y-auto bg-[#e4ebeb] lg:rounded-t-0 border">
     
   <div className="lg:hidden px-1">
     <MenuSubmobileMain
@@ -1467,7 +1467,7 @@ const handleCloseAdView = () => {
       {isInitialLoading ? (
         <div className="grid grid-cols-2 lg:grid-cols-4 gap-2">
           {Array.from({ length: 12 }).map((_, index) => (
-            <div key={index} className="bg-gray-200 dark:bg-[#2D3236] p-4 rounded-lg shadow-md w-full">
+            <div key={index} className="bg-[#e4ebeb] dark:bg-[#2D3236] p-4 rounded-lg shadow-md w-full">
               <Skeleton variant="rectangular" width="100%" height={140} />
               <Skeleton variant="text" width="80%" height={30} className="mt-2" />
               <Skeleton variant="text" width="60%" height={25} />
@@ -1696,10 +1696,10 @@ const handleCloseAdView = () => {
      />
 
  {showPopupMap && (
-                                  <div className="fixed inset-0 flex items-center justify-center bg-gray-200 z-50">
-                                    <div className="dark:border-gray-600 dark:bg-[#2D3236] dark:text-gray-100 bg-gray-200 p-2 w-full items-center justify-center relative">
+                                  <div className="fixed inset-0 flex items-center justify-center bg-[#e4ebeb] z-50">
+                                    <div className="dark:border-gray-600 dark:bg-[#2D3236] dark:text-gray-100 bg-[#e4ebeb] p-2 w-full items-center justify-center relative">
                            
-                                      <div className="flex flex-col items-center justify-center dark:bg-[#2D3236] bg-gray-200">
+                                      <div className="flex flex-col items-center justify-center dark:bg-[#2D3236] bg-[#e4ebeb]">
                                   
               <PropertyMap queryObject={queryObject} onClose={handleClosePopupMap} coordinates={coordinates}
               handleAdEdit={handleAdEdit}

@@ -1214,7 +1214,7 @@ labelMarkersRef.current.push(labelOverlay);
     {/* Sidebar with Toggle Button */}
         {uploadPopup && (
       <div className="fixed inset-0 flex items-center justify-center bg-gray-900 bg-opacity-50 p-2 z-50">
-        <div className="dark:bg-[#131B1E] dark:text-gray-300 bg-gray-200 rounded-xl p-4 w-full max-w-xl shadow-lg space-y-4">
+        <div className="dark:bg-[#131B1E] dark:text-gray-300 bg-[#e4ebeb] rounded-xl p-4 w-full max-w-xl shadow-lg space-y-4">
           
           {/* Close Button */}
           <div className="flex justify-end">
@@ -1715,7 +1715,7 @@ Radius: {radius / 1000} km
               <div className="flex justify-end">
                 <button
                   onClick={() => setShowMappingInfo(false)}
-                  className="p-2 rounded-full text-gray-600 dark:text-gray-300 hover:bg-gray-200 dark:hover:bg-gray-700 transition"
+                  className="p-2 rounded-full text-gray-600 dark:text-gray-300 hover:bg-[#e4ebeb] dark:hover:bg-gray-700 transition"
                 >
                   <CloseOutlinedIcon fontSize="small" />
                 </button>
@@ -1724,7 +1724,7 @@ Radius: {radius / 1000} km
               {/* Scroll Content */}
               <ScrollArea className="h-[60vh] bg-gray-50 dark:bg-[#131B1E] rounded-lg p-4">
                 
-                <h3 className="text-lg font-semibold text-gray-700 dark:text-gray-200 text-center border-b pb-2">
+                <h3 className="text-lg font-semibold text-gray-700 dark:text-[#e4ebeb] text-center border-b pb-2">
                   Benefits of a Virtual Property Location Tour
                 </h3>
 
@@ -1742,7 +1742,7 @@ Radius: {radius / 1000} km
                   <li>⏳ <strong>Saves Time for Both Buyers & Sellers</strong> - Only visit the site after you&apos;re satisfied with the property&apos;s location.</li>
                 </ul>
 
-                <p className="text-sm font-semibold text-gray-700 dark:text-gray-200 mt-4 text-center border-b pb-2">
+                <p className="text-sm font-semibold text-gray-700 dark:text-[#e4ebeb] mt-4 text-center border-b pb-2">
                   We have an <span className="text-green-600 hover:underline cursor-pointer" onClick={() => handleCategory('Property')}>Advanced Property Mapping Tool</span> when creating property ads in the Property Category.
                 </p>
 
@@ -1750,13 +1750,13 @@ Radius: {radius / 1000} km
                   <Image
                     src="/assets/icons/property-map.png"
                     alt="Mapping Tool"
-                    className="w-full lg:w-[600px] max-h-[350px] mb-4 rounded-lg border border-gray-200 dark:border-gray-700"
+                    className="w-full lg:w-[600px] max-h-[350px] mb-4 rounded-lg border border-[#e4ebeb] dark:border-gray-700"
                     width={800}
                     height={500}
                   />
                 </div>
 
-                <h3 className="text-lg font-semibold text-gray-700 dark:text-gray-200 text-center border-b pb-2 mt-5">
+                <h3 className="text-lg font-semibold text-gray-700 dark:text-[#e4ebeb] text-center border-b pb-2 mt-5">
                   How Property Mapping Prevents Fraud
                 </h3>
 

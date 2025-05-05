@@ -126,7 +126,7 @@ const Message = ({
                   className={`max-w-xs mx-2 my-1 p-3 rounded-lg  ${
                     message.uid === uid
                       ? "bg-emerald-500 text-white"
-                      : "bg-gray-200 text-gray-700"
+                      : "bg-[#e4ebeb] text-gray-700"
                   }`}
                 >
                   {message.imageUrl && (
@@ -168,7 +168,7 @@ const Message = ({
                   className={`max-w-xs mx-2 my-1 p-3 rounded-lg  ${
                     message.uid === uid
                       ? "bg-blue-500 text-white"
-                      : "bg-gray-200 text-gray-700"
+                      : "bg-[#e4ebeb] text-gray-700"
                   }`}
                 >
                   {message.imageUrl && (

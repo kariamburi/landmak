@@ -30,7 +30,7 @@ const BottomNavigation = ({ userId, popup, handleOpenP, handleOpenSearchTab, han
   const router = useRouter();
   const pathname = usePathname();
   return (
-    <nav className="dark:bg-[#131B1E] text-black dark:text-[#F1F3F3] bottom-0 z-5 w-full bg-white shadow-md border-t dark:border-gray-700 border-gray-200">
+    <nav className="dark:bg-[#131B1E] text-black dark:text-[#F1F3F3] bottom-0 z-5 w-full bg-white shadow-md border-t dark:border-gray-700 border-[#e4ebeb]">
       <div className="flex justify-around py-2 relative">
         <div
           onClick={() => {

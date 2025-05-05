@@ -78,7 +78,7 @@ const Chat = ({ senderName, senderId, senderImage, handleAdEdit,
     <div className="w-full flex flex-col items-center">
       <div className="w-full flex p-1 mb-20">
         <div className="hidden lg:inline mr-5">
-          <div className="w-full bg-gray-200 w-[300px] rounded-lg p-0">
+          <div className="w-full bg-[#e4ebeb] w-[300px] rounded-lg p-0">
             <div className="max-h-[500px] w-full rounded-md p-2 overflow-y-auto">
               <div className="w-full flex flex-col items-center">
                 <span className="logo font-bold text-orange-600">Chat</span>
@@ -118,7 +118,7 @@ const Chat = ({ senderName, senderId, senderImage, handleAdEdit,
                         onClick={() =>
                           handleClick(message.uid, message.name, message.avatar)
                         }
-                        className="bg-green-700 rounded-lg text-gray-200 hover:bg-gray-400 hover:text-black p-3 mb-1 cursor-pointer"
+                        className="bg-green-700 rounded-lg text-[#e4ebeb] hover:bg-gray-400 hover:text-black p-3 mb-1 cursor-pointer"
                       >
                         <div className="flex items-center gap-2">
                           <img
@@ -150,7 +150,7 @@ const Chat = ({ senderName, senderId, senderImage, handleAdEdit,
         </div>
         <div className="flex-1">
           <div className="lg:hidden">
-            <div className="max-h-[500px] w-full bg-gray-200 rounded-md p-4 mb-2 mt-10 lg:mt-0 overflow-y-auto">
+            <div className="max-h-[500px] w-full bg-[#e4ebeb] rounded-md p-4 mb-2 mt-10 lg:mt-0 overflow-y-auto">
               <div className="w-full flex flex-col items-center">
                 <span className="logo font-bold text-orange-600">Chat</span>
                 <p className="text-center sm:text-left">Latest chats</p>
@@ -189,7 +189,7 @@ const Chat = ({ senderName, senderId, senderImage, handleAdEdit,
                         onClick={() =>
                           handleClick(message.uid, message.name, message.avatar)
                         }
-                        className="bg-green-700 rounded-lg text-gray-200 hover:bg-gray-400 hover:text-black p-3 mb-1 cursor-pointer"
+                        className="bg-green-700 rounded-lg text-[#e4ebeb] hover:bg-gray-400 hover:text-black p-3 mb-1 cursor-pointer"
                       >
                         <div className="flex items-center gap-2">
                           <img

@@ -76,7 +76,7 @@ const CategorySelectSub = ({
                         onChange("category", category.name, category._id);
                         setOpen(false);
                       }}
-                      className="p-3 cursor-pointer hover:bg-gray-200 dark:hover:bg-gray-800 rounded"
+                      className="p-3 cursor-pointer hover:bg-[#e4ebeb] dark:hover:bg-gray-800 rounded"
                     >
                       <div className="flex gap-2 items-center">
                         <Image
@@ -123,7 +123,7 @@ const CategorySelectSub = ({
                       onChange("category", category.name, category._id);
                       setOpen(false);
                     }}
-                    className="p-3 cursor-pointer hover:bg-gray-200 dark:hover:bg-gray-800 rounded"
+                    className="p-3 cursor-pointer hover:bg-[#e4ebeb] dark:hover:bg-gray-800 rounded"
                   >
                     <div className="flex gap-2 items-center">
                       <Image

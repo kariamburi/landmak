@@ -134,7 +134,7 @@ const DashboardChat = ({
        if (isDarkMode === null) return null; // Avoid flickering before state is set
      
   return (
-    <div className="h-[100vh] w-full dark:bg-[#131B1E] text-black dark:text-[#F1F3F3] bg-white lg:bg-gray-200">
+    <div className="h-[100vh] w-full dark:bg-[#131B1E] text-black dark:text-[#F1F3F3] bg-white lg:bg-[#e4ebeb]">
   {/* Fixed Navbar */}
   <div className="fixed top-0 left-0 w-full z-50">
     <Navbar

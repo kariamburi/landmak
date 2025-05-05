@@ -1586,7 +1586,7 @@ setSelectedCategoryCommand(filteredCategories);
               {field.type === "radio" && (
                 <div className="w-full flex py-2 px-3 rounded-sm border border-gray-300 dark:border-gray-600 flex-wrap gap-2 dark:bg-[#2D3236] bg-white">
                   <FormControl>
-                    <FormLabel className="text-gray-800 dark:text-gray-200">
+                    <FormLabel className="text-gray-800 dark:text-[#e4ebeb]">
                       {capitalizeFirstLetter(field.name.replace("-", " "))}
                     </FormLabel>
                     <RadioGroup
@@ -1613,7 +1613,7 @@ setSelectedCategoryCommand(filteredCategories);
                             />
                           }
                           label={option}
-                          className="text-gray-800 dark:text-gray-200"
+                          className="text-gray-800 dark:text-[#e4ebeb]"
                         />
                       ))}
                     </RadioGroup>
@@ -1776,7 +1776,7 @@ setSelectedCategoryCommand(filteredCategories);
                   
              
                   {showPopupArea && (
-                    <div className="fixed inset-0 flex items-center justify-center bg-gray-200 z-50">
+                    <div className="fixed inset-0 flex items-center justify-center bg-[#e4ebeb] z-50">
                     
                        {/*  <GoogleMapping name={"propertyarea"}
                           onChange={handleInputOnChange}

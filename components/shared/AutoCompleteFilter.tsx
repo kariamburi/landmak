@@ -136,7 +136,7 @@ const isMobile = useMediaQuery({ maxWidth: 768 }); // Detect mobile screens
               {data.map((option: any) => (
                 <CommandItem
                   key={option}
-                   className="p-3 text-base cursor-pointer hover:bg-gray-200 dark:hover:bg-gray-800 rounded"
+                   className="p-3 text-base cursor-pointer hover:bg-[#e4ebeb] dark:hover:bg-gray-800 rounded"
                   onSelect={() => {
                     onChange(name, option);
                     setOpen(false);

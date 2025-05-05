@@ -220,7 +220,7 @@ CollectionProps) => {
        
   return (
     <>
-  <ScrollArea className="h-[100vh] bg-gray-200 p-0 dark:bg-[#131B1E] text-black dark:text-[#F1F3F3]">
+  <ScrollArea className="h-[100vh] bg-[#e4ebeb] p-0 dark:bg-[#131B1E] text-black dark:text-[#F1F3F3]">
      
       <div className="top-0 z-10 fixed w-full">
         <Navbar user={user} userstatus={user.status} userId={userId} onClose={onClose} popup={"performance"} handleOpenSell={handleOpenSell} handleOpenBook={handleOpenBook} handleOpenPlan={handleOpenPlan} handleOpenChat={handleOpenChat}
@@ -303,7 +303,7 @@ CollectionProps) => {
                   <div
                     ref={lastAdRef}
                     key={ad._id}
-                    className="flex flex-col lg:flex-row gap-1 bg-white shadow-lg rounded-lg overflow-hidden mb-6 border border-gray-200"
+                    className="flex flex-col lg:flex-row gap-1 bg-white shadow-lg rounded-lg overflow-hidden mb-6 border border-[#e4ebeb]"
                   >
                     {/* Ad Image */}
                   
@@ -476,7 +476,7 @@ CollectionProps) => {
                 return (
                   <div
                     key={ad._id}
-                    className="flex flex-col lg:flex-row gap-1 bg-white shadow-lg rounded-lg overflow-hidden mb-6 border border-gray-200"
+                    className="flex flex-col lg:flex-row gap-1 bg-white shadow-lg rounded-lg overflow-hidden mb-6 border border-[#e4ebeb]"
                   >
                     {/* Ad Image */}
                     <img

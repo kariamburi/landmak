@@ -420,7 +420,7 @@ const handleSave = () => {
                         <div className="flex items-center gap-1">  <LocationOnIcon /> Property Location</div>
                             <button
                               onClick={handleClosePopup}
-                              className="flex justify-center items-center h-12 w-12 text-black dark:text-gray-200 dark:hover:bg-gray-700 hover:bg-black hover:text-white rounded-full"
+                              className="flex justify-center items-center h-12 w-12 text-black dark:text-[#e4ebeb] dark:hover:bg-gray-700 hover:bg-black hover:text-white rounded-full"
                             >
                               <CloseOutlinedIcon />
                             </button>

@@ -95,7 +95,7 @@ const AutoComplete = ({
                 <CommandGroup>
                   {data.map((option) => (
                     <CommandItem
-                    className="p-3 text-base cursor-pointer hover:bg-gray-200 dark:hover:bg-gray-800 rounded"
+                    className="p-3 text-base cursor-pointer hover:bg-[#e4ebeb] dark:hover:bg-gray-800 rounded"
                       key={option}
                       onSelect={() => {
                         onChange(name, option);

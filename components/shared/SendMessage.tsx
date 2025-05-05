@@ -234,7 +234,7 @@ const SendMessage = ({
       )}
 
       {showPopupGps && (
-        <div className="fixed inset-0 flex items-center justify-center bg-gray-200 z-50">
+        <div className="fixed inset-0 flex items-center justify-center bg-[#e4ebeb] z-50">
                               <LatLngPickerAndShare
               name={"gps"}
               onChange={handleInputOnChange}

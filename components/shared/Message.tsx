@@ -120,10 +120,10 @@ const match = message.text.match(regex);
                                 </button>
               
                                 {showPopup && (
-                                  <div className="fixed inset-0 flex items-center justify-center bg-gray-200 z-50">
-                                    <div className="dark:border-gray-600 dark:bg-[#2D3236] dark:text-gray-100 bg-gray-200 p-2 w-full items-center justify-center relative">
+                                  <div className="fixed inset-0 flex items-center justify-center bg-[#e4ebeb] z-50">
+                                    <div className="dark:border-gray-600 dark:bg-[#2D3236] dark:text-gray-100 bg-[#e4ebeb] p-2 w-full items-center justify-center relative">
                            
-                                      <div className="flex flex-col items-center justify-center dark:bg-[#2D3236] bg-gray-200">
+                                      <div className="flex flex-col items-center justify-center dark:bg-[#2D3236] bg-[#e4ebeb]">
                                   
               <PropertyMap queryObject={queryObject} onClose={handleClosePopup} coordinates={match[1]}
               handleAdEdit={handleAdEdit}

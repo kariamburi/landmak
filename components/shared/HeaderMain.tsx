@@ -181,21 +181,21 @@ const handleClosePopupBeacon = () => {
 
       
         {showPopupBeacon && (
-                    <div className="fixed inset-0 flex items-center justify-center bg-gray-200 z-50">
+                    <div className="fixed inset-0 flex items-center justify-center bg-[#e4ebeb] z-50">
                       <BeaconTracker onClose={handleClosePopupBeacon}/>
                     </div>
                      
                   )}
 
 {showPopupLocateBeacon && (
-                    <div className="fixed inset-0 flex items-center justify-center bg-gray-200 z-50">
+                    <div className="fixed inset-0 flex items-center justify-center bg-[#e4ebeb] z-50">
                       <LandTargetNavigator handleClosePopupLocateBeacon={handleClosePopupLocateBeacon}/>
                     </div>
                      
                   )}
 
         {showPopupMap && (
-                    <div className="fixed inset-0 flex items-center justify-center bg-gray-200 z-50">
+                    <div className="fixed inset-0 flex items-center justify-center bg-[#e4ebeb] z-50">
                       <PropertyMap queryObject={queryObject} handleOpenSell={handleOpenSell} handleOpenPlan={handleOpenPlan} onClose={handleClosePopupMap} handleAdView={handleAdView} handleAdEdit={handleAdEdit} handleCategory={handleCategory}/>
                     </div>
                      

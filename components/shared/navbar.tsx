@@ -79,12 +79,12 @@ export default function Navbar({ userstatus, userId, user, onClose, popup, handl
     setIsOpenP(false);
   };
   return (
-    <div className="h-[60px] items-center flex p-2 lg:p-3 gap-1 w-full border-b bg-gradient-to-b from-white to-gray-200 lg:from-white lg:to-white">
+    <div className="h-[60px] items-center flex p-2 lg:p-3 gap-1 w-full border-b bg-gradient-to-b from-green-600 to-green-600 lg:from-white lg:to-white">
       <div className="flex-1 mt-1">
         <div className="flex items-center">
        
             <div
-              className="mr-2 w-5 h-8 flex text-gray-500 lg:text-gray-500 items-center justify-center rounded-sm tooltip tooltip-bottom hover:cursor-pointer lg:hover:text-green-600"
+              className="mr-2 w-5 h-8 flex text-white lg:text-gray-500 items-center justify-center rounded-sm tooltip tooltip-bottom hover:cursor-pointer lg:hover:text-green-600"
               data-tip="Back"
               onClick={() => {
                 onClose()
@@ -104,7 +104,8 @@ export default function Navbar({ userstatus, userId, user, onClose, popup, handl
          
            <div className="flex items-center gap-2">
           
-                          <img src="/logo.png" alt="Logo" className="w-8 h-8 rounded-full" />
+           <img src="/logo_white.png" alt="Logo" className="w-8 h-8 lg:hidden rounded-full" />
+           <img src="/logo.png" alt="Logo" className="w-8 h-8 hidden lg:inline rounded-full"/>
                           <StyledBrandName/>
               </div>
         
@@ -117,7 +118,7 @@ export default function Navbar({ userstatus, userId, user, onClose, popup, handl
       {popup !=="bookmark" && (<>
          <SignedIn>
          <div
-            className="w-8 h-8 flex items-center justify-center rounded-full dark:bg-[#131B1E] dark:hover:bg-[#2D3236] bg-gray-200 hover:bg-gray-300 tooltip tooltip-bottom hover:cursor-pointer"
+            className="w-8 h-8 flex items-center justify-center rounded-full dark:bg-[#131B1E] dark:hover:bg-[#2D3236] bg-[#e4ebeb] hover:bg-gray-300 tooltip tooltip-bottom hover:cursor-pointer"
             data-tip="Messages"
             onClick={() => {
               handleOpenBook();
@@ -137,7 +138,7 @@ export default function Navbar({ userstatus, userId, user, onClose, popup, handl
           </SignedIn>
           <SignedOut>
          <div
-            className="w-8 h-8 flex items-center justify-center rounded-full dark:bg-[#131B1E] dark:hover:bg-[#2D3236] bg-gray-200 hover:bg-gray-300 tooltip tooltip-bottom hover:cursor-pointer"
+            className="w-8 h-8 flex items-center justify-center rounded-full dark:bg-[#131B1E] dark:hover:bg-[#2D3236] bg-[#e4ebeb] hover:bg-gray-300 tooltip tooltip-bottom hover:cursor-pointer"
             data-tip="Messages"
             onClick={() => {
               setIsOpenP(true);
@@ -160,7 +161,7 @@ export default function Navbar({ userstatus, userId, user, onClose, popup, handl
         {popup !=="chat" && (<>
             <SignedIn>
              <div
-            className="w-8 h-8 flex items-center justify-center rounded-full dark:bg-[#131B1E] dark:hover:bg-[#2D3236] bg-gray-200 hover:bg-gray-300  tooltip tooltip-bottom hover:cursor-pointer"
+            className="w-8 h-8 flex items-center justify-center rounded-full dark:bg-[#131B1E] dark:hover:bg-[#2D3236] bg-[#e4ebeb] hover:bg-gray-300  tooltip tooltip-bottom hover:cursor-pointer"
             data-tip="Messages"
             onClick={() => {
               handleOpenChat();
@@ -218,7 +219,7 @@ export default function Navbar({ userstatus, userId, user, onClose, popup, handl
          {popup !=="plan" && (
           
           <div
-            className="w-8 h-8 flex items-center justify-center rounded-full dark:bg-[#131B1E] dark:hover:bg-[#2D3236] bg-gray-200 hover:bg-gray-300 tooltip tooltip-bottom hover:cursor-pointer"
+            className="w-8 h-8 flex items-center justify-center rounded-full dark:bg-[#131B1E] dark:hover:bg-[#2D3236] bg-[#e4ebeb] hover:bg-gray-300 tooltip tooltip-bottom hover:cursor-pointer"
             data-tip="Messages"
             onClick={() => {
               handleOpenPlan();

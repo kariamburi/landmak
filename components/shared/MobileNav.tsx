@@ -50,7 +50,7 @@ const MobileNav = ({ userstatus, userId,popup,user, onClose, handleOpenSettings,
             setIsSheetOpen(true);
           }}
         >
-          <div className="flex p-1 text-green-600 lg:text-gray-500 items-center justify-center rounded-full tooltip tooltip-bottom lg:hover:text-green-600 hover:cursor-pointer">
+          <div className="flex p-1 text-white lg:text-green-600 lg:text-gray-500 items-center justify-center rounded-full tooltip tooltip-bottom lg:hover:text-green-600 hover:cursor-pointer">
             <MenuIcon />
           </div>
         </SheetTrigger>
@@ -61,12 +61,13 @@ const MobileNav = ({ userstatus, userId,popup,user, onClose, handleOpenSettings,
           <SheetTitle>
             <div className="flex justify-between items-center">
             <div className="flex items-center gap-1">
-                <img src="/logo.png" alt="Logo" className="w-6 h-6 rounded-full" />
+          
+            <img src="/logo.png" alt="Logo" className="w-6 h-6 rounded-full"/>
                 <StyledBrandNameG/>
               </div>
               <button
                 onClick={handleclicklink}
-                className="flex justify-center items-center h-10 w-10 text-black dark:text-gray-200 dark:hover:bg-gray-700 hover:bg-gray-200 rounded-full"
+                className="flex justify-center items-center h-10 w-10 text-black dark:text-[#e4ebeb] dark:hover:bg-gray-700 hover:bg-[#e4ebeb] rounded-full"
               >
                 <CloseOutlinedIcon />
               </button>

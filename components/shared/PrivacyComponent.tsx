@@ -55,7 +55,7 @@ const PrivacyComponent =  ({userId,user, handleOpenPerfomance,
    
 
   return (
-    <ScrollArea className="h-[100vh] bg-gray-200 dark:bg-[#131B1E] text-black dark:text-[#F1F3F3]">
+    <ScrollArea className="h-[100vh] bg-[#e4ebeb] dark:bg-[#131B1E] text-black dark:text-[#F1F3F3]">
     <Head>
       <title>Privacy Policy | mapa.co.ke</title>
       <meta

@@ -74,7 +74,7 @@ export const BulkPriceManager = ({
      {isMobile ? (
                    
                       // Fullscreen Popover for Mobile
-                      <div className="fixed inset-0 z-10 bg-gray-200 dark:bg-[#2D3236] dark:text-gray-100 p-1 lg:p-4 flex flex-col">
+                      <div className="fixed inset-0 z-10 bg-[#e4ebeb] dark:bg-[#2D3236] dark:text-gray-100 p-1 lg:p-4 flex flex-col">
                         <div className="flex justify-between items-center border-b pb-2">
                         <p className="text-lg lg:text-2xl font-bold text-center">
         Bulk Price Manager
@@ -189,7 +189,7 @@ export const BulkPriceManager = ({
                                   <CloseOutlinedIcon />
                                 </Button>
                               </div>
-    <div className="w-full p-6 bg-white border border-gray-200 dark:border-gray-600 dark:bg-[#2D3236] dark:text-gray-100 rounded-sm shadow-md">
+    <div className="w-full p-6 bg-white border border-[#e4ebeb] dark:border-gray-600 dark:bg-[#2D3236] dark:text-gray-100 rounded-sm shadow-md">
       <h2 className="text-2xl font-bold text-center mb-6">
         Bulk Price Manager
       </h2>

@@ -74,14 +74,14 @@ const LatLngPicker = ({
     onSave();
   };
   return (
-    <div className="w-full p-1 dark:bg-[#2D3236] bg-gray-200 rounded-lg">
+    <div className="w-full p-1 dark:bg-[#2D3236] bg-[#e4ebeb] rounded-lg">
     <div className="flex gap-2 flex-col lg:flex-row">
       <div className="flex-1 gap-2 mb-2">
         <input type="text" placeholder="Search by address..." value={value} onChange={(e) => setValue(e.target.value)} className="w-full text-sm dark:bg-[#131B1E] dark:text-gray-300 dark:border-gray-600  p-2 border rounded" />
         {suggestions.status === "OK" && (
           <ul className="absolute z-10 text-sm dark:bg-[#131B1E] w-[350px] dark:text-gray-300 dark:border-gray-600 bg-white border rounded mt-1 max-h-40 overflow-auto">
             {suggestions.data.map((suggestion) => (
-              <li key={suggestion.place_id} className="p-2 cursor-pointer hover:bg-gray-200" onClick={() => handleSelect(suggestion.description)}>
+              <li key={suggestion.place_id} className="p-2 cursor-pointer hover:bg-[#e4ebeb]" onClick={() => handleSelect(suggestion.description)}>
                 {suggestion.description}
               </li>
             ))}

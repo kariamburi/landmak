@@ -81,7 +81,7 @@ export function IconUploader({
   };
 
   return (
-    <div className="flex-center dark:text-gray-200 flex cursor-pointer p-0 flex-col overflow-hidden bg-grey-50">
+    <div className="flex-center dark:text-[#e4ebeb] flex cursor-pointer p-0 flex-col overflow-hidden bg-grey-50">
       <input {...getInputProps()} className="cursor-pointer" />
       <div className="text-left text-sm w-full mx-auto">
         <div className="font-semibold">Upload Icon</div>
@@ -101,7 +101,7 @@ export function IconUploader({
               </Zoom>
               <div
                 {...getRootProps()}
-                className="absolute text-gray-800 top-1 right-1 rounded-full bg-gray-200 p-1 shadow-sm hover:cursor-pointer"
+                className="absolute text-gray-800 top-1 right-1 rounded-full bg-[#e4ebeb] p-1 shadow-sm hover:cursor-pointer"
               >
                 <EditOutlinedIcon />
               </div>

@@ -1120,7 +1120,7 @@ polyline.addListener("click", () => {
   )}  
         {uploadPopup && (
   <div className="fixed inset-0 flex items-center justify-center bg-gray-900 bg-opacity-50 p-2 z-50">
-    <div className="dark:bg-[#131B1E] dark:text-gray-300 bg-gray-200 rounded-xl p-4 w-full max-w-xl shadow-lg space-y-4">
+    <div className="dark:bg-[#131B1E] dark:text-gray-300 bg-[#e4ebeb] rounded-xl p-4 w-full max-w-xl shadow-lg space-y-4">
       
       {/* Close Button */}
       <div className="flex justify-end">
@@ -1175,7 +1175,7 @@ polyline.addListener("click", () => {
 
   {selectedShape && selectedShapePosition && (
   
-  <div className="fixed top-1/2 left-1/2 transform -translate-x-1/2 -translate-y-1/2 z-50 bg-gray-200 p-4 rounded shadow-md min-w-[240px]">
+  <div className="fixed top-1/2 left-1/2 transform -translate-x-1/2 -translate-y-1/2 z-50 bg-[#e4ebeb] p-4 rounded shadow-md min-w-[240px]">
       {/* Close Button */}
       <button
         onClick={() => {
@@ -1416,7 +1416,7 @@ polyline.addListener("click", () => {
 
 {/* Marker Options - LEFT SIDE */}
 {selectedControl === "marker" && (
-  <div className="fixed top-1 left-2 z-40 flex flex-col p-2 border bg-gray-200 border-white rounded-lg gap-2 mb-2 min-w-[250px] max-h-[90vh] overflow-y-auto">
+  <div className="fixed top-1 left-2 z-40 flex flex-col p-2 border bg-[#e4ebeb] border-white rounded-lg gap-2 mb-2 min-w-[250px] max-h-[90vh] overflow-y-auto">
     <h3 className="text-sm font-medium text-gray-700">Select Marker Type</h3>
     <div className="flex items-center gap-4 flex-wrap">
       <div className="min-w-[200px]">
@@ -1557,7 +1557,7 @@ polyline.addListener("click", () => {
       <button
         title="Close"
         onClick={() => onSave()}
-        className="absolute right-5 top-3 p-1 flex gap-1 items-center hover:bg-green-600 text-gray-200 rounded-sm"
+        className="absolute right-5 top-3 p-1 flex gap-1 items-center hover:bg-green-600 text-[#e4ebeb] rounded-sm"
       >
         <CloseOutlinedIcon />
       </button>
@@ -1595,7 +1595,7 @@ polyline.addListener("click", () => {
 
             {/* Scrollable Content */}
             <ScrollArea className="h-[70dvh] bg-gray-50 dark:bg-[#131B1E] rounded-lg p-4">
-              <h3 className="text-lg font-semibold text-gray-700 dark:text-gray-200 text-center border-b pb-2">
+              <h3 className="text-lg font-semibold text-gray-700 dark:text-[#e4ebeb] text-center border-b pb-2">
                 Benefits of the Advanced Property Mapping Tool
               </h3>
 

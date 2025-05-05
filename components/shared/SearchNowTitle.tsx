@@ -116,7 +116,7 @@ const SearchNowTitle = ({
         </button>
           <button
                                 onClick={onClose}
-                                className="flex justify-center border items-center h-12 w-12 hover:bg-gray-200 bg-gray-100 text-black rounded-sm"
+                                className="flex justify-center border items-center h-12 w-12 hover:bg-[#e4ebeb] bg-gray-100 text-black rounded-sm"
                               >
                                 <CloseOutlinedIcon />
                   </button>
@@ -151,7 +151,7 @@ const SearchNowTitle = ({
           ))}
           <div className="flex gap-2 justify-between">
           <button
-            className="w-full text-sm text-gray-500 p-2 bg-gray-100 hover:bg-gray-200 dark:hover:bg-gray-800"
+            className="w-full text-sm text-gray-500 p-2 bg-gray-100 hover:bg-[#e4ebeb] dark:hover:bg-gray-800"
             onClick={() => {
               setSearchHistory([]);
               localStorage.removeItem("searchHistory");
@@ -160,7 +160,7 @@ const SearchNowTitle = ({
             Clear All History
           </button>
           <button
-            className="w-full text-sm text-gray-500 p-2 bg-gray-100 hover:bg-gray-200 dark:hover:bg-gray-800"
+            className="w-full text-sm text-gray-500 p-2 bg-gray-100 hover:bg-[#e4ebeb] dark:hover:bg-gray-800"
             onClick={() => {
               setFocus(false);
             }}

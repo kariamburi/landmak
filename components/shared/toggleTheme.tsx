@@ -34,7 +34,7 @@ const ToggleTheme = () => {
           checked={isDarkMode}
           onChange={() => setIsDarkMode(!isDarkMode)}
         />
-        <div className="w-11 h-6 bg-gray-200 peer-focus:outline-none peer-focus:ring-2 peer-focus:ring-primary rounded-full peer dark:bg-gray-700 peer-checked:bg-primary"></div>
+        <div className="w-11 h-6 bg-[#e4ebeb] peer-focus:outline-none peer-focus:ring-2 peer-focus:ring-primary rounded-full peer dark:bg-gray-700 peer-checked:bg-primary"></div>
         <div className="absolute left-1 top-1 w-4 h-4 bg-[#131B1E] rounded-full transition-transform peer-checked:translate-x-5"></div>
       </label>
     </div>

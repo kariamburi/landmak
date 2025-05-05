@@ -325,7 +325,7 @@ const HomeDashboard = ({
                 >
                   <div
                     onClick={() => handle(link.label)}
-                    className="flex hover:bg-gray-200 hover:rounded-xl hover:text-gray-700 p-3 mb-1 hover:cursor-pointer"
+                    className="flex hover:bg-[#e4ebeb] hover:rounded-xl hover:text-gray-700 p-3 mb-1 hover:cursor-pointer"
                   >
                     <span className="text-right my-auto">
                       {link.label === "Home" && (
@@ -399,7 +399,7 @@ const HomeDashboard = ({
                       className={`${
                         activeTab === link.label
                           ? "items-center p-3 flex gap-1 bg-[#064E3B] text-white rounded-xl hover:cursor-pointers"
-                          : "items-center p-3 flex gap-1 border rounded-xl dark:bg-gray-800 dark:text-gray-300 bg-white text-black hover:cursor-pointer hover:bg-gray-200"
+                          : "items-center p-3 flex gap-1 border rounded-xl dark:bg-gray-800 dark:text-gray-300 bg-white text-black hover:cursor-pointer hover:bg-[#e4ebeb]"
                       }`}
                     >
                       <span className="text-right my-auto">

@@ -42,7 +42,7 @@ const SearchTabWindow: React.FC<ChatWindowProps> = ({
 if (!isOpen) return null;
 
   return (
-<div className="fixed inset-0 z-40 bg-gray-200 dark:bg-[#222528] dark:text-gray-100 p-4 flex flex-col">  
+<div className="fixed inset-0 z-40 bg-[#e4ebeb] dark:bg-[#222528] dark:text-gray-100 p-4 flex flex-col">  
 <div className="relative flex w-full">
       <div className="w-full absolute">
       <div className="flex justify-between items-center border-b pb-2">
@@ -135,7 +135,7 @@ if (!isOpen) return null;
       </div>
       {hoveredCategory && (
         <div
-          className={`absolute w-full z-10 p-0 dark:bg-[#222528] bg-gray-200 transition-all duration-300"
+          className={`absolute w-full z-10 p-0 dark:bg-[#222528] bg-[#e4ebeb] transition-all duration-300"
           }`}
     
         >

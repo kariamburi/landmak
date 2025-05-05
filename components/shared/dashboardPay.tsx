@@ -192,7 +192,7 @@ const [isDarkMode, setIsDarkMode] = useState<boolean | null>(null);
     );
   }
   return (
-    <div className="min-h-screen dark:bg-[#131B1E] h-screen text-black dark:text-[#F1F3F3] bg-gray-200">
+    <div className="min-h-screen dark:bg-[#131B1E] h-screen text-black dark:text-[#F1F3F3] bg-[#e4ebeb]">
      <div className="top-0 z-10 fixed w-full">
                         <Navbar user={user}  userstatus={user.status} userId={userId} onClose={onClose} popup={"pay"} handleOpenSell={handleOpenSell} handleOpenBook={handleOpenBook} handleOpenPlan={handleOpenPlan} handleOpenChat={handleOpenChat}
                          handleOpenPerfomance={handleOpenPerfomance}

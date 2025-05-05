@@ -155,7 +155,7 @@ const ReviewsComponent =  ({displayName,uid,photoURL,user, recipient, onClose, h
        if (isDarkMode === null) return null; // Avoid flickering before state is set
      
   return (
-     <div className="h-[100vh] bg-white lg:bg-gray-200 dark:bg-[#131B1E] text-black dark:text-[#F1F3F3]">
+     <div className="h-[100vh] bg-white lg:bg-[#e4ebeb] dark:bg-[#131B1E] text-black dark:text-[#F1F3F3]">
        
       <div className="z-10 top-0 fixed w-full">
                  <Navbar user={user} userstatus={user.status} userId={uid} onClose={onClose} 

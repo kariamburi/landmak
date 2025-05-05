@@ -195,7 +195,7 @@ const SidebarSearchmobile = ({
      {isMobile ? (
                
                   // Fullscreen Popover for Mobile
-                  <div className="fixed inset-0 z-50 bg-gray-200 dark:bg-[#222528] dark:text-gray-100 p-1 flex flex-col">
+                  <div className="fixed inset-0 z-50 bg-[#e4ebeb] dark:bg-[#222528] dark:text-gray-100 p-1 flex flex-col">
                     <div className="flex justify-between items-center border-b pb-2">
                     <div className="font-bold text-lg  dark:text-gray-300 text-emerald-950 text-center sm:text-left p-2">
                             Filter
@@ -203,7 +203,7 @@ const SidebarSearchmobile = ({
                       <Button variant="outline" onClick={HandletogglePopup}>
                       <CloseOutlinedIcon />
                       </Button>
-                    </div>  <ScrollArea className="h-[95vh] w-full dark:bg-[#222528] dark:text-gray-300 bg-gray-200 rounded-t-md p-0">
+                    </div>  <ScrollArea className="h-[95vh] w-full dark:bg-[#222528] dark:text-gray-300 bg-[#e4ebeb] rounded-t-md p-0">
         <div className="flex flex-col items-center w-full p-2">
           <div className="dark:bg-[#2D3236] dark:text-gray-300 bg-white text-sm mt-2 border rounded-lg w-full p-1">
             <Accordion type="single" collapsible value={openItem} onValueChange={setOpenItem}>
@@ -424,7 +424,7 @@ const SidebarSearchmobile = ({
       </ScrollArea></div>
                     ):(
     <div className="fixed inset-0 flex items-center justify-center bg-gray-800 bg-opacity-90 z-50">
-                      <div className="h-[90vh] dark:border-gray-600 dark:bg-[#2D3236] dark:text-gray-100 bg-gray-200 p-0 w-full  lg:max-w-3xl rounded-md shadow-md relative">
+                      <div className="h-[90vh] dark:border-gray-600 dark:bg-[#2D3236] dark:text-gray-100 bg-[#e4ebeb] p-0 w-full  lg:max-w-3xl rounded-md shadow-md relative">
                         
                          <div className="flex w-full items-center justify-between">
                            <div className="font-bold text-lg  dark:text-gray-300 text-emerald-950 text-center sm:text-left p-2">
@@ -440,7 +440,7 @@ const SidebarSearchmobile = ({
                              </button>
                            </div>
                          </div>
-      <ScrollArea className="h-[80vh] w-full  dark:bg-[#222528]  dark:text-gray-300 bg-gray-200 rounded-t-md p-3">
+      <ScrollArea className="h-[80vh] w-full  dark:bg-[#222528]  dark:text-gray-300 bg-[#e4ebeb] rounded-t-md p-3">
         <div className="flex flex-col items-center w-full">
           <div className="dark:bg-[#2D3236] dark:text-gray-300 bg-white text-sm mt-2 border rounded-lg w-full p-2">
             <Accordion type="single" collapsible value={openItem} onValueChange={setOpenItem}>

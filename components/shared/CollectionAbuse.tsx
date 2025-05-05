@@ -81,7 +81,7 @@ const CollectionAbuse = ({
       {data.length > 0 ? (
         <div>
           <table className="min-w-full border-collapse border border-gray-300 dark:border-gray-600">
-            <thead className="dark:bg-gray-800 bg-gray-200 text-xs">
+            <thead className="dark:bg-gray-800 bg-[#e4ebeb] text-xs">
               <tr>
                 <th className="border border-gray-300 dark:border-gray-600 px-4 py-2">
                   Ad Id

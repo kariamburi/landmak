@@ -93,7 +93,7 @@ const DeliveryOptions = ({
        {isMobile ? (
                
                   // Fullscreen Popover for Mobile
-                  <div className="fixed inset-0 z-10 bg-gray-200 dark:bg-[#222528] dark:text-gray-100 p-4 flex flex-col">
+                  <div className="fixed inset-0 z-10 bg-[#e4ebeb] dark:bg-[#222528] dark:text-gray-100 p-4 flex flex-col">
                     <div className="flex justify-between items-center border-b pb-2">
                     <div className="flex gap-2 items-center mb-2">
         <LocalShippingOutlinedIcon />
@@ -295,7 +295,7 @@ const DeliveryOptions = ({
                 costTo: "",
               })
             }
-            className="flex items-center justify-center w-full p-2 mt-4 bg-gray-200 text-black rounded-md hover:bg-gray-300"
+            className="flex items-center justify-center w-full p-2 mt-4 bg-[#e4ebeb] text-black rounded-md hover:bg-gray-300"
           >
             <AddOutlinedIcon /> Add Delivery Option
           </button>
@@ -519,7 +519,7 @@ const DeliveryOptions = ({
                 costTo: "",
               })
             }
-            className="flex items-center justify-center w-full p-2 mt-4 bg-gray-200 text-black rounded-md hover:bg-gray-300"
+            className="flex items-center justify-center w-full p-2 mt-4 bg-[#e4ebeb] text-black rounded-md hover:bg-gray-300"
           >
             <AddOutlinedIcon /> Add Delivery Option
           </button>

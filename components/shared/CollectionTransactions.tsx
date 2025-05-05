@@ -152,7 +152,7 @@ const CollectionTransactions = ({
                         <button
                           onClick={() => handleDelete(trans._id)}
                           disabled={trans.status === "Successful"}
-                          className={`mt-1 bg-gray-100 p-1 rounded-lg cursor-pointer hover:bg-gray-200`}
+                          className={`mt-1 bg-gray-100 p-1 rounded-lg cursor-pointer hover:bg-[#e4ebeb]`}
                         >
                           <DeleteOutlineOutlinedIcon />
                         </button>

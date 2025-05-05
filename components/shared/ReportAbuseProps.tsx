@@ -105,7 +105,7 @@ export const ReportAbuse: React.FC<ReportAbuseProps> = ({ ad, isOpen,userId, use
      {isMobile && isOpen ? (
                
                   // Fullscreen Popover for Mobile
-                  <div className="fixed inset-0 z-20 bg-gray-200 dark:bg-[#222528] dark:text-gray-100 p-4 flex flex-col">
+                  <div className="fixed inset-0 z-20 bg-[#e4ebeb] dark:bg-[#222528] dark:text-gray-100 p-4 flex flex-col">
                     <div className="flex justify-end items-center border-b pb-2">
                   
                       <Button variant="outline" onClick={onClose}>

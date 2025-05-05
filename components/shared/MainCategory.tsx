@@ -642,7 +642,7 @@ const SCROLL_THRESHOLD = 150; // pixels
   
     {/* Ads Section */}
     <div
-      className={`flex-1 flex-col bg-gray-200 lg:bg-white transition-all duration-300 h-screen ${
+      className={`flex-1 flex-col bg-[#e4ebeb] lg:bg-white transition-all duration-300 h-screen ${
         showSidebar ? "hidden md:block" : "block"
       }`}
     >
@@ -664,16 +664,16 @@ const SCROLL_THRESHOLD = 150; // pixels
         )}
       </Button>
         {/* Header Section */}
-        <div className="mb-0 flex flex-col gap-0 top-0 left-0 w-full bg-gradient-to-b from-gray-200 to-gray-200 lg:from-white lg:to-white p-0 z-10 md:relative md:w-auto md:shadow-none">
+        <div className="mb-0 flex flex-col gap-0 top-0 left-0 w-full bg-gradient-to-b from-[#e4ebeb] to-[#e4ebeb] lg:from-white lg:to-white p-0 z-10 md:relative md:w-auto md:shadow-none">
         <div
-  className={`bg-gradient-to-b from-white to-gray-200 lg:from-white lg:to-white transition-all duration-300 overflow-hidden p-2 w-full flex flex-col items-center ${
-    showBottomNav ? "max-h-[50px] opacity-100" : "max-h-0 opacity-0"
+  className={`bg-gradient-to-b from-green-600 to-green-600 lg:from-white h-[60px] lg:to-white transition-all duration-300 overflow-hidden p-2 w-full flex flex-col items-center ${
+    showBottomNav ? "max-h-[60px] opacity-100" : "max-h-0 opacity-0"
   }`}
 >
-    <div className="w-full justify-between flex items-center">
+    <div className="w-full h-full justify-between flex items-center">
       <div className="flex items-center">
         <div
-          className="mr-2 w-5 h-8 text-gray-500 lg:text-gray-500 flex items-center justify-center rounded-sm tooltip tooltip-bottom hover:cursor-pointer lg:hover:text-green-600"
+          className="mr-2 w-5 h-8 text-white lg:text-gray-500 flex items-center justify-center rounded-sm tooltip tooltip-bottom hover:cursor-pointer lg:hover:text-green-600"
           data-tip="Back"
           onClick={() => {
             onClose();
@@ -693,7 +693,8 @@ const SCROLL_THRESHOLD = 150; // pixels
 
         <div className="flex items-center gap-2">
       
-                <img src="/logo.png" alt="Logo" className="w-8 h-8 rounded-full" />
+        <img src="/logo_white.png" alt="Logo" className="w-8 h-8 lg:hidden rounded-full" />
+        <img src="/logo.png" alt="Logo" className="w-8 h-8 hidden lg:inline rounded-full"/>
                 
         <StyledBrandName/>
         </div>
@@ -715,7 +716,7 @@ const SCROLL_THRESHOLD = 150; // pixels
           <div className="flex items-center gap-2">
             <SignedIn>
             <div
-              className="w-8 h-8 flex items-center justify-center rounded-full dark:bg-[#131B1E] dark:hover:bg-[#2D3236] bg-gray-200 hover:bg-gray-300 tooltip tooltip-bottom hover:cursor-pointer"
+              className="w-8 h-8 flex items-center justify-center rounded-full dark:bg-[#131B1E] dark:hover:bg-[#2D3236] bg-[#e4ebeb] hover:bg-gray-300 tooltip tooltip-bottom hover:cursor-pointer"
               data-tip="Messages"
               onClick={() => {
                 handleOpenBook();
@@ -724,7 +725,7 @@ const SCROLL_THRESHOLD = 150; // pixels
               <TooltipProvider>
                 <Tooltip>
                   <TooltipTrigger asChild>
-                    <BookmarkIcon sx={{ fontSize: 16 }} className="hover:text-green-600" />
+                    <BookmarkIcon sx={{ fontSize: 16 }} className="" />
                   </TooltipTrigger>
                   <TooltipContent>
                     <p>Bookmark</p>
@@ -735,7 +736,7 @@ const SCROLL_THRESHOLD = 150; // pixels
             </SignedIn>
              <SignedOut>
                                  <div
-                                    className="w-8 h-8 flex items-center justify-center rounded-full dark:bg-[#131B1E] dark:hover:bg-[#2D3236] bg-gray-200 hover:bg-gray-300 tooltip tooltip-bottom hover:cursor-pointer"
+                                    className="w-8 h-8 flex items-center justify-center rounded-full dark:bg-[#131B1E] dark:hover:bg-[#2D3236] bg-[#e4ebeb] hover:bg-gray-300 tooltip tooltip-bottom hover:cursor-pointer"
                                     data-tip="Messages"
                                     onClick={() => {
                                       setIsOpenP(true);
@@ -756,7 +757,7 @@ const SCROLL_THRESHOLD = 150; // pixels
                         </SignedOut>
 <SignedIn>
             <div
-              className="w-8 h-8 flex items-center justify-center rounded-full dark:bg-[#131B1E] dark:hover:bg-[#2D3236] bg-gray-200 hover:bg-gray-300 tooltip tooltip-bottom hover:cursor-pointer"
+              className="w-8 h-8 flex items-center justify-center rounded-full dark:bg-[#131B1E] dark:hover:bg-[#2D3236] bg-[#e4ebeb] hover:bg-gray-300 tooltip tooltip-bottom hover:cursor-pointer"
               data-tip="Messages"
               onClick={() => {
                 handleOpenChat();
@@ -766,7 +767,7 @@ const SCROLL_THRESHOLD = 150; // pixels
                 <Tooltip>
                   <TooltipTrigger asChild>
                     <div className="relative flex items-center justify-center">
-                      <MessageIcon sx={{ fontSize: 16 }} className="absolute hover:text-green-600" />
+                      <MessageIcon sx={{ fontSize: 16 }} className="absolute " />
                       <div className="absolute z-10">
                         <Unreadmessages userId={userId} popup={"category"}/>
                       </div>
@@ -809,7 +810,7 @@ const SCROLL_THRESHOLD = 150; // pixels
             </div>
             </SignedOut>
             <div
-              className="w-8 h-8 flex items-center justify-center rounded-full dark:bg-[#131B1E] dark:hover:bg-[#2D3236] bg-gray-200 hover:bg-gray-300 tooltip tooltip-bottom hover:cursor-pointer"
+              className="w-8 h-8 flex items-center justify-center rounded-full dark:bg-[#131B1E] dark:hover:bg-[#2D3236] bg-[#e4ebeb] hover:bg-gray-300 tooltip tooltip-bottom hover:cursor-pointer"
               data-tip="Messages"
               onClick={() => {
                 handleOpenPlan();
@@ -818,7 +819,7 @@ const SCROLL_THRESHOLD = 150; // pixels
               <TooltipProvider>
                 <Tooltip>
                   <TooltipTrigger asChild>
-                    <DiamondIcon sx={{ fontSize: 16 }} className="hover:text-green-600" />
+                    <DiamondIcon sx={{ fontSize: 16 }} className="" />
                   </TooltipTrigger>
                   <TooltipContent>
                     <p>Premium Services</p>
@@ -890,10 +891,10 @@ const SCROLL_THRESHOLD = 150; // pixels
     </div>
     <div className="lg:hidden dark:text-gray-400 text-emerald-950 sm:text-left p-0">
     {newqueryObject.subcategory ? (
-          <div className="ml-2 flex gap-1 items-center"> <div className="font-bold"> {newqueryObject.subcategory}{"(s)"}</div> in Kenya</div>
+          <div className="m-2 flex gap-1 items-center"> <div className="font-bold"> {newqueryObject.subcategory}{"(s)"}</div> in Kenya</div>
         ) : (
          
-             <div className="ml-2 flex gap-1 items-center">All <div className="font-bold"> {newqueryObject.category}</div> in Kenya</div>
+             <div className="m-2 flex gap-1 items-center">All <div className="font-bold"> {newqueryObject.category}</div> in Kenya</div>
             
          
         )}
@@ -1059,7 +1060,7 @@ const SCROLL_THRESHOLD = 150; // pixels
             <TooltipTrigger asChild>
               <div
                 onClick={togglePopup}
-                className="flex py-4 px-2 cursor-pointer border-gray-300 border rounded-sm text-gray-700 text-sm hover:bg-gray-200 p-1 justify-between items-center"
+                className="flex py-4 px-2 cursor-pointer border-gray-300 border rounded-sm text-gray-700 text-sm hover:bg-[#e4ebeb] p-1 justify-between items-center"
               >
                 <SortOutlinedIcon />
                 <div className="flex gap-1 items-center">Filter</div>
@@ -1091,7 +1092,7 @@ const SCROLL_THRESHOLD = 150; // pixels
           <div className="h-[90vh] dark:border-gray-600 dark:bg-[#2D3236] dark:text-gray-100 bg-gray-100 p-0 w-full lg:max-w-3xl rounded-md shadow-md relative">
           
           {loadingCount ? (<>{isMobile ? (<>
-                          <div className="fixed inset-0 z-50 bg-gray-200 dark:bg-[#222528] dark:text-gray-100 p-1 flex flex-col">
+                          <div className="fixed inset-0 z-50 bg-[#e4ebeb] dark:bg-[#222528] dark:text-gray-100 p-1 flex flex-col">
                                             <div className="flex justify-between items-center border-b pb-2">
                                             <div className="font-bold text-lg  dark:text-gray-300 text-emerald-950 text-center sm:text-left p-2">
                                                   Location Filter
@@ -1104,7 +1105,7 @@ const SCROLL_THRESHOLD = 150; // pixels
                           </div></>):(<>
                           
                             <div className="fixed inset-0 flex items-center justify-center bg-gray-800 bg-opacity-90 z-50">
-                      <div className="h-[90vh] dark:border-gray-600 dark:bg-[#2D3236] dark:text-gray-100 bg-gray-200 p-0 w-full  lg:max-w-3xl rounded-md shadow-md relative">
+                      <div className="h-[90vh] dark:border-gray-600 dark:bg-[#2D3236] dark:text-gray-100 bg-[#e4ebeb] p-0 w-full  lg:max-w-3xl rounded-md shadow-md relative">
                     <div className="flex justify-between items-center border-b pb-2">
                                             <div className="font-bold text-lg  dark:text-gray-300 text-emerald-950 text-center sm:text-left p-2">
                                                    Location Filter
@@ -1167,7 +1168,7 @@ const SCROLL_THRESHOLD = 150; // pixels
         {/* List Ads Section */}
      
      <ScrollArea.Root className="flex-1 overflow-hidden">
-      <ScrollArea.Viewport ref={scrollRefB} className="h-full overflow-y-auto bg-gray-200 border">
+      <ScrollArea.Viewport ref={scrollRefB} className="h-full overflow-y-auto bg-[#e4ebeb] border">
       
   <section className="p-1 mb-20">
     <div className="flex items-center p-1 w-full justify-between">

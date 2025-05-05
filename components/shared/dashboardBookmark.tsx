@@ -75,7 +75,7 @@ CollectionProps) => {
      
   return (
     <>
-     <ScrollArea className="h-[100vh] bg-gray-200 dark:bg-[#131B1E] text-black dark:text-[#F1F3F3]">
+     <ScrollArea className="h-[100vh] bg-[#e4ebeb] dark:bg-[#131B1E] text-black dark:text-[#F1F3F3]">
        
       <div className="z-10 top-0 fixed w-full">
             <Navbar user={user} userstatus={user.status} userId={userId} onClose={onClose} handleOpenSell={handleOpenSell} handleOpenPlan={handleOpenPlan} popup={"bookmark"} handleOpenBook={handleOpenBook} handleOpenChat={handleOpenChat}

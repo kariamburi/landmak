@@ -78,13 +78,13 @@ export default function Navbardashboard({
     setIsOpenP(false);
   };
   return (
-    <div className="w-full bg-gray-200">
-      <div className="fixed bg-white border-b z-10 flex p-3 w-full">
+    <div className="w-full bg-[#e4ebeb]">
+      <div className="fixed bg-gradient-to-b from-green-600 to-green-600 lg:from-white lg:to-white border-b z-10 flex p-3 w-full">
         <div className="flex-1">
           <div className="flex items-center">
           
               <div
-                className="mr-5 w-5 h-8 flex items-center justify-center rounded-sm hover:text-green-600 hover:cursor-pointer"
+                className="mr-5 w-5 h-8 text-white lg:text-green-600 flex items-center justify-center rounded-sm hover:text-green-600 hover:cursor-pointer"
                 data-tip="Back"
                 onClick={() => {
                   router.back();
@@ -103,7 +103,9 @@ export default function Navbardashboard({
               </div>
          
               <div className="flex items-center gap-2">
-                <img src="/logo.png" alt="Logo" className="w-6 h-6 rounded-full" />
+              <img src="/logo_white.png" alt="Logo" className="w-6 h-6 lg:hidden rounded-full" />
+           <img src="/logo.png" alt="Logo" className="w-6 h-6 hidden lg:inline rounded-full"/>
+             
                  <StyledBrandName/>
               </div>
            

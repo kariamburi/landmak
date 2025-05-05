@@ -217,7 +217,7 @@ export function FileUploader({
   };
 
   return (
-    <div className="w-full flex-center dark:text-gray-200 flex cursor-pointer p-1 flex-col">
+    <div className="w-full flex-center dark:text-[#e4ebeb] flex cursor-pointer p-1 flex-col">
       <input {...getInputProps()} className="cursor-pointer" />
       <div className="text-left text-sm w-full">
         <div className="font-semibold">Add Photo</div>
@@ -243,7 +243,7 @@ export function FileUploader({
   return (
     <div
       key={index}
-      className="relative justify-center items-center mb-1 rounded-sm bg-gray-200 shadow-sm p-1 mr-1 flex-shrink-0"
+      className="relative justify-center items-center mb-1 rounded-sm bg-[#e4ebeb] shadow-sm p-1 mr-1 flex-shrink-0"
     >
       {/* Show spinner only when loading */}
       {isLoading && (

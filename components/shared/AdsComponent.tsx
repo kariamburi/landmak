@@ -20,7 +20,7 @@ const CollectionRelateddd = dynamic(
     ssr: false,
     loading: () => (
       <div>
-        <div className="w-full h-[300px] mb-2 dark:bg-[#131B1E] text-black dark:text-[#F1F3F3] bg-gray-200 rounded-lg flex flex-col items-center justify-center">
+        <div className="w-full h-[300px] mb-2 dark:bg-[#131B1E] text-black dark:text-[#F1F3F3] bg-[#e4ebeb] rounded-lg flex flex-col items-center justify-center">
           <Image
             src="/assets/icons/loading2.gif"
             alt="loading"
@@ -146,8 +146,8 @@ const SCROLL_THRESHOLD = 100; // pixels
    
 
   return (
-    <ScrollArea.Root className="h-[100vh] bg-gray-200 p-0 dark:bg-[#131B1E] text-black dark:text-[#F1F3F3] overflow-hidden">
-    <ScrollArea.Viewport ref={scrollRefB} className="h-full overflow-y-auto bg-gray-200 border">
+    <ScrollArea.Root className="h-[100vh] bg-[#e4ebeb] p-0 dark:bg-[#131B1E] text-black dark:text-[#F1F3F3] overflow-hidden">
+    <ScrollArea.Viewport ref={scrollRefB} className="h-full overflow-y-auto bg-[#e4ebeb] border">
          
       <div className="top-0 z-10 fixed w-full">
                     <Navbar user={user} userstatus={user.status} userId={userId} onClose={onClose} popup={"sell"} handleOpenSell={handleOpenSell} handleOpenBook={handleOpenBook} handleOpenPlan={handleOpenPlan} handleOpenChat={handleOpenChat}
@@ -202,7 +202,7 @@ const SCROLL_THRESHOLD = 100; // pixels
         </div>
 
         <div
-                 className={`fixed bottom-0 left-0 right-0 dark:bg-[#233338] dark:text-gray-300 dark:lg:bg-transparent bg-gray-200 lg:bg-transparent h-auto  z-10 p-3 shadow-md flex flex-col md:flex-row justify-between items-center transition-transform duration-300 ${
+                 className={`fixed bottom-0 left-0 right-0 dark:bg-[#233338] dark:text-gray-300 dark:lg:bg-transparent bg-[#e4ebeb] lg:bg-transparent h-auto  z-10 p-3 shadow-md flex flex-col md:flex-row justify-between items-center transition-transform duration-300 ${
                    showBottomNav ? "translate-y-0" : "translate-y-full"
                  }`}
                >
