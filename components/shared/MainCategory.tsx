@@ -900,7 +900,7 @@ const SCROLL_THRESHOLD = 150; // pixels
         )}
       </div>
     <div className="w-full lg:hidden">
-      <div className="flex w-full gap-1 p-1 items-center">
+      <div className="flex w-full gap-1 pl-1 pr-1 items-center">
       
         {/*   <div className="flex-1">
            <TooltipProvider>
@@ -934,17 +934,19 @@ const SCROLL_THRESHOLD = 150; // pixels
                 <TooltipTrigger asChild>
                   <button
                     onClick={handleOpenPopupMapSearch}
-                    className="flex text-xs gap-2 bg-white text-gray-700 items-center justify-center w-full py-3 px-2 border-gray-300 border rounded-sm hover:bg-gray-100"
+                    className="flex text-xs gap-2 bg-white text-gray-700 items-center justify-center w-full py-4 px-2 border-gray-300 border rounded-sm hover:bg-gray-100"
                   >
+
+                    
                     <div className="flex gap-2 items-center">
-                     {/*  <Image
-                        src={"/assets/icons/travel-distance.png"}
-                        alt="icon"
-                        className="rounded-full object-cover"
-                        width={30}
-                        height={30}
-                      />*/}
-                        <TravelExploreOutlinedIcon/>
+                    
+                    <div className="hidden lg:inline">
+           <TravelExploreOutlinedIcon/>
+           </div>
+           <div className="lg:hidden">
+           <TravelExploreOutlinedIcon sx={{ fontSize: 20 }}/>
+           </div> 
+                    
                       Search by Distance
                     </div>
                    
@@ -985,7 +987,7 @@ const SCROLL_THRESHOLD = 150; // pixels
       </div>
     </div>
 
-    <div className="flex w-full p-1 gap-1  justify-center items-center mb-1">
+    <div className="flex w-full p-1 gap-1  justify-center items-center mb-0">
       <button
         onClick={handleOpenPopupLocation}
         className="flex text-xs lg:text-base gap-1 items-center justify-center py-4 px-2 border border-gray-300 dark:border-gray-600 bg-white dark:bg-[#2D3236] dark:text-gray-100 rounded-sm hover:bg-gray-100"
@@ -1003,33 +1005,6 @@ const SCROLL_THRESHOLD = 150; // pixels
       </div>
 
   
-        {/*    <div className="flex hidden lg:inline">
-           <TooltipProvider>
-             <Tooltip>
-               <TooltipTrigger asChild>
-                 <button
-                   onClick={handleNearByProperties}
-                   className="flex gap-2 bg-white text-gray-700 items-center justify-between w-full py-4 px-2 border-gray-300 border rounded-sm hover:bg-gray-100"
-                 >
-                   <div className="flex gap-2 items-center">
-                     <MyLocationOutlinedIcon/>
-                     
-                      {isPicking ? (<>
-                                              Nearby {newqueryObject.category ==='Property Services' ? (<>Service Provider</>):(<>Property</>)} <CircularProgress sx={{ color: "gray" }} size={30} />
-                                               </> ):(<>
-                                              Nearby {newqueryObject.category ==='Property Services' ? (<>Service Provider</>):(<>Property</>)}
-                                             </>)}
-                   </div>
-                  
-                 </button>
-               </TooltipTrigger>
-               <TooltipContent>
-                 <p>Search Near By</p>
-               </TooltipContent>
-             </Tooltip>
-           </TooltipProvider>
-         </div>
-         */}
         <div className="flex hidden lg:inline">
           <TooltipProvider>
             <Tooltip>

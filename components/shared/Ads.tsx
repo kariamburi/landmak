@@ -383,16 +383,16 @@ export default function Ads({ ad, user, userId, userImage, userName, onClose,han
             )}
   <div className="p-0">
   {/* Top Tab Buttons */}
-  <div className="rounded-t-xl overflow-hidden">
+  <div className="lg:rounded-t-xl overflow-hidden">
     <div className="grid grid-cols-3 gap-1">
       <button
         title="Ad Pictures"
         onClick={() => setInputMode("Images")}
-        className={`h-12 p-3 flex gap-2 justify-center items-center text-[10px] lg:text-xs ${
+        className={`h-12 p-3 rounded-tl-0 lg:rounded-tl-xl flex gap-2 justify-center items-center text-[10px] lg:text-xs ${
           inputMode === "Images"
             ? "text-white bg-[#131B1E] dark:text-white"
             : "bg-green-600 hover:bg-green-700 text-white"
-        } rounded-tl-xl`}
+        }`}
       >
         <LocalSeeOutlinedIcon sx={{ fontSize: 16 }} /> Pictures
       </button>
@@ -412,11 +412,11 @@ export default function Ads({ ad, user, userId, userImage, userName, onClose,han
       <button
         title="Ad 3D Virtual"
         onClick={() => setInputMode("Virtual")}
-        className={`h-12 p-3 flex gap-2 justify-center items-center text-[10px] lg:text-xs ${
+        className={`h-12 p-3 rounded-0 lg:rounded-tr-xl flex gap-2 justify-center items-center text-[10px] lg:text-xs ${
           inputMode === "Virtual"
             ? "text-white bg-[#131B1E] dark:text-white"
             : "bg-green-600 hover:bg-green-700 text-white"
-        } rounded-tr-xl`}
+        }`}
       >
         <ThreeDRotationOutlinedIcon sx={{ fontSize: 16 }} /> 3D Virtual Tour
       </button>

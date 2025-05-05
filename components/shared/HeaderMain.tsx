@@ -76,7 +76,7 @@ const handleClosePopupBeacon = () => {
   };
   return (
     <div
-      className="relative flex flex-col w-full p-1 mb-1"
+      className="relative flex flex-col w-full p-1 mb-0"
      
     >
         <div className="flex gap-1 flex-col items-center w-full">
