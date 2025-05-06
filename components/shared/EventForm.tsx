@@ -242,7 +242,8 @@ const AdForm = ({
   const { startUpload } = useUploadThing("imageUploader");
   let uploadedImageUrl: string[] = [];
   const [showPopup, setShowPopup] = useState(false);
-  
+  const [phoneError, setphoneError] = useState('');
+  const [locationError, setlocationError] = useState('');
   const modules = {
     toolbar: [
      // [{ header: "1" }, { header: "2" }, { font: [] }],
@@ -608,6 +609,7 @@ setSelectedCategoryCommand(filteredCategories);
         if (!isValid) return;
 
         const phone = countryCode + removeLeadingZero(phoneNumber);
+      
         if(!isValidKenyanPhoneNumber(phone)){
           toast({
             title: "Invalid Phone",
@@ -615,9 +617,19 @@ setSelectedCategoryCommand(filteredCategories);
             duration: 5000,
             className: "bg-[#999999] text-white",
           });
+          setphoneError("Invalid Phone Number.!")
           return
         }
-     
+        if(!formData["propertyarea"].toString()){
+          toast({
+            title: "No location",
+            description: "Set location!.",
+            duration: 5000,
+            className: "bg-[#999999] text-white",
+          });
+          setlocationError("Set Location!")
+          return
+        }
         const uploadedUrls = await uploadFiles();
     
         if (!uploadedUrls) return;
@@ -691,6 +703,16 @@ setSelectedCategoryCommand(filteredCategories);
             duration: 5000,
             className: "bg-[#999999] text-white",
           });
+          return
+        }
+        if(!formData["propertyarea"].toString()){
+          toast({
+            title: "No location",
+            description: "Set location!.",
+            duration: 5000,
+            className: "bg-[#999999] text-white",
+          });
+          setlocationError("Set Location!")
           return
         }
         const uploadedUrls = await uploadFiles();
@@ -926,6 +948,8 @@ setSelectedCategoryCommand(filteredCategories);
               {formErrors["category"] && (
                 <p className="text-red-500 text-sm">{formErrors["category"]}</p>
               )}
+             
+              
             </div>
             <div className="flex">
               <SubCategorySelect
@@ -1647,7 +1671,7 @@ setSelectedCategoryCommand(filteredCategories);
 </div>
 )}
 
-              {field.type === "phone" && (
+              {field.type === "phone" && (<div className="flex w-full flex-col">
                 <div className="flex w-full gap-1">
                   <select
                     className="border-gray-300 dark:border-gray-600 dark:bg-[#2D3236] dark:text-gray-100 text-sm py-2 px-1 rounded-sm border border-gray-300 dark:border-gray-600 w-[140px] lg:w-[200px]"
@@ -1739,7 +1763,10 @@ setSelectedCategoryCommand(filteredCategories);
                     className="w-full"
                   />
                 </div>
-              )}
+                 {phoneError && (
+                  <p className="text-red-500 p-2 text-sm">{phoneError}</p>
+                )}
+              </div>)}
 
               {field.type === "delivery" && (
                 <div className="flex flex-col w-full gap-1">
@@ -1770,10 +1797,14 @@ setSelectedCategoryCommand(filteredCategories);
                       onClick={handleOpenPopupArea}
                       className="py-3 w-full px-1 cursor-pointer rounded-sm text-green-600 bg-green-100 border border-green-600 hover:bg-green-200">
                       <AddLocationAltOutlinedIcon /> 
-                      
-                      {selectedCategory ==="Property Services" ? (<> Add Location</>):(<>Add Property Location</>)}
+                      {formData["propertyarea"]?.mapaddress ? (<>
+                               {formData["propertyarea"]?.mapaddress}
+                              </>):(<> {selectedCategory ==="Property Services" ? (<> Add Location</>):(<>Add Property Location</>)}</>)} 
+                     
                     </button>
-                  
+                    {locationError && (
+                <p className="text-red-500 text-sm p-2">{locationError}</p>
+              )}
              
                   {showPopupArea && (
                     <div className="fixed inset-0 flex items-center justify-center bg-[#e4ebeb] z-50">
