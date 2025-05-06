@@ -285,10 +285,10 @@ const CardAutoHeight = ({
           >
             <h2>{ad.data.title}</h2>
           </div>
-         {ad.data["propertyarea"].address && (
+         {ad.data["propertyarea.address"] && (
           <div className="text-gray-500 flex gap-1 items-center dark:text-gray-500 text-[12px] lg:text-xs">
           <LocationOnIcon sx={{ fontSize: 14 }} />
-          {truncateaddress(ad.data["propertyarea"].address, 25)}
+          {truncateaddress(ad.data["propertyarea.address"], 25)}
         </div>
 
          )} 
