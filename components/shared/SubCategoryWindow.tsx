@@ -8,7 +8,7 @@ import ChatOutlinedIcon from "@mui/icons-material/ChatOutlined";
 import ContactSupportOutlinedIcon from "@mui/icons-material/ContactSupportOutlined";
 import Image from "next/image";
 import CreateCategoryForm from "./CreateCategoryForm";
-
+import ArrowBackOutlinedIcon from "@mui/icons-material/ArrowBackOutlined";
 import { ICategory } from "@/lib/database/models/category.model";
 import { getAllSubCategories } from "@/lib/actions/subcategory.actions";
 import { formUrlQuerymultiple, removeKeysFromQuery } from "@/lib/utils";
@@ -94,14 +94,15 @@ const SubCategoryWindow: React.FC<ChatWindowProps> = ({
         <div className="flex flex-col items-center w-full h-full">
           <div className="w-full h-full dark:bg-[#2D3236]">
             <Command className="w-full h-[100vh]">
-              <div className="flex text-base justify-between items-center dark:bg-[#131B1E] border-0 border-gray-600">
-                <CommandInput placeholder={`Search category`} />
+              <div className="flex w-full gap-2 items-center dark:bg-[#131B1E] border-0 border-gray-600">
+               
                 <button
                   onClick={onClose}
-                  className="flex justify-center items-center h-12 w-12 text-gray-700 dark:text-[#e4ebeb] dark:hover:bg-gray-700 hover:text-green-600 rounded-full"
+                  className="flex justify-center p-2 items-center text-gray-600 dark:text-[#e4ebeb] dark:hover:bg-gray-700 hover:text-green-600 rounded-full"
                 >
-                  <CloseOutlinedIcon />
+                  <ArrowBackOutlinedIcon />
                 </button>
+                <CommandInput className="text-base flex-1" placeholder={`Search category`} />
               </div>
 
               <CommandList className="max-h-[77vh] overflow-y-auto dark:bg-[#2D3236]">

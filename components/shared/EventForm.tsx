@@ -940,7 +940,7 @@ setSelectedCategoryCommand(filteredCategories);
               )}
             </div>
           </div>
-          {selectedSubCategory && (
+    {/*     {selectedSubCategory && (
             <>
               <div className="grid grid-cols-1 lg:grid-cols-2 flex gap-3 mt-3 flex-col">
                 <div>
@@ -972,7 +972,7 @@ setSelectedCategoryCommand(filteredCategories);
                 </div>
               </div>
             </>
-          )}
+          )} */} 
           {selectedSubCategory && (
             <>
               <div className="flex bg-white w-full mt-3 gap-0 border dark:bg-[#2D3236] py-2 px-1 rounded-sm border border-gray-300 dark:border-gray-600 items-center">

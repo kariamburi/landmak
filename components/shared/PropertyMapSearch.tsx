@@ -57,7 +57,7 @@ import { formUrlQuery, removeKeysFromQuery } from "@/lib/utils";
 import { useRouter, useSearchParams } from "next/navigation";
 import { SignedIn, SignedOut } from "@clerk/nextjs";
 import { formatKsh } from "@/lib/help";
-
+import ArrowBackOutlinedIcon from "@mui/icons-material/ArrowBackOutlined";
 const GOOGLE_MAPS_API_KEY = process.env.NEXT_PUBLIC_GOOGLEAPIKEY as string;
 
 const containerStyle = {
@@ -164,20 +164,19 @@ useEffect(() => {
           showSidebar ? "w-full md:w-1/3 p-1" : "-translate-x-full md:w-0 md:translate-x-0"
         }`}
       >
-          <div className="flex p-2 justify-end items-center w-full">
-        <Button
-          onClick={() => setShowSidebar(!showSidebar)}
-          className="mb-1 md:hidden"
-        >
-          <KeyboardArrowLeftOutlinedIcon/> {showSidebar ? "Hide" : "Show"} Sidebar
-        </Button>
-        </div>
+        
 
        
         {showSidebar && (
           <div className="flex flex-col space-y-1">
-             <div className="flex justify-between items-center w-full">
-             <h2 className="p-1 text-lg border-b w-full">Nearby {NewqueryObject.category==='Property services' ? (<>Service Providers</>):(<>Properties</>)}</h2></div>
+             <div className="flex gap-2 items-center w-full">
+
+             <div className="flex p-2 text-gray-600 dark:text-[#e4ebeb] dark:hover:bg-gray-700 hover:text-green-600 justify-start items-center w-full"  onClick={() => setShowSidebar(!showSidebar)}>
+            <ArrowBackOutlinedIcon/>
+      
+        </div>
+          <h2 className="p-1 text-lg border-b w-full">Nearby {NewqueryObject.category==='Property services' ? (<>Service Providers</>):(<>Properties</>)}</h2>
+          </div>
 
       {data?.length > 0 ? (<>
       <h3 className="font-semibold mb-2">{NewqueryObject.category==='Property services' ? (<>Service Providers</>):(<>Properties</>)} within {radius / 1000} km</h3>

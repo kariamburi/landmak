@@ -132,7 +132,7 @@ const handleClosePopupBeacon = () => {
 
         <div className="w-full">
         <div className="flex gap-1 items-center w-full">
-        <div className="flex">
+       {/*  <div className="flex">
         <button
         onClick={handleOpenPopup}
         className="flex text-xs lg:text-base gap-1 items-center justify-center w-full py-4 px-2 border border-gray-300 dark:border-gray-600 bg-white dark:bg-[#2D3236] dark:text-gray-100 rounded-sm hover:bg-gray-100"
@@ -142,7 +142,7 @@ const handleClosePopupBeacon = () => {
           
         {region}
         </button>
-        </div>
+        </div>*/}
         <div className="flex-1">
         <SearchNow handleFilter={handleFilter} handleOpenSearchByTitle={handleOpenSearchByTitle}/>
         </div>

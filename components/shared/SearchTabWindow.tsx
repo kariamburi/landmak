@@ -15,7 +15,7 @@ import CategoryFilterSearch from "./CategoryFilterSearch";
 import CategoryFilterSearchMain from "./CategoryFilterSearchMain";
 import { useToast } from "../ui/use-toast";
 import ArrowForwardIosIcon from "@mui/icons-material/ArrowForwardIos";
-
+import ArrowBackOutlinedIcon from "@mui/icons-material/ArrowBackOutlined";
 interface ChatWindowProps {
   isOpen: boolean;
   onClose: () => void;
@@ -45,20 +45,22 @@ if (!isOpen) return null;
 <div className="fixed inset-0 z-40 bg-[#e4ebeb] dark:bg-[#222528] dark:text-gray-100 p-4 flex flex-col">  
 <div className="relative flex w-full">
       <div className="w-full absolute">
-      <div className="flex justify-between items-center border-b pb-2">
-      <h1>Categories</h1>
-        <div className="flex items-center">
-        <Button variant="outline" onClick={onClose}>
-            <CloseOutlinedIcon />
-          </Button>
+      <div className="flex gap-2 items-center border-b pb-2">
+      <div className="flex cursor-pointer items-center text-gray-600 dark:text-[#e4ebeb] dark:hover:bg-gray-700 hover:text-green-600" onClick={onClose}>
+      
+            <ArrowBackOutlinedIcon/>
+         
         </div>
+    
+      <div className="text-lg font-bold">Categories</div>
+        
         </div>
         <div
           className={`flex flex-col items-center transition-all duration-300`}
         >
           <div className="w-full dark:bg-[#2D3236] rounded-xl bg-white">
           
-            <ScrollArea className="h-[80vh] w-full p-2">
+            <ScrollArea className="h-[90vh] w-full p-2">
               
               {categoryList.map((category: any, index: number) => (
                 <div
@@ -139,17 +141,17 @@ if (!isOpen) return null;
           }`}
     
         >
-          <div className="flex justify-between items-center border-b pb-2">
-            <h1>Sub Categories</h1>
-        <div className="flex items-center">
-        <Button variant="outline" onClick={()=> handleHoverCategory('')}>
-            <CloseOutlinedIcon />
-          </Button>
-        </div>
+          <div className="flex gap-2 items-center border-b pb-2">
+
+      <div className="flex cursor-pointer items-center text-gray-600 dark:text-[#e4ebeb] dark:hover:bg-gray-700 hover:text-green-600" onClick={onClose}>
+      <ArrowBackOutlinedIcon/>
+      </div>
+      <div className="text-lg font-bold">Sub Categories</div>
+    
         </div>
         <div className="w-full dark:bg-[#2D3236] rounded-xl bg-white">
          
-          <ScrollArea className="h-[80vh] w-full p-2">
+          <ScrollArea className="h-[90vh] w-full p-2">
             {subcategoryList
               .filter((cat: any) => cat.category.name === hoveredCategory)
               .map((sub: any, index: number) => (

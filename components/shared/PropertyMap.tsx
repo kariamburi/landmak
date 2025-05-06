@@ -1715,7 +1715,7 @@ Radius: {radius / 1000} km
               <div className="flex justify-end">
                 <button
                   onClick={() => setShowMappingInfo(false)}
-                  className="p-2 rounded-full text-gray-600 dark:text-gray-300 hover:bg-[#e4ebeb] dark:hover:bg-gray-700 transition"
+                  className="p-2 rounded-full text-white bg-green-600 hover:bg-green-700 dark:hover:bg-gray-700 transition"
                 >
                   <CloseOutlinedIcon fontSize="small" />
                 </button>

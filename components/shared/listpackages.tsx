@@ -237,7 +237,7 @@ export default function Listpackages({
           >
             1 month
           </button>
-          <button
+        {/*  <button
             className={`mr-2 mb-2 text-xs w-[80px] lg:w-[90px] lg:text-sm ${
               activeButton === 2
                 ? "bg-gradient-to-b from-[#4DCE7A] to-[#30AF5B] text-white p-2 rounded-full"
@@ -266,7 +266,7 @@ export default function Listpackages({
             onClick={() => handleButtonClick(4, " 1 year")}
           >
             1 year
-          </button>
+          </button> */}
         </div>
 
         {/* Right-aligned input field and button */}

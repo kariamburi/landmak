@@ -988,7 +988,7 @@ const SCROLL_THRESHOLD = 150; // pixels
     </div>
 
     <div className="flex w-full p-1 gap-1  justify-center items-center mb-0">
-      <button
+    {/*   <button
         onClick={handleOpenPopupLocation}
         className="flex text-xs lg:text-base gap-1 items-center justify-center py-4 px-2 border border-gray-300 dark:border-gray-600 bg-white dark:bg-[#2D3236] dark:text-gray-100 rounded-sm hover:bg-gray-100"
       >
@@ -998,7 +998,7 @@ const SCROLL_THRESHOLD = 150; // pixels
            <div className="lg:hidden">
            <LocationOnIcon sx={{ fontSize: 24 }}/>
            </div> {region}
-      </button>
+      </button>*/}
 
       <div className="flex-1">
         <SearchNow handleFilter={handleFilter} handleOpenSearchByTitle={handleOpenSearchByTitle}/>

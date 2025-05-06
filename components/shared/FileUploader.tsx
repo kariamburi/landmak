@@ -14,6 +14,7 @@ import "react-medium-image-zoom/dist/styles.css";
 import { useToast } from "@/components/ui/use-toast";
 import { removeImageUrl } from "@/lib/actions/dynamicAd.actions";
 import { Icon } from "@iconify/react";
+import imageCompression from "browser-image-compression";
 import threeDotsScale from "@iconify-icons/svg-spinners/3-dots-scale"; // Correct import
  // Correct import
 type FileUploaderProps = {
@@ -22,6 +23,21 @@ type FileUploaderProps = {
   userName: string;
   adId: string;
   setFiles: Dispatch<SetStateAction<File[]>>;
+};
+const compressImage = async (file: File): Promise<File> => {
+  const options = {
+    maxSizeMB: 2, // Target size in MB
+    maxWidthOrHeight: 1280,
+    useWebWorker: true,
+  };
+
+  try {
+    const compressedFile = await imageCompression(file, options);
+    return compressedFile;
+  } catch (error) {
+    console.error("Image compression error:", error);
+    return file;
+  }
 };
 
 const applyWatermark = (
@@ -122,7 +138,7 @@ export function FileUploader({
   const [showmessage, setmessage] = useState("");
   const onDrop = useCallback(
     async (acceptedFiles: File[]) => {
-      const filteredFiles = acceptedFiles.filter((file) => {
+      const filteredFiles = acceptedFiles.filter(async (file) => {
         const isScreenshot =
           /screenshot/i.test(file.name) || /Screen\s?Shot/i.test(file.name);
         if (isScreenshot) {
@@ -152,19 +168,29 @@ export function FileUploader({
         }
 
         if (file.size > 5 * 1024 * 1024) {
-          setmessage(
-            `${file.name} exceeds the 5MB limit and will not be uploaded.`
-          );
-          toast({
-            variant: "destructive",
-            title: "Failed!",
-            description: showmessage,
-            duration: 5000,
-          });
-          return false;
+          try {
+            const compressed = await compressImage(file);
+            if (compressed.size > 5 * 1024 * 1024) {
+              setmessage(
+                `${file.name} is still too large after compression. Skipped.`
+              );
+              toast({
+                variant: "destructive",
+                title: "Failed!",
+                description: showmessage,
+                duration: 5000,
+              });
+              return false;
+            }
+            file = compressed; // Replace original file with compressed one
+          } catch (err) {
+            console.error("Compression failed", err);
+            return false;
+          }
         }
         return true;
       });
+
 
       const processedFiles: File[] = await Promise.all(
         filteredFiles.map(async (file) => {
