@@ -217,7 +217,7 @@ const CardAutoHeight = ({
               </div>
             )}
             
-            {(ad.data["propertyarea"]) && (
+          {/*   {(ad.data["propertyarea"]) && (
               <div className="gap-1 cursor-pointer bg-[#000000] bg-opacity-70 text-[10px] text-white flex rounded-sm p-1 shadow-sm transition-all">
                 <LocationOnIcon
                   sx={{ fontSize: 16, cursor: "pointer" }}
@@ -225,7 +225,7 @@ const CardAutoHeight = ({
                 />
              
               </div>
-            )}
+            )}*/}
           </div>
           <div className="w-full flex justify-end absolute bottom-[-19px] left-1/2 transform -translate-x-1/2 p-1 rounded-full">
             <SignedIn>
@@ -285,11 +285,13 @@ const CardAutoHeight = ({
           >
             <h2>{ad.data.title}</h2>
           </div>
-          <div className="text-gray-600 flex gap-1 items-center dark:text-gray-500 text-[12px] lg:text-xs">
-            <LocationOnIcon sx={{ fontSize: 14 }} />
-            {ad.data.region} - {ad.data.area}
-          </div>
+         {ad.data["propertyarea"].address && (
+          <div className="text-gray-500 flex gap-1 items-center dark:text-gray-500 text-[12px] lg:text-xs">
+          <LocationOnIcon sx={{ fontSize: 14 }} />
+          {truncateaddress(ad.data["propertyarea"].address, 25)}
+        </div>
 
+         )} 
           <div
             onClick={() => {
               handleAdView(ad);

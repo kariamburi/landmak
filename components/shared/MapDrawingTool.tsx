@@ -22,6 +22,7 @@ import {
   TooltipProvider,
   TooltipTrigger,
 } from "../ui/tooltip";
+import { getAddressFromLatLng } from "@/lib/actions/geocode";
 const defaultcenter = {
   lat: -1.286389, // Default center (Nairobi, Kenya)
   lng: 36.817223,
@@ -63,6 +64,7 @@ interface Props {
     polylines: Polyline[];
     markers: Marker[];
     shapes: Shape[];
+    address:string;
   };
   onSave:() => void;
   onClose:() => void;
@@ -73,6 +75,7 @@ interface Props {
       polylines: Polyline[];
       markers: Marker[];
       shapes: Shape[];
+      address: string;
     }
   ) => void;
 }
@@ -124,6 +127,23 @@ export default function MapDrawingTool({ name, selectedCategory, data, onChange,
   const [uploadPopup, setUploadPopup] = useState(false);
   const [selectedControl, setSelectedControl] = useState("none");
   
+  const [address, setAddress] = useState('');
+
+  useEffect(() => {
+    const fetchAddress = async () => {
+      const address = await getAddressFromLatLng(center.lat, center.lng);
+      const safeAddress = address ?? "";
+      setAddress(safeAddress);
+      onChange(name, {
+        location: { type: "Point", coordinates: [center.lat, center.lng] },
+        polylines,
+        markers,
+        shapes,
+        address:safeAddress,
+      });
+    };
+    fetchAddress();
+  }, [center]);
   // Sync refs when state updates
   useEffect(() => {
     shapesRef.current = shapes;
@@ -168,6 +188,7 @@ export default function MapDrawingTool({ name, selectedCategory, data, onChange,
           polylines,
           markers,
           shapes,
+          address,
         });
       });
       markerRef.current = marker;
@@ -514,6 +535,7 @@ polyline.addListener("mouseout", () => {
         polylines,
         markers: [],
         shapes,
+        address,
       });
     }
   };
@@ -595,6 +617,7 @@ polyline.addListener("mouseout", () => {
       polylines,
       markers,
       shapes,
+      address,
     });
   }, [polylines, markers, shapes]);
   const [selected, setSelected] = useState(markerOptions[0]);
@@ -862,17 +885,18 @@ polyline.addListener("click", () => {
   
     const latitude = Number(lat);
     const longitude = Number(lng);
-  
+    setCenter({ lat: latitude, lng: longitude });
+    setLatitude(latitude);
+    setLongitude(longitude);
     onChange(name, {
       location: { type: "Point", coordinates: [latitude, longitude] },
       polylines,
       markers,
       shapes,
+      address,
     });
   
-    setCenter({ lat: latitude, lng: longitude });
-    setLatitude(latitude);
-    setLongitude(longitude);
+   
   
     const map = mapInstance.current;
     const position = { lat: latitude, lng: longitude };
@@ -1069,6 +1093,7 @@ polyline.addListener("click", () => {
                   polylines,
                   markers,
                   shapes,
+                  address,
                 });
                 centerSet = true;
               }

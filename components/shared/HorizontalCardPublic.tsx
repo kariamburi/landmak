@@ -128,6 +128,12 @@ const HorizontalCardPublic = ({
   };
   const router = useRouter();
   const [isLoadingsmall, setIsLoadingsmall] = useState(true);
+  const truncateaddress = (address: string, maxLength: number) => {
+    if (address.length > maxLength) {
+      return address.substring(0, maxLength) + "...";
+    }
+    return address;
+  };
   // console.log(ad.imageUrls);
   return (
     <>
@@ -264,14 +270,14 @@ const HorizontalCardPublic = ({
               
               </div>
             )}
-            {(ad.data["propertyarea"]) && (
+           {/*  {(ad.data["propertyarea"]) && (
               <div className="mb-1 bottom-0 right-0 mr-1 cursor-pointer absolute bg-[#000000] bg-opacity-70 text-[10px] text-white right-0 top-100 flex rounded-lg p-1 shadow-sm transition-all">
                 <LocationOnIcon
                   sx={{ fontSize: 16, cursor: "pointer" }}
                 />
               
               </div>
-            )}
+            )}*/}
         </div>
 
         <div className="flex-1 mt-2 p-2">
@@ -290,10 +296,12 @@ const HorizontalCardPublic = ({
         <p className="dark:text-gray-300 text-[12px] hidden lg:inline">
         <span dangerouslySetInnerHTML={{ __html:  truncateDescription(ad?.data.description, 50) }} />
         </p>
-          <div className="dark:text-gray-400 text-gray-500 text-[10px] lg:text-xs">
-            <LocationOnIcon sx={{ fontSize: 16 }} />
-            {ad.data.region} - {ad.data.area}
-          </div>
+          {ad.data["propertyarea"].address && (
+                           <div className="text-gray-500 flex gap-1 items-center dark:text-gray-500 text-[12px] lg:text-xs">
+                           <LocationOnIcon sx={{ fontSize: 14 }} />
+                           {truncateaddress(ad.data["propertyarea"].address, 25)}
+                         </div>
+                   )}
           {ad.calcDistance && (
             <div className="flex w-[100px] mt-1 text-[10px] bg-green-100 rounded-lg p-1 text-green-600">
               {Math.round(ad.calcDistance / 100) / 10} KM Away
