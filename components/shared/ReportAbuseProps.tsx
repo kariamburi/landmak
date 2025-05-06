@@ -5,6 +5,7 @@ import { Dialog, DialogContent, DialogHeader, DialogTitle } from "@/components/u
 import { Button } from "@/components/ui/button";
 import { Textarea } from "@/components/ui/textarea";
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
+import ArrowBackOutlinedIcon from "@mui/icons-material/ArrowBackOutlined";
 import {
     addDoc,
     collection,
@@ -106,12 +107,18 @@ export const ReportAbuse: React.FC<ReportAbuseProps> = ({ ad, isOpen,userId, use
                
                   // Fullscreen Popover for Mobile
                   <div className="fixed inset-0 z-20 bg-[#e4ebeb] dark:bg-[#222528] dark:text-gray-100 p-4 flex flex-col">
-                    <div className="flex justify-end items-center border-b pb-2">
+                    <div className="flex w-full gap-2 items-center dark:bg-[#131B1E] border-b pb-2">
+                                                                                         
+                                                                                          <button
+                                                                                           onClick={onClose}
+                                                                                            className="flex justify-center p-2 items-center text-gray-600 dark:text-[#e4ebeb] dark:hover:bg-gray-700 hover:text-green-600 rounded-full"
+                                                                                          >
+                                                                                            <ArrowBackOutlinedIcon />
+                                                                                          </button>
+                                                                                        
+                                                                                        </div>
+
                   
-                      <Button variant="outline" onClick={onClose}>
-                      <CloseOutlinedIcon />
-                      </Button>
-                    </div>
                       {/* Report Reason Select */}
                       <div className="flex mt-10 flex-col justify-center items-center">
                       <p className="font-bold mb-2"> Report for {ad.data.title}</p>

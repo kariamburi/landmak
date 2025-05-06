@@ -19,7 +19,7 @@ import { cn } from "@/lib/utils";
 import React, { useState } from "react";
 import { Button } from "@/components/ui/button";
 import { useMediaQuery } from "react-responsive"; // Detect mobile screens
-
+import ArrowBackOutlinedIcon from "@mui/icons-material/ArrowBackOutlined";
 const AutoComplete = ({
   selected,
   name,
@@ -69,13 +69,18 @@ const AutoComplete = ({
         open && (
           // Fullscreen Popover for Mobile
           <div className="fixed inset-0 z-50 bg-white dark:bg-[#222528] dark:text-gray-100 p-4 flex flex-col">
-            <div className="flex justify-between items-center border-b pb-2">
-              <h4 className="font-medium text-lg">Select {capitalizeFirstLetter(name.replace("-", " "))}</h4>
-              <Button variant="outline" onClick={() => setOpen(false)}>
-                Close
-              </Button>
-            </div>
-
+             <div className="flex w-full gap-2 items-center dark:bg-[#131B1E] border-b pb-2">
+                                       
+                                        <button
+                                         onClick={() => setOpen(false)}
+                                          className="flex justify-center p-2 items-center text-gray-600 dark:text-[#e4ebeb] dark:hover:bg-gray-700 hover:text-green-600 rounded-full"
+                                        >
+                                          <ArrowBackOutlinedIcon />
+                                        </button>
+                                        <h4 className="font-medium text-lg">Select {capitalizeFirstLetter(name.replace("-", " "))}</h4>
+                                      </div>
+            
+           
             <Command>
               <div className="dark:bg-[#222528] p-2">
                 <CommandInput

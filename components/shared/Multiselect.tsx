@@ -9,7 +9,7 @@ import {
 import { useState } from "react";
 import { ScrollArea } from "../ui/scroll-area";
 import { useMediaQuery } from "react-responsive";
-
+import ArrowBackOutlinedIcon from "@mui/icons-material/ArrowBackOutlined";
 type featureProps = {
   features: any;
   selectedFeatures: any;
@@ -54,14 +54,21 @@ export function Multiselect({
         // Fullscreen PopoverContent on Mobile
         open && (
           <div className="fixed inset-0 z-50 bg-white dark:bg-[#222528] dark:text-gray-100 p-4 flex flex-col">
-            <div className="flex justify-between items-center border-b pb-2">
-              <h4 className="font-medium text-lg">
+           
+            <div className="flex w-full gap-2 items-center dark:bg-[#131B1E] border-b pb-2">
+                                                  
+                                                   <button
+                                                    onClick={() => setOpen(false)}
+                                                     className="flex justify-center p-2 items-center text-gray-600 dark:text-[#e4ebeb] dark:hover:bg-gray-700 hover:text-green-600 rounded-full"
+                                                   >
+                                                     <ArrowBackOutlinedIcon />
+                                                   </button>
+                                                   <h4 className="font-medium text-lg">
                 {capitalizeFirstLetter(name)}
               </h4>
-              <Button variant="outline" onClick={() => setOpen(false)}>
-                Close
-              </Button>
-            </div>
+                                                 </div>
+           
+          
 
             <ScrollArea className="flex-1 mt-2">
               <ul className="p-2 w-full rounded">
