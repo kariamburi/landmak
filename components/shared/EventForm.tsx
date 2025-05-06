@@ -609,21 +609,23 @@ setSelectedCategoryCommand(filteredCategories);
         if (!isValid) return;
 
         const phone = countryCode + removeLeadingZero(phoneNumber);
-      
+     
         if(!isValidKenyanPhoneNumber(phone)){
+         
           toast({
             title: "Invalid Phone",
             description: "Invalid Phone Number.",
             duration: 5000,
             className: "bg-[#999999] text-white",
           });
-          setphoneError("Invalid Phone Number.!")
+          setphoneError("Invalid Phone Number!");
           return
         }
-        if(!formData["propertyarea"].toString()){
+        if(!formData["propertyarea"]){
+         
           toast({
             title: "No location",
-            description: "Set location!.",
+            description: "Set location!",
             duration: 5000,
             className: "bg-[#999999] text-white",
           });
@@ -703,6 +705,7 @@ setSelectedCategoryCommand(filteredCategories);
             duration: 5000,
             className: "bg-[#999999] text-white",
           });
+          setphoneError("Invalid Phone Number!");
           return
         }
         if(!formData["propertyarea"].toString()){
@@ -712,7 +715,7 @@ setSelectedCategoryCommand(filteredCategories);
             duration: 5000,
             className: "bg-[#999999] text-white",
           });
-          setlocationError("Set Location!")
+          setlocationError("Set Location!");
           return
         }
         const uploadedUrls = await uploadFiles();
@@ -1764,7 +1767,7 @@ setSelectedCategoryCommand(filteredCategories);
                   />
                 </div>
                  {phoneError && (
-                  <p className="text-red-500 p-2 text-sm">{phoneError}</p>
+                  <p className="text-red-500 p-1 text-sm">{phoneError}</p>
                 )}
               </div>)}
 
@@ -1803,7 +1806,7 @@ setSelectedCategoryCommand(filteredCategories);
                      
                     </button>
                     {locationError && (
-                <p className="text-red-500 text-sm p-2">{locationError}</p>
+                <p className="text-red-500 text-sm p-1">{locationError}</p>
               )}
              
                   {showPopupArea && (
