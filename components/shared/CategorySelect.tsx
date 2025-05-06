@@ -20,7 +20,7 @@ import { cn } from "@/lib/utils";
 import { useState } from "react";
 import { useMediaQuery } from "react-responsive";
 import { Button } from "@/components/ui/button";
-
+import ArrowBackOutlinedIcon from "@mui/icons-material/ArrowBackOutlined";
 const CategorySelect = ({
   selected,
   data,
@@ -55,12 +55,19 @@ const CategorySelect = ({
         open && (
           // Fullscreen PopoverContent for Mobile
           <div className="fixed inset-0 z-50 bg-white dark:bg-[#222528] dark:text-gray-100 p-4 flex flex-col">
-            <div className="flex justify-between items-center border-b pb-2">
-              <h4 className="font-medium text-lg">Select Category</h4>
-              <Button variant="outline" onClick={() => setOpen(false)}>
-                Close
-              </Button>
-            </div>
+             <div className="flex w-full gap-2 items-center dark:bg-[#131B1E] border-b pb-2">
+                                       
+                                        <button
+                                         onClick={() => setOpen(false)}
+                                          className="flex justify-center p-2 items-center text-gray-600 dark:text-[#e4ebeb] dark:hover:bg-gray-700 hover:text-green-600 rounded-full"
+                                        >
+                                          <ArrowBackOutlinedIcon />
+                                        </button>
+                                        <h4 className="font-medium text-lg">Select Category</h4>
+                                      </div>
+            
+            
+          
 
             <Command>
               <div className="dark:bg-[#222528]">

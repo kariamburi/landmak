@@ -942,7 +942,7 @@ setSelectedCategoryCommand(filteredCategories);
         </section>
         <div className="flex flex-col w-full mt-2">
           <div className="grid grid-cols-1 lg:grid-cols-2 flex gap-3 flex-col">
-            <div className="flex">
+            <div className="flex flex-col">
               <CategorySelect
                 selected={selectedCategory}
                 data={selectedCategoryCommand}
@@ -954,7 +954,7 @@ setSelectedCategoryCommand(filteredCategories);
              
               
             </div>
-            <div className="flex">
+            <div className="flex flex-col">
               <SubCategorySelect
                 selected={selectedSubCategory}
                 data={selectedCategory ? filteredSubcategories : []}
@@ -1002,7 +1002,7 @@ setSelectedCategoryCommand(filteredCategories);
           )} */} 
           {selectedSubCategory && (
             <>
-              <div className="flex bg-white w-full mt-3 gap-0 border dark:bg-[#2D3236] py-2 px-1 rounded-sm border border-gray-300 dark:border-gray-600 items-center">
+              <div className="flex flex-col bg-white w-full mt-3 gap-0 border dark:bg-[#2D3236] py-2 px-1 rounded-sm border border-gray-300 dark:border-gray-600 items-center">
                 <FileUploader
                   onFieldChange={(urls) => handleInputChange("imageUrls", urls)}
                   imageUrls={formData["imageUrls"] || []} // Ensure this is an array
@@ -1767,7 +1767,7 @@ setSelectedCategoryCommand(filteredCategories);
                   />
                 </div>
                  {phoneError && (
-                  <p className="text-red-500 p-1 text-sm">{phoneError}</p>
+                  <p className="text-red-500 text-sm">{phoneError}</p>
                 )}
               </div>)}
 
@@ -1806,7 +1806,7 @@ setSelectedCategoryCommand(filteredCategories);
                      
                     </button>
                     {locationError && (
-                <p className="text-red-500 text-sm p-1">{locationError}</p>
+                <p className="text-red-500 text-sm">{locationError}</p>
               )}
              
                   {showPopupArea && (
