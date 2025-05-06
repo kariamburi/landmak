@@ -406,12 +406,12 @@ const VerticalCard = ({
         <p className="dark:text-gray-300 text-gray-700 text-[12px] lg:inline">
         <span dangerouslySetInnerHTML={{ __html:  truncateDescription(ad.data.description, 100) }} />
         </p>
-          {ad.data["propertyarea.address"] && (
+         {ad.data.propertyarea?.mapaddress && (
                   <div className="text-gray-500 flex gap-1 items-center dark:text-gray-500 text-[12px] lg:text-xs">
                   <LocationOnIcon sx={{ fontSize: 14 }} />
-                  {truncateaddress(ad.data["propertyarea.address"], 25)}
+                  {truncateaddress(ad.data.propertyarea?.mapaddress, 25)}
                 </div>
-          )}
+              )} 
         
           {ad.calcDistance && (
             <div className="flex text-sm mt-1 fount-bold bg-green-100 rounded-lg p-1 text-green-600">

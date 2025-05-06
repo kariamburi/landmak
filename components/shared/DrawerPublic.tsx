@@ -121,21 +121,19 @@ export function DrawerPublic({
     <Drawer open={isOpen} onOpenChange={setIsOpen}>
   <DrawerTrigger asChild>
     {longitude && latitude ? (
-      <Button
+      <div
         onClick={() => setIsOpen(true)}
-        variant="default"
-        className="absolute hidden lg:inline bottom-10 left-2 z-20"
+        className="absolute bottom-[90px] text-sm lg:text-base p-2 cursor-pointer rounded-lg left-2 z-20 text-white bg-black hover:bg-gray-900"
       >
-        📍 {(selectedCategory && selectedCategory ==='Property Services') ? (<>My Location</>):(<>Property:</>)} ({Number(latitude).toFixed(2)}, {Number(longitude).toFixed(2)})
-      </Button>
+        📍 {(selectedCategory && selectedCategory ==='Property Services') ? (<>My Location</>):(<>Property:</>)} ({Number(latitude).toFixed(5)}, {Number(longitude).toFixed(5)})
+      </div>
     ) : (
-      <Button
+      <div
         onClick={() => setIsOpen(true)}
-        variant="default"
-        className="text-white bg-green-600 hover:bg-green-700"
+        className="text-white p-2 rounded-lg cursor-pointer bg-green-600 hover:bg-green-700"
       >
         <AddOutlinedIcon /> Add {(selectedCategory && selectedCategory ==='Property Services')? (<>My Location</>):(<>Property coordinates</>)} 
-      </Button>
+      </div>
     )}
   </DrawerTrigger>
 

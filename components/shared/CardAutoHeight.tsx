@@ -284,14 +284,14 @@ const CardAutoHeight = ({
             className="font-semibold text-sm cursor-pointer lg:text-base"
           >
             <h2>{ad.data.title}</h2>
+           
           </div>
-         {ad.data["propertyarea.address"] && (
+         {ad.data.propertyarea?.mapaddress && (
           <div className="text-gray-500 flex gap-1 items-center dark:text-gray-500 text-[12px] lg:text-xs">
           <LocationOnIcon sx={{ fontSize: 14 }} />
-          {truncateaddress(ad.data["propertyarea.address"], 25)}
+          {truncateaddress(ad.data.propertyarea?.mapaddress, 25)}
         </div>
-
-         )} 
+      )} 
           <div
             onClick={() => {
               handleAdView(ad);

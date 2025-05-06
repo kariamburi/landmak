@@ -1768,10 +1768,10 @@ setSelectedCategoryCommand(filteredCategories);
                 <div className="flex flex-col w-full gap-1">
                    <button
                       onClick={handleOpenPopupArea}
-                      className="py-3 w-full px-1 rounded-sm text-green-600 bg-green-100 border border-green-600 hover:bg-green-200">
+                      className="py-3 w-full px-1 cursor-pointer rounded-sm text-green-600 bg-green-100 border border-green-600 hover:bg-green-200">
                       <AddLocationAltOutlinedIcon /> 
                       
-                      {selectedCategory ==="Property Services" ? (<> Google Map location</>):(<>Advanced Property Mapping</>)}
+                      {selectedCategory ==="Property Services" ? (<> Add Location</>):(<>Add Property Location</>)}
                     </button>
                   
              

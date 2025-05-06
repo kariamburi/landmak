@@ -296,12 +296,12 @@ const HorizontalCardPublic = ({
         <p className="dark:text-gray-300 text-[12px] hidden lg:inline">
         <span dangerouslySetInnerHTML={{ __html:  truncateDescription(ad?.data.description, 50) }} />
         </p>
-          {ad.data["propertyarea.address"] && (
-                           <div className="text-gray-500 flex gap-1 items-center dark:text-gray-500 text-[12px] lg:text-xs">
-                           <LocationOnIcon sx={{ fontSize: 14 }} />
-                           {truncateaddress(ad.data["propertyarea.address"], 25)}
-                         </div>
-                   )}
+          {ad.data.propertyarea?.mapaddress && (
+                   <div className="text-gray-500 flex gap-1 items-center dark:text-gray-500 text-[12px] lg:text-xs">
+                   <LocationOnIcon sx={{ fontSize: 14 }} />
+                   {truncateaddress(ad.data.propertyarea?.mapaddress, 25)}
+                 </div>
+               )} 
           {ad.calcDistance && (
             <div className="flex w-[100px] mt-1 text-[10px] bg-green-100 rounded-lg p-1 text-green-600">
               {Math.round(ad.calcDistance / 100) / 10} KM Away

@@ -16,6 +16,7 @@ import { ScrollArea } from "../ui/scroll-area";
 import FullscreenOutlinedIcon from '@mui/icons-material/FullscreenOutlined';
 import UploadFileOutlinedIcon from '@mui/icons-material/UploadFileOutlined';
 import { AnyAaaaRecord } from "node:dns";
+import { useMediaQuery } from "react-responsive";
 import {
   Tooltip,
   TooltipContent,
@@ -64,7 +65,7 @@ interface Props {
     polylines: Polyline[];
     markers: Marker[];
     shapes: Shape[];
-    address:string;
+    mapaddress:string;
   };
   onSave:() => void;
   onClose:() => void;
@@ -75,7 +76,7 @@ interface Props {
       polylines: Polyline[];
       markers: Marker[];
       shapes: Shape[];
-      address: string;
+      mapaddress: string;
     }
   ) => void;
 }
@@ -126,20 +127,21 @@ export default function MapDrawingTool({ name, selectedCategory, data, onChange,
   const [showMappingInfo, setShowMappingInfo] = useState(false);
   const [uploadPopup, setUploadPopup] = useState(false);
   const [selectedControl, setSelectedControl] = useState("none");
-  
-  const [address, setAddress] = useState('');
+  // const isMobile = useMediaQuery({ maxWidth: 768 });
+  const [isMobile, setisMobile] = useState(true);
+  const [mapaddress, setAddress] = useState('');
 
   useEffect(() => {
     const fetchAddress = async () => {
-      const address = await getAddressFromLatLng(center.lat, center.lng);
-      const safeAddress = address ?? "";
+      const mapaddress = await getAddressFromLatLng(center.lat, center.lng);
+      const safeAddress = mapaddress ?? "";
       setAddress(safeAddress);
       onChange(name, {
         location: { type: "Point", coordinates: [center.lat, center.lng] },
         polylines,
         markers,
         shapes,
-        address:safeAddress,
+        mapaddress:safeAddress,
       });
     };
     fetchAddress();
@@ -188,7 +190,7 @@ export default function MapDrawingTool({ name, selectedCategory, data, onChange,
           polylines,
           markers,
           shapes,
-          address,
+          mapaddress,
         });
       });
       markerRef.current = marker;
@@ -289,6 +291,7 @@ export default function MapDrawingTool({ name, selectedCategory, data, onChange,
   // Create an InfoWindow for showing the label
   let infoWindowTimeout: NodeJS.Timeout;
   const sharedInfoWindow = new google.maps.InfoWindow();
+  if(!isMobile){
 polyline.addListener("mouseover", (e:any) => {
    // Get latest label from ref
    const currentPolyline = polylinesRef.current.find((p) =>
@@ -324,7 +327,7 @@ polyline.addListener("mouseout", () => {
     sharedInfoWindow.close();
   }, 300);
 });
- 
+}
         // 🔁 Updated to get the latest label from stored polyline data
   polyline.addListener("click", () => {
     const shapePath = polyline.getPath();
@@ -387,7 +390,7 @@ polyline.addListener("mouseout", () => {
 
           const sharedInfoWindow = new google.maps.InfoWindow();
           let infoWindowTimeout: NodeJS.Timeout;
-          
+          if(!isMobile){
           event.overlay.addListener("mouseover", (e: google.maps.MapMouseEvent) => {
             const path = event.overlay.getPath();
             const matchedShape = shapesRef.current.find((s) =>
@@ -432,7 +435,7 @@ polyline.addListener("mouseout", () => {
               sharedInfoWindow.close();
             }, 300);
           });
-          
+        }
 
          event.overlay.addListener("click", () => {
           const path = event.overlay.getPath();
@@ -535,7 +538,7 @@ polyline.addListener("mouseout", () => {
         polylines,
         markers: [],
         shapes,
-        address,
+        mapaddress,
       });
     }
   };
@@ -617,7 +620,7 @@ polyline.addListener("mouseout", () => {
       polylines,
       markers,
       shapes,
-      address,
+      mapaddress,
     });
   }, [polylines, markers, shapes]);
   const [selected, setSelected] = useState(markerOptions[0]);
@@ -663,8 +666,8 @@ polyline.addListener("mouseout", () => {
       if (mapInstance.current) {
         clearInterval(interval);
         setPolylines(data.polylines);
-       data.polylines.forEach((poly) => {
-      const polyline = new google.maps.Polyline({
+        data.polylines.forEach((poly) => {
+        const polyline = new google.maps.Polyline({
         path: poly.path,
         map: mapInstance.current!,
         strokeColor: poly.color,
@@ -686,6 +689,9 @@ polyline.addListener("mouseout", () => {
 // Create an InfoWindow for showing the label
 let infoWindowTimeout: NodeJS.Timeout;
 const sharedInfoWindow = new google.maps.InfoWindow();
+
+if(!isMobile){
+  //not mobile
 polyline.addListener("mouseover", (e:any) => {
  // Get latest label from ref
  const currentPolyline = polylinesRef.current.find((p) =>
@@ -722,6 +728,7 @@ infoWindowTimeout = setTimeout(() => {
 }, 300);
 });
 
+}
       // 🔁 Updated to get the latest label from stored polyline data
 polyline.addListener("click", () => {
   const shapePath = polyline.getPath();
@@ -794,7 +801,7 @@ polyline.addListener("click", () => {
 
           const sharedInfoWindow = new google.maps.InfoWindow();
           let infoWindowTimeout: NodeJS.Timeout;
-          
+          if(!isMobile){
           polygon.addListener("mouseover", (e: google.maps.MapMouseEvent) => {
             const path = polygon.getPath();
             const matchedShape = shapesRef.current.find((s) =>
@@ -839,7 +846,7 @@ polyline.addListener("click", () => {
               sharedInfoWindow.close();
             }, 300);
           });
-          
+        }
 
           polygon.addListener("click", () => {
           const path = polygon.getPath();
@@ -893,7 +900,7 @@ polyline.addListener("click", () => {
       polylines,
       markers,
       shapes,
-      address,
+      mapaddress,
     });
   
    
@@ -1093,7 +1100,7 @@ polyline.addListener("click", () => {
                   polylines,
                   markers,
                   shapes,
-                  address,
+                  mapaddress,
                 });
                 centerSet = true;
               }
@@ -1374,25 +1381,25 @@ polyline.addListener("click", () => {
      
   <div className="h-[100vh] relative">
   <div ref={mapRef} className="w-full h-full rounded-xl shadow-md border" />
+  <div className="absolute flex gap-2 items-center left-2 bottom-10">
+  <div
+          onClick={onSave}
+          className="p-2 text-white rounded-lg text-sm lg:text-base cursor-pointer bg-green-600 hover:bg-green-700 z-5 bg-green-600 hover:bg-green-700 text-white px-4 py-2 rounded"
+        >
+          <AddOutlinedIcon/> Save
+        </div>
 
     {markers.length > 0 && 
-      (<Button variant="destructive" className="absolute left-2 bottom-[140px] lg:bottom-[190px]" onClick={deleteAllMarkers}>
+      (<div className="p-2 text-sm rounded-lg lg:text-base text-white cursor-pointer bg-red-600 hover:bg-red-700" onClick={deleteAllMarkers}>
           <DeleteOutlineOutlinedIcon/> Delete Markers
-      </Button>
+      </div>
       )} 
 
-       <Button
-          onClick={onSave}
-          variant="default"
-          className="absolute bottom-[90px] lg:bottom-[140px] left-2 z-5 bg-green-600 hover:bg-green-700 text-white px-4 py-2 rounded"
-        >
-          <AddOutlinedIcon/> {(selectedCategory && selectedCategory ==='Property Services')? (<>Save Location</>):(<>Save Property Map</>)}
-        </Button>
-
-        <Button variant="destructive" className="absolute left-2 bottom-10 lg:bottom-[90px]" onClick={deleteAll}>
+      
+        <div className="p-2 text-sm rounded-lg lg:text-base text-white cursor-pointer bg-red-600 hover:bg-red-700" onClick={deleteAll}>
         <DeleteOutlineOutlinedIcon/> Delete All
-        </Button>
-        
+        </div>
+        </div>
 
         <DrawerPublic onChange={handlePropertyLocation} selectedCategory={selectedCategory} latitude={latitude.toString()} longitude={longitude.toString()} />
 

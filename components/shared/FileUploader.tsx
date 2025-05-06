@@ -16,6 +16,7 @@ import { removeImageUrl } from "@/lib/actions/dynamicAd.actions";
 import { Icon } from "@iconify/react";
 import imageCompression from "browser-image-compression";
 import threeDotsScale from "@iconify-icons/svg-spinners/3-dots-scale"; // Correct import
+import CircularProgress from "@mui/material/CircularProgress";
  // Correct import
 type FileUploaderProps = {
   onFieldChange: (urls: string[]) => void;
@@ -134,11 +135,13 @@ export function FileUploader({
   const { toast } = useToast();
   const [showAlert, setShowAlert] = useState(false);
   const [isLoading, setIsLoading] = useState(true);
-
+  const [processingStatus, setProcessingStatus] = useState(false);
   const [showmessage, setmessage] = useState("");
   const onDrop = useCallback(
     async (acceptedFiles: File[]) => {
+      try{
       const filteredFiles = acceptedFiles.filter(async (file) => {
+        setProcessingStatus(true);
         const isScreenshot =
           /screenshot/i.test(file.name) || /Screen\s?Shot/i.test(file.name);
         if (isScreenshot) {
@@ -152,6 +155,7 @@ export function FileUploader({
             description: showmessage,
             duration: 5000,
           });
+         
           return false;
         }
 
@@ -164,6 +168,7 @@ export function FileUploader({
             description: showmessage,
             duration: 5000,
           });
+          
           return false;
         }
 
@@ -180,11 +185,13 @@ export function FileUploader({
                 description: showmessage,
                 duration: 5000,
               });
+             
               return false;
             }
             file = compressed; // Replace original file with compressed one
           } catch (err) {
             console.error("Compression failed", err);
+        
             return false;
           }
         }
@@ -210,6 +217,12 @@ export function FileUploader({
       setFiles((prevFiles: File[]) => [...prevFiles, ...processedFiles]);
       const urls = processedFiles.map((file: File) => convertFileToUrl(file));
       onFieldChange([...imageUrls, ...urls]);
+    } catch (err) {
+      console.error("Processing failed", err);
+     
+    } finally {
+      setProcessingStatus(false);
+    }
     },
     [imageUrls, setFiles, onFieldChange]
   );
@@ -256,7 +269,11 @@ export function FileUploader({
             First picture - is the title picture.
           </small>
         </div>
-
+        {processingStatus && (
+        <div className="flex gap-2 text-gray-500 justify-center items-center">
+          <CircularProgress sx={{ color: "gray" }} size={30}/> processing images...
+        </div>
+      )}
         {imageUrls.length > 0 ? (
           <div className="flex w-full m-1 ">
             <div {...getRootProps()}>

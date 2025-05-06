@@ -475,11 +475,15 @@ export default function Ads({ ad, user, userId, userImage, userName, onClose,han
             {ad.data.imageUrls.map((image: string, index: number) => (
               <CarouselItem key={index}>
                 <div className="relative w-full">
-                  {isLoading && (
-                    <div className="absolute inset-0 flex justify-center items-center bg-black bg-opacity-50">
+                  {isLoading && (<>
+                   {/*  <div className="absolute inset-0 flex justify-center items-center bg-black bg-opacity-50">
                       <Icon icon={threeDotsScale} className="w-6 h-6 text-gray-500" />
-                    </div>
-                  )}
+                    </div>*/}
+
+<div className="absolute inset-0 flex items-center justify-center bg-[#000000] bg-opacity-50">
+<CircularProgress sx={{ color: "white" }} />
+</div>
+</>  )}
                   <Zoom>
                   <Image
                           src={image}
@@ -561,11 +565,18 @@ export default function Ads({ ad, user, userId, userImage, userName, onClose,han
                 >
                   <span key={index} onClick={() => handleImageClick(index)}>
                     <div className="relative">
-                      {isLoadingsmall && (
-                        <div className="absolute inset-0 flex justify-center items-center bg-black bg-opacity-50">
+                      {isLoadingsmall && (<>
+                       {/* <div className="absolute inset-0 flex justify-center items-center bg-black bg-opacity-50">
                           <Icon icon={threeDotsScale} className="w-6 h-6 text-gray-500" />
-                        </div>
-                      )}
+                        </div>*/}
+                         <div className="absolute rounded-lg inset-0 flex items-center justify-center bg-[#000000] bg-opacity-50">
+                        
+                         <CircularProgress
+                           sx={{ color: "white" }}
+                           size={30}
+                         />
+                       </div>
+                       </> )}
                       <Image
                         src={image}
                         alt={`Image ${index + 1}`}
@@ -611,7 +622,7 @@ export default function Ads({ ad, user, userId, userImage, userName, onClose,han
                             {isLoadingpopup && (
                               <div className="absolute inset-0 flex items-center justify-center bg-[#000000] bg-opacity-50">
                                 {/* Spinner or loading animation */}
-                                <CircularProgress sx={{ color: "white" }} />
+                                <CircularProgress sx={{ color: "gray" }} />
                               </div>
                             )}
                               {isLoadingpopup && (
@@ -787,11 +798,14 @@ export default function Ads({ ad, user, userId, userImage, userName, onClose,han
                   <AccessTimeIcon sx={{ fontSize: 20 }} />
                   Posted {formattedCreatedAt}
                 </p>
-                <p className="dark:text-gray-400 text-gray-700 text-[10px] lg:text-sm">
-                  <LocationOnIcon sx={{ fontSize: 20 }} /> {ad.data.region}
-                  {" - "}
-                  {ad.data.area}
-                </p>
+
+                {ad.data.propertyarea?.mapaddress && (
+<p className="dark:text-gray-400 text-gray-700 text-[10px] lg:text-sm">
+<LocationOnIcon sx={{ fontSize: 20 }} />
+{ad.data.propertyarea?.mapaddress}
+</p>
+)} 
+               
               </div>
               <p className="dark:text-gray-400 text-gray-700 text-[10px] lg:text-sm">
                 <VisibilityIcon sx={{ fontSize: 20 }} /> {ad.views} Views
