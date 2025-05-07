@@ -89,7 +89,7 @@ const SubCategorySelect = ({
                 />
               </div>
 
-              <CommandList className="max-h-[80vh] overflow-y-auto dark:bg-[#222528] dark:text-gray-100 flex-1 overflow-auto">
+              <CommandList className="max-h-[90vh] overflow-y-auto dark:bg-[#222528] dark:text-gray-100 flex-1 overflow-auto">
                 <CommandEmpty>No sub categories found</CommandEmpty>
                 <CommandGroup>
                   {data.map((category: any, index: number) => (

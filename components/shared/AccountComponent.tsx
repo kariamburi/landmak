@@ -368,7 +368,7 @@ useEffect(() => {
      
              {/* Grid Menu */}
                  <div className="grid grid-cols-2 gap-4 p-4">
-                   <Card icon={<MessageCircle />} loading={loading} label={`My ads • ${data.length > 0 ? data.length : 0}`}/>
+                   <Card icon={<MessageCircle />} handleClick={() => handleOpenShop(user)} loading={loading} label={`My ads • ${data.length > 0 ? data.length : 0}`}/>
                   {/* <Card icon={<Star />} label="Pro Sales" />*/} 
                    <Card icon={<Users />} loading={loadingMyclient} handleClick={handleOpenChat} label={`My clients • ${myclientCount > 0 ? myclientCount : 0}`}/>
                    <Card icon={<Gem />} label="Premium Services"  handleClick={handleOpenPlan} />

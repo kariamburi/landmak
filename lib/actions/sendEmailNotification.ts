@@ -24,13 +24,13 @@ export async function sendEmailNotification(
     html: `
       <div style="font-family: Arial, sans-serif; max-width: 600px; margin: auto; padding: 20px; background-color: #f7f7f7; border-radius: 8px; color: #333;">
         <div style="text-align: center; margin-bottom: 30px;">
-          <span style="display: inline-flex; align-items: center; gap: 8px;">
-            <img src="https://pocketshop.co.ke/logo.png" alt="pocketshop Logo" style="height: 30px; width: auto;" />
-            <span style="font-size: 20px; font-weight: bold; color: #064E3B;">PocketShop</span>
-          </span>
+         <span style="display: inline-flex; align-items: center; gap: 6px;">
+  <img src="https://mapa.co.ke/logo.png" alt="mapa Logo" style="height: 24px; width: auto; display: block;" />
+  <span style="font-size: 16px; font-weight: bold; color: #16A34A;">mapa</span>
+</span>
         </div>
 
-        <h2 style="color: #064E3B;">Important Notification</h2>
+        <h2 style="color: #16A34A;">Important Notification</h2>
         <p>Hello,</p>
         <div style="margin: 20px 0; padding: 15px; background-color: #fff; border-left: 4px solid #064E3B; border-radius: 5px;">
           <p style="margin: 0;">"${message}"</p>

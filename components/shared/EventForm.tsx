@@ -606,29 +606,39 @@ setSelectedCategoryCommand(filteredCategories);
     try {
       if (type === "Create") {
         const isValid = await validateForm();
-        if (!isValid) return;
+        if (!isValid){ 
+          toast({
+            variant: "destructive",
+            title:  "Missing fields",
+            description: "Please fill in all required fields",
+            duration: 5000,
+          });
+          
+          return;
+        }
 
         const phone = countryCode + removeLeadingZero(phoneNumber);
      
         if(!isValidKenyanPhoneNumber(phone)){
-         
           toast({
-            title: "Invalid Phone",
+            variant: "destructive",
+            title:  "Invalid Phone",
             description: "Invalid Phone Number.",
             duration: 5000,
-            className: "bg-[#999999] text-white",
           });
+
           setphoneError("Invalid Phone Number!");
           return
         }
         if(!formData["propertyarea"]){
          
           toast({
+            variant: "destructive",
             title: "No location",
-            description: "Set location!",
+            description: "Please set location!",
             duration: 5000,
-            className: "bg-[#999999] text-white",
           });
+
           setlocationError("Set Location!")
           return
         }

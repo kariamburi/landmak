@@ -105,7 +105,7 @@ const SubCategoryWindow: React.FC<ChatWindowProps> = ({
                 <CommandInput className="text-base flex-1" placeholder={`Search category`} />
               </div>
 
-              <CommandList className="max-h-[77vh] overflow-y-auto dark:bg-[#2D3236]">
+              <CommandList className="max-h-[90vh] overflow-y-auto dark:bg-[#2D3236]">
                 <CommandEmpty>No subcategory found</CommandEmpty>
                 <CommandGroup
                   className="dark:bg-[#2D3236]"

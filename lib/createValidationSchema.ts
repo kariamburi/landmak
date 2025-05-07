@@ -49,7 +49,17 @@ export const createValidationSchema = (fields: Field[]) => {
   if (fieldExists("make-model")) {
     schemaShape["model"] = z.string().nonempty(`Model is required`);
   }
+  const deliveryItemSchema = z.object({
+    name: z.string().nonempty(),
+    region: z.array(z.string()).nonempty(),
+    chargeFee: z.string(),
+    costFrom: z.string(),
+    costTo: z.string(),
+    daysFrom: z.string(),
+    daysTo: z.string()
+  });
 
+  const deliverySchema = z.array(deliveryItemSchema);
   //if (fieldExists("rentprice")) {
   // schemaShape["period"] = z.string().nonempty(`Period is required`);
   //}
@@ -142,8 +152,8 @@ export const createValidationSchema = (fields: Field[]) => {
         break;
       case "delivery":
         fieldSchema = field.required
-          ? z.string().nonempty(`${field.name} is required`)
-          : z.string().optional();
+          ? z.array(deliveryItemSchema).nonempty(`${field.name} is required`)
+          : z.array(deliveryItemSchema).optional();
         break;
       case "phone":
         fieldSchema = field.required
