@@ -70,6 +70,7 @@ type homeProps = {
   catList: any;
   reported:any;
   vfee:any;
+  contacts:any;
 };
 const HomeDashboard = ({
   userId,
@@ -86,6 +87,7 @@ const HomeDashboard = ({
   catList,
   reported,
   vfee,
+  contacts,
 }: homeProps) => {
   const router = useRouter();
   const searchParams = useSearchParams();
@@ -618,7 +620,7 @@ const HomeDashboard = ({
                 Send Broadcast Message
               </h1>
               <div className="flex flex-col lg:flex-row gap-3"></div>
-              <BroadcastMessage />
+              <BroadcastMessage contacts={contacts}/>
             </div>
           </>
         )}
@@ -711,13 +713,13 @@ const HomeDashboard = ({
 
               <ScrollArea className="w-[340px] lg:w-full">
                 <CollectionTransactions
-                  data={transactions.data}
-                  emptyTitle={`No Order Found`}
-                  emptyStateSubtext="Come back later"
-                  limit={limit}
-                  page={page}
-                  totalPages={transactions.totalPages}
-                />
+                      data={transactions.data}
+                      emptyTitle={`No Order Found`}
+                      emptyStateSubtext="Come back later"
+                      limit={limit}
+                      page={page}
+                      totalPages={transactions.totalPages} 
+                      handleOpenChatId={handleOpenChatId}                />
                 <ScrollBar orientation="horizontal" />
               </ScrollArea>
             </div>

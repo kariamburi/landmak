@@ -235,3 +235,17 @@ export async function getAllUsers(limit: number, page: number) {
     handleError(error)
   }
 }
+export async function getAllContacts() {
+  try {
+    await connectToDatabase()
+
+    // Fetch filtered orders with pagination
+    const user = await User.find();
+    // Get the count of documents that match the conditions
+    const AdCount = await User.countDocuments();
+    //console.log({ data: JSON.parse(JSON.stringify(user)), totalPages: Math.ceil(AdCount / limit) })
+    return { data: JSON.parse(JSON.stringify(user)) }
+  } catch (error) {
+    handleError(error)
+  }
+}

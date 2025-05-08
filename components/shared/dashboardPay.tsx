@@ -49,6 +49,7 @@ const DashboardPay = ({ userId, trans,user, recipientUid, handleOpenPerfomance, 
   const [errordeposit, seterrordeposit] = useState("");
   const [errormpesaphone, seterrormpesaphone] = useState("");
   const [isSubmitting, setisSubmitting] = useState<boolean>(false);
+  const [receiptData, setReceiptData] = useState<any>([]);
   const [pay, setpay] = useState(
     trans.length > 0 ? trans[0].status : "Pending"
   );
@@ -143,6 +144,52 @@ const DashboardPay = ({ userId, trans,user, recipientUid, handleOpenPerfomance, 
     // alert(checkresponse);
     if (checkresponse === "success") {
       setpay("Active");
+      const receipt = {
+        orderId: trans[0].orderTrackingId,
+        //transactionId: paymentStatus.payment.transactionId,
+        amount: deposit,
+        date: new Date().toLocaleString(),
+        phone: payphone,
+      };
+      setReceiptData(receipt);
+      
+// Optionally send email receipt
+await fetch("/api/send-receipt", {
+method: "POST",
+headers: { "Content-Type": "application/json" },
+body: JSON.stringify({
+to: user.email,
+subject: "Payment Receipt",
+body: `
+<div style="font-family: Arial, sans-serif; max-width: 600px; margin: auto; padding: 20px; background-color: #f7f7f7; border-radius: 8px; color: #333;">
+  <div style="text-align: center; margin-bottom: 30px;">
+    <span style="display: inline-flex; align-items: center; gap: 6px;">
+  <img src="https://mapa.co.ke/logo.png" alt="mapa Logo" style="height: 24px; width: auto; display: block;" />
+  <span style="font-size: 16px; font-weight: bold; color: #16A34A;">mapa</span>
+</span>
+  </div>
+
+  <h2 style="color: #16A34A;">Payment Receipt</h2>
+  <p>Hello ${user.firstName || "Customer"},</p>
+  <p>Thank you for your payment. Here are your receipt details:</p>
+
+  <div style="margin: 20px 0; padding: 15px; background-color: #fff; border-left: 4px solid #16A34A; border-radius: 5px;">
+    <p><strong>Order ID:</strong> ${receipt.orderId}</p>
+    <p><strong>Amount:</strong> KES ${formatKsh(receipt.amount)}</p>
+    <p><strong>Date:</strong> ${receipt.date}</p>
+    <p><strong>Phone:</strong> ${receipt.phone}</p>
+  </div>
+
+  <p style="margin-top: 30px;">If you have any questions, please contact our support at <a href="mailto:support@mapa.co.ke">support@mapa.co.ke</a>.</p>
+
+  <hr style="margin: 40px 0; border: none; border-top: 1px solid #ddd;" />
+  <p style="font-size: 12px; color: #999;">This email was sent by mapa (<a href="https://mapa.co.ke" style="color: #999;">mapa.co.ke</a>).</p>
+</div>
+`,
+from: '"mapa" <support@mapa.co.ke>'
+}),
+});
+
       toast({
         title: "Order successful!",
         description: "Your subscription is successful",
@@ -354,27 +401,41 @@ const [isDarkMode, setIsDarkMode] = useState<boolean | null>(null);
                         </>
                       ) : (
                         <>
-                          <div className="flex gap-1 mt-10 items-center">
-                            <div className="text-3xl text-grey-900 font-bold p-2">
-                              PAID
-                            </div>
-                            <div className="flex gap-1 w-full">
-                              <Button
-                              variant="outline"
-                              onClick={() => router.push(`/`)}
-                              
-                              >
-                                Home
-                              </Button>
-                              <Button
-                                variant="outline"
-                                //onClick={() => router.push(`/shop/${userId}`)}
-                              >
-                                My Shop
-                              </Button>
-                             
-                            </div>
-                          </div>
+                           <div className="mt-10 p-4 border rounded-lg shadow-sm bg-white text-gray-800">
+  {/* Receipt Header */}
+  <div className="text-2xl font-bold mb-2">Payment Receipt</div>
+
+  {/* Receipt Details */}
+  <div className="space-y-1 text-sm">
+ 
+    <div><span className="font-semibold">Receipt ID:</span> #{receiptData.orderId}</div>
+    <div><span className="font-semibold">Amount Paid:</span> KES {formatKsh(receiptData.amount)}</div>
+    <div><span className="font-semibold">Phone:</span> {receiptData.phone}</div>
+    <div><span className="font-semibold">Date:</span> {receiptData.date}</div>
+    <div><span className="font-semibold">Payment Method:</span> M-Pesa</div>
+    <div><span className="font-semibold">Transaction Status:</span> <span className="text-green-600 font-medium">Successful</span></div>
+  </div>
+
+  {/* Paid & Navigation Buttons */}
+  <div className="flex gap-1 mt-6 items-center">
+    
+    <div className="flex gap-2 w-full">
+      <Button
+        variant="outline"
+        onClick={onClose}
+      >
+        Home
+      </Button>
+      <Button
+        variant="outline"
+        onClick={()=> handleOpenShop(user)}
+      >
+        My Shop
+      </Button>
+    </div>
+  </div>
+</div>
+
                         </>
                       )}
                     </div>

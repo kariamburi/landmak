@@ -17,7 +17,7 @@ import {
   getallTransactions,
   getStatusTrans,
 } from "@/lib/actions/transactions.actions";
-import { getAllUsers } from "@/lib/actions/user.actions";
+import { getAllContacts, getAllUsers } from "@/lib/actions/user.actions";
 import { getVerifyfee } from "@/lib/actions/verifies.actions";
 import { SearchParamProps } from "@/types";
 import { auth } from "@clerk/nextjs/server";
@@ -35,6 +35,7 @@ const Home = async ({ searchParams }: SearchParamProps) => {
   const limit = Number(searchParams?.limit) || 50;
   const users = await getAllUsers(limit, page);
   const reported = await getallReported(limit, page);
+  const contacts = await getAllContacts();
   const transactions = await getallTransactions(
     transactionId,
     start,
@@ -66,6 +67,7 @@ const Home = async ({ searchParams }: SearchParamProps) => {
           catList={catList}
           reported={reported}
           vfee={fee}
+          contacts={contacts}
         />
       
   );
