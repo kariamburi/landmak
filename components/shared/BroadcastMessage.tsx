@@ -96,6 +96,10 @@ function BroadcastMessage({
       ...base,
       color: '#f3f4f6',
     }),
+      input: (base: any) => ({
+    ...base,
+    color: '#f3f4f6',
+  }),
   };
   
   //const isDark = typeof window !== 'undefined' && document.documentElement.classList.contains('light');

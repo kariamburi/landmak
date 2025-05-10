@@ -68,7 +68,7 @@ export async function broadcastMessage(type: string, message: string, recipient?
 
       } else {
         try {
-          const res = await fetch("/api/send-push", {
+          const res = await fetch(process.env.NEXT_PUBLIC_DOMAIN_URL + "/api/send-push", {
             method: "POST",
             headers: {
               "Content-Type": "application/json",

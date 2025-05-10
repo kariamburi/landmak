@@ -155,7 +155,15 @@ const HorizontalCard = ({
             //router.push(`/ads/${ad._id}`);
             handleAdView(ad);
           }}
-          className="relative w-[160px] lg:w-[200px] h-[200px]"
+          className="relative rounded-l-lg w-[160px] lg:w-[200px] h-[200px]"
+          style={
+          ad.plan.name !== "Free"
+            ? {
+                border: "2px solid",
+                borderColor: ad.plan.color, // Border color for non-free plans
+              }
+            : undefined
+        }
         >
           <div className="relative w-full h-full">
             {isLoadingsmall && (

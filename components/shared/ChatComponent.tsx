@@ -119,7 +119,7 @@ const ChatComponent =  ({senderId,senderName,senderImage,user,onClose, handlePay
             <div className="lg:flex-1 h-screen p-1">
               <div className="w-full p-1 w-full bg-white rounded-t-lg border-b dark:lg:bg-[#2D3236] items-center">
                 <span className="logo font-bold text-base lg:text-[25px] dark:text-gray-400 text-emerald-950">
-                  Messanger
+                  Messenger
                 </span>
                 <div className="text-xs lg:text-base flex gap-1 items-center">
                   <PeopleOutlinedIcon />

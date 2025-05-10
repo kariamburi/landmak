@@ -149,18 +149,18 @@ const VerticalCard = ({
     <>
       <div
         className={`mb-2 w-full lg:min-w-[200px] rounded-lg border shadow-sm bg-white dark:bg-[#2D3236] overflow-hidden`}
-        style={
+      >
+        {/* Image section with dynamic height */}
+
+      <div className="relative rounded-t-lg w-full"
+         style={
           ad.plan.name !== "Free"
             ? {
                 border: "2px solid",
                 borderColor: ad.plan.color, // Border color for non-free plans
               }
             : undefined
-        }
-      >
-        {/* Image section with dynamic height */}
-
-        <div className="relative w-full">
+        }>
           {isLoadingsmall && (
                           <div 
                           onClick={() => {
@@ -180,7 +180,7 @@ const VerticalCard = ({
             width={400} // Set a width to control layout consistency
             height={0} // Proportional height
             style={{ minHeight: "200px" }} // Set the minimum height here
-            className={`w-full h-auto object-cover cursor-pointer ${
+            className={`w-full h-auto rounded-t-lg object-cover cursor-pointer ${
               isLoadingsmall ? "opacity-0" : "opacity-100"
             } transition-opacity duration-300`}
             onLoadingComplete={() => setIsLoadingsmall(false)}

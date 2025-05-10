@@ -23,6 +23,7 @@ import { ScrollArea, ScrollBar } from "../ui/scroll-area";
 import { getallTrans } from "@/lib/actions/transactions.actions";
 import TotalRevenue from "./TotalRevenue";
 import PropertyReferrals from "./PropertyReferrals";
+import GppGoodOutlinedIcon from '@mui/icons-material/GppGoodOutlined';
 import Chat from "./Chat";
 import CreateCategoryForm from "./CreateCategoryForm";
 import DisplayCategories from "./DisplayCategories";
@@ -35,6 +36,7 @@ import CollectionUsers from "./CollectionUsers";
 import BroadcastMessage from "./BroadcastMessage";
 import CollectionTransactions from "./CollectionTransactions";
 import AssistantPhotoOutlinedIcon from '@mui/icons-material/AssistantPhotoOutlined';
+
 import {
   formUrlQuery,
   formUrlQuerymultiple,
@@ -52,9 +54,12 @@ import { Toaster } from "../ui/toaster";
 import CollectionAbuse from "./CollectionAbuse";
 import Navbardashboard from "./Navbardashboard";
 import PopupChatId from "./PopupChatId";
-import { updateVerifiesFee } from "@/lib/actions/verifies.actions";
+import { updateVerifies, updateVerifiesFee } from "@/lib/actions/verifies.actions";
 import { useToast } from "../ui/use-toast";
-import GppGoodOutlinedIcon from '@mui/icons-material/GppGoodOutlined';
+import MonetizationOnOutlinedIcon from '@mui/icons-material/MonetizationOnOutlined';
+//import CollectionPayments from "./CollectionPayments";
+import TopAdvertiser from "./TopAdvertiser";
+import AdvertiserSubscriptions from "./AdvertiserSubscriptions";
 type homeProps = {
   userId: string;
   userName: string;
@@ -63,14 +68,17 @@ type homeProps = {
   limit: number;
   page: number;
   transactions: any;
+  payments: any;
   adSum: any;
+  vfee:any;
   transactionSum: any;
   categories: any;
   subcategories: any;
   catList: any;
   reported:any;
-  vfee:any;
   contacts:any;
+  subscriptionsExpirely:any;
+  topadvertiser:any;
 };
 const HomeDashboard = ({
   userId,
@@ -79,6 +87,7 @@ const HomeDashboard = ({
   users,
   limit,
   page,
+  payments,
   transactions,
   transactionSum,
   adSum,
@@ -88,6 +97,8 @@ const HomeDashboard = ({
   reported,
   vfee,
   contacts,
+  subscriptionsExpirely,
+  topadvertiser,
 }: homeProps) => {
   const router = useRouter();
   const searchParams = useSearchParams();
@@ -99,6 +110,7 @@ const HomeDashboard = ({
   const [endDate, setEndDate] = useState<string | null>(null);
   const [search, setSearch] = useState("");
   const [fee, setFee] = useState("500");
+
   const [recipient, setrecipient] = useState<any>([]);
     const [recipientUid, setrecipientUid] = useState('');
     const [shopId, setshopId] = useState<any>([]);
@@ -116,64 +128,7 @@ const HomeDashboard = ({
     const [isOpenSettings, setIsOpenSettings] = useState(false);
     const [isOpenPerfomance, setIsOpenPerfomance] = useState(false);
     const [isOpenSearchTab, setIsOpenSearchTab] = useState(false);
- const { toast } = useToast();
-  const handleCloseChatId = () => {
-    setrecipientUid('')
-    setIsOpenChatId(false);
-  };
-  const handleOpenChatId = (value:string) => {
-    
-    setrecipientUid(value)
-   setIsOpenChatId(true);
-   
-    };
-    const handleOpenSell = () => {
-       
-    };
-    const handleOpenAbout=() => {
-   
-    };
-    const handleOpenTerms=() => {
-   
-    };
-    const handleOpenPrivacy=() => {
-   
-    }; 
-    const handleOpenSafety=() => {
-   
-    };
-    const handleOpenBook=() => {
-   
-    };
-    const handleOpenPlan=() => {
-   
-    };
-   
-    const handleOpenChat=() => {
-   
-    };
-    const handleOpenShop=() => {
-   
-    };
-   
-    const handleOpenPerfomance=() => {
-   
-    };
-    const handleOpenSettings=() => {
-   
-    };
-    const handleCategory=() => {
-   
-    };
-    const handleAdEdit=() => {
-   
-    };
-    const handleAdView=() => {
-   
-    };
-    const handleOpenSearchTab=() => {
-   
-    };
+    const { toast } = useToast();
   const handle = async (title: string) => {
     setActiveTab(title);
     if (title === "Categories") {
@@ -193,6 +148,7 @@ const HomeDashboard = ({
   };
   useEffect(() => {
     setFee(vfee.fee);
+
     const transactions = async () => {
       const allt = await getallTrans();
       setalltrans(allt);
@@ -210,6 +166,16 @@ const HomeDashboard = ({
   const handleClosePackage = () => {
     setIsOpenPackage(false);
   };
+  const handleFee = async () => {
+  const res = await updateVerifiesFee(fee,VerificationPackId);
+  console.log(res);
+  toast({
+    title: "Updated!",
+    description: "Verification fee updated",
+    duration: 5000,
+    className: "bg-[#30AF5B] text-white",
+  });
+  };
 
   const [isOpenCategory, setIsOpenCategory] = useState(false);
   const handleOpenCategory = () => {
@@ -219,16 +185,6 @@ const HomeDashboard = ({
   const handleCloseCategory = () => {
     setIsOpenCategory(false);
   };
- 
-  const handleFee = async () => {
-    await updateVerifiesFee(fee,VerificationPackId);
-    toast({
-      title: "Updated!",
-      description: "Verification fee updated",
-      duration: 5000,
-      className: "bg-[#30AF5B] text-white",
-    });
-    };
   const [isOpen, setIsOpen] = useState(false);
   const handleOpen = () => {
     setIsOpen(true);
@@ -285,6 +241,22 @@ const HomeDashboard = ({
 
     router.push(newUrl, { scroll: false });
   };
+  const handleCloseChatId = () => {
+    setrecipientUid('')
+    setIsOpenChatId(false);
+  };
+  const handleOpenChatId = (value:string) => {
+    
+    setrecipientUid(value)
+   setIsOpenChatId(true);
+   
+    };
+    const registerSafaricom = async () => {
+      const res = await fetch('/api/safaricom/register', { method: 'POST' });
+      const data = await res.json();
+      console.log(data);
+    };
+    
     const [isDarkMode, setIsDarkMode] = useState<boolean | null>(null);
   
       useEffect(() => {
@@ -303,7 +275,55 @@ const HomeDashboard = ({
        }, [isDarkMode]);
      
        if (isDarkMode === null) return null; // Avoid flickering before state is set
-     
+      
+       const handleOpenSell = () => {
+       
+        };
+        const handleOpenAbout=() => {
+       
+        };
+        const handleOpenTerms=() => {
+       
+        };
+        const handleOpenPrivacy=() => {
+       
+        }; 
+        const handleOpenSafety=() => {
+       
+        };
+        const handleOpenBook=() => {
+       
+        };
+        const handleOpenPlan=() => {
+       
+        };
+       
+        const handleOpenChat=() => {
+       
+        };
+        const handleOpenShop=() => {
+       
+        };
+       
+        const handleOpenPerfomance=() => {
+       
+        };
+        const handleOpenSettings=() => {
+       
+        };
+        const handleCategory=() => {
+       
+        };
+        const handleAdEdit=() => {
+       
+        };
+        const handleAdView=() => {
+       
+        };
+        const handleOpenSearchTab=() => {
+       
+        };
+        
   return (
     <div className="min-h-screen dark:bg-[#131B1E] text-black dark:text-[#F1F3F3] bg-white">
     <div className="fixed z-10 top-0 w-full">
@@ -327,7 +347,7 @@ const HomeDashboard = ({
                 >
                   <div
                     onClick={() => handle(link.label)}
-                    className="flex hover:bg-[#e4ebeb] hover:rounded-xl hover:text-gray-700 p-3 mb-1 hover:cursor-pointer"
+                    className="flex hover:bg-gray-200 hover:rounded-xl hover:text-gray-700 p-3 mb-1 hover:cursor-pointer"
                   >
                     <span className="text-right my-auto">
                       {link.label === "Home" && (
@@ -350,6 +370,11 @@ const HomeDashboard = ({
                           <ChecklistOutlinedIcon className="w-10 p-1" />
                         </span>
                       )}
+                     {/*  {link.label === "Payments" && (
+                          <span>
+                            <MonetizationOnOutlinedIcon className="w-10 p-1" />
+                          </span>
+                        )}*/} 
                       {link.label === "User Management" && (
                         <span>
                           <GroupsOutlinedIcon className="w-10 p-1" />
@@ -365,7 +390,7 @@ const HomeDashboard = ({
                           <AssistantPhotoOutlinedIcon className="w-10 p-1" />
                         </span>
                       )}
-                        {link.label === "Verification" && (
+                       {link.label === "Verification" && (
                         <span>
                           <GppGoodOutlinedIcon className="w-10 p-1" />
                         </span>
@@ -401,7 +426,7 @@ const HomeDashboard = ({
                       className={`${
                         activeTab === link.label
                           ? "items-center p-3 flex gap-1 bg-[#064E3B] text-white rounded-xl hover:cursor-pointers"
-                          : "items-center p-3 flex gap-1 border rounded-xl dark:bg-gray-800 dark:text-gray-300 bg-white text-black hover:cursor-pointer hover:bg-[#e4ebeb]"
+                          : "items-center p-3 flex gap-1 border rounded-xl dark:bg-gray-800 dark:text-gray-300 bg-white text-black hover:cursor-pointer hover:bg-gray-200"
                       }`}
                     >
                       <span className="text-right my-auto">
@@ -425,6 +450,11 @@ const HomeDashboard = ({
                             <ChecklistOutlinedIcon className="w-10 p-1" />
                           </span>
                         )}
+                       {/*   {link.label === "Payments" && (
+                          <span>
+                            <MonetizationOnOutlinedIcon className="w-10 p-1" />
+                          </span>
+                        )}*/}
                         {link.label === "User Management" && (
                           <span>
                             <GroupsOutlinedIcon className="w-10 p-1" />
@@ -481,7 +511,35 @@ const HomeDashboard = ({
                     </>
                   ))}
                 </Box>
+               
                 <Stack
+                  mt="25px"
+                  width="100%"
+                  direction={{ xs: "column", lg: "row" }}
+                  gap={4}
+                >
+                  <Box flex={1}>
+                    <AdvertiserSubscriptions handleOpenChatId={handleOpenChatId} subscriptionsExpirely={subscriptionsExpirely}/>
+                  </Box>
+                 
+
+                  
+                </Stack>
+
+                 <Stack
+                  mt="25px"
+                  width="100%"
+                  direction={{ xs: "column", lg: "row" }}
+                  gap={4}
+                >
+              
+                  <Box flex={1}>
+                    <TopAdvertiser handleOpenChatId={handleOpenChatId} topadvertiser={topadvertiser} />
+                  </Box>
+
+                  
+                </Stack>
+                 <Stack
                   mt="25px"
                   width="100%"
                   direction={{ xs: "column", lg: "row" }}
@@ -494,6 +552,8 @@ const HomeDashboard = ({
                   <Box flex={1}>
                     <TrendingAds />
                   </Box>
+
+                  
                 </Stack>
               </Box>
             </div>
@@ -600,19 +660,20 @@ const HomeDashboard = ({
 
               <ScrollArea className="w-[340px] lg:w-full">
                 <CollectionUsers
-                  data={users.data}
-                  emptyTitle={`No User Found`}
-                  emptyStateSubtext="Come back later"
-                  limit={limit}
-                  page={page}
-                  userId={userId}
-                  totalPages={users.totalPages}
-                />
+                      data={users.data}
+                      emptyTitle={`No User Found`}
+                      emptyStateSubtext="Come back later"
+                      limit={limit}
+                      page={page}
+                      userId={userId}
+                      totalPages={users.totalPages} 
+                      handleOpenChatId={handleOpenChatId}                />
                 <ScrollBar orientation="horizontal" />
               </ScrollArea>
             </div>
           </>
         )}
+        
         {activeTab === "Communication" && (
           <>
             <div className="container mx-auto p-1 lg:p-4 border rounded-xl">
@@ -671,6 +732,13 @@ const HomeDashboard = ({
                     >
                       Search
                     </button>
+                {/*    <button
+                      onClick={registerSafaricom}
+                      className="hover:dark:bg-emerald-800 dark:bg-emerald-700 lg:mt-5 text-xs bg-black text-white px-4 py-2 rounded"
+                    >
+                      Register url Safaricom
+                    </button>
+                    */} 
                   </div>
                 </div>
 
@@ -713,18 +781,120 @@ const HomeDashboard = ({
 
               <ScrollArea className="w-[340px] lg:w-full">
                 <CollectionTransactions
-                      data={transactions.data}
-                      emptyTitle={`No Order Found`}
-                      emptyStateSubtext="Come back later"
-                      limit={limit}
-                      page={page}
-                      totalPages={transactions.totalPages} 
-                      handleOpenChatId={handleOpenChatId}                />
+                  data={transactions.data}
+                  emptyTitle={`No Order Found`}
+                  emptyStateSubtext="Come back later"
+                  limit={limit}
+                  page={page}
+                  totalPages={transactions.totalPages}
+                  handleOpenChatId={handleOpenChatId}
+                />
                 <ScrollBar orientation="horizontal" />
               </ScrollArea>
             </div>
           </>
         )}
+        {/*   {activeTab === "Payments" && (
+          <>
+            <div className="container mx-auto p-1 lg:p-4 border rounded-xl">
+              <h1 className="text-2xl font-bold mb-4">Payments</h1>
+              <div className="flex flex-col lg:flex-row gap-3">
+                <div className="flex flex-col lg:flex-row items-center gap-4 mb-4">
+                  <div className="flex flex-col w-full">
+                    <label
+                      className="text-xs font-semibold mb-1"
+                      htmlFor="startDate"
+                    >
+                      Start Date
+                    </label>
+                    <input
+                      type="date"
+                      id="startDate"
+                      value={startDate || ""}
+                      onChange={(e) => setStartDate(e.target.value)}
+                      className="dark:bg-[#2D3236] bg-white text-xs border p-2 w-full rounded"
+                    />
+                  </div>
+                  <div className="flex flex-col w-full">
+                    <label
+                      className="text-xs font-semibold mb-1"
+                      htmlFor="endDate"
+                    >
+                      End Date
+                    </label>
+                    <input
+                      type="date"
+                      id="endDate"
+                      value={endDate || ""}
+                      onChange={(e) => setEndDate(e.target.value)}
+                      className="dark:bg-[#2D3236] bg-white text-xs border w-full p-2 rounded"
+                    />
+                  </div>
+                  <div className="flex flex-col w-full">
+                    <label
+                      className="text-xs text-white font-semibold mb-1"
+                      htmlFor="endDate"
+                    ></label>
+                    <button
+                      onClick={handleSearchDates}
+                      className="hover:dark:bg-emerald-800 dark:bg-emerald-700 lg:mt-5 text-xs bg-black text-white px-4 py-2 rounded"
+                    >
+                      Search
+                    </button>
+              
+                  </div>
+                </div>
+
+            
+
+                <div className="flex flex-col lg:flex-row gap-1">
+                  <div className="flex flex-col">
+                    <label
+                      className="text-xs font-semibold mb-1"
+                      htmlFor="endDate"
+                    >
+                      TransactionId
+                    </label>
+                    <div className="flex gap-1 flex-col lg:flex-row">
+                      <input
+                        type="text"
+                        placeholder="Search by Order ID"
+                        value={search}
+                        onChange={(e) => setSearch(e.target.value)}
+                        className="dark:bg-[#2D3236] bg-white text-xs border p-2 flex rounded-md"
+                      />
+                      <button
+                        type="submit"
+                        onClick={handleSearch}
+                        className="text-xs hover:dark:bg-emerald-800 dark:bg-emerald-700 bg-black text-white px-4 py-2 rounded-md hover:bg-gray-800"
+                      >
+                        Search
+                      </button>
+                      <button
+                        onClick={handleClear}
+                        className="text-xs hover:dark:bg-emerald-800 dark:bg-emerald-700 bg-black text-white px-4 py-2 rounded-md hover:bg-gray-800"
+                      >
+                        Clear
+                      </button>
+                    </div>
+                  </div>
+                </div>
+              </div>
+            
+              <ScrollArea className="w-[340px] lg:w-full">
+                <CollectionPayments
+                  data={payments.data}
+                  emptyTitle={`No Payment Found`}
+                  emptyStateSubtext="Come back later"
+                  limit={limit}
+                  page={page}
+                  totalPages={payments.totalPages}
+                />
+                <ScrollBar orientation="horizontal" />
+              </ScrollArea>
+            </div>
+          </>
+        )}*/}
           {activeTab === "Verification" && (
           <>
             <div className="container mx-auto p-1 lg:p-4 border rounded-xl">
@@ -763,14 +933,15 @@ const HomeDashboard = ({
 
               <ScrollArea className="w-[340px] lg:w-full">
                 <CollectionAbuse
-                      data={reported.data}
-                      emptyTitle={`No Abuse`}
-                      emptyStateSubtext="Come back later"
-                      limit={limit}
-                      page={page}
-                      userId={userId}
-                      totalPages={reported.totalPages} 
-                      handleOpenChatId={handleOpenChatId}                />
+                  data={reported.data}
+                  emptyTitle={`No Abuse`}
+                  emptyStateSubtext="Come back later"
+                  limit={limit}
+                  page={page}
+                  userId={userId}
+                  totalPages={reported.totalPages}
+                  handleOpenChatId={handleOpenChatId}
+                />
                 <ScrollBar orientation="horizontal" />
               </ScrollArea>
             </div>
@@ -780,7 +951,7 @@ const HomeDashboard = ({
     </div>
     <Toaster />
       </div>
-      <PopupChatId 
+        <PopupChatId 
            isOpen={isOpenChatId} 
            onClose={handleCloseChatId} 
            recipientUid={recipientUid} 

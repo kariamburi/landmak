@@ -372,3 +372,121 @@ export async function getStatusTrans() {
     throw new Error("Unable to fetch order statuses with worth and profit");
   }
 }
+// Function to check expired subscriptions
+export async function checkExpiredLatestSubscriptionsPerUser() {
+  try {
+    await connectToDatabase();
+
+    const now = new Date();
+
+    const subscriptions = await Transaction.aggregate([
+      // Sort to get the latest transaction per buyer
+      { $sort: { buyer: 1, createdAt: -1 } },
+      {
+        $group: {
+          _id: '$buyer',
+          latestTransaction: { $first: '$$ROOT' }
+        }
+      },
+      {
+        $addFields: {
+          periodMs: {
+            $switch: {
+              branches: [
+                { case: { $eq: ['$latestTransaction.period', '7 days'] }, then: 7 * 24 * 60 * 60 * 1000 },
+                { case: { $eq: ['$latestTransaction.period', '14 days'] }, then: 14 * 24 * 60 * 60 * 1000 },
+                { case: { $eq: ['$latestTransaction.period', '30 days'] }, then: 30 * 24 * 60 * 60 * 1000 }
+              ],
+              default: 0
+            }
+          }
+        }
+      },
+      {
+        $addFields: {
+          expiryDate: { $add: ['$latestTransaction.createdAt', '$periodMs'] }
+        }
+      },
+      {
+        $addFields: {
+          isExpired: { $lt: ['$expiryDate', now] }
+        }
+      },
+      {
+        $match: {
+          'latestTransaction.plan': { $ne: 'Verification' }
+        }
+      },
+
+      // Lookup planId details from Packages
+      {
+        $lookup: {
+          from: 'packages',
+          localField: 'latestTransaction.planId',
+          foreignField: '_id',
+          as: 'planDetails'
+        }
+      },
+      { $unwind: { path: '$planDetails', preserveNullAndEmptyArrays: true } },
+
+      // Lookup buyer details from Users
+      {
+        $lookup: {
+          from: 'users',
+          localField: 'latestTransaction.buyer',
+          foreignField: '_id',
+          as: 'buyerDetails'
+        }
+      },
+      { $unwind: { path: '$buyerDetails', preserveNullAndEmptyArrays: true } },
+
+      {
+        $project: {
+          _id: 0,
+          buyer: '$_id',
+          latestTransaction: 1,
+          expiryDate: 1,
+          isExpired: 1,
+          planDetails: {
+            _id: 1,
+            name: 1,
+            list: 1,
+            features: 1,
+            price: 1
+          },
+          buyerDetails: {
+            _id: 1,
+            clerkId: 1,
+            email: 1,
+            firstName: 1,
+            lastName: 1,
+            photo: 1,
+            businessname: 1,
+            aboutbusiness: 1,
+            businessaddress: 1,
+            latitude: 1,
+            longitude: 1,
+            businesshours: 1,
+            businessworkingdays: 1,
+            phone: 1,
+            whatsapp: 1,
+            website: 1,
+            facebook: 1,
+            twitter: 1,
+            instagram: 1,
+            tiktok: 1,
+            imageUrl: 1,
+            verified: 1,
+            token: 1
+          }
+        }
+      }
+    ]);
+
+    return JSON.parse(JSON.stringify(subscriptions));
+  } catch (error) {
+    console.error('Error checking subscriptions:', error);
+    handleError(error);
+    throw error;
+  }
+}
