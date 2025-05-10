@@ -68,7 +68,6 @@ type homeProps = {
   limit: number;
   page: number;
   transactions: any;
-  payments: any;
   adSum: any;
   vfee:any;
   transactionSum: any;
@@ -87,7 +86,6 @@ const HomeDashboard = ({
   users,
   limit,
   page,
-  payments,
   transactions,
   transactionSum,
   adSum,
