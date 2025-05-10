@@ -139,7 +139,15 @@ const HorizontalCardPublic = ({
     <>
       <div
         className={`flex w-full mb-2 border rounded-lg dark:bg-[#2D3236] text-black dark:text-gray-300 bg-white hover:cursor-pointer`}
-        style={
+       
+      >
+        <div
+          onClick={() => {
+            handleAdView(ad);
+          }}
+          className="relative rounded-l-lg w-[160px] h-[200px]"
+
+           style={
           ad.plan.name !== "Free"
             ? {
                 border: "2px solid",
@@ -147,12 +155,6 @@ const HorizontalCardPublic = ({
               }
             : undefined
         }
-      >
-        <div
-          onClick={() => {
-            handleAdView(ad);
-          }}
-          className="relative w-[160px] h-[200px]"
         >
           <div className="relative w-full h-full">
             {isLoadingsmall && (

@@ -171,10 +171,8 @@ useEffect(() => {
           <div className="flex flex-col space-y-1">
              <div className="flex gap-2 items-center w-full">
 
-             <div className="flex p-2 text-gray-600 dark:text-[#e4ebeb] dark:hover:bg-gray-700 hover:text-green-600 justify-start items-center w-full"  onClick={() => setShowSidebar(!showSidebar)}>
-            <ArrowBackOutlinedIcon/>
-      
-        </div>
+             <div className="flex p-2 text-gray-600 dark:text-[#e4ebeb] dark:hover:bg-gray-700 hover:text-green-600 justify-start items-center"  onClick={() => setShowSidebar(!showSidebar)}>
+            <ArrowBackOutlinedIcon/></div>
           <h2 className="p-1 text-lg border-b w-full">Nearby {NewqueryObject.category==='Property services' ? (<>Service Providers</>):(<>Properties</>)}</h2>
           </div>
 
