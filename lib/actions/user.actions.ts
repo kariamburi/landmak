@@ -11,6 +11,11 @@ import { handleError } from '@/lib/utils'
 import { CreateUserParams, UpdateUserParams, UpdateUserSetingsParams, UpdateUserToken } from '@/types'
 import Verify from '../database/models/verifies.model'
 import Verifies from '../database/models/verifies.model'
+import Transaction from '../database/models/transaction.model'
+import DynamicAd from '../database/models/dynamicAd.model'
+import Packages from '@/lib/database/models/packages.model'
+import { FreePackId } from '@/constants'
+import mongoose from 'mongoose'
 
 
 export async function createUser(user: CreateUserParams) {
@@ -37,6 +42,88 @@ export async function getUserById(userId: string) {
   try {
     await connectToDatabase()
 
+    // Get User
+    const user = await User.findById(userId)
+    if (!user) throw new Error('User not found')
+
+    // Get Verification Fee
+    const verifyData = await Verifies.findOne()
+    const fee = verifyData?.fee || 500
+
+    // Get Transaction and Package Info
+    const status = "Active"
+    const transactionConditions = {
+      $and: [
+        { buyer: userId },
+        { status: status },
+        { plan: { $ne: "Verification" } }
+      ]
+    }
+
+    const recentTransaction = await Transaction.find(transactionConditions)
+      .sort({ createdAt: 'desc' })
+      .limit(1)
+      .lean()
+
+    let transaction = null
+    let currentpack = null
+    let adCount = 0
+    let subscriptionStatus = 'Expired'
+    if (!recentTransaction || recentTransaction.length === 0) {
+      // No transaction — assign FreePack
+      currentpack = await Packages.findById(FreePackId).lean()
+      adCount = await DynamicAd.countDocuments({ organizer: userId })
+    } else {
+      // Use recent transaction's plan
+      transaction = recentTransaction[0]
+      const planId = transaction.planId ? new mongoose.Types.ObjectId(transaction.planId) : null
+      currentpack = await Packages.findById(transaction.planId).lean()
+
+      const adConditions = {
+        $and: [
+          { plan: planId },
+          { createdAt: { $gte: transaction.createdAt } }
+        ]
+      }
+      adCount = await DynamicAd.countDocuments(adConditions)
+      // ======= Determine Subscription Status =======
+      const periodStr = transaction.period || '7 days' // fallback
+      const periodDays = parseInt(periodStr) || 7 // extract numeric days
+
+      const createdAt = new Date(transaction.createdAt)
+      const expirationDate = new Date(createdAt)
+      expirationDate.setDate(createdAt.getDate() + periodDays)
+
+      if (expirationDate > new Date()) {
+        subscriptionStatus = 'Active'
+      } else {
+        subscriptionStatus = 'Expired'
+      }
+    }
+
+    return {
+      user: JSON.parse(JSON.stringify({ ...user.toObject(), fee })),
+      transaction,
+      ads: adCount,
+      currentpack,
+      subscriptionStatus
+    }
+
+  } catch (error) {
+    handleError(error)
+    return {
+      user: null,
+      transaction: null,
+      ads: 0,
+      currentpack: null,
+      subscriptionStatus: 'Unknown'
+    }
+  }
+}
+export async function getUserById_(userId: string) {
+  try {
+    await connectToDatabase()
+
     const user = await User.findById(userId)
 
     if (!user) throw new Error('User not found')
@@ -44,7 +131,7 @@ export async function getUserById(userId: string) {
     // Fetch verification fee
     const verifyData = await Verifies.findOne() // adjust if you have a different criteria
     const fee = verifyData?.fee || 500
-    console.log(fee);
+    //console.log(fee);
     return JSON.parse(JSON.stringify({ ...user.toObject(), fee }))
 
 

@@ -91,6 +91,8 @@ import { Icon } from "@iconify/react";
 import threeDotsScale from "@iconify-icons/svg-spinners/3-dots-scale"; // Correct import
 import PropertyShapesGrid from "./PropertyShapesGrid";
 import ArrowForwardIosOutlinedIcon from '@mui/icons-material/ArrowForwardIosOutlined';
+import { RequestFinancing } from "./RequestFinancing";
+import AccountBalanceOutlinedIcon from '@mui/icons-material/AccountBalanceOutlined';
  // Correct import
 type CardProps = {
   ad: any;
@@ -104,7 +106,7 @@ type CardProps = {
   handleOpenShop: (value:any) => void;
   handlePay: (id:string) => void;
   handleOpenPlan: () => void;
-  handleOpenSell: () => void;
+  handleOpenSell: (category?:string, subcategory?:string) => void;
   handleOpenSafety: () => void;
   
 };
@@ -251,8 +253,19 @@ export default function Ads({ ad, user, userId, userImage, userName, onClose,han
     // Handle error when formatting date
   }
   const [isPopupOpen, setIsPopupOpen] = useState(false);
+  const [isPopupOpenLoan, setIsPopupOpenLoan] = useState(false);
   const [isPopupOpenAAv, setIsPopupOpenAv] = useState(false);
   const [abuseDescription, setAbuseDescription] = useState("");
+
+   const handleOpenPopupLoan = () => {
+    setIsPopupOpenLoan(true);
+  };
+
+  const handleClosePopupLoan = () => {
+    setIsPopupOpenLoan(false);
+   // Clear the textarea on close
+  };
+
   const handleOpenPopupAv = () => {
     setIsPopupOpenAv(true);
   };
@@ -1365,10 +1378,30 @@ export default function Ads({ ad, user, userId, userImage, userName, onClose,han
                 </div>
               </>
             )}
+ <div className="flex w-full items-center">
+              <SignedIn>
+              <button onClick={handleOpenPopupLoan} className="flex rounded-sm w-full py-3 px-2 text-lg text-white bg-green-600 hover:bg-green-700 justify-center items-center gap-1">
+              <AccountBalanceOutlinedIcon/>
+              Request this property Financing
+      </button>
+       
+        </SignedIn>
 
+        <SignedOut>
+        <button onClick={() => {
+             // setIsOpenP(true);
+              router.push("/sign-in");
+            }}
+             className="flex text-white justify-center rounded-sm w-full py-3 px-2 text-lg bg-green-600 hover:bg-green-700 items-center">
+              <AccountBalanceOutlinedIcon/>
+              Request this property Financing
+      </button>
+      </SignedOut>
+        </div>
             <div className="flex justify-between w-full items-center">
             <ReportUnavailable  userId={userId} ad={ad} isOpen={isPopupOpenAAv} onClose={handleClosePopupAv} userName={userName} userImage={userImage}/>
             <ReportAbuse  userId={userId} ad={ad} isOpen={isPopupOpen} onClose={handleClosePopup} userName={userName} userImage={userImage}/>
+            <RequestFinancing  userId={userId} ad={ad} isOpen={isPopupOpenLoan} onClose={handleClosePopupLoan} userName={userName} userImage={userImage}/>
             </div>
           </div>
         </div>
@@ -1782,7 +1815,7 @@ export default function Ads({ ad, user, userId, userImage, userName, onClose,han
             <SignedIn>
             <Button onClick={() => {
             
-            handleOpenSell();
+            handleOpenSell(ad.data.category.toString(), ad.data.subcategory.toString());
            // router.push("/ads/create");
           
         }} variant="default" className="flex bg-green-600 hover:bg-green-700 w-full items-center gap-2">

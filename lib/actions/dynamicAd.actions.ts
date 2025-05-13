@@ -15,7 +15,29 @@ import User from "../database/models/user.model"
 import { createTransaction } from "./transactions.actions"
 import Subcategory from "../database/models/subcategory.model"
 import { PipelineStage } from "mongoose"
+import Loan from "../database/models/loans.model"
+import { FaClosedCaptioning } from "react-icons/fa"
 
+const populateLoans = (query: any) => {
+  return query
+    .populate({
+      path: 'userId',
+      model: User,
+      select:
+        '_id clerkId email firstName lastName photo businessname aboutbusiness businessaddress latitude longitude businesshours businessworkingdays phone whatsapp website facebook twitter instagram tiktok imageUrl verified token notifications',
+    })
+    .populate({
+      path: 'adId',
+      model: DynamicAd,
+      select:
+        '_id data views priority expirely adstatus inquiries whatsapp calls shared bookmarked abused subcategory organizer plan createdAt',
+      populate: {
+        path: 'organizer',
+        model: User, // or whatever model the organizer refers to
+        select: '_id clerkId email firstName lastName photo businessname aboutbusiness businessaddress latitude longitude businesshours businessworkingdays phone whatsapp website facebook twitter instagram tiktok imageUrl verified token notifications',
+      },
+    });
+};
 
 const populateAd = (query: any) => {
   return query
@@ -224,6 +246,7 @@ export async function getAlldynamicAd({ limit = 20, page = 1, queryObject }: Get
     };
 
     const isLocationSearch = !!queryObject.location;
+    const isFinanceRequestSearch = queryObject.subcategory ? queryObject.subcategory.trim().toLowerCase() === "Property Financing Requests".toLowerCase() : false;
     const conditionsAdstatus = { adstatus: "Active" };
     const dynamicConditions: any = {};
 
@@ -306,6 +329,25 @@ export async function getAlldynamicAd({ limit = 20, page = 1, queryObject }: Get
         totalPages: Math.ceil(adCount / limit),
       };
     }
+
+    if (isFinanceRequestSearch) {
+
+      try {
+        const conditions = { status: 'Pending' }
+        const skipAmount = (Number(page) - 1) * limit
+        const response = await populateLoans(Loan.find(conditions)
+          .skip(skipAmount)
+          .limit(limit));
+        const AdCount = await Loan.countDocuments(conditions)
+
+        return { data: JSON.parse(JSON.stringify(response)), totalPages: Math.ceil(AdCount / limit) }
+      } catch (error) {
+        handleError(error)
+      }
+    }
+
+
+
 
     // Else normal listing
     const skipAmount = (page - 1) * limit;

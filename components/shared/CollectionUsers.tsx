@@ -168,7 +168,7 @@ const CollectionUsers = ({
                    <td className="border border-gray-300 dark:border-gray-600 px-4 py-2">
                                     <button
                                     onClick={() => handleOpenContact(user)}
-                                    className="bg-gray-800 text-white px-3 py-1 rounded hover:bg-gray-900"
+                                    className="bg-gray-100 px-3 py-1 rounded hover:bg-[#e4ebeb]"
                                   >
                                    <QuestionAnswerOutlinedIcon/>
                                   </button>

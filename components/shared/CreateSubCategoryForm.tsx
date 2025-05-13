@@ -199,6 +199,7 @@ const CreateSubCategoryForm = () => {
                   <option value="autocomplete">AutoComplete</option>
                   <option value="year">Year</option>
                   <option value="phone">Phone</option>
+                  <option value="budget">Budget</option>
                   <option value="price">Sale Price</option>
                   <option value="rentprice">Price Per Duration</option>
                   <option value="priceper">Price Per Space</option>

@@ -34,6 +34,7 @@ type CollectionProps = {
   handleAdEdit: (ad:any) => void;
   handleAdView: (ad:any) => void;
   handleOpenPlan: () => void;
+   handleOpenChatId: (value:any) => void;
   collectionType?: "Ads_Organized" | "My_Tickets" | "All_Ads";
 };
 
@@ -42,7 +43,7 @@ const CollectionRelated = ({
   emptyTitle,
   emptyStateSubtext,
   // page,
-  // totalPages = 0,
+  handleOpenChatId,
   collectionType,
   urlParamName,
   categoryId,
@@ -154,6 +155,7 @@ const CollectionRelated = ({
                                            handleAdEdit={handleAdEdit}
                                            handleAdView={handleAdView}
                                            handleOpenPlan={handleOpenPlan}
+                                             handleOpenChatId={handleOpenChatId} 
                                          />
                 </div>
               );
@@ -168,6 +170,7 @@ const CollectionRelated = ({
                                             handleAdEdit={handleAdEdit}
                                             handleAdView={handleAdView}
                                             handleOpenPlan={handleOpenPlan}
+                                              handleOpenChatId={handleOpenChatId} 
                                           />
                 </div>
               );

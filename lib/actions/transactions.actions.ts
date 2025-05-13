@@ -132,11 +132,6 @@ export async function getData(userId: string) {
       const adConditions = { organizer: userId };
       const AdCount = await DynamicAd.countDocuments(adConditions);
 
-      console.log({
-        transaction: null,
-        ads: AdCount,
-        currentpack: pack,
-      });
 
       return {
         transaction: null,
@@ -158,7 +153,7 @@ export async function getData(userId: string) {
       };
       const AdCount = await DynamicAd.countDocuments(adConditions);
 
-      console.log("Transaction:", transaction, "AdCount:", AdCount, "Pack:", pack);
+      // console.log("Transaction:", transaction, "AdCount:", AdCount, "Pack:", pack);
 
       return {
         transaction,

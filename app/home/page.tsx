@@ -8,6 +8,7 @@ import {
   getselectedCategories,
 } from "@/lib/actions/category.actions";
 import { getTotalProducts } from "@/lib/actions/dynamicAd.actions";
+import { getallLaons } from "@/lib/actions/loan.actions";
 import { getallReported } from "@/lib/actions/report.actions";
 import {
   getallcategories,
@@ -52,7 +53,8 @@ const Home = async ({ searchParams }: SearchParamProps) => {
   const fee = await getVerifyfee();
    const subscriptionsExpirely = await checkExpiredLatestSubscriptionsPerUser();
   const topadvertiser = await getToAdvertiser();
-//console.log(reported);
+  const financeRequests = await getallLaons(limit, page);
+  console.log(reported);
   return (
    
         <HomeDashboard
@@ -73,6 +75,7 @@ const Home = async ({ searchParams }: SearchParamProps) => {
           contacts={contacts}
           subscriptionsExpirely={subscriptionsExpirely}
           topadvertiser={topadvertiser}
+          financeRequests={financeRequests}
         />
       
   );

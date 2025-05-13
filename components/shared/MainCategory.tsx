@@ -109,7 +109,7 @@ type CollectionProps = {
   limit: number;
   emptyTitle: string;
   emptyStateSubtext: string;
-  //AdsCountPerRegion: any;
+  loans: any;
   //AdsCountPerVerifiedTrue: any;
   //AdsCountPerVerifiedFalse: any;
   queryObject: any;
@@ -131,6 +131,7 @@ type CollectionProps = {
   handleOpenShop: (shopId:string) => void;
   handleCategory: (value:string) => void;
   handleOpenSearchTab: (value:string) => void;
+  handleOpenChatId: (value:any) => void;
 }
 const MainCategory = ({
   userId,
@@ -141,7 +142,7 @@ const MainCategory = ({
   emptyTitle,
   emptyStateSubtext,
   user,
- // AdsCountPerRegion,
+  loans,
   //AdsCountPerVerifiedTrue,
   //AdsCountPerVerifiedFalse,
   queryObject,
@@ -160,6 +161,7 @@ const MainCategory = ({
   handleCategory,
   handleOpenSearchTab,
   handleOpenSearchByTitle,
+  handleOpenChatId,
 
 }: // user,
 
@@ -621,6 +623,7 @@ const SCROLL_THRESHOLD = 150; // pixels
                           category={newqueryObject.category}
                           subcategory={newqueryObject.subcategory}
                           handleFilter={handleResetFilter}
+                          loans={loans}
                          
                         />
                         
@@ -676,6 +679,7 @@ const SCROLL_THRESHOLD = 150; // pixels
           className="mr-2 w-5 h-8 text-white lg:text-gray-500 flex items-center justify-center rounded-sm tooltip tooltip-bottom hover:cursor-pointer lg:hover:text-green-600"
           data-tip="Back"
           onClick={() => {
+            console.log(newqueryObject);
             onClose();
           }}
         >
@@ -1308,6 +1312,7 @@ const SCROLL_THRESHOLD = 150; // pixels
       handleOpenSell={handleOpenSell}
       handleAdView={handleAdView}
       handleOpenPlan={handleOpenPlan}
+      handleOpenChatId={handleOpenChatId}
     />
   </section>
 

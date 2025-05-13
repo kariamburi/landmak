@@ -27,6 +27,7 @@ type CollectionProps = {
   handleAdEdit: (ad:any) => void;
   handleAdView: (ad:any) => void;
   handleOpenPlan: () => void;
+   handleOpenChatId: (value:any) => void;
   collectionType?: "Ads_Organized" | "My_Tickets" | "All_Ads";
 };
 
@@ -36,7 +37,7 @@ const CollectionMyads = ({
   emptyTitle,
   emptyStateSubtext,
   sortby,
-  //totalPages = 0,
+   handleOpenChatId,
   collectionType,
   urlParamName,
   isAdCreator,
@@ -164,10 +165,10 @@ const filteredAds = selectedCategory
                       ad={ad}
                       userId={userId}
                       isAdCreator={isAdCreator}
-                      handleAdView={handleAdView} 
+                      handleAdView={handleAdView}
                       handleAdEdit={handleAdEdit}
-                      handleOpenPlan={handleOpenPlan}
-                    />
+                      handleOpenPlan={handleOpenPlan} 
+                      handleOpenChatId={handleOpenChatId}                    />
                   </div>
                 );
               } else {
@@ -181,6 +182,7 @@ const filteredAds = selectedCategory
                       handleAdView={handleAdView} 
                       handleAdEdit={handleAdEdit}
                       handleOpenPlan={handleOpenPlan}
+                      handleOpenChatId={handleOpenChatId} 
                     />
                   </div>
                 );
@@ -206,6 +208,7 @@ const filteredAds = selectedCategory
                         handleAdView={handleAdView} 
                       handleAdEdit={handleAdEdit}
                       handleOpenPlan={handleOpenPlan}
+                        handleOpenChatId={handleOpenChatId} 
                       />
                     </div>
                   );
@@ -220,6 +223,7 @@ const filteredAds = selectedCategory
                         handleAdView={handleAdView} 
                       handleAdEdit={handleAdEdit}
                       handleOpenPlan={handleOpenPlan}
+                        handleOpenChatId={handleOpenChatId} 
                       />
                     </div>
                   );

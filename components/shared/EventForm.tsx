@@ -62,6 +62,7 @@ import { updateUserPhone } from "@/lib/actions/user.actions";
 
 import CircularProgress from "@mui/material/CircularProgress";
 import MapDrawingTool from "./MapDrawingTool";
+import { createLoan } from "@/lib/actions/loan.actions";
 const ReactQuill = dynamic(() => import("react-quill"), {
   ssr: false,
   loading: () => (
@@ -166,19 +167,22 @@ type Package = {
 };
 type AdFormProps = {
   userId: string;
+  userImage?: string;
   user: any;
   type: string;
   ad?: any;
   adId?: string;
   categories:any;
   userName: string;
+  category?:string
+  subcategory?:string
  // daysRemaining: number;
  // packname: string;
  // packagesList: any;
   //listed: number;
  // priority: number;
   //expirationDate: Date;
-  //adstatus: string;
+  packagesList:any;
   handleAdView?:(ad:any) => void;
   handlePay?:(id:string) => void;
   handleOpenTerms:() => void;
@@ -186,19 +190,16 @@ type AdFormProps = {
 
 const AdForm = ({
   userId,
+  userImage,
   user,
   type,
   ad,
   adId,
   userName,
-  //daysRemaining,
- // packname,
- // packagesList,
- // listed,
-  //priority,
-  //expirationDate,
-  //adstatus,
+  category,
+  subcategory,
   categories,
+  packagesList,
   handleAdView,
   handlePay,
   handleOpenTerms,
@@ -307,26 +308,15 @@ const AdForm = ({
     string[]
   >([]);
  
-  const [activeButton, setActiveButton] = useState(0);
-  const [activeButtonTitle, setActiveButtonTitle] = useState("1 week");
-  const [priceInput, setPriceInput] = useState("");
-  const [periodInput, setPeriodInput] = useState("");
-   const [subscription, setSubscription] = useState<any>(null);
-    const [packagesList, setPackagesList] = useState<Package[]>([]);
-    const [daysRemaining, setDaysRemaining] = useState(0);
-    const [remainingAds, setRemainingAds] = useState(0);
     const [listed, setListed] = useState(0);
-    const [Plan, setplan] = useState("Free");
-    const [PlanId, setplanId] = useState(FreePackId);
-    const [Priority_, setpriority] = useState(0);
-    const [Adstatus_, setadstatus] = useState("Pending");
     const [color, setColor] = useState("#000000");
     const [loadingSub, setLoadingSub] = useState<boolean>(false);
-    const [ExpirationDate_, setexpirationDate] = useState(new Date());
-    const [activePackage, setActivePackage] = useState<Package | null>(null);
     const [countryCode, setCountryCode] = useState("+254"); // Default country code
     const [phoneNumber, setPhoneNumber] = useState("");
   
+
+
+
     useEffect(() => {
       const getCategory = async () => {
         try {
@@ -352,7 +342,8 @@ const allowedCategories = [
     "Event Centres, Venues & Workstations",
   "Short Let Property",
    "Special Listings",
-    "Property Services"];
+    "Property Services", 
+    "Wanted Ads"];
 
 const filteredCategories = uniqueCategories.filter(
   (cat: any) => allowedCategories.includes(cat.category.name)
@@ -384,6 +375,26 @@ setSelectedCategoryCommand(filteredCategories);
               });
             
           
+          }else{
+if(subcategory && category){
+  setSelectedCategory(category);
+  setSelectedSubCategory(subcategory);
+  const selectedData: any = categories.find(
+              (ca: any) =>
+                ca.category.name === category &&
+                ca.subcategory === subcategory
+            );
+            // Update fields if a match is founds
+            setSelectedCategoryId(selectedData.category._id)
+            setFields(selectedData ? selectedData.fields : []);
+             setFormData({
+                ...formData,
+                phone: ad.data.phone,
+              });
+          }
+
+
+
           }
           setShowLoad(false)
         } catch (error) {
@@ -394,63 +405,114 @@ setSelectedCategoryCommand(filteredCategories);
       getCategory();
     }, []);
 
-  useEffect(() => {
-      if(type === "Create"){
+
+    const [activePackage, setActivePackage] = useState<Package | null>(null);
+    const [activeButton, setActiveButton] = useState(0);
+    const [activeButtonTitle, setActiveButtonTitle] = useState("1 week");
+    const createdAt = new Date(user.transaction?.createdAt || new Date());
+    const periodInDays = parseInt(user.transaction?.period) || 0;
+    const expiryDate = new Date(createdAt.getTime() + periodInDays * 24 * 60 * 60 * 1000);
+    const currentTime = new Date();
+    const remainingTime = expiryDate.getTime() - currentTime.getTime();
+    const remainingDays = Math.ceil(remainingTime / (1000 * 60 * 60 * 24));
+   //  const [subscription, setSubscription] = useState<any>(null);
+   // const [packagesList, setPackagesList] = useState<Package[]>([]);
+  //  const [daysRemaining, setDaysRemaining] = useState(0);
+   // const [remainingAds, setRemainingAds] = useState(0);
+    
+        const [Plan, setplan] = useState("Free");
+        const [PlanId, setplanId] = useState(FreePackId);
+        const [Priority_, setpriority] = useState(0);
+        const [Adstatus_, setadstatus] = useState("Active");
+        const [priceInput, setPriceInput] = useState("");
+        const [periodInput, setPeriodInput] = useState("");
+         const [ExpirationDate_, setexpirationDate] = useState(new Date());
+    
+          const currDate = new Date();
+        // Add one month to the current date
+        let expirationDate = new Date(currDate);
+        expirationDate.setMonth(currDate.getMonth() + 1);
+       // expirationDate.setDate(currDate.getDate() + 7);
+
+useEffect(() => {
+    
+    setadstatus("Active");
+    setActivePackage(packagesList[0]);
+    setplanId(packagesList[0]._id);
+    setplan(packagesList[0].name);
+    setpriority(packagesList[0].priority);
+    setexpirationDate(expirationDate);
+    packagesList[0].price.forEach((price: any, index: number) => {
+      if (index === activeButton) {
+        setPriceInput(price.amount);
+        setPeriodInput(price.period);
+      }
+    });
+     }, []);
+
+
+
+
+ // useEffect(() => {
+     // if(type === "Create"){
        
-        const fetchData = async () => {
-          try {
-            setLoadingSub(true);
+        //const fetchData = async () => {
+        //  try {
+          //  setLoadingSub(true);
            
-            const subscriptionData = await getData(userId);
-            const packages = await getAllPackages();
-            setPackagesList(packages);
+         //   const subscriptionData = await getData(userId);
+          //  const packages = await getAllPackages();
+          //  setPackagesList(packages);
            //console.log(subscriptionData);
 
-            if (subscriptionData) {
-              setSubscription(subscriptionData);
-              const listedAds = subscriptionData.ads || 0;
-              setListed(listedAds);
-              if (subscriptionData.currentpack && !Array.isArray(subscriptionData.currentpack)) { 
-              setRemainingAds(subscriptionData.currentpack.list - listedAds);
-              setpriority(subscriptionData.currentpack.priority);
-              setColor(subscriptionData.currentpack.color);
-              setplan(subscriptionData.currentpack.name);
-              setplanId(subscriptionData.transaction?.planId || FreePackId);
+           // if (subscriptionData) {
+           //   setSubscription(subscriptionData);
+          //    const listedAds = subscriptionData.ads || 0;
+          //    setListed(listedAds);
+          //    if (subscriptionData.currentpack && !Array.isArray(subscriptionData.currentpack)) { 
+           //   setRemainingAds(subscriptionData.currentpack.list - listedAds);
+           //   setpriority(subscriptionData.currentpack.priority);
+          //    setColor(subscriptionData.currentpack.color);
+          //    setplan(subscriptionData.currentpack.name);
+          //    setplanId(subscriptionData.transaction?.planId || FreePackId);
              // console.log(subscriptionData);
-              const createdAtDate = new Date(subscriptionData.transaction?.createdAt || new Date());
-              const periodDays = parseInt(subscriptionData.transaction?.period) || 0;
-              const expiryDate = new Date(createdAtDate.getTime() + periodDays * 24 * 60 * 60 * 1000);
-              setexpirationDate(expiryDate);
-              const currentDate = new Date();
-              const remainingDays = Math.ceil((expiryDate.getTime() - currentDate.getTime()) / (1000 * 60 * 60 * 24));
-              setDaysRemaining(remainingDays);
-              setadstatus((remainingDays > 0 && (subscriptionData.currentpack.list - listedAds) > 0) || ((subscriptionData.currentpack.list - listedAds) > 0 && subscriptionData.currentpack.name === "Free") ? "Active" : "Pending");
-              setActivePackage(
-              packages.length > 0
-                ? subscriptionData.currentpack.list - listedAds > 0 && subscriptionData.currentpack.name === "Free"
-                  ? packages[0]
-                  : packages[1]
-                : null
-            );
-            } else {
-              console.warn("No current package found for the user.");
-            }
-            }
-          } catch (error) {
-            console.error("Failed to fetch data", error);
-          } finally {
+           //   const createdAtDate = new Date(subscriptionData.transaction?.createdAt || new Date());
+           //   const periodDays = parseInt(subscriptionData.transaction?.period) || 0;
+           //   const expiryDate = new Date(createdAtDate.getTime() + periodDays * 24 * 60 * 60 * 1000);
+          //    setexpirationDate(expiryDate);
+           //   const currentDate = new Date();
+           //   const remainingDays = Math.ceil((expiryDate.getTime() - currentDate.getTime()) / (1000 * 60 * 60 * 24));
+           //   setDaysRemaining(remainingDays);
+           //   setadstatus((remainingDays > 0 && (subscriptionData.currentpack.list - listedAds) > 0) || ((subscriptionData.currentpack.list - listedAds) > 0 && subscriptionData.currentpack.name === "Free") ? "Active" : "Pending");
+          //    setActivePackage(
+          //    packages.length > 0
+           //     ? subscriptionData.currentpack.list - listedAds > 0 && subscriptionData.currentpack.name === "Free"
+          //        ? packages[0]
+         //         : packages[1]
+          //      : null
+         //   );
+        //    } else {
+        //      console.warn("No current package found for the user.");
+        //    }
+        //    }
+       //   } catch (error) {
+       //     console.error("Failed to fetch data", error);
+      //    } finally {
            
-            setLoadingSub(false);
-          }
-        };
-        fetchData();
-      }
-    }, []);
+      //      setLoadingSub(false);
+    //      }
+   //     };
+   //     fetchData();
+  //    }
+  //  }, []);
+
+
+
  
   const validateForm = async () => {
     //console.log("start: ");
     const validationSchema = createValidationSchema(fields);
-     console.log(formData);
+     //console.log(formData);
 
     const result = validationSchema.safeParse(formData);
     // console.log("result:" + result);
@@ -600,63 +662,93 @@ setSelectedCategoryCommand(filteredCategories);
     const kenyanPhoneRegex = /^(?:\+254|254|0)?(7\d{8})$/;
     return kenyanPhoneRegex.test(phone.trim());
   }
-  const handleSubmit = async () => {
-    setLoading(true);
-    setUploadProgress(0);
-    try {
-      if (type === "Create") {
-        const isValid = await validateForm();
-        if (!isValid){ 
-          toast({
-            variant: "destructive",
-            title:  "Missing fields",
-            description: "Please fill in all required fields",
-            duration: 5000,
-          });
-          
-          return;
-        }
+ const handleSubmit = async () => {
+  setLoading(true);
+  setUploadProgress(0);
 
-        const phone = countryCode + removeLeadingZero(phoneNumber);
-     
-        if(!isValidKenyanPhoneNumber(phone)){
-          toast({
-            variant: "destructive",
-            title:  "Invalid Phone",
-            description: "Invalid Phone Number.",
-            duration: 5000,
-          });
+  try {
+    const isValid = await validateForm();
+    if (!isValid) {
+      toast({
+        variant: "destructive",
+        title: "Missing fields",
+        description: "Please fill in all required fields",
+        duration: 5000,
+      });
+      return;
+    }
 
-          setphoneError("Invalid Phone Number!");
-          return
-        }
-        if(!formData["propertyarea"]){
-         
-          toast({
-            variant: "destructive",
-            title: "No location",
-            description: "Please set location!",
-            duration: 5000,
-          });
+    const phone = countryCode + removeLeadingZero(phoneNumber);
 
-          setlocationError("Set Location!")
-          return
-        }
+    if (!isValidKenyanPhoneNumber(phone)) {
+      toast({
+        variant: "destructive",
+        title: "Invalid Phone",
+        description: "Invalid Phone Number.",
+        duration: 5000,
+      });
+      setphoneError("Invalid Phone Number!");
+      return;
+    }
+
+    if (!formData["propertyarea"]) {
+      toast({
+        variant: "destructive",
+        title: "No location",
+        description: "Please set location!",
+        duration: 5000,
+      });
+      setlocationError("Set Location!");
+      return;
+    }
+
+    let finalData: any;
+    if (type === "Create") {
+      if (selectedCategory === 'Wanted Ads') {
+        finalData = {
+          ...formData,
+          imageUrls: userImage,
+          budget: parseCurrencyToNumber(formData["budget"].toString()),
+          phone,
+        };
+      } else {
         const uploadedUrls = await uploadFiles();
-    
         if (!uploadedUrls) return;
-      
-        const finalData = {
+
+        finalData = {
           ...formData,
           imageUrls: uploadedUrls,
           price: parseCurrencyToNumber(formData["price"].toString()),
-          phone: phone,
+          phone,
         };
-        const pricePack = Number(priceInput);
-      
-     try {
+      }
+  if (selectedSubCategory.trim().toLowerCase() === "Property Financing Requests".toLowerCase()) {
+       const newResponse = await createLoan({
+          loan: {
+          userId: userId,
+          adId: '',
+          loanType:formData["Loan Type"].toString(),
+          monthlyIncome:formData["Monthly Income"].toString(),
+          deposit:formData["Deposit Amount"].toString(),
+          loanterm:formData["Preferred Loan Term"].toString(),
+          employmentStatus:formData["Employment Status"].toString(),
+          messageComments:formData["Comment"].toString(),
+          status: "Pending",
+          },
+          path: "/create",
+            });
+      setFormData(defaults);
+      setFiles([]);
+              toast({
+        title: "Submitted",
+        description: "Loan request submitted successfully.",
+        duration: 5000,
+        className: "bg-[#30AF5B] text-white",
+      });
+          } else{
+      const pricePack = Number(priceInput);
       const newAd = await createData({
-        userId: userId,
+        userId,
         subcategory: selectedSubCategoryId,
         category: selectedCategoryId,
         formData: finalData,
@@ -665,110 +757,83 @@ setSelectedCategoryCommand(filteredCategories);
         adstatus: Adstatus_,
         planId: PlanId,
         plan: Plan,
-        pricePack: pricePack,
+        pricePack,
         periodPack: periodInput,
         path: "/create",
       });
-     
-       
-        if(!user.phone){
-        await updateUserPhone(userId,phone);
+    
+      try {
+        if (!user.phone) {
+          await updateUserPhone(userId, phone);
         }
-
-
-        setFormData(defaults);
-        setFiles([]);
-        setSelectedYear("");
-        setPhoneNumber("");
-        setselectedFeatures([]);
-        toast({
-          title: "Submitted",
-          description: "Ad submitted successfully.",
-          duration: 5000,
-          className: "bg-[#30AF5B] text-white",
-        });
-        if (newAd) {
-          if (newAd.adstatus === "Pending" && handlePay) {
-            handlePay(newAd._id);
-          } else {
-            if (handleAdView) {
-              handleAdView(newAd);
-            }
-          
-          }
-        }
-      }catch (error){
-        console.log(error)
-      //  console.log(newAd);
-       }  
-        // console.log("Data submitted successfully:", finalData);
+      } catch (err) {
+        console.error("Failed to update user phone:", err);
       }
-      if (type === "Update") {
-        const isValid = await validateForm();
-        if (!isValid) return;
 
-        const phone = countryCode + removeLeadingZero(phoneNumber);
-        if(!isValidKenyanPhoneNumber(phone)){
-          toast({
-            title: "Invalid Phone",
-            description: "Invalid Phone Number.",
-            duration: 5000,
-            className: "bg-[#999999] text-white",
-          });
-          setphoneError("Invalid Phone Number!");
-          return
-        }
-        if(!formData["propertyarea"].toString()){
-          toast({
-            title: "No location",
-            description: "Set location!.",
-            duration: 5000,
-            className: "bg-[#999999] text-white",
-          });
-          setlocationError("Set Location!");
-          return
-        }
-        const uploadedUrls = await uploadFiles();
-        // Preserve existing imageUrls if no new files are uploaded
-        const finalImageUrls =
-          uploadedUrls.length > 0 ? uploadedUrls : formData.imageUrls;
+      setFormData(defaults);
+      setFiles([]);
+      setSelectedYear("");
+      setPhoneNumber("");
+      setselectedFeatures([]);
 
-        const finalData = {
-          ...formData,
-          imageUrls: finalImageUrls,
-          price: parseCurrencyToNumber(formData["price"].toString()),
-          phone: phone,
-        };
-        const _id = ad._id;
-        const updatedAd = await updateAd(userId, _id, selectedCategoryId,selectedSubCategoryId, finalData);
+      toast({
+        title: "Submitted",
+        description: "Ad submitted successfully.",
+        duration: 5000,
+        className: "bg-[#30AF5B] text-white",
+      });
 
-        setFormData(defaults);
-        setFiles([]);
-        setSelectedYear("");
-        setPhoneNumber("");
-        setselectedFeatures([]);
-        toast({
-          title: "Updated",
-          description: "Ad updated successfully.",
-          duration: 5000,
-          className: "bg-[#30AF5B] text-white",
-        });
-        if (updatedAd && handleAdView) {
-          handleAdView(updatedAd);
-        
+      if (newAd) {
+        if (newAd.adstatus === "Pending" && handlePay) {
+          handlePay(newAd._id);
+        } else {
+          handleAdView?.(newAd);
         }
-        // console.log("Data submitted successfully:", finalData);
       }
-    } catch (error) {
-      console.error("Validation or submission failed", error);
-    } finally {
-      setLoading(false);
     }
-  };
+    }
+
+    if (type === "Update") {
+      const uploadedUrls = await uploadFiles();
+      if (!uploadedUrls) return;
+
+      const finalImageUrls =
+        uploadedUrls.length > 0 ? uploadedUrls : formData.imageUrls;
+
+      const finalData = {
+        ...formData,
+        imageUrls: finalImageUrls,
+        price: parseCurrencyToNumber(formData["price"].toString()),
+        phone,
+      };
+
+      const updatedAd = await updateAd(userId, ad._id, selectedCategoryId, selectedSubCategoryId, finalData);
+
+      setFormData(defaults);
+      setFiles([]);
+      setSelectedYear("");
+      setPhoneNumber("");
+      setselectedFeatures([]);
+
+      toast({
+        title: "Updated",
+        description: "Ad updated successfully.",
+        duration: 5000,
+        className: "bg-[#30AF5B] text-white",
+      });
+
+      handleAdView?.(updatedAd);
+    }
+  } catch (error) {
+    console.error("Validation or submission failed", error);
+  } finally {
+    setLoading(false);
+  }
+};
 
   // Filter the subcategories for the selected category and include both subcategory and _id
   const filteredSubcategories = categories
-    .filter((category: any) => category.category.name === selectedCategory)
+    .filter((category: any) => category.category.name === selectedCategory && category.subcategory !=="Property Financing Requests")
     .map((category: any) => ({
       subcategory: category.subcategory,
       imageUrl: category.imageUrl[0],
@@ -1010,7 +1075,7 @@ setSelectedCategoryCommand(filteredCategories);
               </div>
             </>
           )} */} 
-          {selectedSubCategory && (
+          {selectedSubCategory && selectedCategory !=='Wanted Ads' && (
             <>
               <div className="flex flex-col bg-white w-full mt-3 gap-0 border dark:bg-[#2D3236] py-2 px-1 rounded-sm border border-gray-300 dark:border-gray-600 items-center">
                 <FileUploader
@@ -1128,7 +1193,35 @@ setSelectedCategoryCommand(filteredCategories);
                   className="w-full"
                 />
               )}
-
+             {field.type === "budget" && (
+                <div className="flex flex-col w-full">
+                  <TextField
+                    required={field.required}
+                    id={field.name}
+                    label={capitalizeFirstLetter(field.name)}
+                    value={formatToCurrency(formData[field.name] ?? 0)}
+                    onChange={(e) =>
+                      handleInputChange(field.name, e.target.value)
+                    }
+                    variant="outlined"
+                    placeholder={`Enter ${field.name.replace("-", " ")}`}
+                    InputProps={{
+                      classes: {
+                        root: "bg-white dark:bg-[#2D3236] dark:text-gray-100",
+                        notchedOutline: "border-gray-300 dark:border-gray-600",
+                        focused: "",
+                      },
+                    }}
+                    InputLabelProps={{
+                      classes: {
+                        root: "text-gray-500 dark:text-gray-400",
+                        focused: "text-green-500 dark:text-green-400",
+                      },
+                    }}
+                    className="w-full"
+                  />
+                </div>
+              )}
 
               {field.type === "price" && (
                 <div className="flex flex-col w-full">
@@ -1812,7 +1905,7 @@ setSelectedCategoryCommand(filteredCategories);
                       <AddLocationAltOutlinedIcon /> 
                       {formData["propertyarea"]?.mapaddress ? (<>
                                {formData["propertyarea"]?.mapaddress}
-                              </>):(<> {selectedCategory ==="Property Services" ? (<> Add Location</>):(<>Add Property Location</>)}</>)} 
+                              </>):(<> {(selectedCategory ==="Property Services" || selectedCategory ==="Wanted Ads") ? (<> Add Location</>):(<>Add Property Location</>)}</>)} 
                      
                     </button>
                     {locationError && (
@@ -1859,21 +1952,8 @@ setSelectedCategoryCommand(filteredCategories);
             {loadingSub ? (<> <div className="w-full min-h-[100px] h-full flex flex-col items-center justify-center">
                             <Icon icon={Barsscale} className="w-10 h-10 text-gray-500" />
                           </div></>):(<>
-            
-            
-             {/* <PromoSelection
-                  packagesList={packagesList}
-                  packname={Plan}
-                  planId={PlanId}
-                  expirationDate={ExpirationDate_}
-                  listed={listed}
-                  adstatus={Adstatus_}
-                  priority={Priority_}
-                  daysRemaining={daysRemaining}
-                  onChange={handlePackageOnChange}
-                />*/}
 
-<div className="w-full mt-2 p-0 dark:text-gray-100 rounded-lg">
+                          <div className="w-full mt-2 p-0 dark:text-gray-100 rounded-lg">
                     <div className="flex flex-col mb-5">
                       <p className="text-gray-700 dark:text-gray-300 font-semibold text-xl">
                         Promote your ad
@@ -1884,161 +1964,120 @@ setSelectedCategoryCommand(filteredCategories);
                     </div>
                     {/* No Promo */}
                     <div className="w-full">
-                      {packagesList.length > 0 &&
-                        packagesList.map((pack: any, index: any) => {
-                          // const check = packname == pack.name != "Free";
-                          const issamepackage = Plan === pack.name;
-                          return (
-                            <div
-                              key={index}
-                              className={`mb-2 dark:bg-[#2D3236] border bg-white rounded-lg cursor-pointer ${
+             {packagesList.length > 0 &&
+      packagesList.map((pack: any, index: number) => {
+        const issamepackage = user.currentpack.name === pack.name;
+
+        return (
+          <div
+            key={index}
+            className={`mb-2 dark:bg-[#2D3236] border bg-white rounded-lg cursor-pointer ${
+              activePackage === pack
+                ? "bg-[#F2FFF2] border-[#4DCE7A] border-2"
+                : ""
+            }`}
+          >
+            <div
+              onClick={() =>
+                (!issamepackage && pack.name === "Free") ||
+                (issamepackage && pack.name === "Free" && (user.currentpack.list - user.ads) === 0)
+                  ? handleClick(pack)
+                  : handleClick(pack)
+              }
+              className="flex justify-between items-center w-full"
+            >
+              {/* Left Column: Package Details */}
+              <div className="p-3">
+                <p className="text-gray-700 font-semibold dark:text-gray-300">
+                  {pack.name}
+                </p>
+                <ul className="flex flex-col gap-1 p-1">
+                  {pack.features.slice(0, 1).map((feature: any, i: number) => (
+                    <li key={i} className="flex items-center gap-1">
+                      <DoneOutlinedIcon />
+                      <p className="text-sm">{feature.title}</p>
+                    </li>
+                  ))}
+                </ul>
+              </div>
+
+              {/* Right Column: Status and Price */}
+              <div className="p-3">
+                <div className="text-gray-600 mb-1">
+                  <div className="flex gap-2 text-sm">
+                    {remainingDays > 0 && pack.name === user.currentpack.name ? (
+                      <div className="p-1 flex-block rounded-full bg-emerald-500">
+                        <p className="text-white text-xs">Active</p>
+                      </div>
+                    ) : (
+                      <>
+                        {(!issamepackage && pack.name === "Free") ||
+                        (issamepackage &&
+                          pack.name === "Free" &&
+                         (user.currentpack.list - user.ads) === 0) ? null : issamepackage &&
+                          pack.name === "Free" &&
+                          (user.currentpack.list - user.ads) > 0 ? null : null}
+                      </>
+                    )}
+                  </div>
+                </div>
+
+                {/* Price Display */}
+                <div className="text-center">
+                  {pack.name !== "Free" && (
+                    <div className="text-gray-800 font-bold mb-0">
+                      <ul className="flex flex-col items-center gap-0 py-0">
+                        {pack.price.map((price: any, i: number) => (
+                          <li
+                            key={i}
+                            className={`flex items-center gap-0 ${
+                              i !== activeButton ? "hidden" : ""
+                            }`}
+                          >
+                            <p
+                              className={`font-semibold ${
                                 activePackage === pack
-                                  ? "bg-[#F2FFF2] border-[#4DCE7A] border-2"
-                                  : ""
+                                  ? "text-[#30AF5B]"
+                                  : "text-gray-800 dark:text-gray-400"
                               }`}
                             >
-                              {/*  <div
-                                className={`text-lg font-bold rounded-t-md text-white py-2 px-4 mb-4 flex flex-col items-center justify-center`}
-                                  style={{
-                                 backgroundColor:
-                                     activePackage === pack ? "#4DCE7A" : pack.color,
-                                  }}
-              
-                              ></div>*/}
-                              <div
-                                onClick={() =>
-                                  (!issamepackage && pack.name === "Free") ||
-                                  (issamepackage && pack.name === "Free" &&  remainingAds === 0)
-                                    ? handleClick(pack)
-                                    : handleClick(pack)
-                                }
-                                className="flex justify-between items-center w-full"
-                              >
-                                <div className="p-3">
-                                  <p className="text-gray-700 font-semibold dark:text-gray-300">
-                                    {pack.name}
-                                  </p>
-                                  <ul className="flex flex-col gap-1 p-1">
-                                    {pack.features
-                                      .slice(0, 1)
-                                      .map((feature: any, index: number) => (
-                                        <li key={index} className="flex items-center gap-1">
-                                          {/*  <Image
-                                          src={`/assets/icons/${
-                                            feature.checked ? "check" : "cross"
-                                          }.svg`}
-                                          alt={feature.checked ? "check" : "cross"}
-                                          width={24}
-                                          height={24}
-                                        />*/}
-                                          <DoneOutlinedIcon />
-                                          <p className="text-sm">{feature.title}</p>
-                                        </li>
-                                      ))}
-                                  </ul>
-                                </div>
-              
-                                <div className="p-3">
-                                  <div className="text-gray-600 mb-1">
-                                    <div className="flex gap-2 text-sm">
-                                      {daysRemaining > 0 && pack.name === Plan ? (
-                                        <>
-                                          <div className="p-1 flex-block rounded-full bg-emerald-500">
-                                            <p className="text-white text-xs">Active</p>
-                                          </div>
-                                        </>
-                                      ) : (
-                                        <>
-                                          {(!issamepackage && pack.name === "Free") ||
-                                          (issamepackage &&
-                                            pack.name === "Free" &&
-                                            remainingAds === 0) ? (
-                                            <div>
-                                            {/*   <div className="p-0 items-center flex rounded-full bg-grey-50">
-                                                <p className="bg-gray-500 border rounded-xl p-2 text-white font-bold text-xs">
-                                                  Disabled
-                                                </p>
-                                              </div>
-                                              <div className="text-xs text-gray-400 p-1">
-                                                You can&apos;t subscribe to Free Package
-                                              </div>
-                                              */}
-                                            </div>
-                                          ) : (
-                                            issamepackage &&
-                                            pack.name === "Free" &&
-                                            remainingAds > 0 && (
-                                              <>
-                                                {/* <div className="p-1 w-full items-center justify-center flex rounded-full bg-emerald-500">
-                                              <p className="text-white text-xs">Active</p>
-                                            </div>*/}
-                                              </>
-                                            )
-                                          )}
-                                        </>
-                                      )}
-                                    </div>
-                                  </div>
-                                  <div className="text-center">
-                                    {pack.name === "Free" ? (
-                                      <></>
-                                    ) : (
-                                      <>
-                                        <div className="text-gray-800 font-bold mb-0">
-                                          <ul className="flex flex-col items-center gap-0 py-0">
-                                            {pack.price.map((price: any, index: number) => (
-                                              <li
-                                                key={index}
-                                                className={`flex items-center gap-0 ${
-                                                  index !== activeButton ? "hidden" : ""
-                                                }`}
-                                              >
-                                                <p
-                                                  className={`font-semibold ${
-                                                    activePackage === pack
-                                                      ? "text-[#30AF5B]"
-                                                      : "text-gray-800 dark:text-gray-400"
-                                                  }`}
-                                                >
-                                                  Ksh {price.amount.toLocaleString()}/{" "}
-                                                  {activeButtonTitle}
-                                                </p>
-                                              </li>
-                                            ))}
-                                          </ul>
-                                        </div>
-                                      </>
-                                    )}
-                                  </div>
-                                </div>
-                              </div>
-                              {pack.name !== "Free" && activePackage === pack && (
-                                <>
-                                  <div className="flex flex-wrap justify-end items-center p-2">
-                                    <button
-                                      className={`mr-2 mb-2 text-xs w-[80px] lg:w-[90px] lg:text-sm ${
-                                        activeButton === 0
-                                          ? "bg-gradient-to-b from-[#4DCE7A] to-[#30AF5B] text-white p-2 rounded-full"
-                                          : "border border-[#30AF5B] text-[#30AF5B] rounded-full p-2"
-                                      }`}
-                                      onClick={() => handleButtonClick(0, "1 week")}
-                                    >
-                                      1 week
-                                    </button>
-                                    <button
-                                      className={`mr-2 mb-2 text-xs w-[80px] lg:w-[90px] lg:text-sm ${
-                                        activeButton === 1
-                                          ? "bg-gradient-to-b from-[#4DCE7A] to-[#30AF5B] text-white p-2 rounded-full"
-                                          : "border border-[#30AF5B] text-[#30AF5B] rounded-full p-2"
-                                      }`}
-                                      onClick={() => handleButtonClick(1, "1 month")}
-                                    >
-                                      1 month
-                                    </button>
-                                  </div>
-                                </>
-                              )}
-                            </div>
+                              Ksh {price.amount.toLocaleString()}/ {activeButtonTitle}
+                            </p>
+                          </li>
+                        ))}
+                      </ul>
+                    </div>
+                  )}
+                </div>
+              </div>
+            </div>
+
+            {/* Button Group */}
+            {pack.name !== "Free" && activePackage === pack && (
+              <div className="flex flex-wrap justify-end items-center p-2">
+                <button
+                  className={`mr-2 mb-2 text-xs w-[80px] lg:w-[90px] lg:text-sm ${
+                    activeButton === 0
+                      ? "bg-gradient-to-b from-[#4DCE7A] to-[#30AF5B] text-white p-2 rounded-full"
+                      : "border border-[#30AF5B] text-[#30AF5B] rounded-full p-2"
+                  }`}
+                  onClick={() => handleButtonClick(0, "1 week")}
+                >
+                  1 week
+                </button>
+                <button
+                  className={`mr-2 mb-2 text-xs w-[80px] lg:w-[90px] lg:text-sm ${
+                    activeButton === 1
+                      ? "bg-gradient-to-b from-[#4DCE7A] to-[#30AF5B] text-white p-2 rounded-full"
+                      : "border border-[#30AF5B] text-[#30AF5B] rounded-full p-2"
+                  }`}
+                  onClick={() => handleButtonClick(1, "1 month")}
+                >
+                  1 month
+                </button>
+              </div>
+            )}
+            </div>
                           );
                         })}
                     </div>

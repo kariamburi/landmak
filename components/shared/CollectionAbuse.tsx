@@ -135,7 +135,7 @@ const CollectionAbuse = ({
                   <td className="border border-gray-300 dark:border-gray-600 px-4 py-2">
                     <div
                       onClick={() => handleOpenMethods(report.adId)} // Pass the specific delivery
-                      className="cursor-pointer hover:text-green-600"
+                      className="bg-gray-100 px-3 py-1 rounded cursor-pointer hover:bg-[#e4ebeb]"
                     >
                       <ModeEditOutlinedIcon />
                     </div>

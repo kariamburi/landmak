@@ -77,7 +77,7 @@ const [isOpenContact, setIsOpenContact] = useState(false);
         </div>
 
         {/* Total for successful orders */}
-        <div className="flex gap-2 items-center bg-green-600 p-1 text-xs rounded-sm">
+        <div className="flex gap-2 items-center bg-green-100 p-1 text-xs rounded-sm">
           <div>Successful</div>
           <div className="font-bold">
             KES{" "}
@@ -89,7 +89,7 @@ const [isOpenContact, setIsOpenContact] = useState(false);
         </div>
 
         {/* Total for pending orders */}
-        <div className="flex gap-2 items-center bg-yellow-600 p-1 text-xs rounded-sm">
+        <div className="flex gap-2 items-center bg-orange-100 p-1 text-xs rounded-sm">
           <div>Pending</div>
           <div className="font-bold">
             KES{" "}
@@ -136,12 +136,12 @@ const [isOpenContact, setIsOpenContact] = useState(false);
                   <td className="border p-2">{trans.buyer.email}</td>
                   <td className="border p-2 text-blue-500 cursor-pointer underline">
                     <div
-                      className={`flex flex-col p-1 text-white justify-center items-center w-[70px] rounded-full ${
+                      className={`flex flex-col p-1 justify-center items-center w-[70px] rounded-full ${
                         trans.status === "Pending"
-                          ? "bg-yellow-600"
+                          ? "bg-orange-100"
                           : trans.status === "Failed"
-                          ? "bg-red-600 "
-                          : "bg-green-600"
+                          ? "bg-red-100 "
+                          : "bg-green-100"
                       }`}
                     >
                       {trans.status}
@@ -174,7 +174,7 @@ const [isOpenContact, setIsOpenContact] = useState(false);
                   <td className="border p-2">
                   <button
                   onClick={() => handleOpenContact(trans.buyer)}
-                  className="bg-green-500 text-white px-3 py-1 rounded hover:bg-green-700"
+                  className="bg-gray-100 px-3 py-1 rounded hover:bg-[#e4ebeb]"
                 >
                 <QuestionAnswerOutlinedIcon/>
                 </button>

@@ -30,6 +30,7 @@ type CollectionProps = {
   handleOpenSell: () => void;
   handleAdView: (ad:any) => void;
   handleOpenPlan: () => void;
+  handleOpenChatId: (value:any) => void;
 };
 
 const CollectionSearch = ({
@@ -44,8 +45,9 @@ const CollectionSearch = ({
   handleAdEdit,
   handleAdView,
   handleOpenPlan,
+  handleOpenChatId,
 }: CollectionProps) => {
-  const [data, setAds] = useState<IAd[]>([]); // Initialize with an empty array
+  const [data, setAds] = useState<any>([]); // Initialize with an empty array
   const [page, setPage] = useState(1);
   const [totalPages, setTotalPages] = useState(1);
   const [loading, setLoading] = useState(true);
@@ -67,12 +69,12 @@ const CollectionSearch = ({
 
       if (newpage) {
         setnewpage(false);
-        setAds((prevAds: IAd[]) => {
-          const existingAdIds = new Set(prevAds.map((ad) => ad._id));
+        setAds((prevAds: any) => {
+          const existingAdIds = new Set(prevAds.map((ad:any) => ad._id));
 
           // Filter out ads that are already in prevAds
           const newAds = Ads?.data.filter(
-            (ad: IAd) => !existingAdIds.has(ad._id)
+            (ad: any) => !existingAdIds.has(ad._id)
           );
 
           return [...prevAds, ...newAds]; // Return updated ads
@@ -130,7 +132,13 @@ const CollectionSearch = ({
                 columnClassName="bg-clip-padding"
               >
                 {data.map((ad: any, index: number) => {
-                  const isAdCreator = userId === ad.organizer._id.toString();
+                     let isAdCreator;
+                  if(ad.loanterm){
+                       isAdCreator = userId === ad.userId._id.toString();
+                  }else{
+                        isAdCreator = userId === ad.organizer._id.toString();
+                  }
+               
                   if (data.length === index + 1) {
                     return (
                       <div
@@ -146,6 +154,7 @@ const CollectionSearch = ({
                           handleAdEdit={handleAdEdit}    
                           handleAdView={handleAdView}
                           handleOpenPlan={handleOpenPlan}
+                          handleOpenChatId={handleOpenChatId}
                         />
                       </div>
                     );
@@ -160,6 +169,7 @@ const CollectionSearch = ({
                           handleAdEdit={handleAdEdit}    
                           handleAdView={handleAdView}
                           handleOpenPlan={handleOpenPlan}
+                          handleOpenChatId={handleOpenChatId}
                         />
                       </div>
                     );
@@ -173,7 +183,12 @@ const CollectionSearch = ({
               <div className="flex p-1 rounded-lg min-h-screen">
                 <ul className="w-full">
                   {data.map((ad: any, index: number) => {
-                    const isAdCreator = userId === ad.organizer._id.toString();
+                    let isAdCreator;
+                  if(ad.loanterm){
+                       isAdCreator = userId === ad.userId._id.toString();
+                  }else{
+                        isAdCreator = userId === ad.organizer._id.toString();
+                  }
                     if (data.length === index + 1) {
                       return (
                         <div
@@ -189,6 +204,7 @@ const CollectionSearch = ({
                             handleAdEdit={handleAdEdit}    
                             handleAdView={handleAdView}
                             handleOpenPlan={handleOpenPlan}
+                            handleOpenChatId={handleOpenChatId}
                           />
                         </div>
                       );
@@ -202,7 +218,8 @@ const CollectionSearch = ({
                             isAdCreator={isAdCreator}
                             handleAdView={handleAdView} 
                             handleAdEdit={handleAdEdit}
-                            handleOpenPlan={handleOpenPlan}                         />
+                            handleOpenPlan={handleOpenPlan}  
+                            handleOpenChatId={handleOpenChatId} />
                         </div>
                       );
                     }

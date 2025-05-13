@@ -33,6 +33,7 @@ interface WindowProps {
   handleOpenSettings: () => void;
   handleOpenSearchByTitle: () => void;
   handleOpenSearchTab: (value:string) => void;
+  handleOpenChatId: (value:string) => void;
   userId: string;
   userName: string;
   userImage:string;
@@ -40,6 +41,7 @@ interface WindowProps {
   categoryList:any;
   subcategoryList:any;
   user:any;
+  loans:any;
 }
 
 const PopupCategory = ({
@@ -51,6 +53,8 @@ const PopupCategory = ({
   userName,
   userImage,
   user,
+  loans,
+  handleOpenChatId,
   onClose,
   handleOpenBook,
   handleOpenSell,
@@ -101,6 +105,8 @@ const PopupCategory = ({
             handleAdEdit={handleAdEdit}
             handleOpenSearchTab={handleOpenSearchTab}
             handleOpenSearchByTitle={handleOpenSearchByTitle}
+            handleOpenChatId={handleOpenChatId}
+            loans={loans}
           />
         
         <Toaster />

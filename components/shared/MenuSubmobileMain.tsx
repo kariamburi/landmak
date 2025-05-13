@@ -31,12 +31,16 @@ type MobileProps = {
   categoryList: Category[];
   subcategoryList: any;
    handleSubCategory: (category:string, subcategory:string) => void;
-  handleOpenSell: () => void;
+  handleOpenSell: (category?:string, subcategory?:string) => void;
   userId:string;
   handleOpenChat: () => void;
   handleCategory:(value:string)=> void;
   handleOpenSearchTab:(value:string)=> void;
   handleOpenSettings: () => void;
+  handlePayNow:(id:string)=> void;
+  loans:any;
+  user:any;
+  packagesList:any;
 };
 
 export default function MenuSubmobileMain({
@@ -46,9 +50,13 @@ export default function MenuSubmobileMain({
   userId,
   handleOpenChat,
   handleOpenSell,
+  handlePayNow,
   handleCategory,
   handleOpenSearchTab,
   handleOpenSettings,
+packagesList,
+  user,
+  loans,
 }: MobileProps) {
   const router = useRouter();
   const searchParams = useSearchParams();
@@ -98,7 +106,7 @@ export default function MenuSubmobileMain({
               setIsOpenP(true);
               router.push("/sign-in");
             }}
-            className="hidden lg:inline h-[140px] bg-emerald-500 text-white flex flex-col items-center justify-center cursor-pointer rounded-sm p-1 border-0 border-emerald-300 hover:bg-emerald-600"
+            className="h-[140px] bg-emerald-500 text-white flex flex-col items-center justify-center cursor-pointer rounded-sm p-1 border-0 border-emerald-300 hover:bg-emerald-600"
           >
             <div className="flex flex-col items-center text-center justify-center">
               <div className="h-12 w-12 rounded-full p-2">
@@ -129,7 +137,7 @@ export default function MenuSubmobileMain({
               <div className="flex flex-col">
                 <h2 className="text-xs">{category.name}</h2>
                 <p className="text-xs text-gray-500 dark:text-gray-500">
-                  {category.adCount} ads
+                  {category.name === "Wanted Ads" ?  (category.adCount + loans.adCount): category.adCount} ads
                 </p>
               </div>
             </div>
@@ -148,7 +156,10 @@ export default function MenuSubmobileMain({
         handleCategory={handleCategory}
         handleOpenSearchTab={handleOpenSearchTab}
         handleOpenSettings={handleOpenSettings}
-
+        loans={loans}
+        user={user}
+        packagesList={packagesList}
+        handlePayNow={handlePayNow}
       />
       <ProgressPopup isOpen={isOpenP} onClose={handleCloseP} />
     </div>

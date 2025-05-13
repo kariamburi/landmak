@@ -28,7 +28,11 @@ import {
 import ProgressPopup from "./ProgressPopup";
 import BottomNavigation from "./BottomNavigation";
 import { useToast } from "../ui/use-toast";
-
+import { getallPendingLaons } from "@/lib/actions/loan.actions";
+import { VerificationPackId } from "@/constants";
+import { createTransaction } from "@/lib/actions/transactions.actions";
+import { v4 as uuidv4 } from "uuid";
+import { DrawerDemo } from "./DrawerDemo";
 interface ChatWindowProps {
   isOpen: boolean;
   onClose: () => void;
@@ -36,49 +40,63 @@ interface ChatWindowProps {
   subcategoryList: any;
   handleSubCategory: (category:string, subcategory:string) => void;
   userId:string;
+  user:any;
+  packagesList:any;
   handleOpenChat: () => void;
-  handleOpenSell:()=> void;
+  handleOpenSell:(category?:string, subcategory?:string)=> void;
   handleCategory:(value:string)=> void;
   handleOpenSearchTab:(value:string)=> void;
+  handlePayNow:(id:string)=> void;
   handleOpenSettings: () => void; 
+  loans:any;
 }
 
 const SubCategoryWindow: React.FC<ChatWindowProps> = ({
   isOpen,
   category,
   onClose,
+  user,
+  packagesList,
   subcategoryList,
   userId,
+  handlePayNow,
   handleSubCategory,
   handleOpenChat,
   handleOpenSell,
   handleCategory,
   handleOpenSearchTab,
   handleOpenSettings,
+  loans,
 }) => {
   const { toast } = useToast();
   const [query, setQuery] = useState("");
   const router = useRouter();
   const searchParams = useSearchParams();
   const [isOpenP, setIsOpenP] = useState(false);
-
+const [showWantedPopup, setShowWantedPopup] = useState(false);
   if (!isOpen) return null; // Keep the early return after defining hooks
 
   const handleOpenP = (query: string) => {
     setIsOpenP(true);
   };
 
-  const handleCloseP = () => {
-    setIsOpenP(false);
+  const handleClose = () => {
+    setShowWantedPopup(false);
   };
 
   const handleQuery = (query: string) => {
-    if (query) {
+  if (query) {
+    if (category.toString() === "Wanted Ads") {
+      setQuery(query);
+      setShowWantedPopup(true); // Show the popup instead
+    } else {
       setQuery(query);
       handleSubCategory(category.toString(), query.toString());
       onClose();
     }
-  };
+  }
+};
+
 
   const totalAdCount = subcategoryList.reduce((sum: any, item: any) => {
     if (item.category.name === category) {
@@ -86,6 +104,7 @@ const SubCategoryWindow: React.FC<ChatWindowProps> = ({
     }
     return sum;
   }, 0);
+
 
   return (
     <div className="fixed inset-0 flex items-center justify-center bg-gray-800 bg-opacity-50 z-50">
@@ -119,11 +138,11 @@ const SubCategoryWindow: React.FC<ChatWindowProps> = ({
                   {subcategoryList
                     .filter((cat: any) => cat.category.name === category)
                     .map((sub: any, index: number) => (
-                      <CommandItem
+                        <CommandItem
                         key={index}
                         className="relative p-0 mb-0 cursor-pointer"
                         onSelect={() => {
-                          if (sub.adCount > 0) {
+                          if (category.toString() === "Wanted Ads" ?  (sub.adCount + loans.adCount + 1) > 0: sub.adCount > 0) {
                             handleQuery(sub.subcategory);
                           } else {
                             toast({
@@ -151,36 +170,45 @@ const SubCategoryWindow: React.FC<ChatWindowProps> = ({
                             <div className="flex text-base flex-col">
                               <div
                                 className={`w-[300px] font-bold ${
-                                  sub.adCount > 0 ? "" : "text-gray-500 dark:text-gray-500"
+                                  sub.subcategory?.trim().toLowerCase() === "Property Financing Requests".toLowerCase() ?  (sub.adCount + loans.adCount) > 0: sub.adCount > 0 ? "" : "text-gray-500 dark:text-gray-500"
                                 }`}
                               >
                                 {sub.subcategory}
                               </div>
                               <div className="flex text-sm text-gray-500 dark:text-gray-500 gap-1">
-                                {sub.adCount}
+                                {sub.subcategory?.trim().toLowerCase() === "Property Financing Requests".toLowerCase() ?  (sub.adCount + loans.adCount): sub.adCount}
                                 <div>ads</div>
                               </div>
                             </div>
                           </div>
                           <div
                             className={`flex items-center justify-end w-full ${
-                              sub.adCount > 0 ? "" : "text-gray-500 dark:text-gray-500"
+                              sub.subcategory?.trim().toLowerCase() === "Property Financing Requests".toLowerCase() ?  (sub.adCount + loans.adCount) > 0: sub.adCount > 0 ? "" : "text-gray-500 dark:text-gray-500"
                             }`}
                           >
-                         {/*   <ArrowForwardIosIcon sx={{ fontSize: 14 }} /> */}
+                         {/* <ArrowForwardIosIcon sx={{ fontSize: 14 }} /> */}
                           </div>
                         </div>
                       </CommandItem>
-                    ))}
+                    
+                   ))}
                 </CommandGroup>
               </CommandList>
             </Command>
           </div>
         </div>
-
-        <footer>
-         
-        </footer>
+<DrawerDemo 
+  handleOpenSell={handleOpenSell}
+  handlePayNow={handlePayNow}
+  userId={userId}
+  category={category}
+  subcategory={query}
+  user={user}
+isOpen={showWantedPopup} 
+packagesList={packagesList}
+onClose={handleClose} 
+handleSubCategory={handleSubCategory}/>
+  
       </div>
     </div>
   );

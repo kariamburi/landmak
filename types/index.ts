@@ -212,6 +212,27 @@ export type UpdateAdParams = {
 }
 
 //==========Reported
+export type CreateLoanParams = {
+  loan: {
+    userId: string
+    adId: string
+    loanType: string;
+    monthlyIncome: number,
+    deposit: number,
+    loanterm: string,
+    employmentStatus: string,
+    messageComments: string,
+    status: string,
+  }
+  path: string
+}
+export type DeleteLoanParams = {
+  _id: string
+  path: string
+}
+
+
+//==========Reported
 export type CreateReportedParams = {
   report: {
     userId: string

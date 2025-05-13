@@ -26,6 +26,9 @@ import { usePathname, useRouter } from "next/navigation";
 import { useToast } from "../ui/use-toast";
 import { updatebookmarked } from "@/lib/actions/ad.actions";
 import { SignedIn, SignedOut } from "@clerk/nextjs";
+import sanitizeHtml from "sanitize-html";
+import { Email, Phone } from '@mui/icons-material'; // Or from 'react-icons/md'
+import ChatBubbleOutlineOutlinedIcon from "@mui/icons-material/ChatBubbleOutlineOutlined";
 import { Icon } from "@iconify/react";
 import threeDotsScale from "@iconify-icons/svg-spinners/3-dots-scale"; // Correct import
  // Correct import
@@ -37,6 +40,7 @@ type CardProps = {
   handleAdEdit: (ad:any) => void;
   handleAdView: (ad:any) => void;
   handleOpenPlan: () => void;
+  handleOpenChatId: (value:any) => void;
 };
 
 const CardAutoHeight = ({
@@ -47,13 +51,19 @@ const CardAutoHeight = ({
   handleAdEdit,
   handleAdView,
   handleOpenPlan,
+  handleOpenChatId,
 }: CardProps) => {
   const pathname = usePathname();
   const { toast } = useToast();
 
   const router = useRouter();
 
-  const isAdCreator = userId === ad.organizer._id.toString();
+  let isAdCreator;
+                  if(ad.loanterm){
+                       isAdCreator = userId === ad.userId._id.toString();
+                  }else{
+                        isAdCreator = userId === ad.organizer._id.toString();
+                  }
   const truncateTitle = (title: string, maxLength: number) => {
     if (title.length > maxLength) {
       return title.substring(0, maxLength) + "...";
@@ -102,9 +112,149 @@ const CardAutoHeight = ({
     }
   };
   const [isLoadingsmall, setIsLoadingsmall] = useState(true);
+   const truncateDescription = (description: string, charLimit: number) => {
+      const safeMessage = sanitizeHtml(description); 
+      const truncatedMessage =
+      safeMessage.length > charLimit
+        ? `${safeMessage.slice(0, charLimit)}...`
+        : safeMessage;
+      return truncatedMessage;
+    };
   //console.log(ad.imageUrls);
   return (
-    <>
+    <>{ad.loanterm ?(<><div className="bg-white hover:bg-gray-100 dark:hover:bg-gray-600 rounded-lg text-xs border border-gray-300 dark:border-gray-600">
+  <div className="relative rounded w-full"
+          onClick={() => {
+             handleAdView(ad.adId);
+            }}>
+          {isLoadingsmall && (
+            <div className="absolute inset-0 flex justify-center items-center bg-gray-100">
+              <Icon icon={threeDotsScale} className="w-6 h-6 text-gray-500" />
+            </div>
+          )}
+         
+            <Image
+              src={ad.adId.data.imageUrls[0]}
+              alt={ad.adId.data.title}
+              width={800}
+              height={400}
+              className={`w-full h-[200px] rounded object-cover cursor-pointer ${
+                isLoadingsmall ? "opacity-0" : "opacity-100"
+              } transition-opacity duration-300`}
+              onLoadingComplete={() => setIsLoadingsmall(false)}
+              placeholder="empty"
+            />
+        
+        </div>
+  <div className="p-2">
+    <div className="flex flex-col">
+      <div className="flex flex-col border-b p-1 w-full items-start">
+       
+
+        <div className="flex flex-col justify-between h-full">
+          <p className="text-sm font-semibold mb-1">
+            {ad.adId.data.title.length > 50
+              ? `${ad.adId.data.title.substring(0, 50)}...`
+              : ad.adId.data.title}
+          </p>
+
+          <p className="text-sm text-gray-600 dark:text-gray-300 mb-1 max-w-[200px]">
+            <span
+              dangerouslySetInnerHTML={{
+                __html: truncateDescription(ad.adId.data.description ?? "", 65),
+              }}
+            />
+          </p>
+
+          <span className="font-bold text-green-600 dark:text-green-600 mt-1">
+            {formatKsh(ad.adId.data.price)}
+          </span>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  {/* Section 2: User Info */}
+  <div className="p-2">
+    <div className="flex flex-col gap-1">
+      <div className="flex gap-2 items-center">
+        {/* Optional Avatar */}
+      
+       <div className="flex flex-col">
+        <p className="text-sm font-semibold">
+  Financing Request from:
+  </p>
+</div>
+      </div>
+ <p className="text-xs text-gray-600 dark:text-gray-300">
+        Client Name:
+        <span className="font-semibold">  {ad.userId.firstName} {ad.userId.lastName}</span>
+      </p>
+      <p className="text-xs text-gray-600 dark:text-gray-300">
+        Monthly Income:
+        <span className="font-semibold"> KES {ad.monthlyIncome.toLocaleString()}</span>
+      </p>
+
+      <p className="text-xs text-gray-600 dark:text-gray-300">
+        Deposit Amount:
+        <span className="font-semibold"> KES {ad.deposit.toLocaleString()}</span>
+      </p>
+
+      <p className="text-xs text-gray-600 dark:text-gray-300">
+        Preferred Loan Term:
+        <span className="font-semibold"> {ad.loanterm}</span>
+      </p>
+
+      <p className="text-xs text-gray-600 dark:text-gray-300">
+        Employment Status:
+        <span className="font-semibold"> {ad.employmentStatus}</span>
+      </p>
+
+      <p className="text-xs text-gray-600 dark:text-gray-300">
+        Message Comments:
+        <span className="font-semibold"> {ad.messageComments}</span>
+      </p>
+
+      <p className="flex gap-2 text-xs text-gray-600 dark:text-gray-300">
+        Status:
+        <span
+          className={`flex p-1 justify-center items-center w-[70px] rounded-full ${
+            ad.status === "Pending"
+              ? "bg-orange-100"
+              : ad.status === "Failed"
+              ? "bg-red-100"
+              : "bg-green-100"
+          }`}
+        >
+          {ad.status}
+        </span>
+      </p>
+
+    </div>
+  </div>
+
+  {/* Section 3: Footer (e.g., Delete) */}
+  <div className="p-2 flex justify-between w-full">
+  <div className="flex items-center gap-2 mb-1 border-b py-1">
+    <a href={`mailto:${ad.userId.email}`} className="flex items-center text-green-600 hover:underline">
+      <Email className="w-4 h-4 mr-1" /> Email
+    </a>
+  </div>
+
+  <div className="flex items-center gap-2 mb-1 border-b py-1">
+    <a href={`tel:${ad.userId.phone}`} className="flex items-center text-green-600 hover:underline">
+      <Phone className="w-4 h-4 mr-1" /> Call
+    </a>
+  </div>
+
+  <div className="flex items-center gap-2 mb-1 border-b py-1">
+    <div  onClick={() => handleOpenChatId(ad.userId)} className="flex cursor-pointer items-center text-green-600 hover:underline">
+      <ChatBubbleOutlineOutlinedIcon className="w-4 h-4 mr-1" /> Chat
+    </div>
+  </div>
+  </div>
+</div>
+</>):(<>
       <div
         className={`mb-2 w-full lg:min-w-[200px] rounded-lg border shadow-sm bg-white dark:bg-[#2D3236]`}
      
@@ -360,7 +510,7 @@ const CardAutoHeight = ({
           </div>
         </div>
       </div>
-    </>
+    </>)}</>
   );
 };
 

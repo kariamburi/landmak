@@ -45,7 +45,7 @@ interface AdsProps {
     handleOpenTerms: () => void;
     handleOpenPrivacy: () => void;
     handleOpenSafety: () => void;
-    handleOpenSell: () => void;
+    handleOpenSell: (category?:string, subcategory?:string) => void;
     handleOpenPlan: () => void;
   handleOpenChat: () => void;
   handleOpenBook: () => void;
@@ -187,6 +187,7 @@ const SCROLL_THRESHOLD = 100; // pixels
             categoryId={ad.subcategory.category}
             subcategory={ad.data.subcategory}
             adId={id}
+            handleOpenChatId={handleOpenChatId}
             handleAdView={handleAdView}
             handleAdEdit={handleAdEdit}
             handleOpenPlan={handleOpenPlan}

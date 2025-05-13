@@ -42,7 +42,10 @@ interface WindowProps {
   userId: string;
   userName: string;
   subcategoryList:any;
+  packagesList:any;
   user:any;
+  category?:string;
+  subcategory?:string;
   handleAdView: (ad:any) => void;
   handleOpenShop: (shopId:any) => void;
   handleOpenPerfomance: () => void;
@@ -50,7 +53,8 @@ interface WindowProps {
   handleOpenSearchTab:(value:string)=> void;
 }
 
-const PopupSell = ({ isOpen, type, userId, user, userName, subcategoryList, handleAdView, handleOpenSettings,
+const PopupSell = ({ isOpen, type, userId, user, userName, category,
+  subcategory, subcategoryList, packagesList, handleAdView, handleOpenSettings,
   handleOpenShop,handleOpenSearchTab,
   handleOpenPerfomance, handleCategory, handleOpenChat, onClose,handleOpenPlan, handleOpenBook, handleOpenSell, handlePay, handleOpenAbout,handleOpenTerms,handleOpenPrivacy,handleOpenSafety }: WindowProps) => {
  
@@ -64,15 +68,14 @@ const PopupSell = ({ isOpen, type, userId, user, userName, subcategoryList, hand
           userId={userId}
           type={type}
           user={user}
-         // daysRemaining={daysRemaining}
-         // packname={planPackage}
-          //planId={planId}
+          category={category}
+          subcategory={subcategory}
           userName={userName}
         //  packagesList={packagesList}
         //  listed={remainingAds}
          // expirationDate={expirationDate}
          // priority={priority}
-        //  adstatus={adStatus}
+          packagesList={packagesList}
           subcategoryList={subcategoryList}
           onClose={onClose}
           handleOpenSell={handleOpenSell}

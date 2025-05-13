@@ -152,7 +152,8 @@ debouncedNotifyUser(ad, userId, userName, inquiryMessage);
     <>
      <div className="fixed inset-0 flex items-center justify-center bg-gray-700 bg-opacity-50 z-50">
           <div className="h-[90vh] dark:bg-[#2D3236] dark:text-[#F1F3F3] bg-white rounded-lg p-6 w-full max-w-md">
-         <div className="flex items-center justify-between"> <p className="font-semibold mb-2">{ad.data.title.length > 50
+         <div className="flex items-center justify-between"> 
+          <p className="font-semibold mb-2">{ad.data.title.length > 50
                 ? `${ad.data.title.substring(0, 50)}...`
                 : ad.data.title}</p>
 

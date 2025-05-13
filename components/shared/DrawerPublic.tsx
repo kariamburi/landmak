@@ -39,7 +39,7 @@ export function DrawerPublic({
     const { suggestions, setValue, value, clearSuggestions } = usePlacesAutocomplete();
     const [lat_, setlat] = useState('');
     const [lng_, setlng] = useState('');
-    const [inputMode, setInputMode] = useState< 'coordinates' | 'maplink' | 'address' | 'mylocation'>('mylocation');
+    const [inputMode, setInputMode] = useState< 'coordinates' | 'maplink' | 'address' | 'My Location'>('My Location');
     function capitalizeFirstLetter(str: string): string {
     return str.charAt(0).toUpperCase() + str.slice(1);
     }
@@ -138,7 +138,7 @@ export function DrawerPublic({
   </DrawerTrigger>
 
   <DrawerContent>
-    <div className="mx-auto w-full max-w-md">
+    <div className="mx-auto w-full max-w-lg">
       <DrawerHeader>
         <DrawerTitle>📍 {(selectedCategory && selectedCategory ==='Property Services')? (<>My Location</>):(<>Property Location</>)} </DrawerTitle>
         <DrawerDescription>
@@ -165,8 +165,8 @@ export function DrawerPublic({
         </div>
 
         {/* Tab Buttons */}
-        <div className="flex gap-1 mb-4">
-          {["mylocation", "coordinates", "maplink", "address"].map((mode: any) => (
+        <div className="flex grid grid-cols-4 mb-2 gap-1 w-full">
+          {["My Location", "address", "coordinates", "maplink"].map((mode: any) => (
             <button
               key={mode}
               onClick={() => setInputMode(mode)}
@@ -180,7 +180,7 @@ export function DrawerPublic({
         </div>
 
         <div className="bg-white rounded-b-xl rounded-tr-xl dark:bg-[#131B1E] p-2 flex flex-col">
-          {inputMode === "mylocation" && (
+          {inputMode === "My Location" && (
             <div className="mb-2">
               <div className="flex items-center space-x-2">
                 <Checkbox id="location" onCheckedChange={handleMyLocation} />
@@ -202,7 +202,7 @@ export function DrawerPublic({
                 placeholder="Search by address..."
                 value={value}
                 onChange={(e) => setValue(e.target.value)}
-                className="w-full text-sm dark:bg-[#2D3236] dark:text-gray-300 dark:border-gray-600 p-2 border border-gray-300 rounded-md"
+                className="w-full text-sm dark:bg-[#2D3236] dark:text-gray-300 dark:border-gray-600 py-3 px-2 border border-gray-300 rounded-md"
               />
               {suggestions.status === "OK" && (
                 <ul className="text-sm dark:bg-[#2D3236] dark:text-gray-300 dark:border-gray-600 bg-white border border-gray-300 rounded-md mt-2 max-h-40 overflow-auto">
@@ -227,21 +227,21 @@ export function DrawerPublic({
                   type="text"
                   placeholder="Latitude"
                   onChange={(e) => setlat(e.target.value)}
-                  className="p-2 w-full text-sm border dark:bg-[#2D3236] dark:text-gray-300 dark:border-gray-600 border-gray-300 rounded-md"
+                  className="py-3 px-2 w-full text-sm border dark:bg-[#2D3236] dark:text-gray-300 dark:border-gray-600 border-gray-300 rounded-md"
                 />
                 <input
                   type="text"
                   placeholder="Longitude"
                   onChange={(e) => setlng(e.target.value)}
-                  className="p-2 w-full border text-sm dark:bg-[#2D3236] dark:text-gray-300 dark:border-gray-600 border-gray-300 rounded-md"
+                  className="py-3 px-2 w-full border text-sm dark:bg-[#2D3236] dark:text-gray-300 dark:border-gray-600 border-gray-300 rounded-md"
                 />
-                <Button
+                <div
                   onClick={handleCoordinateSearch}
-                  variant="default"
-                  className="bg-green-600 text-white rounded"
+      
+                  className="py-4 px-2 bg-green-600 hover:green-700 text-white rounded"
                 >
                   Go
-                </Button>
+                </div>
               </div>
             </div>
           )}

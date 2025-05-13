@@ -6,6 +6,8 @@ import { getAllCategories, seedCategories } from "@/lib/actions/category.actions
 import { duplicateSubcategories, getAllSubCategories, migrateFieldOptions, removenegotiable, reverseFieldOptions, syncSubcategoryImages, updateSub, updatethisCategory } from "@/lib/actions/subcategory.actions";
 import { getAdsCountAllRegion, getAllAds } from "@/lib/actions/dynamicAd.actions";
 import MainPage from "@/components/shared/MainPage";
+import { getallPendingLaons } from "@/lib/actions/loan.actions";
+import { getAllPackages } from "@/lib/actions/packages.actions";
 
 export default async function Home({ searchParams }: SearchParamProps) {
   const { sessionClaims } = auth();
@@ -25,10 +27,12 @@ export default async function Home({ searchParams }: SearchParamProps) {
   }
   const categoryList = await getAllCategories();
   const subcategoryList = await getAllSubCategories();
+  const packagesList = await getAllPackages();
   const AdsCountPerRegion = await getAdsCountAllRegion();
+  const loans = await getallPendingLaons();
  // const udate = await  updatethisCategory();
   //const migration = await syncSubcategoryImages("68144b998d7305e3676767a0");
- // console.log(udate)
+ // console.log(user);
  
 //const categoryList:any = [];
 //const subcategoryList:any = [];
@@ -41,14 +45,16 @@ export default async function Home({ searchParams }: SearchParamProps) {
             emptyStateSubtext="Come back later"
             collectionType="All_Ads"
             limit={20}
-            user={user}
+            userprofile={user}
             userId={userId}
             userName={userName}
             userImage={userImage}
             queryObject={queryObject}
             categoryList={categoryList}
             subcategoryList={subcategoryList}
+            packagesList={packagesList}
             AdsCountPerRegion={AdsCountPerRegion}
+            loans={loans}
          />
       
           <Toaster />

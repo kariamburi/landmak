@@ -36,6 +36,7 @@ const DisplaySubCategories = ({ subcategories }: subcatProps) => {
 
  
 useEffect(() => {
+
     // ✅ Filter only "Property" and "Land" categories (example)
  const allowedCategories = [
   "New builds",
@@ -48,7 +49,8 @@ useEffect(() => {
     "Event Centres, Venues & Workstations",
   "Short Let Property",
    "Special Listings",
-    "Property Services"];
+    "Property Services",
+   "Wanted Ads"];
 
 const filteredCategories = subcategories.filter(
   (cat: any) => allowedCategories.includes(cat.category.name)
@@ -233,6 +235,7 @@ setSelectedCategoryCommand(filteredCategories);
                           <option value="autocomplete">AutoComplete</option>
                           <option value="year">Year</option>
                           <option value="phone">Phone</option>
+                          <option value="budget">Budget</option>
                           <option value="price">Sale Price</option>
                           <option value="rentprice">Price Per Duration</option>
                           <option value="priceper">Price Per Space</option>

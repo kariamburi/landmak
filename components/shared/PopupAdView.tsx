@@ -29,7 +29,7 @@ import BottomNavigation from "./BottomNavigation";
 interface WindowProps {
   isOpen: boolean;
   onClose: () => void;
-  handleOpenSell: () => void;
+  handleOpenSell: (category?:string, subcategory?:string) => void;
   handleOpenPlan: () => void;
   handleOpenChat: () => void;
   handleOpenBook: () => void;

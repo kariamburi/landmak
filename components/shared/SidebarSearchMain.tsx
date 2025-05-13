@@ -71,12 +71,14 @@ type sidebarProps = {
   categoryList?: any;
   subcategory?: string;
   handleFilter:(value:any) => void;
+  loans:any;
 };
 const SidebarSearchMain = ({
   category,
   categoryList,
   subcategory,
   handleFilter,
+  loans,
 }: sidebarProps) => {
   const [query, setQuery] = useState(subcategory);
  
@@ -149,11 +151,11 @@ const SidebarSearchMain = ({
         <div className="w-full dark:bg-[#2D3236] bg-white rounded-lg">
        
           <div className="flex flex-col text-sm rounded-t-lg w-full">
-            <div className="flex p-2 w-full flex-col gap-1 items-center mt-1 mb-1 border-gray-300 dark:border-gray-600">
+            <div className="flex p-2 w-full flex-col gap-1 mt-1 mb-1 border-gray-300 dark:border-gray-600">
          
             {selectedCategory && (
                 <>
-                  <div className="flex gap-1 items-center">
+                  <div className="flex gap-1">
                     <div className="rounded-full dark:bg-[#131B1E] bg-white p-1">
                       <Image
                         className="h-7 w-8 object-cover"
@@ -161,15 +163,15 @@ const SidebarSearchMain = ({
                         alt={
                           selectedCategory ? selectedCategory.category.name : ""
                         }
-                        width={60}
-                        height={60}
+                        width={100}
+                        height={100}
                       />
                     </div>
                   
                     <div className="flex flex-col">
                   <div className="font-bold">  {selectedCategory ? selectedCategory.category.name : ""}</div>
                 <div className="text-sm dark:text-gray-500 text-gray-500">
-                {"("}{totalAdCount} ads{")"}
+                {"("}{selectedCategory.category.name === "Wanted Ads" ?  (totalAdCount + loans.adCount): totalAdCount } ads{")"}
                 </div>
               </div>
                   </div>
@@ -228,7 +230,7 @@ const SidebarSearchMain = ({
                           : "dark:text-gray-500 text-gray-500"
                       }`}
                     >
-                      {sub.adCount}
+                      {sub.subcategory?.trim().toLowerCase() === "Property Financing Requests".toLowerCase() ?  (sub.adCount + loans.adCount): sub.adCount}
                       <div>ads</div>
                     </div>
                   </div>

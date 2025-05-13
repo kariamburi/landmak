@@ -58,7 +58,7 @@ export default function ContactUser({
   if (!isOpen) return null;
   return (
      <div className="fixed inset-0 flex items-center justify-center bg-gray-800 bg-opacity-50 z-50">
-          <div className="dark:bg-[#2D3236] dark:text-gray-300 bg-white rounded-lg p-4 lg:p-6 w-full max-w-4xl h-[90vh] flex flex-col">
+          <div className="dark:bg-[#2D3236] dark:text-gray-300 bg-[#e4ebeb] rounded-lg p-4 lg:p-6 w-full max-w-4xl h-[90vh] flex flex-col">
             {/* Header */}
             <div className="flex justify-end items-center mb-4">
              

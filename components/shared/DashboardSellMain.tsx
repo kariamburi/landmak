@@ -25,11 +25,9 @@ type dashboardProps = {
   type: string;
   ad?: any;
   adId?: string;
- // packagesList: any;
- // listed: number;
- // priority: number;
-//expirationDate: Date;
- // adstatus: string;
+  category?:string;
+  subcategory?:string;
+  packagesList:any;
   onClose: () => void;
   handleOpenBook: () => void;
   handleOpenChat: () => void;
@@ -53,15 +51,12 @@ const DashboardSellMain = ({
   user,
   //packname,
   userName,
-  //daysRemaining,
+  packagesList,
   type,
   ad,
   adId,
-  //packagesList,
-  //listed,
-  //priority,
-  //expirationDate,
-  //adstatus,
+  category,
+  subcategory,
   subcategoryList,
   onClose,
   handleCategory,
@@ -105,8 +100,8 @@ const DashboardSellMain = ({
        
       <div className="z-10 top-0 fixed w-full">
     <Navbar
-      user={user}
-      userstatus={user.status}
+      user={user.user}
+      userstatus={user.user.status}
       userId={userId}
       onClose={onClose}
       popup={popup}
@@ -136,13 +131,15 @@ const DashboardSellMain = ({
                 adId={adId}
                 user={user}
                 userName={userName}
+                category={category}
+                subcategory={subcategory}
                 //daysRemaining={daysRemaining}
                // packname={packname}
                // listed={listed}
                 //priority={priority}
                 //expirationDate={expirationDate}
                 //adstatus={adstatus}
-                //packagesList={packagesList}
+                packagesList={packagesList}
                 handleAdView={handleAdView}
                 handlePay={handlePay}
                 handleOpenTerms={handleOpenTerms}

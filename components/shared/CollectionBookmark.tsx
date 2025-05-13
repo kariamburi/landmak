@@ -23,6 +23,7 @@ type CollectionProps = {
   collectionType?: "Ads_Organized" | "My_Tickets" | "All_Ads";
   handleAdEdit: (ad:any) => void;
   handleAdView: (ad:any) => void;
+  handleOpenChatId: (value:any) => void;
   handleOpenPlan: () => void;
 };
 
@@ -32,7 +33,7 @@ const CollectionBookmark = ({
   emptyTitle,
   emptyStateSubtext,
   // page,
-  // totalPages = 0,
+   handleOpenChatId,
   collectionType,
   urlParamName,
   isAdCreator,
@@ -128,6 +129,7 @@ const CollectionBookmark = ({
                       handleAdView={handleAdView} 
                       handleAdEdit={handleAdEdit} 
                       handleOpenPlan={handleOpenPlan}
+                        handleOpenChatId={handleOpenChatId} 
                       popup={"bookmark"}/></>)}   
                   </div>
                 );
@@ -142,6 +144,7 @@ const CollectionBookmark = ({
                       handleAdView={handleAdView} 
                       handleAdEdit={handleAdEdit}
                       handleOpenPlan={handleOpenPlan}
+                        handleOpenChatId={handleOpenChatId} 
                       popup={"bookmark"}
                     /></>)}  
                   </div>
@@ -169,6 +172,7 @@ const CollectionBookmark = ({
                         handleAdView={handleAdView} 
                         handleAdEdit={handleAdEdit}
                         handleOpenPlan={handleOpenPlan}
+                          handleOpenChatId={handleOpenChatId} 
                         popup={"bookmark"}
                       /></>)}  
                     </div>
@@ -184,6 +188,7 @@ const CollectionBookmark = ({
                         handleAdView={handleAdView} 
                       handleAdEdit={handleAdEdit}
                       handleOpenPlan={handleOpenPlan}
+                        handleOpenChatId={handleOpenChatId} 
                       /></>)}  
                     </div>
                   );
