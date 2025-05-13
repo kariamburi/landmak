@@ -105,9 +105,9 @@ const SendMessage = ({
       }
 
       if (recipientStatus === "offline") {
-        const user = await getUserById(recipientUid);
-       if(user.token && user.notifications.fcm){
-          const token = user.token;
+        const userprofile:any = await getUserById(recipientUid);
+       if(userprofile.user.token && userprofile.user.notifications.fcm){
+          const token = userprofile.user.token;
          // sendNotify(token, `You've got a new message from ${displayName}!`);
           const debouncedNotifyUser = debounce(sendNotify, 1000); // only allow once every second
           // Then call
