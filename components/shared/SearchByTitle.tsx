@@ -43,7 +43,7 @@ interface ChatWindowProps {
   onClose: () => void;
   handleAdEdit: (ad:any) => void;
   handleAdView: (ad:any) => void;
- 
+ handleOpenChatId:(value:any) => void;
   handleOpenPlan: () => void;
   handleOpenSearchByTitle: () => void;
   queryObject:any;
@@ -58,6 +58,7 @@ const SearchByTitle: React.FC<ChatWindowProps> = ({
   handleAdEdit,
   handleOpenPlan,
   handleOpenSearchByTitle,
+  handleOpenChatId,
   queryObject,
 }) => {
   const { toast } = useToast();
@@ -187,6 +188,7 @@ const fetchAds = async (value:string) => {
                           hasOrderLink={true}
                           hidePrice={false}
                           userId={userId}
+                          handleOpenChatId={handleOpenChatId}
                           handleAdEdit={handleAdEdit}
                           handleAdView={handleAdView}
                           handleOpenPlan={handleOpenPlan}

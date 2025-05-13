@@ -1773,6 +1773,7 @@ const handleCloseAdView = () => {
         handleAdEdit={handleAdEdit}
         handleAdView={handleAdView}
         handleOpenPlan={handleOpenPlan}
+        handleOpenChatId={handleOpenChatId}
         queryObject={queryObject} />
         <DrawerDemo 
           handleOpenSell={handleOpenSell}
