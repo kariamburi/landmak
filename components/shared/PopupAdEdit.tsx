@@ -48,10 +48,10 @@ handleCategory:(value:string) => void;
   ad:any;
   user:any;
   subcategoryList:any;
-
+packagesList:any;
 }
 
-const PopupAdEdit = ({ isOpen, type, user, userId, userName, subcategoryList, ad, handleOpenPerfomance,
+const PopupAdEdit = ({ isOpen, type, user, userId, userName, subcategoryList, packagesList, ad, handleOpenPerfomance,
   handleOpenSettings,
   handleOpenShop,handleCategory, onClose, handleAdView, handleOpenBook ,handleOpenChat,handleOpenPlan, handleOpenSell, handleOpenAbout, handleOpenTerms,handleOpenPrivacy,handleOpenSafety }: WindowProps) => {
  
@@ -74,6 +74,7 @@ const PopupAdEdit = ({ isOpen, type, user, userId, userName, subcategoryList, ad
           adId={ad._id}
           ad={ad}
           user={user}
+          packagesList={packagesList}
           handleOpenAbout={handleOpenAbout}
           handleOpenTerms={handleOpenTerms}
           handleOpenPrivacy={handleOpenPrivacy}
