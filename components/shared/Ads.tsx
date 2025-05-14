@@ -364,6 +364,10 @@ export default function Ads({ ad, user, userId, userImage, userName, onClose,han
 
       </div>
       <div className="space-y-0 lg:flex lg:space-x-0 gap-2">
+
+
+
+
   <div
           className="mt-1 lg:mt-2 relative lg:flex-1 dark:bg-[#2D3236] dark:text-gray-300"
           style={
@@ -684,6 +688,7 @@ export default function Ads({ ad, user, userId, userImage, userName, onClose,han
             <div className="lg:hidden flex justify-end mb-2 items-center w-full">
               <div className="flex flex-col justify-center">
                 <div className="flex gap-1 items-center justify-center">
+        
                   <div className="flex items-center">
                     {ad.data.negotiable === "yes" && (
                       <div className="flex gap-1 text-[10px] text-green-700 font-bold bg-white rounded-lg p-1 justify-center border">
@@ -802,6 +807,19 @@ export default function Ads({ ad, user, userId, userImage, userName, onClose,han
               </div>
             </div>
             <div className="flex mb-2 items-center w-full">
+                        {ad.data.category==='Wanted Ads' && (<>
+
+<div className="w-16 h-16 rounded-full bg-white relative">
+            <Zoom>
+              <Image
+                className="w-full h-full rounded-full object-cover"
+                src={ad.data.imageUrls[0] ?? "/avator.png"}
+                alt={ad.data.title}
+                width={100}
+                height={100}
+              />
+            </Zoom>
+            </div></>)}
               <p className="text-lg lg:text-2xl font-bold dark:text-gray-300 text-green-900">
                 {ad.data.title}
               </p>
@@ -1049,38 +1067,7 @@ export default function Ads({ ad, user, userId, userImage, userName, onClose,han
                       </AccordionTrigger>
                       <AccordionContent className="border-0">
                         <div className="p-0 flex grid grid-cols-1 rounded-[20px] m-0 dark:bg-[#2D3236] bg-gray-100">
-                          {/*   {ad.organizer?.imageUrl && (
-                            <div className="flex h-50 w-full flex-1 justify-center">
-                              <div className="relative  h-[200px] w-[200px] rounded-full">
-                                {isLoading && (
-                                  <div className="absolute inset-0 rounded-t-lg flex items-center justify-center bg-[#000000] bg-opacity-50">
-                                
-                                    <CircularProgress
-                                      sx={{ color: "white" }}
-                                      size={30}
-                                    />
-                                  </div>
-                                )}
-                                <Zoom>
-                                  <Image
-                                    src={ad.organizer?.imageUrl}
-                                    alt="image"
-                                    width={900}
-                                    height={500}
-                                    className={`object-center h-full w-full rounded-full ${
-                                      isLoading ? "opacity-0" : "opacity-100"
-                                    } transition-opacity duration-300`}
-                                    onLoadingComplete={() =>
-                                      setIsLoading(false)
-                                    }
-                                    placeholder="empty" // Optional: you can use "empty" if you want a placeholder before loading
-                                  />
-                                </Zoom>
-                              </div>
-                              
-                            </div>
-                          )}
-                            */}
+                       
                           <div className="flex flex-col">
                             <SellerProfileCard
                               userId={userId}
@@ -1380,7 +1367,7 @@ export default function Ads({ ad, user, userId, userImage, userName, onClose,han
               </>
             )}
  
- {ad.data.category !== 'Property Services' && (<>
+ {(ad.data.category !== 'Property Services' || ad.data.category !== 'Wanted Ads') && (<>
  <div className="flex w-full items-center">
               <SignedIn>
               <button onClick={handleOpenPopupLoan} className="flex rounded-sm w-full py-3 px-2 text-lg text-white bg-green-600 hover:bg-green-700 justify-center items-center gap-1">

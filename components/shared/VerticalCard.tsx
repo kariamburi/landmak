@@ -537,8 +537,9 @@ const VerticalCard = ({
               <div className="text-sm lg:text-base font-bold">Contact for price</div>
             ) : (
               <>
-                <span className="text-sm lg:text-base font-bold">
-                  Ksh {ad.data.price.toLocaleString()}
+               
+                  <span className="text-sm lg:text-base font-bold">
+              {ad.data.budget ? (<> Budget : Ksh {ad.data.budget.toLocaleString()}</>):(<>Ksh {ad.data.price.toLocaleString()}</>)}   
                 </span>
               </>
             )}{" "}

@@ -446,7 +446,7 @@ const CardAutoHeight = ({
             ) : (
               <>
                 <span className="font-bold">
-                  Ksh {ad.data.price.toLocaleString()}
+              {ad.data.budget ? (<> Budget : Ksh {ad.data.budget.toLocaleString()}</>):(<>Ksh {ad.data.price.toLocaleString()}</>)}   
                 </span>
               </>
             )}{" "}

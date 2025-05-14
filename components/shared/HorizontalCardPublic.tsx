@@ -367,9 +367,10 @@ const HorizontalCardPublic = ({
                 }}
                 className="flex gap-1 cursor-pointer items-center no-underline"
               >
-                <span className="text-[12px] lg:text-sm font-bold w-min rounded-full dark:text-green-500 text-emerald-700">
-                  {formatKsh(ad.data.price)}
-                </span>{" "}
+               
+                 <span className="text-[12px] lg:text-sm font-bold w-min rounded-full dark:text-green-500 text-emerald-700">
+              {ad.data.budget ? (<> Budget : Ksh {ad.data.budget.toLocaleString()}</>):(<>Ksh {ad.data.price.toLocaleString()}</>)}   
+                </span>
                 {ad.data.per && (
                   <div className="text-xs dark:text-white">{ad.data.per}</div>
                 )}

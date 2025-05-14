@@ -144,7 +144,8 @@ const remainingDays = Math.ceil(remainingTime / (1000 * 60 * 60 * 24));
     expirationDate.setDate(currDate.getDate() + 7);
 
  useEffect(() => {
-    
+    setShowVerify(true);
+    setShowPackages(true);
     setadstatus("Pending");
     setActivePackage(packagesList[1]);
     setplanId(packagesList[1]._id);
@@ -407,7 +408,11 @@ const remainingDays = Math.ceil(remainingTime / (1000 * 60 * 60 * 24));
           )}
 
           <DrawerFooter>
-            <Button onClick={onClose} variant="outline">
+            <Button onClick={()=> {
+               onClose();
+               setShowVerify(true);
+               setShowPackages(true);
+            }} variant="outline">
               Cancel
             </Button>
           </DrawerFooter>

@@ -9,8 +9,6 @@ import User from "../database/models/user.model"
 import Reported from "../database/models/reported.model"
 import DynamicAd from "../database/models/dynamicAd.model"
 import Loan from "../database/models/loans.model"
-
-
 const populateAd = (query: any) => {
   return query
     .populate({ path: 'userId', model: User, select: '_id clerkId email firstName lastName photo businessname aboutbusiness businessaddress latitude longitude businesshours businessworkingdays phone whatsapp website facebook twitter instagram tiktok imageUrl verified' })
@@ -20,8 +18,6 @@ const populateAd = (query: any) => {
       select: '_id data views priority expirely adstatus inquiries whatsapp calls shared bookmarked abused subcategory organizer plan createdAt'
     });
 };
-
-
 export const createLoan = async ({ loan, path }: CreateLoanParams) => {
   try {
     await connectToDatabase();

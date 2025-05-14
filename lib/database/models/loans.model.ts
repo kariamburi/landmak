@@ -14,7 +14,7 @@ export interface ILoan extends Document {
   financerId: string;
 }
 const LoanSchema = new Schema({
-  adId: { type: Schema.Types.ObjectId, ref: 'DynamicAd' },
+  adId: { type: Schema.Types.ObjectId, ref: 'DynamicAd', default: null },
   userId: { type: Schema.Types.ObjectId, ref: 'User' },
   loanType: { type: String },
   monthlyIncome: { type: Number },

@@ -687,28 +687,14 @@ useEffect(() => {
 
     let finalData: any;
     if (type === "Create") {
-      if (selectedCategory === 'Wanted Ads') {
-        finalData = {
-          ...formData,
-          price: parseCurrencyToNumber(formData["price"].toString()),
-          phone,
-        };
-      } else {
-        const uploadedUrls = await uploadFiles();
-        if (!uploadedUrls) return;
 
-        finalData = {
-          ...formData,
-          imageUrls: uploadedUrls,
-          price: parseCurrencyToNumber(formData["price"].toString()),
-          phone,
-        };
-      }
-  if (selectedSubCategory.trim().toLowerCase() === "Property Financing Requests".toLowerCase()) {
-       const newResponse = await createLoan({
+
+ if (selectedCategory === 'Wanted Ads' && selectedSubCategory.trim().toLowerCase() === "Property Financing Requests".toLowerCase()) {
+
+  const newResponse = await createLoan({
           loan: {
           userId: userId,
-          adId: '',
+          adId: null,
           loanType:formData["Loan Type"].toString(),
           monthlyIncome:formData["Monthly Income"].toString(),
           deposit:formData["Deposit Amount"].toString(),
@@ -721,13 +707,35 @@ useEffect(() => {
             });
       setFormData(defaults);
       setFiles([]);
-              toast({
+        toast({
         title: "Submitted",
         description: "Loan request submitted successfully.",
         duration: 5000,
         className: "bg-[#30AF5B] text-white",
       });
-          } else{
+  return;
+ }
+
+
+      if (selectedCategory === 'Wanted Ads') {
+           finalData = {
+          ...formData,
+          price: parseCurrencyToNumber(formData["budget"].toString()),
+          phone,
+        };
+
+      } else {
+        const uploadedUrls = await uploadFiles();
+        if (!uploadedUrls) return;
+
+        finalData = {
+          ...formData,
+          imageUrls: uploadedUrls,
+          price: parseCurrencyToNumber(formData["price"].toString()),
+          phone,
+        };
+      }
+    
       const pricePack = Number(priceInput);
       const newAd = await createData({
         userId,
@@ -772,7 +780,7 @@ useEffect(() => {
           handleAdView?.(newAd);
         }
       }
-    }
+    
     }
 
     if (type === "Update") {
@@ -1182,9 +1190,9 @@ useEffect(() => {
                     required={field.required}
                      id={"price"}
                     label={capitalizeFirstLetter(field.name)}
-                      value={formatToCurrency(formData["price"] ?? 0)}
+                      value={formatToCurrency(formData[field.name] ?? 0)}
                       onChange={(e) =>
-                        handleInputChange("price", e.target.value)
+                        handleInputChange(field.name, e.target.value)
                       }
                     variant="outlined"
                     placeholder={`Enter ${field.name.replace("-", " ")}`}

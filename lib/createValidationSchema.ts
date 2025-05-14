@@ -97,16 +97,16 @@ export const createValidationSchema = (fields: Field[]) => {
           : z.number().optional();
         break;
       case "budget":
-        fieldSchema = field.required
-          ? z
-            .union([z.string(), z.number()])
-            .transform((value) =>
-              typeof value === "string" ? parseFloat(value) : value
-            )
-            .refine((value) => !isNaN(value), {
-              message: `${field.name} must be a valid number`,
-            })
-          : z.number().optional();
+        const baseBudgetSchema = z
+          .union([z.string(), z.number()])
+          .transform((value) =>
+            typeof value === "string" ? parseFloat(value) : value
+          )
+          .refine((value) => !isNaN(value), {
+            message: `${field.name} must be a valid number`,
+          });
+
+        fieldSchema = field.required ? baseBudgetSchema : baseBudgetSchema.optional();
         break;
       case "rentprice":
         fieldSchema = field.required
