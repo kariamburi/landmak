@@ -35,7 +35,7 @@ type CollectionProps = {
   handleOpenChatId:(valu:string)=> void;
 };
 
-const CollectionLoans = ({
+const CollectionMyLoans = ({
   data,
   emptyTitle,
   emptyStateSubtext,
@@ -125,7 +125,7 @@ const CollectionLoans = ({
                Property
                 </th>
                 <th className="border border-gray-300 dark:border-gray-600 px-4 py-2">
-                Applied By
+               Application Details
                 </th>
                 
                {/*  <th className="border border-gray-300 dark:border-gray-600 px-4 py-2">
@@ -143,7 +143,7 @@ const CollectionLoans = ({
                   className="bg-gray-100 rounded-sm p-1 hover:bg-gray-100 dark:hover:bg-gray-600 text-xs"
                 >
                   <td className="border border-gray-300 dark:border-gray-600 px-4 py-2">
-                  {loan.adId ? (<> <div className="flex flex-col">  
+                {loan.adId ? (<> <div className="flex flex-col">  
                    <div className="flex gap-1 lg:gap-4 w-full items-start"> {/* Changed items-center to items-start for top alignment */}
      <div className="relative rounded">
         {isLoadingsmall && (
@@ -219,11 +219,12 @@ const CollectionLoans = ({
                        </p>
                         </div>
                         </div>
-                         <p className="text-xs flex gap-2 text-gray-600 dark:text-gray-300 mb-1">
+                      <p className="text-xs flex gap-2 text-gray-600 dark:text-gray-300 mb-1">
                       Loan Request Type: {loan.loanType ? (<>{loan.loanType}</>):(<>Property Financing Loan</>)}
                        <span className="font-semibold">KES {loan.monthlyIncome.toLocaleString()}
                       </span>
                     </p>
+                        
                      <p className="text-xs flex gap-2 text-gray-600 dark:text-gray-300 mb-1">
                        Monthly Income: 
                        <span className="font-semibold">KES {loan.monthlyIncome.toLocaleString()}
@@ -270,12 +271,7 @@ const CollectionLoans = ({
                             
                        <p className="text-xs items-center flex gap-2 text-gray-600 dark:text-gray-300 mb-1">
                     
-                       <button
-                                                          onClick={() => handleOpenContact(loan.userId)}
-                                                          className="bg-gray-100 border px-3 py-1 rounded hover:bg-[#e4ebeb]"
-                                                        >
-                                                         <QuestionAnswerOutlinedIcon/> Contact Applier
-                                                        </button>
+                      
                     </p>         
                      </div>
                     
@@ -305,10 +301,9 @@ const CollectionLoans = ({
           <p className="text-xs lg:p-regular-14">{emptyStateSubtext}</p>
         </div>
       )}
-      <ContactUser isOpen={isOpenContact} user={selectUser} handleOpenChatId={handleOpenChatId} onClose={handleCloseContact}/>
      
     </div>
   );
 };
 
-export default CollectionLoans;
+export default CollectionMyLoans;

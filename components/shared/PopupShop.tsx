@@ -46,6 +46,7 @@ interface WindowProps {
   handleOpenShop: (shopId:any) => void;
   handleOpenPerfomance: () => void;
   shopAcc: any;
+  loans:any;
   user:any;
   userId: string;
   userName: string;
@@ -53,7 +54,7 @@ interface WindowProps {
   queryObject:any;
 }
 
-const PopupShop = ({ isOpen, userId, user, shopAcc, queryObject, userName,userImage, onClose,handlePay, handleOpenShop,
+const PopupShop = ({ isOpen, userId, user, shopAcc, queryObject, loans, userName,userImage, onClose,handlePay, handleOpenShop,
   handleOpenPerfomance, handleOpenSettings, handleOpenChatId, handleOpenReview, handleOpenChat, handleOpenBook,handleOpenPlan, handleOpenSell, handleAdEdit,handleAdView, handleOpenAbout,handleOpenTerms,handleOpenPrivacy,handleOpenSafety }: WindowProps) => {
 
   if (!isOpen) return null;
@@ -74,6 +75,7 @@ const PopupShop = ({ isOpen, userId, user, shopAcc, queryObject, userName,userIm
                           limit={3}
                           sortby={"recommeded"}
                           urlParamName="adsPage"
+                          loans={loans}
                           onClose={onClose}
                           handleOpenSell={handleOpenSell}
                           handleOpenAbout={handleOpenAbout}

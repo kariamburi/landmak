@@ -6,7 +6,7 @@ import { getAllCategories, seedCategories } from "@/lib/actions/category.actions
 import { duplicateSubcategories, getAllSubCategories, migrateFieldOptions, removenegotiable, reverseFieldOptions, syncSubcategoryImages, updateSub, updatethisCategory } from "@/lib/actions/subcategory.actions";
 import { getAdsCountAllRegion, getAllAds } from "@/lib/actions/dynamicAd.actions";
 import MainPage from "@/components/shared/MainPage";
-import { getallPendingLaons } from "@/lib/actions/loan.actions";
+import { getallPendingLaons, getByUserIdLaons, getLoanById } from "@/lib/actions/loan.actions";
 import { getAllPackages } from "@/lib/actions/packages.actions";
 
 export default async function Home({ searchParams }: SearchParamProps) {
@@ -22,17 +22,19 @@ export default async function Home({ searchParams }: SearchParamProps) {
     : {};
 
   let user: any = [];
+  let myloans: any = [];
   if (userId) {
     user = await getUserById(userId);
+    myloans = await getByUserIdLaons(userId);
   }
   const categoryList = await getAllCategories();
   const subcategoryList = await getAllSubCategories();
   const packagesList = await getAllPackages();
   const AdsCountPerRegion = await getAdsCountAllRegion();
   const loans = await getallPendingLaons();
- // const udate = await  updatethisCategory();
+ 
   //const migration = await syncSubcategoryImages("68144b998d7305e3676767a0");
- // console.log(user);
+  console.log(myloans);
  
 //const categoryList:any = [];
 //const subcategoryList:any = [];
@@ -55,6 +57,7 @@ export default async function Home({ searchParams }: SearchParamProps) {
             packagesList={packagesList}
             AdsCountPerRegion={AdsCountPerRegion}
             loans={loans}
+            myloans={myloans}
          />
       
           <Toaster />

@@ -42,9 +42,10 @@ interface WindowProps {
   handleCategory: (value:string) => void;
   userId: string;
   user:any;
+  packagesList:any;
 }
 
-const PopupPlan = ({ isOpen, userId, user, onClose,handlePay, handleCategory, handleOpenSettings, handleOpenShop, handleOpenPerfomance, handleOpenAbout,handleOpenTerms,handleOpenPrivacy,handleOpenSafety, handleOpenChat,handleOpenBook,handleOpenPlan, handleOpenSell }: WindowProps) => {
+const PopupPlan = ({ isOpen, userId, user, packagesList, onClose,handlePay, handleCategory, handleOpenSettings, handleOpenShop, handleOpenPerfomance, handleOpenAbout,handleOpenTerms,handleOpenPrivacy,handleOpenSafety, handleOpenChat,handleOpenBook,handleOpenPlan, handleOpenSell }: WindowProps) => {
  
  
 
@@ -70,7 +71,8 @@ const PopupPlan = ({ isOpen, userId, user, onClose,handlePay, handleCategory, ha
               handleOpenSafety={handleOpenSafety}
               handleOpenShop={handleOpenShop}
               handlePay={handlePay} 
-              handleCategory={handleCategory} />
+              handleCategory={handleCategory} 
+              packagesList={packagesList}/>
               
      
         <Toaster />

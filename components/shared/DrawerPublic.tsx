@@ -17,10 +17,14 @@ import {
 } from "@/components/ui/drawer"
 import { useState } from "react"
 import { Checkbox } from "../ui/checkbox"
-import usePlacesAutocomplete, { getGeocode, getLatLng } from "use-places-autocomplete"
+//import usePlacesAutocomplete, { getGeocode, getLatLng } from "use-places-autocomplete"
 import AddOutlinedIcon from '@mui/icons-material/AddOutlined';
 import CircularProgress from "@mui/material/CircularProgress";
-
+import GooglePlacesAutocomplete, {
+  geocodeByAddress,
+  getLatLng,
+} from "react-google-places-autocomplete";
+const GOOGLE_MAPS_API_KEY = process.env.NEXT_PUBLIC_GOOGLEAPIKEY!;
 export function DrawerPublic({
     onChange,
     latitude,
@@ -36,7 +40,7 @@ export function DrawerPublic({
     const [isOpen, setIsOpen] = useState(false);
     const [isPicking, setisPicking] = useState(false);
     
-    const { suggestions, setValue, value, clearSuggestions } = usePlacesAutocomplete();
+    //const { suggestions, setValue, value, clearSuggestions } = usePlacesAutocomplete();
     const [lat_, setlat] = useState('');
     const [lng_, setlng] = useState('');
     const [inputMode, setInputMode] = useState< 'coordinates' | 'maplink' | 'address' | 'My Location'>('My Location');
@@ -100,22 +104,18 @@ export function DrawerPublic({
   }
 };
 // Handle Address Selection
-  const handleSelect = async (address: string) => {
-    setValue(address, false);
-    clearSuggestions();
-    try {
-      const results = await getGeocode({ address });
-      const { lat, lng } = await getLatLng(results[0]);
-     // setCenter({ lat, lng });
-      setlat(lat.toFixed(6))
-      setlng(lng.toFixed(6))
-      onChange(lat.toFixed(6),lng.toFixed(6))
+const handleSelect = (e: any) => {
+    geocodeByAddress(e.value.description)
+      .then((results) => getLatLng(results[0]))
+      .then(({ lat, lng }) => {
+      setlat(lat.toString())
+      setlng(lng.toString())
+      onChange(lat.toString(),lng.toString())
       setIsOpen(false)
-     
-    } catch (error) {
-      console.error("Error getting geocode:", error);
-    }
+      });
   };
+
+
   
   return (
     <Drawer open={isOpen} onOpenChange={setIsOpen}>
@@ -179,7 +179,7 @@ export function DrawerPublic({
           ))}
         </div>
 
-        <div className="bg-white rounded-b-xl rounded-tr-xl dark:bg-[#131B1E] p-2 flex flex-col">
+        <div className="bg-white h-[200px] rounded-b-xl rounded-tr-xl dark:bg-[#131B1E] p-2 flex flex-col">
           {inputMode === "My Location" && (
             <div className="mb-2">
               <div className="flex items-center space-x-2">
@@ -197,26 +197,37 @@ export function DrawerPublic({
 
           {inputMode === "address" && (
             <div className="mb-2">
-              <input
-                type="text"
-                placeholder="Search by address..."
-                value={value}
-                onChange={(e) => setValue(e.target.value)}
-                className="w-full text-sm dark:bg-[#2D3236] dark:text-gray-300 dark:border-gray-600 py-3 px-2 border border-gray-300 rounded-md"
-              />
-              {suggestions.status === "OK" && (
-                <ul className="text-sm dark:bg-[#2D3236] dark:text-gray-300 dark:border-gray-600 bg-white border border-gray-300 rounded-md mt-2 max-h-40 overflow-auto">
-                  {suggestions.data.map((suggestion: any) => (
-                    <li
-                      key={suggestion.place_id}
-                      className="p-2 hover:bg-green-100 dark:hover:bg-gray-700 cursor-pointer"
-                      onClick={() => handleSelect(suggestion.description)}
-                    >
-                      {suggestion.description}
-                    </li>
-                  ))}
-                </ul>
-              )}
+               <GooglePlacesAutocomplete
+                                      apiKey={GOOGLE_MAPS_API_KEY}
+                                      selectProps={{
+                  placeholder: "Search location",
+                  onChange: handleSelect,
+                  styles: {
+                    control: (provided) => ({
+                      ...provided,
+                      padding: '6px',
+                      borderRadius: '4px',
+                      borderColor: '#ccc',
+                      boxShadow: 'none',
+                      minHeight: '55px',
+                    }),
+                    placeholder: (provided) => ({
+                      ...provided,
+                      color: '#888',
+                    }),
+                    menu: (provided) => ({
+                      ...provided,
+                      zIndex: 9999, // ensure it appears on top
+                    }),
+                  },
+                }}
+                                      autocompletionRequest={{
+                                        componentRestrictions: {
+                                          country: ["KE"], // Limits results to Kenya
+                                        },
+                                      }}
+                                    />
+            
             </div>
           )}
 

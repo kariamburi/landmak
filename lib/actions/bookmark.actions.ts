@@ -9,14 +9,21 @@ import { UTApi } from "uploadthing/server"
 import Packages from "../database/models/packages.model"
 import Bookmark from "../database/models/bookmark.model"
 import DynamicAd from "../database/models/dynamicAd.model"
+import User from "../database/models/user.model"
 
 
 const populateAd = (query: any) => {
   return query.populate({
     path: 'adId',
     model: DynamicAd,
-    select: '_id data views priority expirely adstatus inquiries whatsapp calls shared bookmarked abused subcategory organizer plan createdAt'
-  })
+    select:
+      '_id data views priority expirely adstatus inquiries whatsapp calls shared bookmarked abused subcategory organizer plan createdAt',
+    populate: {
+      path: 'organizer',
+      model: User, // or whatever model the organizer refers to
+      select: '_id clerkId email firstName lastName photo businessname aboutbusiness businessaddress latitude longitude businesshours businessworkingdays phone whatsapp website facebook twitter instagram tiktok imageUrl verified token notifications',
+    },
+  });
 };
 
 

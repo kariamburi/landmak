@@ -54,7 +54,7 @@ type CollectionProps = {
  // packname?: string;
  // color: string;
   sortby: string;
-  user: IUser;
+  user: any;
   emptyTitle: string;
   emptyStateSubtext: string;
   limit: number;
@@ -107,51 +107,15 @@ CollectionProps) => {
   const [loading, setLoading] = useState(true);
   // const observer = useRef();
   const observer = useRef<IntersectionObserver | null>(null);
- const [loadingSub, setLoadingSub] = useState<boolean>(true);
-  const [daysRemaining, setDaysRemaining] = useState(0);
-  const [planPackage, setPlanPackage] = useState("Free");
-  const [color, setColor] = useState("#000000");
- 
-  useEffect(() => {
-   
-      const fetchData = async () => {
-        try {
-          setLoadingSub(true);
-          const subscriptionData = await getData(userId);
-      
-          if (subscriptionData) {
-         
-            const listedAds = subscriptionData.ads || 0;
-            if (subscriptionData.currentpack && !Array.isArray(subscriptionData.currentpack)) {
-              
-             // setRemainingAds(subscriptionData.currentpack.list - listedAds);
-           
-              setColor(subscriptionData.currentpack.color);
-              setPlanPackage(subscriptionData.currentpack.name);
-           
-            const createdAtDate = new Date(subscriptionData.transaction?.createdAt || new Date());
-            const periodDays = parseInt(subscriptionData.transaction?.period) || 0;
-            const expiryDate = new Date(createdAtDate.getTime() + periodDays * 24 * 60 * 60 * 1000);
-          
-            const currentDate = new Date();
-            const remainingDays = Math.ceil((expiryDate.getTime() - currentDate.getTime()) / (1000 * 60 * 60 * 24));
-            setDaysRemaining(remainingDays);
-          
-          } else {
-            console.warn("No current package found for the user.");
-          }
-          }
-        } catch (error) {
-          console.error("Failed to fetch data", error);
-        } finally {
-       
-          setLoadingSub(false);
-        }
-      };
-      fetchData();
-  
-  }, []);
-
+ const [loadingSub, setLoadingSub] = useState<boolean>(false);
+ const createdAt = new Date(user.transaction?.createdAt || new Date());
+     const periodInDays = parseInt(user.transaction?.period) || 0;
+     const expiryDate = new Date(createdAt.getTime() + periodInDays * 24 * 60 * 60 * 1000);
+     const currentTime = new Date();
+     const remainingTime = expiryDate.getTime() - currentTime.getTime();
+     const daysRemaining = Math.ceil(remainingTime / (1000 * 60 * 60 * 24));
+    const planPackage = user.currentpack.name;
+    const color = user.currentpack.color;
   const fetchAds = async () => {
     setLoading(true);
     try {
@@ -223,7 +187,7 @@ CollectionProps) => {
   <ScrollArea className="h-[100vh] bg-[#e4ebeb] p-0 dark:bg-[#131B1E] text-black dark:text-[#F1F3F3]">
      
       <div className="top-0 z-10 fixed w-full">
-        <Navbar user={user} userstatus={user.status} userId={userId} onClose={onClose} popup={"performance"} handleOpenSell={handleOpenSell} handleOpenBook={handleOpenBook} handleOpenPlan={handleOpenPlan} handleOpenChat={handleOpenChat}
+        <Navbar user={user.user} userstatus={user.user.status} userId={userId} onClose={onClose} popup={"performance"} handleOpenSell={handleOpenSell} handleOpenBook={handleOpenBook} handleOpenPlan={handleOpenPlan} handleOpenChat={handleOpenChat}
          handleOpenPerfomance={handleOpenPerfomance}
          handleOpenSettings={handleOpenSettings}
          handleOpenAbout={handleOpenAbout}
@@ -241,7 +205,7 @@ CollectionProps) => {
                 userId={userId}
                 userName={userName}
                 userImage={userImage}
-                user={user}
+                user={user.user}
                 handleOpenReview={handleOpenReview}
                 handleOpenShop={handleOpenShop}
                 handlePay={handlePay}

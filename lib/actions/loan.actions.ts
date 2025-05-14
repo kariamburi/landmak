@@ -47,7 +47,7 @@ export async function getLoanById(_id: string) {
   try {
     await connectToDatabase()
 
-    const response = await Loan.findById(_id)
+    const response = await populateAd(Loan.findById(_id));
 
     if (!response) throw new Error('Reported not found')
 
@@ -60,6 +60,21 @@ export async function getallLaons(limit = 16, page = 1) {
   try {
     await connectToDatabase();
     const conditions = {}
+    const skipAmount = (Number(page) - 1) * limit
+    const response = await populateAd(Loan.find(conditions)
+      .skip(skipAmount)
+      .limit(limit));
+    const AdCount = await Loan.countDocuments(conditions)
+
+    return { data: JSON.parse(JSON.stringify(response)), totalPages: Math.ceil(AdCount / limit) }
+  } catch (error) {
+    handleError(error)
+  }
+}
+export async function getByUserIdLaons(_id: string, limit = 16, page = 1) {
+  try {
+    await connectToDatabase();
+    const conditions = { userId: _id }
     const skipAmount = (Number(page) - 1) * limit
     const response = await populateAd(Loan.find(conditions)
       .skip(skipAmount)

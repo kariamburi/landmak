@@ -122,29 +122,32 @@ const CollectionBookmark = ({
                     className="flex justify-center"
                   >
                     {/* Render Ad */}
-                 {ad.adId && (<><VerticalCard
+                 {ad.adId && (<>
+                 <VerticalCard
                       ad={ad.adId}
                       userId={userId}
                       isAdCreator={isAdCreator}
                       handleAdView={handleAdView} 
                       handleAdEdit={handleAdEdit} 
                       handleOpenPlan={handleOpenPlan}
-                        handleOpenChatId={handleOpenChatId} 
-                      popup={"bookmark"}/></>)}   
+                      handleOpenChatId={handleOpenChatId} 
+                      popup={"bookmark"}/>
+                      </>)}   
                   </div>
                 );
               } else {
                 return (
                   <div key={index} className="flex justify-center">
                     {/* Render Ad */}
-                    {ad.adId && (<><VerticalCard
+                    {ad.adId && (<>
+                    <VerticalCard
                       ad={ad.adId}
                       userId={userId}
                       isAdCreator={isAdCreator}
                       handleAdView={handleAdView} 
                       handleAdEdit={handleAdEdit}
                       handleOpenPlan={handleOpenPlan}
-                        handleOpenChatId={handleOpenChatId} 
+                      handleOpenChatId={handleOpenChatId} 
                       popup={"bookmark"}
                     /></>)}  
                   </div>
@@ -165,14 +168,15 @@ const CollectionBookmark = ({
                     >
                       {/* Render Ad */}
                      
-                       {ad.adId && (<> <HorizontalCard
+                       {ad.adId && (<> 
+                       <HorizontalCard
                         ad={ad}
                         userId={userId}
                         isAdCreator={isAdCreator}
                         handleAdView={handleAdView} 
                         handleAdEdit={handleAdEdit}
                         handleOpenPlan={handleOpenPlan}
-                          handleOpenChatId={handleOpenChatId} 
+                        handleOpenChatId={handleOpenChatId} 
                         popup={"bookmark"}
                       /></>)}  
                     </div>
@@ -181,14 +185,16 @@ const CollectionBookmark = ({
                   return (
                     <div key={index} className="flex justify-center">
                       {/* Render Ad */}
-                      {ad.adId && (<> <HorizontalCard
+                      {ad.adId && (<> 
+                      <HorizontalCard
                         ad={ad}
                         userId={userId}
                         isAdCreator={isAdCreator}
                         handleAdView={handleAdView} 
-                      handleAdEdit={handleAdEdit}
-                      handleOpenPlan={handleOpenPlan}
-                        handleOpenChatId={handleOpenChatId} 
+                        handleAdEdit={handleAdEdit}
+                        handleOpenPlan={handleOpenPlan}
+                        handleOpenChatId={handleOpenChatId}
+                        popup={"bookmark"} 
                       /></>)}  
                     </div>
                   );

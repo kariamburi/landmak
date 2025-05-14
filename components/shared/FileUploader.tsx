@@ -22,6 +22,7 @@ type FileUploaderProps = {
   onFieldChange: (urls: string[]) => void;
   imageUrls: string[];
   userName: string;
+  category: string;
   adId: string;
   setFiles: Dispatch<SetStateAction<File[]>>;
 };
@@ -128,6 +129,7 @@ const applyWatermark = (
 export function FileUploader({
   imageUrls,
   userName,
+  category,
   adId,
   onFieldChange,
   setFiles,
@@ -261,13 +263,16 @@ export function FileUploader({
       <div className="text-left text-sm w-full">
         <div className="font-semibold">Add Photo</div>
         <div>
-          <small className="dark:text-gray-500 text-[#464b4f]">
-            Add at least 3 photos for this category
-          </small>
-          <br />
+         
+         {category ==='Property Services' ?(<> 
+         <small className="dark:text-gray-500 text-[#464b4f]">Add Profile Image</small>
+         </>):(<><small className="dark:text-gray-500 text-[#464b4f]">Add at least 3 photos for this category</small>  <br />
           <small className="dark:text-gray-500 text-[#464b4f]">
             First picture - is the title picture.
           </small>
+          </>)}   
+          
+        
         </div>
         {processingStatus && (
         <div className="flex gap-2 text-gray-500 justify-center items-center">

@@ -20,6 +20,7 @@ import VisibilityIcon from "@mui/icons-material/Visibility";
 import CheckCircleIcon from "@mui/icons-material/CheckCircle";
 import WhatsAppIcon from "@mui/icons-material/WhatsApp";
 import HelpOutlineOutlinedIcon from "@mui/icons-material/HelpOutlineOutlined";
+import CreditScoreOutlinedIcon from '@mui/icons-material/CreditScoreOutlined';
 import {
   Accordion,
   AccordionContent,
@@ -1378,10 +1379,12 @@ export default function Ads({ ad, user, userId, userImage, userName, onClose,han
                 </div>
               </>
             )}
+ 
+ {ad.data.category !== 'Property Services' && (<>
  <div className="flex w-full items-center">
               <SignedIn>
               <button onClick={handleOpenPopupLoan} className="flex rounded-sm w-full py-3 px-2 text-lg text-white bg-green-600 hover:bg-green-700 justify-center items-center gap-1">
-              <AccountBalanceOutlinedIcon/>
+              <CreditScoreOutlinedIcon/>
               Request this property Financing
       </button>
        
@@ -1393,11 +1396,13 @@ export default function Ads({ ad, user, userId, userImage, userName, onClose,han
               router.push("/sign-in");
             }}
              className="flex text-white justify-center rounded-sm w-full py-3 px-2 text-lg bg-green-600 hover:bg-green-700 items-center">
-              <AccountBalanceOutlinedIcon/>
+              <CreditScoreOutlinedIcon/>
               Request this property Financing
       </button>
       </SignedOut>
+
         </div>
+        </>)}
             <div className="flex justify-between w-full items-center">
             <ReportUnavailable  userId={userId} ad={ad} isOpen={isPopupOpenAAv} onClose={handleClosePopupAv} userName={userName} userImage={userImage}/>
             <ReportAbuse  userId={userId} ad={ad} isOpen={isPopupOpen} onClose={handleClosePopup} userName={userName} userImage={userImage}/>

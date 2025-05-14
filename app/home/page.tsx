@@ -54,7 +54,7 @@ const Home = async ({ searchParams }: SearchParamProps) => {
    const subscriptionsExpirely = await checkExpiredLatestSubscriptionsPerUser();
   const topadvertiser = await getToAdvertiser();
   const financeRequests = await getallLaons(limit, page);
-  console.log(reported);
+ // console.log(reported);
   return (
    
         <HomeDashboard

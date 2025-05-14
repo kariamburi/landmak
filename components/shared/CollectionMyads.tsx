@@ -128,7 +128,7 @@ const filteredAds = selectedCategory
     <div>
   <div className="flex flex-col lg:flex-row items-center justify-between w-full">
   <h3 className="font-bold text-[25px] text-center sm:text-left">
-                    Seller Ads
+                    My Ads
                   </h3>
    <div className="w-full lg:w-[450px] justify-between lg:justify-end flex items-center gap-4 mb-2 p-1 rounded-md">   
       <label className="text-xs lg:text-base">Filter by Category: </label>

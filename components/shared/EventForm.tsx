@@ -22,6 +22,10 @@ import { Multiselect } from "./Multiselect";
 import AutoComplete from "./AutoComplete";
 import AddOutlinedIcon from "@mui/icons-material/AddOutlined";
 import DoneOutlinedIcon from "@mui/icons-material/DoneOutlined";
+import GooglePlacesAutocomplete, {
+  geocodeByAddress,
+  getLatLng,
+} from "react-google-places-autocomplete";
 
 import {
   FormControl,
@@ -86,19 +90,20 @@ interface Field {
     | "year"
     | "youtube-link"
     | "price"
+    | "budget"
     | "rentprice"
     | "priceper"
     | "bulkprice"
     | "serviceprice"
     | "delivery"
-    | "gps"
+    | "location"
     | "propertyarea"
     | "virtualTourLink"
     | "related-autocompletes";
   required?: boolean;
   options?: string[];
 }
-
+const GOOGLE_MAPS_API_KEY = process.env.NEXT_PUBLIC_GOOGLEAPIKEY!;
 const generateDefaultValues = (fields: Field[]) => {
   const defaults: Record<string, any> = {};
   fields.forEach((field) => {
@@ -120,6 +125,8 @@ const generateDefaultValues = (fields: Field[]) => {
       defaults[field.name] = "";
     } else if (field.type === "price") {
       defaults["price"] = 0;
+    } else if (field.type === "budget") {
+      defaults["price"] = 0;
     } else if (field.type === "rentprice") {
       defaults["price"] = 0;
       defaults["period"] = "";
@@ -130,8 +137,8 @@ const generateDefaultValues = (fields: Field[]) => {
       defaults["price"] = 0;
       defaults["priceType"] = "specify";
       defaults["unit"] = "per service";
-    } else if (field.type === "gps") {
-      defaults["gps"] = [];
+    } else if (field.type === "location") {
+      defaults["location"] = [];
     }
    else if (field.type === "propertyarea") {
     defaults["propertyarea"] = [];
@@ -296,6 +303,18 @@ const AdForm = ({
   const handleClosePopupArea = () => {
     setShowPopupArea(false);
   };
+
+ const handleSelect = (e: any) => {
+    geocodeByAddress(e.value.description)
+      .then((results) => getLatLng(results[0]))
+      .then(({ lat, lng }) => {
+         setFormData((prevData) => ({ ...prevData, propertyarea: {
+        location: { type: "Point", coordinates: [lat, lng] },
+        mapaddress:e.value.description,
+      } }));
+      });
+  };
+
   const handleSaveMap = () => {
   
     setFormData((prevData) => ({ ...prevData, ["propertyarea"]: mapData }));
@@ -386,15 +405,27 @@ if(subcategory && category){
             );
             // Update fields if a match is founds
             setSelectedCategoryId(selectedData.category._id)
+            setSelectedSubCategoryId(selectedData._id);
             setFields(selectedData ? selectedData.fields : []);
+            if(category==='Wanted Ads'){
+    
+     setFormData({
+                ...formData,
+                category: category,
+                subcategory: subcategory,
+                imageUrls: [userImage],
+              });
+            
+          }else{
              setFormData({
                 ...formData,
-                phone: ad.data.phone,
+                category: category,
+                subcategory: subcategory,
               });
           }
 
 
-
+        }
           }
           setShowLoad(false)
         } catch (error) {
@@ -450,83 +481,24 @@ useEffect(() => {
     });
      }, []);
 
-
-
-
- // useEffect(() => {
-     // if(type === "Create"){
-       
-        //const fetchData = async () => {
-        //  try {
-          //  setLoadingSub(true);
-           
-         //   const subscriptionData = await getData(userId);
-          //  const packages = await getAllPackages();
-          //  setPackagesList(packages);
-           //console.log(subscriptionData);
-
-           // if (subscriptionData) {
-           //   setSubscription(subscriptionData);
-          //    const listedAds = subscriptionData.ads || 0;
-          //    setListed(listedAds);
-          //    if (subscriptionData.currentpack && !Array.isArray(subscriptionData.currentpack)) { 
-           //   setRemainingAds(subscriptionData.currentpack.list - listedAds);
-           //   setpriority(subscriptionData.currentpack.priority);
-          //    setColor(subscriptionData.currentpack.color);
-          //    setplan(subscriptionData.currentpack.name);
-          //    setplanId(subscriptionData.transaction?.planId || FreePackId);
-             // console.log(subscriptionData);
-           //   const createdAtDate = new Date(subscriptionData.transaction?.createdAt || new Date());
-           //   const periodDays = parseInt(subscriptionData.transaction?.period) || 0;
-           //   const expiryDate = new Date(createdAtDate.getTime() + periodDays * 24 * 60 * 60 * 1000);
-          //    setexpirationDate(expiryDate);
-           //   const currentDate = new Date();
-           //   const remainingDays = Math.ceil((expiryDate.getTime() - currentDate.getTime()) / (1000 * 60 * 60 * 24));
-           //   setDaysRemaining(remainingDays);
-           //   setadstatus((remainingDays > 0 && (subscriptionData.currentpack.list - listedAds) > 0) || ((subscriptionData.currentpack.list - listedAds) > 0 && subscriptionData.currentpack.name === "Free") ? "Active" : "Pending");
-          //    setActivePackage(
-          //    packages.length > 0
-           //     ? subscriptionData.currentpack.list - listedAds > 0 && subscriptionData.currentpack.name === "Free"
-          //        ? packages[0]
-         //         : packages[1]
-          //      : null
-         //   );
-        //    } else {
-        //      console.warn("No current package found for the user.");
-        //    }
-        //    }
-       //   } catch (error) {
-       //     console.error("Failed to fetch data", error);
-      //    } finally {
-           
-      //      setLoadingSub(false);
-    //      }
-   //     };
-   //     fetchData();
-  //    }
-  //  }, []);
-
-
-
- 
   const validateForm = async () => {
     //console.log("start: ");
     const validationSchema = createValidationSchema(fields);
-     //console.log(formData);
+     console.log(formData);
 
     const result = validationSchema.safeParse(formData);
-    // console.log("result:" + result);
+     console.log(result);
     if (!result.success) {
       const errors = result.error.errors.reduce((acc: any, err: any) => {
         acc[err.path[0]] = err.message;
-        //  console.log("acc:" + acc);
+          console.log(acc);
         return acc;
       }, {});
-      // console.log("faild:" + errors);
+       console.log(errors);
       setFormErrors(errors);
       return false;
     }
-    //console.log("success:");
+    console.log("success:");
     setFormErrors({});
     return true;
   };
@@ -550,6 +522,7 @@ useEffect(() => {
 
   const handleInputChange = (field: string, value: any) => {
     setFormData({ ...formData, [field]: value });
+ 
   };
 
   const handleInputCategoryChange = (field: string, value: any, _id:string) => {
@@ -558,10 +531,20 @@ useEffect(() => {
     setSelectedSubCategory("");
     setSelectedSubCategoryId("");
     setFields([]);
-    setFormData({
+    
+     if(value ==='Wanted Ads'){
+    
+     setFormData({
+                ...formData,
+                  [field]: value,
+                imageUrls: [userImage],
+              });
+    }else{
+       setFormData({
       ...formData,
       [field]: value,
     });
+    }
   };
   const handleInputSubCategoryChange = (
     field: string,
@@ -585,16 +568,16 @@ useEffect(() => {
     setFormErrors({});
     setFiles([]);
    
-    if(user.phone && type === "Create"){
+    if(user.user.phone && type === "Create"){
 
-      const cleanNumber = user.phone.startsWith('+') ? user.phone.slice(1) : user.phone;
+      const cleanNumber = user.user.phone.startsWith('+') ? user.user.phone.slice(1) : user.user.phone;
       const countryCode = cleanNumber.slice(0, 3);
       const localNumber = cleanNumber.slice(3);
       setCountryCode('+'+countryCode)
       setPhoneNumber(localNumber)
       setFormData({
         ...formData, [field]: value,
-        phone: user.phone,
+        phone: user.user.phone,
       });
     }else{
       setFormData({
@@ -707,8 +690,7 @@ useEffect(() => {
       if (selectedCategory === 'Wanted Ads') {
         finalData = {
           ...formData,
-          imageUrls: userImage,
-          budget: parseCurrencyToNumber(formData["budget"].toString()),
+          price: parseCurrencyToNumber(formData["price"].toString()),
           phone,
         };
       } else {
@@ -763,7 +745,7 @@ useEffect(() => {
       });
     
       try {
-        if (!user.phone) {
+        if (!user.user.phone) {
           await updateUserPhone(userId, phone);
         }
       } catch (err) {
@@ -1084,6 +1066,7 @@ useEffect(() => {
                   setFiles={setFiles}
                   adId={adId || ""}
                   userName={userName}
+                  category={selectedCategory}
                 />
                 {formErrors["imageUrls"] && (
                   <p className="text-red-500 text-sm">
@@ -1197,12 +1180,12 @@ useEffect(() => {
                 <div className="flex flex-col w-full">
                   <TextField
                     required={field.required}
-                    id={field.name}
+                     id={"price"}
                     label={capitalizeFirstLetter(field.name)}
-                    value={formatToCurrency(formData[field.name] ?? 0)}
-                    onChange={(e) =>
-                      handleInputChange(field.name, e.target.value)
-                    }
+                      value={formatToCurrency(formData["price"] ?? 0)}
+                      onChange={(e) =>
+                        handleInputChange("price", e.target.value)
+                      }
                     variant="outlined"
                     placeholder={`Enter ${field.name.replace("-", " ")}`}
                     InputProps={{
@@ -1896,6 +1879,42 @@ useEffect(() => {
                   )}
                 </div>
               )}
+               {field.type === "location" && (
+                  <div className="flex flex-col w-full gap-1">
+                      <GooglePlacesAutocomplete
+                        apiKey={GOOGLE_MAPS_API_KEY}
+                        selectProps={{
+    placeholder: "Search location",
+    onChange: handleSelect,
+    styles: {
+      control: (provided) => ({
+        ...provided,
+        padding: '6px',
+        borderRadius: '4px',
+        borderColor: '#ccc',
+        boxShadow: 'none',
+        minHeight: '55px',
+      }),
+      placeholder: (provided) => ({
+        ...provided,
+        color: '#888',
+      }),
+      menu: (provided) => ({
+        ...provided,
+        zIndex: 9999, // ensure it appears on top
+      }),
+    },
+  }}
+                        autocompletionRequest={{
+                          componentRestrictions: {
+                            country: ["KE"], // Limits results to Kenya
+                          },
+                        }}
+                      />
+                         {locationError && (
+                <p className="text-red-500 text-sm">{locationError}</p>
+              )}
+                   </div> )}
               
                     {field.type === "propertyarea" && (
                 <div className="flex flex-col w-full gap-1">
@@ -1915,13 +1934,7 @@ useEffect(() => {
                   {showPopupArea && (
                     <div className="fixed inset-0 flex items-center justify-center bg-[#e4ebeb] z-50">
                     
-                       {/*  <GoogleMapping name={"propertyarea"}
-                          onChange={handleInputOnChange}
-                          selected={formData["propertyarea"] || []}
-                          onSave={handleSaveArea}
-                          userId={userId}
-                          _id={ad ? ad._id : ''}/>
-                        */}
+                     
                         
                         <MapDrawingTool
   name="propertyarea"

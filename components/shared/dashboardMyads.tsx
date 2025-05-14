@@ -26,9 +26,9 @@ import Skeleton from "@mui/material/Skeleton";
 import { IUser } from "@/lib/database/models/user.model";
 import Footersub from "./Footersub";
 import Navbar from "./navbar";
-import { mode } from "@/constants";
+import { FreePackId, mode } from "@/constants";
 import { Toaster } from "../ui/toaster";
-import { ScrollArea } from "../ui/scroll-area";
+import { ScrollArea, ScrollBar } from "../ui/scroll-area";
 import { getData } from "@/lib/actions/transactions.actions";
 import { Icon } from "@iconify/react";
 import Barsscale from "@iconify-icons/svg-spinners/bars-scale"; 
@@ -36,6 +36,8 @@ import sixDotsScale from "@iconify-icons/svg-spinners/6-dots-scale"; // Correct 
 import CollectionMyads from "./CollectionMyads";
 import SellerProfile from "./SellerProfile";
 import SubscriptionSkeleton from "./SubscriptionSkeleton";
+import CollectionLoans from "./CollectionLoans";
+import CollectionMyLoans from "./CollectionMyLoans";
 
 // Correct import
 //const CollectionMyads = dynamic(() => import("./CollectionMyads"), {
@@ -59,13 +61,13 @@ type CollectionProps = {
   sortby: string;
   userImage: string;
   userName: string;
-  user: IUser;
+  user: any;
   emptyTitle: string;
   emptyStateSubtext: string;
   limit: number;
   queryObject:any;
   urlParamName?: string;
- // isAdCreator: boolean;
+  loans: any;
   collectionType?: "Ads_Organized" | "My_Tickets" | "All_Ads";
   onClose: () => void;
   handleOpenBook: () => void;
@@ -91,7 +93,7 @@ const DashboardMyads = ({
   //data,
  // packname,
  // daysRemaining,
- // color,
+  loans,
   emptyTitle,
   emptyStateSubtext,
   sortby,
@@ -115,54 +117,14 @@ CollectionProps) => {
   const [activeButton, setActiveButton] = useState(0);
   const [isVertical, setisVertical] = useState(true);
   const [loading, setLoading] = useState(false);
-
- const [loadingSub, setLoadingSub] = useState<boolean>(true);
-  const [daysRemaining, setDaysRemaining] = useState(0);
-  const [remainingAds, setRemainingAds] = useState(0);
-  const [planPackage, setPlanPackage] = useState("Free");
-  const [color, setColor] = useState("#000000");
  const isAdCreator = userId === shopAcc._id;
- const [listed, setListed] = useState(0);
- useEffect(() => {
- if(isAdCreator){
-    const fetchData = async () => {
-      try {
-      
-        setLoadingSub(true);
-        const subscriptionData = await getData(userId);
+ const createdAt = new Date(user.transaction?.createdAt || new Date());
+     const periodInDays = parseInt(user.transaction?.period) || 0;
+     const expiryDate = new Date(createdAt.getTime() + periodInDays * 24 * 60 * 60 * 1000);
+     const currentTime = new Date();
+     const remainingTime = expiryDate.getTime() - currentTime.getTime();
+     const daysRemaining = Math.ceil(remainingTime / (1000 * 60 * 60 * 24));
     
-        if (subscriptionData) {
-        
-          const listedAds = subscriptionData.ads || 0;
-          setListed(listedAds);
-          if (subscriptionData.currentpack && !Array.isArray(subscriptionData.currentpack)) {
-            
-            setRemainingAds(subscriptionData.currentpack.list - listedAds);
-            setColor(subscriptionData.currentpack.color);
-            setPlanPackage(subscriptionData.currentpack.name);
-          const createdAtDate = new Date(subscriptionData.transaction?.createdAt || new Date());
-          const periodDays = parseInt(subscriptionData.transaction?.period) || 0;
-          const expiryDate = new Date(createdAtDate.getTime() + periodDays * 24 * 60 * 60 * 1000);
-       
-          const currentDate = new Date();
-          const remainingDays = Math.ceil((expiryDate.getTime() - currentDate.getTime()) / (1000 * 60 * 60 * 24));
-          setDaysRemaining(remainingDays);
-        
-        } else {
-          console.warn("No current package found for the user.");
-        }
-        }
-      } catch (error) {
-        console.error("Failed to fetch data", error);
-      } finally {
-     
-        setLoadingSub(false);
-      }
-    }
-    fetchData();
- }
-}, []);
-
 
   const handleButtonClick = (index: number) => {
     setActiveButton(index);
@@ -218,7 +180,7 @@ CollectionProps) => {
     <>
         <ScrollArea className="h-[100vh] bg-[#e4ebeb] dark:bg-[#131B1E] text-black dark:text-[#F1F3F3]">
        <div className="top-0 z-10 fixed w-full">
-                        <Navbar user={user} userstatus={user.status} userId={userId} onClose={onClose} popup={"shop"} handleOpenSell={handleOpenSell} handleOpenBook={handleOpenBook} handleOpenPlan={handleOpenPlan} handleOpenChat={handleOpenChat}
+                        <Navbar user={user.user} userstatus={user.user.status} userId={userId} onClose={onClose} popup={"shop"} handleOpenSell={handleOpenSell} handleOpenBook={handleOpenBook} handleOpenPlan={handleOpenPlan} handleOpenChat={handleOpenChat}
                                             handleOpenPerfomance={handleOpenPerfomance}
                                             handleOpenSettings={handleOpenSettings}
                                             handleOpenAbout={handleOpenAbout}
@@ -234,10 +196,10 @@ CollectionProps) => {
             <div className="w-full">
             
               <div className="flex mt-2 lg:mt-0 gap-1 flex-col border rounded-lg flex justify-center items-center w-full h-full">
-              {isAdCreator && (<>   {loadingSub ? (<> <Icon icon={Barsscale} className="w-6 h-6 text-gray-500" /></>):(<>
+              {isAdCreator && (<>
 
                              {isAdCreator &&
-                             planPackage !== "Free" &&
+                             user.currentpack.name !== "Free" &&
                              daysRemaining &&
                              daysRemaining > 0 ? (
                                <>
@@ -245,11 +207,11 @@ CollectionProps) => {
                                  <div className="flex gap-1 w-full items-center bg-green-100 px-3 py-1 rounded-lg">
                                  <div
                                    style={{
-                                     backgroundColor: color,
+                                     backgroundColor: user.currentpack.color,
                                    }}
                                    className="h-5 w-5 rounded-full"
                                  ></div>
-    <span className="text-sm text-green-700 font-semibold">Active | {planPackage} Plan | {daysRemaining} Days Left </span>
+    <span className="text-sm text-green-700 font-semibold">Active | { user.currentpack.name} Plan | {daysRemaining} Days Left </span>
     <button  onClick={()=> handleOpenPlan()} className="ml-2 text-green-600 underline">Upgrade</button>
   </div>
 
@@ -262,18 +224,18 @@ CollectionProps) => {
 <div className="flex w-full items-center gap-1 bg-green-100 px-3 py-1 rounded-lg">
 <div
                                    style={{
-                                     backgroundColor: color,
+                                     backgroundColor: user.currentpack.color,
                                    }}
                                    className="h-5 w-5 rounded-full"
                                  ></div>
-    <span className="text-sm text-green-700 font-semibold">Active | {planPackage} Plan </span>
+    <span className="text-sm text-green-700 font-semibold">Active | { user.currentpack.name} Plan </span>
     <button  onClick={()=> handleOpenPlan()} className="ml-2 text-green-600 underline">Upgrade</button>
   </div>
 
                             
                                </>
                              )}
-                             </>)} </>)}
+                             </>)} 
                 <SellerProfile
                       user={shopAcc}
                       loggedId={userId}
@@ -290,10 +252,10 @@ CollectionProps) => {
           <div className="flex-1 min-h-screen">
           <div className="p-1 lg:hidden">
             <div className="flex flex-col gap-1 w-full ">
-          {isAdCreator && (<> {loadingSub ? (<>  <Icon icon={Barsscale} className="w-6 h-6 text-gray-500" /></>):(<>
+          {isAdCreator && (<>
 
                              {isAdCreator &&
-                             planPackage !== "Free" &&
+                              user.currentpack.name !== "Free" &&
                              daysRemaining &&
                              daysRemaining > 0 ? (
                                <>
@@ -302,11 +264,11 @@ CollectionProps) => {
                                  <div className="flex gap-1 w-full items-center bg-green-100 px-3 py-1 rounded-lg">
                                  <div
                                    style={{
-                                     backgroundColor: color,
+                                     backgroundColor: user.currentpack.color,
                                    }}
                                    className="h-5 w-5 rounded-full"
                                  ></div>
-    <span className="text-sm text-green-700 font-semibold">Active | {planPackage} Plan | {daysRemaining} Days Left </span>
+    <span className="text-sm text-green-700 font-semibold">Active | {user.currentpack.name} Plan | {daysRemaining} Days Left </span>
     <button  onClick={()=> handleOpenPlan()} className="ml-2 text-green-600 underline">Upgrade</button>
   </div>
 
@@ -319,18 +281,18 @@ CollectionProps) => {
 <div className="flex w-full items-center gap-1 bg-green-100 px-3 py-1 rounded-lg">
 <div
                                    style={{
-                                     backgroundColor: color,
+                                     backgroundColor: user.currentpack.color,
                                    }}
                                    className="h-5 w-5 rounded-full"
                                  ></div>
-    <span className="text-sm text-green-700 font-semibold">Active | {planPackage} Plan </span>
+    <span className="text-sm text-green-700 font-semibold">Active | {user.currentpack.name} Plan </span>
     <button  onClick={()=> handleOpenPlan()} className="ml-2 text-green-600 underline">Upgrade</button>
   </div>
 
                             
                                </>
                              )}
-                             </>)}
+                            
               <SellerProfile user={shopAcc} loggedId={userId} userId={shopAcc._id} handleOpenReview={handleOpenReview} handleOpenChatId={handleOpenChatId} handleOpenSettings={handleOpenSettings} handlePay={handlePay}/></>)} 
               </div>
             </div>
@@ -391,6 +353,27 @@ CollectionProps) => {
                   </div>
                 </div>
  */}
+ {loans && (<>
+  <div className="container mx-auto p-1 lg:p-4 border rounded-xl">
+              <h1 className="text-2xl font-bold mb-4">Property Financing Requests</h1>
+              <div className="flex flex-col lg:flex-row gap-3"></div>
+              {/* Date Filter Section */}
+
+              <ScrollArea className="w-[300px] lg:w-full">
+                <CollectionMyLoans
+                  data={loans.data}
+                  emptyTitle={`No request`}
+                  emptyStateSubtext="(0) Finance Request"
+                  limit={200}
+                  page={1}
+                  userId={userId}
+                  totalPages={loans.totalPages}
+                  handleOpenChatId={handleOpenChatId}
+                />
+                <ScrollBar orientation="horizontal" />
+              </ScrollArea>
+            </div>
+ </>)}
               <CollectionMyads
                   emptyTitle="No ads have been created yet"
                   emptyStateSubtext="Go create some now"

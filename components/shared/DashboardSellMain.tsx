@@ -20,7 +20,7 @@ type dashboardProps = {
   userId: string;
   user: any;
  // daysRemaining: number;
-  //packname: string;
+  userImage?: string;
   userName: string;
   type: string;
   ad?: any;
@@ -49,7 +49,7 @@ type dashboardProps = {
 const DashboardSellMain = ({
   userId,
   user,
-  //packname,
+  userImage,
   userName,
   packagesList,
   type,
@@ -138,7 +138,7 @@ const DashboardSellMain = ({
                // listed={listed}
                 //priority={priority}
                 //expirationDate={expirationDate}
-                //adstatus={adstatus}
+                userImage={userImage}
                 packagesList={packagesList}
                 handleAdView={handleAdView}
                 handlePay={handlePay}

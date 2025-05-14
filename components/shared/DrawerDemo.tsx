@@ -93,18 +93,11 @@ export function DrawerDemo({
         onClose();
       }
     } catch (error) {
-      console.error("Error processing payment: ", error);
+       //console.log(response);
+      console.log("Error processing payment: ", error);
     } finally {
       setIsSending(false);
     }
-  };
-
-  const showSubscriptionPackages = () => {
-    // TODO: Replace with modal or drawer
-    toast({
-      title: "Subscription Required",
-      description: "Please choose a package to view requests.",
-    });
   };
 
   const handleViewRequests = () => {
@@ -213,7 +206,7 @@ const remainingDays = Math.ceil(remainingTime / (1000 * 60 * 60 * 24));
                       VerificationPackId,
                       "Verification",
                       "0",
-                      user?.fee
+                      user.user?.fee
                     )
                   }
                   className="w-full flex flex-col gap-2 justify-enter items-center bg-green-600 hover:bg-green-700 text-white py-3 px-4 rounded-lg shadow"
