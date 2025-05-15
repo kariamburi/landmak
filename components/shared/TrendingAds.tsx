@@ -62,7 +62,10 @@ const TrendingAds = () => {
                   <h3 className="text-xs dark:text-gray-500 ">
                     {product.data.subcategory}
                   </h3>
-                  <p>Price: KES {product.data.price.toLocaleString()}</p>
+                
+                     <span className="font-bold">
+              {product.data.budget ? (<> Budget : Ksh {product.data.budget.toLocaleString()}</>):(<>Price: KES {product.data.price.toLocaleString()}</>)}   
+                </span>
                   <p>Total Views: {product.views}</p>
                 </div>
                 <div className="text-xs">
