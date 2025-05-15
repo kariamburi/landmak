@@ -150,7 +150,7 @@ const SCROLL_THRESHOLD = 100; // pixels
     <ScrollArea.Viewport ref={scrollRefB} className="h-full overflow-y-auto bg-[#e4ebeb] border">
          
       <div className="top-0 z-10 fixed w-full">
-                    <Navbar user={user} userstatus={user.status} userId={userId} onClose={onClose} popup={"sell"} handleOpenSell={handleOpenSell} handleOpenBook={handleOpenBook} handleOpenPlan={handleOpenPlan} handleOpenChat={handleOpenChat}
+                    <Navbar user={user?.user ?? null} userstatus={user?.user?.status ?? "User"} userId={userId} onClose={onClose} popup={"sell"} handleOpenSell={handleOpenSell} handleOpenBook={handleOpenBook} handleOpenPlan={handleOpenPlan} handleOpenChat={handleOpenChat}
                     handleOpenPerfomance={handleOpenPerfomance}
                     handleOpenSettings={handleOpenSettings}
                     handleOpenAbout={handleOpenAbout}

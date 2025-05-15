@@ -1371,7 +1371,7 @@ const handleCloseAdView = () => {
             </div>
         </SignedIn>
   
-          <MobileNav userstatus={userprofile.user.status} userId={userId} user={userprofile.user}
+          <MobileNav userstatus={userprofile?.user?.status ?? "User"} userId={userId ?? null} user={userprofile?.user ?? []}
                   popup={"home"}
                   handleOpenSell={handleOpenSell}
                   handleOpenBook={handleOpenBook}
@@ -1572,7 +1572,7 @@ const handleCloseAdView = () => {
       handleOpenSearchByTitle={handleOpenSearchByTitle}
       categoryList={categoryList} 
       subcategoryList={subcategoryList}
-      user={userprofile.user}
+      user={userprofile?.user ?? []}
       loans={loans}
       handleOpenChatId={handleOpenChatId}
      />
@@ -1601,7 +1601,7 @@ const handleCloseAdView = () => {
       handleOpenSettings={handleOpenSettings}
       handleCategory={handleCategory}
       subcategoryList={subcategoryList}
-      user={userprofile.user} 
+      user={userprofile?.user ?? []} 
       packagesList={packagesList}
       userImage={userImage} />
  
@@ -1610,7 +1610,7 @@ const handleCloseAdView = () => {
       handleOpenPerfomance={handleOpenPerfomance}
       handleCategory={handleCategory} 
       handlePay={handlePay}
-      user={userprofile.user} />
+      user={userprofile?.user ?? []} />
 
       <PopupBookmark
       isOpen={isOpenBook}
@@ -1631,7 +1631,7 @@ const handleCloseAdView = () => {
       handleOpenShop={handleOpenShop} 
       handleOpenChatId={handleOpenChatId} 
       handleOpenSettings={handleOpenSettings}
-      user={userprofile.user}/>
+      user={userprofile?.user ?? []}/>
 
       <PopupPerfomance isOpen={isOpenPerfomance} onClose={handleClosePerfomance} userId={userId} handleOpenSell={handleOpenSell} handleAdEdit={handleAdEdit} handleAdView={handleAdView} handleOpenAbout={handleOpenAbout} handleOpenTerms={handleOpenTerms} handleOpenPrivacy={handleOpenPrivacy} handleOpenSafety={handleOpenSafety} handleOpenBook={handleOpenBook} handleOpenPlan={handleOpenPlan} handleOpenChat={handleOpenChat} userName={userName} userImage={userImage}
       handleOpenPerfomance={handleOpenPerfomance}
@@ -1660,7 +1660,7 @@ const handleCloseAdView = () => {
       handleOpenPerfomance={handleOpenPerfomance}
       handleOpenShop={handleOpenShop}
       handlePay={handlePay} handleOpenSearchTab={handleOpenSearchTab}
-      user={userprofile.user}/>
+      user={userprofile?.user ?? []}/>
 
       <PopupChatId isOpen={isOpenChatId} onClose={handleCloseChatId} recipientUid={recipientUid} userId={userId} handleOpenSell={handleOpenSell} handleOpenAbout={handleOpenAbout} handleOpenTerms={handleOpenTerms} handleOpenPrivacy={handleOpenPrivacy} handleOpenSafety={handleOpenSafety} handleOpenBook={handleOpenBook} handleOpenPlan={handleOpenPlan} userImage={userImage} userName={userName} handleOpenChat={handleOpenChat} handleOpenShop={handleOpenShop} handleOpenChatId={handleOpenChatId}
       handleOpenPerfomance={handleOpenPerfomance}
@@ -1669,14 +1669,14 @@ const handleCloseAdView = () => {
       handleAdEdit={handleAdEdit} 
       handleAdView={handleAdView}
       handleOpenSearchTab={handleOpenSearchTab}
-      user={userprofile.user}/>
+      user={userprofile?.user ?? []}/>
       
       <PopupReviews isOpen={isOpenReview} onClose={handleCloseReview} userId={userId} handleOpenSell={handleOpenSell} handleOpenAbout={handleOpenAbout} handleOpenTerms={handleOpenTerms} handleOpenPrivacy={handleOpenPrivacy} handleOpenSafety={handleOpenSafety} handleOpenBook={handleOpenBook} handleOpenPlan={handleOpenPlan} userImage={userImage} userName={userName} handleOpenChat={handleOpenChat} recipient={recipient} handleOpenSettings={handleOpenSettings} handleOpenChatId={handleOpenChatId} handleOpenReview={handleOpenReview}
       handleOpenPerfomance={handleOpenPerfomance}
       handleOpenShop={handleOpenShop}
       handleCategory={handleCategory}
       handlePay={handlePay}
-      user={userprofile.user}/>
+      user={userprofile?.user ?? []}/>
 
 
       <PopupSettings isOpen={isOpenProfile} onClose={handleCloseProfile} userId={userId} handleOpenSell={handleOpenSell} handleOpenAbout={handleOpenAbout} handleOpenTerms={handleOpenTerms} handleOpenPrivacy={handleOpenPrivacy} handleOpenSafety={handleOpenSafety} handleOpenBook={handleOpenBook} handleOpenPlan={handleOpenPlan} handleOpenChat={handleOpenChat}
@@ -1685,7 +1685,7 @@ const handleCloseAdView = () => {
       handleCategory={handleCategory}
       handlePay={handlePay}
       handleOpenShop={handleOpenShop}
-      user={userprofile.user}
+      user={userprofile?.user ?? []}
       handleOpenSearchTab={handleOpenSearchTab}/>
 
      <PopupAccount isOpen={isOpenSettings} onClose={handleCloseSettings} userId={userId} handleOpenSell={handleOpenSell} handleOpenAbout={handleOpenAbout} handleOpenTerms={handleOpenTerms} handleOpenPrivacy={handleOpenPrivacy} handleOpenSafety={handleOpenSafety} handleOpenBook={handleOpenBook} handleOpenPlan={handleOpenPlan} handleOpenChat={handleOpenChat}
@@ -1694,7 +1694,7 @@ const handleCloseAdView = () => {
       handleCategory={handleCategory}
       handlePay={handlePay}
       handleOpenShop={handleOpenShop}
-      user={userprofile.user}
+      user={userprofile?.user ?? []}
       handleOpenSearchTab={handleOpenSearchTab}
       handleOpenProfile={handleOpenProfile}
       handleOpenFaq={handleOpenFaq}
@@ -1710,40 +1710,40 @@ const handleCloseAdView = () => {
       handleCategory={handleCategory}
       handleOpenShop={handleOpenShop} 
       handleOpenChatId={handleOpenChatId}
-      user={userprofile.user} />
+      user={userprofile?.user ?? []} />
        
       <PopupAbout isOpen={isOpenAbout} handleOpenAbout={handleOpenAbout} handleOpenTerms={handleOpenTerms} handleOpenPrivacy={handleOpenPrivacy} handleOpenSafety={handleOpenSafety} onClose={handleCloseAbout} userId={userId} handleOpenSell={handleOpenSell} handleOpenBook={handleOpenBook} handleOpenPlan={handleOpenPlan} handleOpenChat={handleOpenChat}
       handleOpenPerfomance={handleOpenPerfomance}
       handleOpenSettings={handleOpenSettings}
       handleOpenShop={handleOpenShop}
-      user={userprofile.user} />
+      user={userprofile?.user ?? []} />
 
       <PopupTerms isOpen={isOpenTerms} handleOpenAbout={handleOpenAbout} handleOpenTerms={handleOpenTerms} handleOpenPrivacy={handleOpenPrivacy} handleOpenSafety={handleOpenSafety} onClose={handleCloseTerms} userId={userId} handleOpenSell={handleOpenSell} handleOpenBook={handleOpenBook} handleOpenPlan={handleOpenPlan} handleOpenChat={handleOpenChat}
        handleOpenPerfomance={handleOpenPerfomance}
        handleOpenSettings={handleOpenSettings}
        handleOpenShop={handleOpenShop}
-       user={userprofile.user} 
+       user={userprofile?.user ?? []} 
        />
 
       <PopupPrivacy isOpen={isOpenPrivacy} handleOpenAbout={handleOpenAbout} handleOpenTerms={handleOpenTerms} handleOpenPrivacy={handleOpenPrivacy} handleOpenSafety={handleOpenSafety} onClose={handleClosePrivacy} userId={userId} handleOpenSell={handleOpenSell} handleOpenBook={handleOpenBook} handleOpenPlan={handleOpenPlan} handleOpenChat={handleOpenChat}
        handleOpenPerfomance={handleOpenPerfomance}
        handleOpenSettings={handleOpenSettings}
        handleOpenShop={handleOpenShop}
-       user={userprofile.user}  
+       user={userprofile?.user ?? []}  
        />
 
       <PopupSafety isOpen={isOpenSafety} handleOpenAbout={handleOpenAbout} handleOpenTerms={handleOpenTerms} handleOpenPrivacy={handleOpenPrivacy} handleOpenSafety={handleOpenSafety} onClose={handleCloseSafety} userId={userId} handleOpenSell={handleOpenSell} handleOpenBook={handleOpenBook} handleOpenPlan={handleOpenPlan} handleOpenChat={handleOpenChat}
        handleOpenShop={handleOpenShop}
       handleOpenPerfomance={handleOpenPerfomance}
       handleOpenSettings={handleOpenSettings}
-      user={userprofile.user}  
+      user={userprofile?.user ?? []}  
      />
 
 <PopupFaq isOpen={isOpenFaq} onClose={handleCloseFaq} handleOpenAbout={handleOpenAbout} handleOpenTerms={handleOpenTerms} handleOpenPrivacy={handleOpenPrivacy} handleOpenSafety={handleOpenSafety} userId={userId} handleOpenSell={handleOpenSell} handleOpenBook={handleOpenBook} handleOpenPlan={handleOpenPlan} handleOpenChat={handleOpenChat}
        handleOpenShop={handleOpenShop}
       handleOpenPerfomance={handleOpenPerfomance}
       handleOpenSettings={handleOpenSettings}
-      user={userprofile.user}  
+      user={userprofile?.user ?? []}  
      />
 
  {showPopupMap && (

@@ -1062,7 +1062,7 @@ export default function Ads({ ad, user, userId, userImage, userName, onClose,han
                             <SellerProfileCard
                               userId={userId}
                               ad={ad}
-                              fee={user.fee}
+                              fee={user?.user?.fee ?? 500}
                               userImage={userImage}
                               userName={userName} 
                               handleOpenReview={handleOpenReview}
@@ -1616,7 +1616,7 @@ export default function Ads({ ad, user, userId, userImage, userName, onClose,han
                 <SellerProfileCard
                   userId={userId}
                   ad={ad}
-                  fee={user.fee}
+                  fee={user?.user?.fee ?? 500}
                   userImage={userImage}
                   userName={userName} 
                   handleOpenReview={handleOpenReview}
