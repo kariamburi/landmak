@@ -255,9 +255,7 @@ export default function MapDrawingTool({ name, selectedCategory, data, onChange,
           optimized: true,
           zIndex: google.maps.Marker.MAX_ZINDEX + 1,
         });
-       // marker.setIcon(iconType.icon);
-       // marker.setLabel(label);
-
+       
         const infoWindow = new google.maps.InfoWindow({ content: label });
         marker.addListener("click", () => infoWindow.open({ anchor: marker, map }));
 
@@ -953,7 +951,7 @@ polyline.addListener("click", () => {
       
           return {
             type,
-            coordinates,
+            path:coordinates,
             label,
             area,
             color,

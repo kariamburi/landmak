@@ -35,7 +35,21 @@ import {
   TooltipProvider,
   TooltipTrigger,
 } from "../ui/tooltip";
+import {
+  AlertDialog,
+  AlertDialogAction,
+  AlertDialogCancel,
+  AlertDialogContent,
+  AlertDialogDescription,
+  AlertDialogFooter,
+  AlertDialogHeader,
+  AlertDialogTitle,
+  AlertDialogTrigger,
+} from "@/components/ui/alert-dialog"
 import CircularProgress from "@mui/material/CircularProgress";
+import { DistanceDialog } from "./DistanceDialog";
+import { GetDirectionsDialog } from "./GetDirectionsDialog";
+import { ShowDistanceDialog } from "./ShowDistanceDialogProps";
 const defaultcenter = {
   lat: -1.286389, // Default center (Nairobi, Kenya)
   lng: 36.817223,
@@ -125,7 +139,10 @@ export default function MapDrawingTool({ data }: Props) {
   const [uploadPopup, setUploadPopup] = useState(false);
   const allBoundsRef = useRef<google.maps.LatLngBounds | null>(null);
   const [showbuttons, setShowbuttons] = useState(false);
-  
+  const [showDistanceDialog, setShowDistanceDialog] = useState(false);
+  const [openDirectionsDialog, setOpenDirectionsDialog] = useState(false);
+  const [openDistanceDialog, setOpenDistanceDialog] = useState(false);
+   const [destination, setDestination] = useState('');
   // Sync refs when state updates
   useEffect(() => {
     shapesRef.current = shapes;
@@ -873,6 +890,46 @@ amenityCirclesRef.current.forEach(circle => circle.setMap(null));
 amenityCirclesRef.current = [];
 }
 
+const handleDistance = (lat:number, lng:number) => {
+ if (selectedControl !== "route" || !lat || !lng) return;
+
+    const directionsService = new google.maps.DirectionsService();
+    if (directionsRendererRef.current) {
+      directionsRendererRef.current.setMap(null);
+    }
+    // Clear any existing route before creating a new one
+    const newRenderer = new google.maps.DirectionsRenderer({
+      suppressMarkers: false,
+      map: mapInstance.current,
+    });
+
+    directionsRendererRef.current = newRenderer;
+
+    directionsService.route(
+      {
+        origin: {lat, lng},
+        destination: center,
+        travelMode: google.maps.TravelMode.DRIVING,
+      },
+      (result, status) => {
+        if (status === google.maps.DirectionsStatus.OK && result) {
+          newRenderer.setDirections(result);
+
+          const route = result.routes[0];
+          const distanceInMeters = route.legs[0].distance?.value || 0;
+          const distanceInKm = (distanceInMeters / 1000).toFixed(2);
+
+          setDistance(distanceInKm);
+          console.log(`Distance: ${distanceInKm} km`);
+        } else {
+          console.error("Directions request failed:", status);
+        }
+      }
+    );
+  
+  }
+
+
 useEffect(() => {
   if (!mapInstance.current) return;
 
@@ -1148,6 +1205,7 @@ Radius: {radius / 1000} km
     setSelectedControl("route");
     handleRoute();
     setActiveAmenity(null); // unselect other controls
+    setShowDistanceDialog(true);
   }}
   variant={selectedControl === "route" ? "default" : "outline"}
   className={`w-14 text-gray-600 ${
@@ -1158,7 +1216,7 @@ Radius: {radius / 1000} km
 </Button>
                      </TooltipTrigger>
                      <TooltipContent>
-                       <p>Get Route to Property</p>
+                       <p>Distance</p>
                      </TooltipContent>
                    </Tooltip>
                  </TooltipProvider>
@@ -1171,7 +1229,8 @@ Radius: {radius / 1000} km
   onClick={() => {
     setSelectedControl("userRoute");
     setActiveAmenity(null); // unselect other controls
-    handleRouteFromUser();
+   // handleRouteFromUser();
+   
   }}
   className={`w-14 text-gray-600 ${
     selectedControl === "userRoute" ? "bg-green-600 text-white hover:bg-green-700 text-white" : ""
@@ -1182,7 +1241,7 @@ Radius: {radius / 1000} km
 </Button>
                      </TooltipTrigger>
                      <TooltipContent>
-                       <p>Route From My Location</p>
+                       <p>Distance to Property</p>
                      </TooltipContent>
                    </Tooltip>
                  </TooltipProvider>
@@ -1190,16 +1249,14 @@ Radius: {radius / 1000} km
                  <TooltipProvider>
                    <Tooltip>
                      <TooltipTrigger asChild>
-                     <a
-  href={`https://www.google.com/maps/dir/?api=1&destination=${center.lat},${center.lng}`}
-  target="_blank"
-  rel="noopener noreferrer"
->
-  <Button variant="outline" className="w-14 text-gray-600">
+                    
+  <Button variant="outline"  onClick={() => {
+    setDestination(`https://www.google.com/maps/dir/?api=1&destination=${center.lat},${center.lng}`);
+    setOpenDirectionsDialog(true);
+  }} className="w-14 text-gray-600">
     <DirectionsOutlinedIcon/>
   </Button>
 
-</a>
                      </TooltipTrigger>
                      <TooltipContent>
                        <p> 📍 Get Directions (Google Maps)</p>
@@ -1209,6 +1266,23 @@ Radius: {radius / 1000} km
 
 </div>
 </>)}
+
+
+
+
+
+
+<DistanceDialog open={showDistanceDialog} onOpenChange={setShowDistanceDialog} handleDistance={handleDistance}/>
+<GetDirectionsDialog
+        open={openDirectionsDialog}
+        onOpenChange={setOpenDirectionsDialog}
+        destination={destination}
+      />
+       <ShowDistanceDialog
+        open={openDistanceDialog}
+        onOpenChange={setOpenDistanceDialog}
+        handleRouteFromUser={handleRouteFromUser}
+      />
   </div>
 );
 }
