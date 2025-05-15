@@ -100,12 +100,17 @@ const Contact = ({ ad, user, userId, userName, userImage, handleOpenEnquire, han
             </button>
           </SignedIn>
           <SignedOut>
-            <a href={`/sign-in`}>
-              <button className="bg-green-600 hover:bg-green-700 text-white text-xs mt-2 p-2 rounded-lg shadow">
+           <div
+                      onClick={() => {
+                        setIsOpenP(true);
+                        router.push("/sign-in");
+                      }}
+                    >
+              <button className="cursor-pointer bg-green-600 hover:bg-green-700 text-white text-xs mt-2 p-2 rounded-lg shadow">
                 <CallIcon sx={{ fontSize: 24 }} />
                {/*  <div className="hidden lg:inline">Call</div>*/}
               </button>
-            </a>
+            </div>
           </SignedOut>
 
           <SignedIn>
@@ -119,12 +124,17 @@ const Contact = ({ ad, user, userId, userName, userImage, handleOpenEnquire, han
            
           </SignedIn>
           <SignedOut>
-            <a href={`/sign-in`}>
-              <button className="flex gap-1 bg-green-600 hover:bg-green-700 text-white text-xs mt-2 p-2 rounded-lg shadow">
+           <div
+                      onClick={() => {
+                        setIsOpenP(true);
+                        router.push("/sign-in");
+                      }}
+                    >
+              <button className="flex cursor-pointer gap-1 bg-green-600 hover:bg-green-700 text-white text-xs mt-2 p-2 rounded-lg shadow">
                 <ChatBubbleOutlineOutlinedIcon sx={{ fontSize: 24 }} />
                 {/*<div className="hidden lg:inline">Message</div>*/}
               </button>
-            </a>
+            </div>
           </SignedOut>
 
           {ad.organizer.whatsapp && (
@@ -140,13 +150,18 @@ const Contact = ({ ad, user, userId, userName, userImage, handleOpenEnquire, han
                 </button>
               </SignedIn>
               <SignedOut>
-                <a href={`/sign-in`}>
-                  <button className="bg-green-600 hover:bg-green-700 text-white text-xs mt-2 p-2 rounded-lg shadow">
+              <div
+                      onClick={() => {
+                        setIsOpenP(true);
+                        router.push("/sign-in");
+                      }}
+                    >
+                  <button className="cursor-pointer bg-green-600 hover:bg-green-700 text-white text-xs mt-2 p-2 rounded-lg shadow">
                     <WhatsAppIcon sx={{ fontSize: 24 }} />
 
                   {/*  <div className="hidden lg:inline">WhatsApp</div>*/}
                   </button>
-                </a>
+                </div>
               </SignedOut>
             </>
           )}

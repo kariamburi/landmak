@@ -135,7 +135,11 @@ export default function Ads({ ad, user, userId, userImage, userName, onClose,han
     setshowphone(true);
     window.location.href = `tel:${ad.data.phone}`;
   };
-
+ 
+    const [isOpenP, setIsOpenP] = useState(false);
+    const handleCloseP = () => {
+      setIsOpenP(false);
+    };
   const handleImageClick = (index: number) => {
     if (!api) {
       return;
@@ -716,7 +720,7 @@ export default function Ads({ ad, user, userId, userImage, userName, onClose,han
                       <SignedOut>
                         <div
                           onClick={() => {
-                            //setIsOpenP(true);
+                            setIsOpenP(true);
                             router.push("/sign-in");
                           }}
                         >
@@ -1369,7 +1373,7 @@ export default function Ads({ ad, user, userId, userImage, userName, onClose,han
 
         <SignedOut>
         <button onClick={() => {
-             // setIsOpenP(true);
+              setIsOpenP(true);
               router.push("/sign-in");
             }}
              className="flex text-white justify-center rounded-sm w-full py-3 px-2 text-lg bg-green-600 hover:bg-green-700 items-center">
@@ -1384,6 +1388,7 @@ export default function Ads({ ad, user, userId, userImage, userName, onClose,han
             <ReportUnavailable  userId={userId} ad={ad} isOpen={isPopupOpenAAv} onClose={handleClosePopupAv} userName={userName} userImage={userImage}/>
             <ReportAbuse  userId={userId} ad={ad} isOpen={isPopupOpen} onClose={handleClosePopup} userName={userName} userImage={userImage}/>
             <RequestFinancing  userId={userId} ad={ad} isOpen={isPopupOpenLoan} onClose={handleClosePopupLoan} userName={userName} userImage={userImage}/>
+            <ProgressPopup isOpen={isOpenP} onClose={handleCloseP} /> 
             </div>
           </div>
         </div>
@@ -1453,7 +1458,7 @@ export default function Ads({ ad, user, userId, userImage, userName, onClose,han
                   <SignedOut>
                     <div
                       onClick={() => {
-                        //setIsOpenP(true);
+                        setIsOpenP(true);
                         router.push("/sign-in");
                       }}
                     >
@@ -1544,7 +1549,7 @@ export default function Ads({ ad, user, userId, userImage, userName, onClose,han
                 <SignedOut>
                   <div
                     onClick={() => {
-                      //setIsOpenP(true);
+                      setIsOpenP(true);
                       router.push("/sign-in");
                     }}
                   >
@@ -1566,7 +1571,7 @@ export default function Ads({ ad, user, userId, userImage, userName, onClose,han
                 <SignedOut>
                   <div
                     onClick={() => {
-                      //setIsOpenP(true);
+                      setIsOpenP(true);
                       router.push("/sign-in");
                     }}
                   >
@@ -1592,7 +1597,7 @@ export default function Ads({ ad, user, userId, userImage, userName, onClose,han
                     <SignedOut>
                       <div
                         onClick={() => {
-                         // setIsOpenP(true);
+                          setIsOpenP(true);
                           router.push("/sign-in");
                         }}
                       >
@@ -1648,7 +1653,7 @@ export default function Ads({ ad, user, userId, userImage, userName, onClose,han
         <SignedOut>
 
         <Button onClick={() => {
-              //setIsOpenP(true);
+              setIsOpenP(true);
               router.push("/sign-in");
             }} variant="default" className="flex w-full bg-green-600 hover:bg-green-700 items-center gap-2">
          😃
@@ -1687,7 +1692,7 @@ export default function Ads({ ad, user, userId, userImage, userName, onClose,han
 
         <SignedOut>
         <Button onClick={() => {
-             // setIsOpenP(true);
+              setIsOpenP(true);
               router.push("/sign-in");
             }}
              variant="outline" className="flex text-blue-600 items-center gap-1">
@@ -1709,7 +1714,7 @@ export default function Ads({ ad, user, userId, userImage, userName, onClose,han
 
         <SignedOut>
         <Button  onClick={() => {
-             
+             setIsOpenP(true);
               router.push("/sign-in");
             }} variant="outline" className="flex text-red-600 items-center gap-1">
               <AssistantPhotoOutlinedIcon sx={{ fontSize: 14 }}/>
@@ -1810,7 +1815,7 @@ export default function Ads({ ad, user, userId, userImage, userName, onClose,han
 
             <SignedOut>
             <Button onClick={() => {
-                  
+                  setIsOpenP(true);
                   router.push("/sign-in");
                 }} variant="default" className="flex bg-green-600 hover:bg-green-700 w-full items-center gap-2">
         <SellOutlinedIcon sx={{ fontSize: 16 }}  />
@@ -1825,7 +1830,7 @@ export default function Ads({ ad, user, userId, userImage, userName, onClose,han
 
         </div>
       </div>
-      
+     
     </>
   );
 }

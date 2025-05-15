@@ -18,6 +18,9 @@ import { createTransaction } from "@/lib/actions/transactions.actions";
 import { v4 as uuidv4 } from "uuid";
 import { useToast } from "../ui/use-toast";
 import DoneOutlinedIcon from "@mui/icons-material/DoneOutlined";
+import { SignedIn, SignedOut } from "@clerk/nextjs";
+import ProgressPopup from "./ProgressPopup";
+import { useRouter } from "next/navigation";
 
 // import { Checkbox } from "../ui/checkbox"; // Unused
 type Package = {
@@ -188,6 +191,11 @@ const remainingDays = Math.ceil(remainingTime / (1000 * 60 * 60 * 24));
       }
     });
   };
+   const router = useRouter();
+    const [isOpenP, setIsOpenP] = useState(false);
+    const handleCloseP = () => {
+      setIsOpenP(false);
+    };
   return (
     <Drawer open={isOpen} onOpenChange={(open) => !open && onClose()}>
       <DrawerContent>
@@ -240,6 +248,8 @@ const remainingDays = Math.ceil(remainingTime / (1000 * 60 * 60 * 24));
                 </DrawerDescription>
               </DrawerHeader>
               <div className="flex flex-col gap-4 w-full items-center">
+
+                  <SignedIn>
                 <button
                   onClick={handlePostRequest}
                   className="w-full bg-green-600 text-white py-2 px-4 rounded hover:bg-green-700"
@@ -253,7 +263,32 @@ const remainingDays = Math.ceil(remainingTime / (1000 * 60 * 60 * 24));
                 >
                   {isSending ? "Checking..." : "View Posted Requests"}
                 </button>
+                  </SignedIn>
+                  <SignedOut>
+                 <button
+                  onClick={() => {
+              setIsOpenP(true);
+               router.push("/sign-in");
+             }} 
+                  className="w-full bg-green-600 text-white py-2 px-4 rounded hover:bg-green-700"
+                >
+                  Post a Request
+                </button>
+                <button
+                  onClick={() => {
+              setIsOpenP(true);
+               router.push("/sign-in");
+             }} 
+                  disabled={isSending}
+                  className="w-full bg-blue-600 text-white py-2 px-4 rounded hover:bg-blue-700 disabled:opacity-50"
+                >
+                  {isSending ? "Checking..." : "View Posted Requests"}
+                </button>
+                 <ProgressPopup isOpen={isOpenP} onClose={handleCloseP} />
+                  </SignedOut>
+              
               </div>
+
             </div>
           )}
 
