@@ -524,23 +524,45 @@ useEffect(() => {
     setFormErrors({});
     return true;
   };
-  const uploadFiles = async () => {
-    const uploadedUrls: string[] = [];
-    let i = 0;
-    for (const file of files) {
-      try {
-        i++;
-        const uploadedImages = await startUpload([file]);
-        if (uploadedImages && uploadedImages.length > 0) {
-          uploadedUrls.push(uploadedImages[0].url);
-          setUploadProgress(Math.round((i / files.length) * 100));
+  const uploadFiles = async (): Promise<string[] | null> => {
+  const uploadedUrls: string[] = [];
+  let i = 0;
+  let failedUploads = 0;
+
+  for (const file of files) {
+    try {
+      const uploadedImages = await startUpload([file]);
+      if (uploadedImages && uploadedImages.length > 0) {
+        const url = uploadedImages[0].url;
+        if (!url.includes("blob:")) {
+          uploadedUrls.push(url);
+        } else {
+          failedUploads++;
         }
-      } catch (error) {
-        console.error("Error uploading file:", error);
+      } else {
+        failedUploads++;
       }
+    } catch (error) {
+      console.error("Error uploading file:", error);
+      failedUploads++;
     }
-    return uploadedUrls.filter((url) => !url.includes("blob:"));
-  };
+
+    i++;
+    setUploadProgress(Math.round((i / files.length) * 100));
+  }
+
+  if (failedUploads > 0 || uploadedUrls.length !== files.length) {
+    toast({
+      variant: "destructive",
+      title: "Upload Failed",
+      description: `Only ${uploadedUrls.length} out of ${files.length} images uploaded successfully.`,
+      duration: 5000,
+    });
+    return null;
+  }
+
+  return uploadedUrls;
+};
 
   const handleInputChange = (field: string, value: any) => {
     setFormData({ ...formData, [field]: value });

@@ -163,7 +163,7 @@ export default function MapDrawingTool({ data }: Props) {
         mapTypeId: "satellite",
       });
       mapInstance.current = map;
-
+   
       const marker = new google.maps.Marker({
         position: center,
         map,
@@ -172,6 +172,7 @@ export default function MapDrawingTool({ data }: Props) {
       });
 
       markerRef.current = marker;
+   
       const manager = new google.maps.drawing.DrawingManager({
       //  drawingControl: true,
         drawingMode: null,
@@ -502,7 +503,7 @@ polyline.addListener("mouseout", () => {
         clearInterval(interval);
         setMarkers(data.markers);
         data.markers.forEach((markerData) => {
-    
+   
       const marker = new google.maps.Marker({
         position: markerData.position,
         map: mapInstance.current!,
