@@ -9,6 +9,7 @@ import ChatBubbleOutlineOutlinedIcon from "@mui/icons-material/ChatBubbleOutline
 import Link from "next/link";
 import Verification from "./Verification";
 import Image from "next/image";
+import { useRouter } from "next/navigation";
 import SellerProfileMobile from "./SellerProfileMobile";
 import Verificationmobile from "./Verificationmobile";
 import Ratingsmobile from "./ratingsmobile";
@@ -31,6 +32,7 @@ type chatProps = {
 };
 const Contact = ({ ad, user, userId, userName, userImage, handleOpenEnquire, handlePay, handleOpenReview, handleOpenChatId, handleOpenSettings, handleOpenShop }: chatProps) => {
   const [showphone, setshowphone] = useState(false);
+   const router = useRouter();
   const [isOpenP, setIsOpenP] = useState(false);
   const handleOpenP = () => {
     setIsOpenP(true);
