@@ -61,6 +61,7 @@ export const DeleteConfirmation = ({ adId, imageUrls }: deleteProps) => {
             onClick={() =>
               startTransition(async () => {
                 await deleteAd({ adId, deleteImages, path: pathname });
+              
               })
             }
           >

@@ -327,14 +327,9 @@ const AdForm = ({
     string[]
   >([]);
  
-    const [listed, setListed] = useState(0);
-    const [color, setColor] = useState("#000000");
-    const [loadingSub, setLoadingSub] = useState<boolean>(false);
+    
     const [countryCode, setCountryCode] = useState("+254"); // Default country code
     const [phoneNumber, setPhoneNumber] = useState("");
-  
-
-
 
     useEffect(() => {
       const getCategory = async () => {
@@ -440,46 +435,73 @@ if(subcategory && category){
     const [activePackage, setActivePackage] = useState<Package | null>(null);
     const [activeButton, setActiveButton] = useState(0);
     const [activeButtonTitle, setActiveButtonTitle] = useState("1 week");
-    const createdAt = new Date(user.transaction?.createdAt || new Date());
-    const periodInDays = parseInt(user.transaction?.period) || 0;
-    const expiryDate = new Date(createdAt.getTime() + periodInDays * 24 * 60 * 60 * 1000);
-    const currentTime = new Date();
-    const remainingTime = expiryDate.getTime() - currentTime.getTime();
-    const remainingDays = Math.ceil(remainingTime / (1000 * 60 * 60 * 24));
-   //  const [subscription, setSubscription] = useState<any>(null);
-   // const [packagesList, setPackagesList] = useState<Package[]>([]);
-  //  const [daysRemaining, setDaysRemaining] = useState(0);
-   // const [remainingAds, setRemainingAds] = useState(0);
-    
-        const [Plan, setplan] = useState("Free");
-        const [PlanId, setplanId] = useState(FreePackId);
-        const [Priority_, setpriority] = useState(0);
-        const [Adstatus_, setadstatus] = useState("Active");
-        const [priceInput, setPriceInput] = useState("");
-        const [periodInput, setPeriodInput] = useState("");
-         const [ExpirationDate_, setexpirationDate] = useState(new Date());
-    
-          const currDate = new Date();
-        // Add one month to the current date
-        let expirationDate = new Date(currDate);
-        expirationDate.setMonth(currDate.getMonth() + 1);
-       // expirationDate.setDate(currDate.getDate() + 7);
-
+    const [priceInput, setPriceInput] = useState("");
+    const [periodInput, setPeriodInput] = useState("");
+    const [subscription, setSubscription] = useState<any>(null);
+    const [daysRemaining, setDaysRemaining] = useState(0);
+    const [remainingAds, setRemainingAds] = useState(0);
+    const [listed, setListed] = useState(0);
+    const [Plan, setplan] = useState("Free");
+    const [PlanId, setplanId] = useState(FreePackId);
+    const [Priority_, setpriority] = useState(0);
+    const [Adstatus_, setadstatus] = useState("Pending");
+    const [color, setColor] = useState("#000000");
+    const [loadingSub, setLoadingSub] = useState<boolean>(true);
+    const [ExpirationDate_, setexpirationDate] = useState(new Date());
+   
 useEffect(() => {
-    
-    setadstatus("Active");
-    setActivePackage(packagesList[0]);
-    setplanId(packagesList[0]._id);
-    setplan(packagesList[0].name);
-    setpriority(packagesList[0].priority);
-    setexpirationDate(expirationDate);
-    packagesList[0].price.forEach((price: any, index: number) => {
-      if (index === activeButton) {
-        setPriceInput(price.amount);
-        setPeriodInput(price.period);
-      }
-    });
-     }, []);
+    if(type === "Create"){
+        const fetchData =() => {
+          try {
+           
+           
+            const subscriptionData = user;
+            const packages = packagesList;
+          
+            if (subscriptionData) {
+             // setSubscription(subscriptionData);
+              const listedAds = subscriptionData.ads || 0;
+              setListed(listedAds);
+              if (subscriptionData.currentpack && !Array.isArray(subscriptionData.currentpack)) { 
+              setRemainingAds(subscriptionData.currentpack.list - listedAds);
+              setpriority(subscriptionData.currentpack.priority);
+              setColor(subscriptionData.currentpack.color);
+              setplan(subscriptionData.currentpack.name);
+              setplanId(subscriptionData.transaction?.planId || FreePackId);
+             // console.log(subscriptionData);
+              const createdAtDate = new Date(subscriptionData.transaction?.createdAt || new Date());
+              const periodDays = parseInt(subscriptionData.transaction?.period) || 0;
+              const expiryDate = new Date(createdAtDate.getTime() + periodDays * 24 * 60 * 60 * 1000);
+              setexpirationDate(expiryDate);
+              const currentDate = new Date();
+              const remainingDays = Math.ceil((expiryDate.getTime() - currentDate.getTime()) / (1000 * 60 * 60 * 24));
+              setDaysRemaining(remainingDays);
+              setadstatus((remainingDays > 0 && (subscriptionData.currentpack.list - listedAds) > 0) || ((subscriptionData.currentpack.list - listedAds) > 0 && subscriptionData.currentpack.name === "Free") ? "Active" : "Pending");
+              setActivePackage(
+              packages.length > 0
+                ? subscriptionData.currentpack.list - listedAds > 0 && subscriptionData.currentpack.name === "Free"
+                  ? packages[0]
+                  : packages[1]
+                : null
+            );
+   
+
+            } else {
+              console.warn("No current package found for the user.");
+            }
+            }
+          } catch (error) {
+            console.error("Failed to fetch data", error);
+          } finally {
+         
+       
+          }
+        };
+        fetchData();
+    }
+    }, []);
+
+
 
   const validateForm = async () => {
     //console.log("start: ");
@@ -691,7 +713,7 @@ useEffect(() => {
 
  if (selectedCategory === 'Wanted Ads' && selectedSubCategory.trim().toLowerCase() === "Property Financing Requests".toLowerCase()) {
 
-  const newResponse = await createLoan({
+  await createLoan({
           loan: {
           userId: userId,
           adId: null,
@@ -720,7 +742,7 @@ useEffect(() => {
       if (selectedCategory === 'Wanted Ads') {
            finalData = {
           ...formData,
-          price: parseCurrencyToNumber(formData["budget"].toString()),
+          budget: parseCurrencyToNumber(formData["budget"].toString()),
           phone,
         };
 
@@ -737,16 +759,17 @@ useEffect(() => {
       }
     
       const pricePack = Number(priceInput);
+      
       const newAd = await createData({
         userId,
         subcategory: selectedSubCategoryId,
         category: selectedCategoryId,
         formData: finalData,
         expirely: ExpirationDate_,
-        priority: Priority_,
-        adstatus: Adstatus_,
-        planId: PlanId,
-        plan: Plan,
+        priority: selectedCategory ==='Wanted Ads' ? 1:Priority_,
+        adstatus: selectedCategory ==='Wanted Ads' ? 'Active':Adstatus_,
+        planId: selectedCategory ==='Wanted Ads' ? FreePackId:PlanId,
+        plan: selectedCategory ==='Wanted Ads' ? 'Free':Plan,
         pricePack,
         periodPack: periodInput,
         path: "/create",
@@ -1157,7 +1180,7 @@ useEffect(() => {
                   className="w-full"
                 />
               )}
-  {field.type === "virtualTourLink" && (
+              {field.type === "virtualTourLink" && (
                 <TextField
                   required={field.required}
                   id={field.type}
@@ -1951,9 +1974,7 @@ useEffect(() => {
   onSave={handleSaveMap}
   onClose={handleOnClose}
   onChange={(name, data) => {
-  // console.log("Map data changed:", name, data);
    setMapData(data);
-    // You can now save this data in your form state or pass to an API
   }}
 />
                   </div>
@@ -1967,14 +1988,11 @@ useEffect(() => {
             </div>
           ))}
            
-          {type === "Create" && selectedSubCategory && (
+          {type === "Create" && selectedCategory !=='Wanted Ads' && selectedSubCategory && (
             <>
               <div className="rounded-lg mt-4 p-0">
-            {loadingSub ? (<> <div className="w-full min-h-[100px] h-full flex flex-col items-center justify-center">
-                            <Icon icon={Barsscale} className="w-10 h-10 text-gray-500" />
-                          </div></>):(<>
-
-                          <div className="w-full mt-2 p-0 dark:text-gray-100 rounded-lg">
+        
+              <div className="w-full mt-2 p-0 dark:text-gray-100 rounded-lg">
                     <div className="flex flex-col mb-5">
                       <p className="text-gray-700 dark:text-gray-300 font-semibold text-xl">
                         Promote your ad
@@ -1985,132 +2003,174 @@ useEffect(() => {
                     </div>
                     {/* No Promo */}
                     <div className="w-full">
-             {packagesList.length > 0 &&
-      packagesList.map((pack: any, index: number) => {
-        const issamepackage = user.currentpack.name === pack.name;
-
-        return (
-          <div
-            key={index}
-            className={`mb-2 dark:bg-[#2D3236] border bg-white rounded-lg cursor-pointer ${
-              activePackage === pack
-                ? "bg-[#F2FFF2] border-[#4DCE7A] border-2"
-                : ""
-            }`}
-          >
-            <div
-              onClick={() =>
-                (!issamepackage && pack.name === "Free") ||
-                (issamepackage && pack.name === "Free" && (user.currentpack.list - user.ads) === 0)
-                  ? handleClick(pack)
-                  : handleClick(pack)
-              }
-              className="flex justify-between items-center w-full"
-            >
-              {/* Left Column: Package Details */}
-              <div className="p-3">
-                <p className="text-gray-700 font-semibold dark:text-gray-300">
-                  {pack.name}
-                </p>
-                <ul className="flex flex-col gap-1 p-1">
-                  {pack.features.slice(0, 1).map((feature: any, i: number) => (
-                    <li key={i} className="flex items-center gap-1">
-                      <DoneOutlinedIcon />
-                      <p className="text-sm">{feature.title}</p>
-                    </li>
-                  ))}
-                </ul>
-              </div>
-
-              {/* Right Column: Status and Price */}
-              <div className="p-3">
-                <div className="text-gray-600 mb-1">
-                  <div className="flex gap-2 text-sm">
-                    {remainingDays > 0 && pack.name === user.currentpack.name ? (
-                      <div className="p-1 flex-block rounded-full bg-emerald-500">
-                        <p className="text-white text-xs">Active</p>
-                      </div>
-                    ) : (
-                      <>
-                        {(!issamepackage && pack.name === "Free") ||
-                        (issamepackage &&
-                          pack.name === "Free" &&
-                         (user.currentpack.list - user.ads) === 0) ? null : issamepackage &&
-                          pack.name === "Free" &&
-                          (user.currentpack.list - user.ads) > 0 ? null : null}
-                      </>
-                    )}
-                  </div>
-                </div>
-
-                {/* Price Display */}
-                <div className="text-center">
-                  {pack.name !== "Free" && (
-                    <div className="text-gray-800 font-bold mb-0">
-                      <ul className="flex flex-col items-center gap-0 py-0">
-                        {pack.price.map((price: any, i: number) => (
-                          <li
-                            key={i}
-                            className={`flex items-center gap-0 ${
-                              i !== activeButton ? "hidden" : ""
-                            }`}
-                          >
-                            <p
-                              className={`font-semibold ${
+                      {packagesList.length > 0 &&
+                        packagesList.map((pack: any, index: any) => {
+                          // const check = packname == pack.name != "Free";
+                          const issamepackage = Plan === pack.name;
+                          return (
+                            <div
+                              key={index}
+                              className={`mb-2 dark:bg-[#2D3236] border bg-white rounded-lg cursor-pointer ${
                                 activePackage === pack
-                                  ? "text-[#30AF5B]"
-                                  : "text-gray-800 dark:text-gray-400"
+                                  ? "bg-[#F2FFF2] border-[#4DCE7A] border-2"
+                                  : ""
                               }`}
                             >
-                              Ksh {price.amount.toLocaleString()}/ {activeButtonTitle}
-                            </p>
-                          </li>
-                        ))}
-                      </ul>
-                    </div>
-                  )}
-                </div>
-              </div>
-            </div>
-
-            {/* Button Group */}
-            {pack.name !== "Free" && activePackage === pack && (
-              <div className="flex flex-wrap justify-end items-center p-2">
-                <button
-                  className={`mr-2 mb-2 text-xs w-[80px] lg:w-[90px] lg:text-sm ${
-                    activeButton === 0
-                      ? "bg-gradient-to-b from-[#4DCE7A] to-[#30AF5B] text-white p-2 rounded-full"
-                      : "border border-[#30AF5B] text-[#30AF5B] rounded-full p-2"
-                  }`}
-                  onClick={() => handleButtonClick(0, "1 week")}
-                >
-                  1 week
-                </button>
-                <button
-                  className={`mr-2 mb-2 text-xs w-[80px] lg:w-[90px] lg:text-sm ${
-                    activeButton === 1
-                      ? "bg-gradient-to-b from-[#4DCE7A] to-[#30AF5B] text-white p-2 rounded-full"
-                      : "border border-[#30AF5B] text-[#30AF5B] rounded-full p-2"
-                  }`}
-                  onClick={() => handleButtonClick(1, "1 month")}
-                >
-                  1 month
-                </button>
-              </div>
-            )}
-            </div>
+                              {/*  <div
+                                className={`text-lg font-bold rounded-t-md text-white py-2 px-4 mb-4 flex flex-col items-center justify-center`}
+                                  style={{
+                                 backgroundColor:
+                                     activePackage === pack ? "#4DCE7A" : pack.color,
+                                  }}
+              
+                              ></div>*/}
+                              <div
+                                onClick={() =>
+                                  (!issamepackage && pack.name === "Free") ||
+                                  (issamepackage && pack.name === "Free" &&  remainingAds === 0)
+                                    ? handleClick(pack)
+                                    : handleClick(pack)
+                                }
+                                className="flex justify-between items-center w-full"
+                              >
+                                <div className="p-3">
+                                  <p className="text-gray-700 font-semibold dark:text-gray-300">
+                                    {pack.name}
+                                  </p>
+                                  <ul className="flex flex-col gap-1 p-1">
+                                    {pack.features
+                                      .slice(0, 1)
+                                      .map((feature: any, index: number) => (
+                                        <li key={index} className="flex items-center gap-1">
+                                          {/*  <Image
+                                          src={`/assets/icons/${
+                                            feature.checked ? "check" : "cross"
+                                          }.svg`}
+                                          alt={feature.checked ? "check" : "cross"}
+                                          width={24}
+                                          height={24}
+                                        />*/}
+                                          <DoneOutlinedIcon />
+                                          <p className="text-sm">{feature.title}</p>
+                                        </li>
+                                      ))}
+                                  </ul>
+                                </div>
+              
+                                <div className="p-3">
+                                  <div className="text-gray-600 mb-1">
+                                    <div className="flex gap-2 text-sm">
+                                      {daysRemaining > 0 && pack.name === Plan ? (
+                                        <>
+                                          <div className="p-1 flex-block rounded-full bg-emerald-500">
+                                            <p className="text-white text-xs">Active</p>
+                                          </div>
+                                        </>
+                                      ) : (
+                                        <>
+                                          {(!issamepackage && pack.name === "Free") ||
+                                          (issamepackage &&
+                                            pack.name === "Free" &&
+                                            remainingAds === 0) ? (
+                                            <div>
+                                            {/*   <div className="p-0 items-center flex rounded-full bg-grey-50">
+                                                <p className="bg-gray-500 border rounded-xl p-2 text-white font-bold text-xs">
+                                                  Disabled
+                                                </p>
+                                              </div>
+                                              <div className="text-xs text-gray-400 p-1">
+                                                You can&apos;t subscribe to Free Package
+                                              </div>
+                                              */}
+                                            </div>
+                                          ) : (
+                                            issamepackage &&
+                                            pack.name === "Free" &&
+                                            remainingAds > 0 && (
+                                              <>
+                                                {/* <div className="p-1 w-full items-center justify-center flex rounded-full bg-emerald-500">
+                                              <p className="text-white text-xs">Active</p>
+                                            </div>*/}
+                                              </>
+                                            )
+                                          )}
+                                        </>
+                                      )}
+                                    </div>
+                                  </div>
+                                  <div className="text-center">
+                                    {pack.name === "Free" ? (
+                                      <></>
+                                    ) : (
+                                      <>
+                                        <div className="text-gray-800 font-bold mb-0">
+                                          <ul className="flex flex-col items-center gap-0 py-0">
+                                            {pack.price.map((price: any, index: number) => (
+                                              <li
+                                                key={index}
+                                                className={`flex items-center gap-0 ${
+                                                  index !== activeButton ? "hidden" : ""
+                                                }`}
+                                              >
+                                                <p
+                                                  className={`font-semibold ${
+                                                    activePackage === pack
+                                                      ? "text-[#30AF5B]"
+                                                      : "text-gray-800 dark:text-gray-400"
+                                                  }`}
+                                                >
+                                                  Ksh {price.amount.toLocaleString()}/{" "}
+                                                  {activeButtonTitle}
+                                                </p>
+                                              </li>
+                                            ))}
+                                          </ul>
+                                        </div>
+                                      </>
+                                    )}
+                                  </div>
+                                </div>
+                              </div>
+                              {pack.name !== "Free" && activePackage === pack && (
+                                <>
+                                  <div className="flex flex-wrap justify-end items-center p-2">
+                                    <button
+                                      className={`mr-2 mb-2 text-xs w-[80px] lg:w-[90px] lg:text-sm ${
+                                        activeButton === 0
+                                          ? "bg-gradient-to-b from-[#4DCE7A] to-[#30AF5B] text-white p-2 rounded-full"
+                                          : "border border-[#30AF5B] text-[#30AF5B] rounded-full p-2"
+                                      }`}
+                                      onClick={() => handleButtonClick(0, "1 week")}
+                                    >
+                                      1 week
+                                    </button>
+                                    <button
+                                      className={`mr-2 mb-2 text-xs w-[80px] lg:w-[90px] lg:text-sm ${
+                                        activeButton === 1
+                                          ? "bg-gradient-to-b from-[#4DCE7A] to-[#30AF5B] text-white p-2 rounded-full"
+                                          : "border border-[#30AF5B] text-[#30AF5B] rounded-full p-2"
+                                      }`}
+                                      onClick={() => handleButtonClick(1, "1 month")}
+                                    >
+                                      1 month
+                                    </button>
+                                  </div>
+                                </>
+                              )}
+                            </div>
                           );
                         })}
                     </div>
+
                     </div>
-                </>)}    
+             
               </div>
             
             </>
           )}
 
 <button
-  disabled={loading || loadingSub}
+  disabled={loading}
                       onClick={handleSubmit}
                       className="py-3 w-full px-1 mt-2 items-center justify-center rounded-sm bg-green-600 text-white hover:bg-green-700">
                        <div className="flex w-full justify-center gap-1 items-center">

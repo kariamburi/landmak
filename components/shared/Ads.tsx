@@ -735,9 +735,10 @@ export default function Ads({ ad, user, userId, userImage, userName, onClose,han
                       </p>
                     ) : (
                       <>
-                        <span className="text-lg lg:text-xl font-bold w-min rounded-full p-1 dark:text-green-500 text-green-600">
-                          {formatKsh(ad.data.price)}
-                        </span>
+                      
+                          <span className="text-lg lg:text-xl font-bold w-full rounded-full p-1 dark:text-green-500 text-green-600">
+              {ad.data.budget ? (<> Budget : Ksh {ad.data.budget.toLocaleString()}</>):(<>Ksh {ad.data.price.toLocaleString()}</>)}   
+                </span>
                       </>
                     )}{" "}
                     {ad.data.unit && ad.data.contact === "specify" && (
@@ -807,19 +808,7 @@ export default function Ads({ ad, user, userId, userImage, userName, onClose,han
               </div>
             </div>
             <div className="flex mb-2 items-center w-full">
-                        {ad.data.category==='Wanted Ads' && (<>
-
-<div className="w-16 h-16 rounded-full bg-white relative">
-            <Zoom>
-              <Image
-                className="w-full h-full rounded-full object-cover"
-                src={ad.data.imageUrls[0] ?? "/avator.png"}
-                alt={ad.data.title}
-                width={100}
-                height={100}
-              />
-            </Zoom>
-            </div></>)}
+                       
               <p className="text-lg lg:text-2xl font-bold dark:text-gray-300 text-green-900">
                 {ad.data.title}
               </p>
@@ -865,6 +854,7 @@ export default function Ads({ ad, user, userId, userImage, userName, onClose,han
                       key !== "per" &&
                       key !== "duration" &&
                       key !== "bulkprice" &&
+                      key !== "budget" &&
                       key !== "unit" &&
                       key !== "contact" &&
                       key !== "gps" &&
@@ -1404,7 +1394,7 @@ export default function Ads({ ad, user, userId, userImage, userName, onClose,han
           ad.data.propertyarea ?
           "lg:w-[40%]":"lg:w-[32%]"
         }`}>
-        {ad.data.propertyarea?.location && ad.data.propertyarea?.location.length !== 0 && (
+        {ad.data.category !== 'Wanted Ads' && ad.data.propertyarea?.location && ad.data.propertyarea?.location.length !== 0 && (
           <>
             <div className="text-l mb-2 rounded-lg">
               <div className="w-full">
@@ -1431,9 +1421,10 @@ export default function Ads({ ad, user, userId, userImage, userName, onClose,han
                   </p>
                 ) : (
                   <>
-                    <span className="flex gap-1 text-2xl font-bold w-min rounded-full px-4 py-1 dark:text-green-500 text-green-600">
-                      {formatKsh(ad.data.price)}
-                    </span>
+                     <span className="flex gap-1 text-2xl font-bold w-full rounded-full px-4 py-1 dark:text-green-500 text-green-600">
+              {ad.data.budget ? (<> Budget : Ksh {ad.data.budget.toLocaleString()}</>):(<>Ksh {ad.data.price.toLocaleString()}</>)}   
+                </span>
+                   
                   </>
                 )}
                 {ad.data.unit && ad.data.contact === "specify" && (
