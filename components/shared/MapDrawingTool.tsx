@@ -1469,7 +1469,7 @@ polyline.addListener("click", () => {
 )}
 
 {openTooltip && (<>
-<div className="absolute top-20 left-[60px] p-2 w-[300px] bg-[#e4ebeb] z-5 rounded-md shadow-lg">
+<div className="absolute top-2 lg:top-20 left-2 lg:left-[60px] p-2 w-[300px] bg-[#e4ebeb] z-5 rounded-md shadow-lg">
       {/* Close Button */}
       <button
         onClick={() => {

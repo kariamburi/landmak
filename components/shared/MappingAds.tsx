@@ -142,7 +142,6 @@ export default function MapDrawingTool({ data }: Props) {
   const [showMappingInfo, setShowMappingInfo] = useState(false);
   const [uploadPopup, setUploadPopup] = useState(false);
   const allBoundsRef = useRef<google.maps.LatLngBounds | null>(null);
-  const [showbuttons, setShowbuttons] = useState(false);
   const [showDistanceDialog, setShowDistanceDialog] = useState(false);
   const [openDirectionsDialog, setOpenDirectionsDialog] = useState(false);
   const [openDistanceDialog, setOpenDistanceDialog] = useState(false);
@@ -521,7 +520,7 @@ polyline.addListener("mouseout", () => {
   
     const interval = setInterval(() => {
       if (mapInstance.current) {
-        setShowbuttons(true);
+       
         clearInterval(interval);
         setMarkers(data.markers);
         data.markers.forEach((markerData) => {
@@ -556,7 +555,7 @@ polyline.addListener("mouseout", () => {
   
     const interval = setInterval(() => {
       if (mapInstance.current) {
-        setShowbuttons(true);
+      
         clearInterval(interval);
         setPolylines(data.polylines);
   
@@ -619,7 +618,7 @@ polyline.addListener("mouseout", () => {
   
     const interval = setInterval(() => {
       if (mapInstance.current) {
-        setShowbuttons(true);
+     
         clearInterval(interval);
         setShapes(data.shapes);
   
@@ -1093,7 +1092,7 @@ const handleSelect = (e: any) => {
   return ( 
   <div id="map-container" className="h-[100vh] relative">
      {!isLoaded && (
-    <div className="absolute inset-0 z-10 flex items-center justify-center bg-white/70">
+    <div className="absolute inset-0 z-5 flex items-center justify-center bg-white/70">
       <div className="animate-spin rounded-full h-8 w-8 border-t-2 border-b-2 border-gray-800" />
       <span className="ml-2 text-gray-700 font-medium">Loading map...</span>
     </div>
@@ -1135,7 +1134,7 @@ const handleSelect = (e: any) => {
 
   <div ref={mapRef} className="w-full h-full rounded-b-xl shadow-md border" />
  
-  {showbuttons && (<>
+  {isLoaded && (<>
   
     <TooltipProvider>
                    <Tooltip>
@@ -1192,7 +1191,7 @@ Radius: {radius / 1000} km
 
 
 {openDirectionsDialog && (<>
-<div className="absolute top-20 left-[60px] p-2 w-[300px] bg-[#e4ebeb] z-5 rounded-md shadow-lg">
+<div className="absolute top-2 lg:top-20 left-2 lg:left-[60px] p-2 w-[300px] bg-[#e4ebeb] z-5 rounded-md shadow-lg">
       {/* Close Button */}
       <button
         onClick={() => {
@@ -1220,7 +1219,7 @@ Radius: {radius / 1000} km
 
 
 {openDistanceDialog && (<>
-<div className="absolute top-20 left-[60px] p-2 w-[300px] bg-[#e4ebeb] z-5 rounded-md shadow-lg">
+<div className="absolute top-2 lg:top-20 left-2 lg:left-[60px] p-2 w-[300px] bg-[#e4ebeb] z-5 rounded-md shadow-lg">
       {/* Close Button */}
       <button
         onClick={() => {
@@ -1246,7 +1245,7 @@ Radius: {radius / 1000} km
 </>)}
 
  {showDistanceDialog && (<>
- <div className="absolute top-20 left-[60px] p-2 bg-[#e4ebeb] z-5 w-[300px] rounded-md shadow-lg">
+ <div className="absolute top-2 lg:top-20 left-2 lg:left-[60px] p-2 bg-[#e4ebeb] z-5 w-[300px] rounded-md shadow-lg">
       {/* Close Button */}
       <button
         onClick={() => {
@@ -1327,7 +1326,7 @@ Radius: {radius / 1000} km
 
 
  
-{showbuttons && (<>  <div className="absolute top-2 right-2 z-5 flex flex-col space-y-2">
+{isLoaded && (<>  <div className="absolute top-2 right-2 z-5 flex flex-col space-y-2">
     {/* Default Button */}
    <TooltipProvider>
                    <Tooltip>
