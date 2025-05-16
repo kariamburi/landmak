@@ -254,6 +254,7 @@ export default function MapDrawingTool({ name, selectedCategory, data, onChange,
           icon: iconType.icon,
           optimized: true,
           zIndex: google.maps.Marker.MAX_ZINDEX + 1,
+          draggable: true,               // ← enable dragging
         });
        
         const infoWindow = new google.maps.InfoWindow({ content: label });
@@ -267,6 +268,31 @@ export default function MapDrawingTool({ name, selectedCategory, data, onChange,
 
         setMarkers((prev) => [...prev, newMarker]);
         setMarkerRefs((prev) => [...prev, marker]);
+ // 6) Listen for drag end and sync back into React
+  marker.addListener("dragend", (e: google.maps.MapMouseEvent) => {
+    if (!e.latLng) return;
+    const updatedPosition = { lat: e.latLng.lat(), lng: e.latLng.lng() };
+
+    setMarkers((prev) => {
+      // find & update the one with this label (or use an ID if you have unique IDs)
+      const newMarkers = prev.map((m) =>
+        m.label === label
+          ? { ...m, position: updatedPosition }
+          : m
+      );
+      // propagate change
+         onChange(name, {
+          location: { type: "Point", coordinates: [center.lat, center.lng] },
+          polylines,
+           markers: newMarkers,
+          shapes,
+          mapaddress,
+        });
+        
+      return newMarkers;
+    });
+   });
+
       });
 
       google.maps.event.addListener(manager, "polylinecomplete", (polyline: google.maps.Polyline) => {

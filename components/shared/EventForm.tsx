@@ -239,7 +239,7 @@ const AdForm = ({
   const [formErrors, setFormErrors] = useState<Record<string, string>>({});
   const [files, setFiles] = useState<File[]>([]);
   const [loading, setLoading] = useState(false);
-  const [uploadProgress, setUploadProgress] = useState(0);
+  const [uploadProgress, setUploadProgress] = useState(2);
   const [defaults, setDefualts] = useState<any>([]);
   const [negotiable, setNegotiable] = useState<"yes" | "no" | "not sure">(
     "not sure"

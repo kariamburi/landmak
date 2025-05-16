@@ -184,16 +184,17 @@ export default function MapDrawingTool({ data }: Props) {
         mapTypeId: "satellite",
       });
       mapInstance.current = map;
-   
-      const marker = new google.maps.Marker({
-        position: center,
-        map,
-        draggable: true,
-        title: "Location",
-      });
+  if (data.shapes.length === 0) {
+  // remove any old marker
 
-      markerRef.current = marker;
-   
+  const marker = new google.maps.Marker({
+    position: center,
+    map,
+    draggable: true,
+    title: "Location",
+  });
+  markerRef.current = marker;
+}
       const manager = new google.maps.drawing.DrawingManager({
       //  drawingControl: true,
         drawingMode: null,
@@ -751,9 +752,9 @@ const handleShowAmenity = (amenityType: AmenityType) => {
 
   setLoadingAmenity(amenityType);
   setActiveAmenity(amenityType);
- setShowDistanceDialog(true);
-    setOpenDistanceDialog(false);
-    setOpenDirectionsDialog(false);
+  setShowDistanceDialog(false);
+  setOpenDistanceDialog(false);
+  setOpenDirectionsDialog(false);
   // Clear previous markers and circle
   amenityMarkers.forEach(marker => marker.setMap(null));
   setAmenityMarkers([]);
