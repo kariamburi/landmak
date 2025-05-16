@@ -261,7 +261,8 @@ const CardAutoHeight = ({
       >
         {/* Image section with dynamic height */}
 
-        <div className="relative rounded-t-lg w-full"
+  {ad.data.imageUrls.length > 0 && (<>
+  <div className="relative rounded-t-lg w-full"
         style={
           ad.plan.name !== "Free"
             ? {
@@ -416,7 +417,7 @@ const CardAutoHeight = ({
               </div>
             </SignedOut>
           </div>
-        </div>
+        </div></>)}  
 
         {/* Text section */}
         <div className="p-2 lg:p-4">

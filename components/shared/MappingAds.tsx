@@ -50,6 +50,10 @@ import CircularProgress from "@mui/material/CircularProgress";
 import { DistanceDialog } from "./DistanceDialog";
 import { GetDirectionsDialog } from "./GetDirectionsDialog";
 import { ShowDistanceDialog } from "./ShowDistanceDialogProps";
+import GooglePlacesAutocomplete, {
+  geocodeByAddress,
+  getLatLng,
+} from "react-google-places-autocomplete";
 const defaultcenter = {
   lat: -1.286389, // Default center (Nairobi, Kenya)
   lng: 36.817223,
@@ -747,7 +751,9 @@ const handleShowAmenity = (amenityType: AmenityType) => {
 
   setLoadingAmenity(amenityType);
   setActiveAmenity(amenityType);
-
+ setShowDistanceDialog(true);
+    setOpenDistanceDialog(false);
+    setOpenDirectionsDialog(false);
   // Clear previous markers and circle
   amenityMarkers.forEach(marker => marker.setMap(null));
   setAmenityMarkers([]);
@@ -1046,6 +1052,43 @@ const handleFullscreen = () => {
   }
 };
   
+
+ const [step, setStep] = useState<"options" | "addressInput">("options");
+  const [searchQuery, setSearchQuery] = useState("");
+   const [error, setError] = useState("");
+  const [centerSource, setCenterSource] = useState<{lat:number, lng:number}>({lat:0, lng:0});
+  const handleSelectOption = (option: "map" | "address") => {
+    if (option === "map") {
+      setShowDistanceDialog(false);
+      // Trigger map tap mode here
+    } else if (option === "address") {
+      setStep("addressInput");
+    }
+  };
+
+  const handleSearch = () => {
+    // Trigger search logic here with `searchQuery`
+     setError("")
+    if(centerSource.lat && centerSource.lng){
+    handleDistance(centerSource.lat, centerSource.lng);
+    setStep("options");
+    setShowDistanceDialog(false);
+    }else{
+     setError("Select location")
+    }
+  };
+const handleSelect = (e: any) => {
+    geocodeByAddress(e.value.description)
+      .then((results) => getLatLng(results[0]))
+      .then(({ lat, lng }) => {
+        setCenterSource({ lat, lng })
+      });
+  };
+   const handleRedirect = () => {
+    const googleMapsUrl = destination;
+    window.open(googleMapsUrl, "_blank");
+   setOpenDirectionsDialog(false);
+  };
   return ( 
   <div id="map-container" className="h-[100vh] relative">
      {!isLoaded && (
@@ -1054,6 +1097,7 @@ const handleFullscreen = () => {
       <span className="ml-2 text-gray-700 font-medium">Loading map...</span>
     </div>
   )}
+
     {showGuide && (
         <div className="absolute z-50 top-10 left-2  mt-2 w-80 bg-gray-100 rounded-lg shadow-md text-gray-700 p-3">
          <div className="flex justify-end p-1 items-center w-full">
@@ -1084,7 +1128,12 @@ const handleFullscreen = () => {
       
         </div>
       )}
+
+
+
+
   <div ref={mapRef} className="w-full h-full rounded-b-xl shadow-md border" />
+ 
   {showbuttons && (<>
   
     <TooltipProvider>
@@ -1139,6 +1188,143 @@ Radius: {radius / 1000} km
  
 </div>
 </>)}
+
+
+{openDirectionsDialog && (<>
+<div className="absolute top-20 left-[60px] p-2 w-[300px] bg-[#e4ebeb] z-5 rounded-md shadow-lg">
+      {/* Close Button */}
+      <button
+        onClick={() => {
+          setOpenDirectionsDialog(false);
+        }}
+        className="absolute top-2 right-2 text-gray-500 hover:text-black text-sm"
+        title="Close"
+      >
+        ✕
+      </button>
+   <p className="font-bold">📍 Redirect to Google Maps</p>
+    <p>
+      This will open Google Maps to navigate to the property location. Do you want to proceed?
+    </p>
+    <div className="p-2 w-full">
+    <Button variant="default" className="w-full" onClick={()=>{handleRedirect();}}>Accept</Button>
+    </div>
+<div>
+
+
+</div>
+</div>
+</>)}
+
+
+
+{openDistanceDialog && (<>
+<div className="absolute top-20 left-[60px] p-2 w-[300px] bg-[#e4ebeb] z-5 rounded-md shadow-lg">
+      {/* Close Button */}
+      <button
+        onClick={() => {
+           setStep("options"); setOpenDistanceDialog(false);
+        }}
+        className="absolute top-2 right-2 text-gray-500 hover:text-black text-sm"
+        title="Close"
+      >
+        ✕
+      </button>
+   <p className="font-bold">Distance to Property</p>
+    <p>
+      Show approximately distance from your current location to the property.
+    </p>
+    <div className="p-2 w-full">
+    <Button variant="default" className="w-full" onClick={()=>{setOpenDistanceDialog(false); handleRouteFromUser();}}>Accept</Button>
+    </div>
+<div>
+
+
+</div>
+</div>
+</>)}
+
+ {showDistanceDialog && (<>
+ <div className="absolute top-20 left-[60px] p-2 bg-[#e4ebeb] z-5 w-[300px] rounded-md shadow-lg">
+      {/* Close Button */}
+      <button
+        onClick={() => {
+           setStep("options"); setShowDistanceDialog(false);
+        }}
+        className="absolute top-2 right-2 text-gray-500 hover:text-black text-sm"
+        title="Close"
+      >
+        ✕
+      </button>
+   <p className="font-bold">Distance Options</p>
+<div>
+     {step === "options" ? (
+                <>
+                  <div
+                    onClick={() => handleSelectOption("map")}
+                    className="cursor-pointer p-2 border rounded mb-2 hover:bg-gray-100"
+                  >
+                    1. Tap on the map
+                  </div>
+                  <div
+                    onClick={() => handleSelectOption("address")}
+                    className="cursor-pointer p-2 border rounded hover:bg-gray-100"
+                  >
+                    2. Select location from address
+                  </div>
+                </>
+              ) : (
+                <>
+                  <label className="block mb-2">Enter address to calculate distance:</label>
+                    <GooglePlacesAutocomplete
+                                        apiKey={process.env.NEXT_PUBLIC_GOOGLEAPIKEY!}
+                                        selectProps={{
+                    placeholder: "Search location",
+                    onChange: handleSelect,
+                    styles: {
+                      control: (provided) => ({
+                        ...provided,
+                        padding: '6px',
+                        borderRadius: '4px',
+                        borderColor: '#ccc',
+                        boxShadow: 'none',
+                        minHeight: '55px',
+                      }),
+                      placeholder: (provided) => ({
+                        ...provided,
+                        color: '#888',
+                      }),
+                      menu: (provided) => ({
+                        ...provided,
+                        zIndex: 9999, // ensure it appears on top
+                      }),
+                    },
+                  }}
+                                        autocompletionRequest={{
+                                          componentRestrictions: {
+                                            country: ["KE"], // Limits results to Kenya
+                                          },
+                                        }}
+                                      />
+                                      {error && (<><p className="text-red-400 p-1">{error} </p></>)}
+                                   
+                                   <div className="p-2 w-full flex justify-between">
+                                                {step === "addressInput" ? (
+                                                  <Button variant="default" className="w-full" onClick={handleSearch}>Search</Button>
+                                                ) : null}
+                                                </div>
+                </>
+              )}
+</div>
+
+
+
+</div>
+</>)}
+
+
+
+
  
 {showbuttons && (<>  <div className="absolute top-2 right-2 z-5 flex flex-col space-y-2">
     {/* Default Button */}
@@ -1206,6 +1392,8 @@ Radius: {radius / 1000} km
     handleRoute();
     setActiveAmenity(null); // unselect other controls
     setShowDistanceDialog(true);
+    setOpenDistanceDialog(false);
+    setOpenDirectionsDialog(false);
   }}
   variant={selectedControl === "route" ? "default" : "outline"}
   className={`w-14 text-gray-600 ${
@@ -1229,7 +1417,10 @@ Radius: {radius / 1000} km
   onClick={() => {
     setSelectedControl("userRoute");
     setActiveAmenity(null); // unselect other controls
-   // handleRouteFromUser();
+    setOpenDistanceDialog(true)
+    setShowDistanceDialog(false);
+    setOpenDirectionsDialog(false);
+  
    
   }}
   className={`w-14 text-gray-600 ${
@@ -1253,6 +1444,8 @@ Radius: {radius / 1000} km
   <Button variant="outline"  onClick={() => {
     setDestination(`https://www.google.com/maps/dir/?api=1&destination=${center.lat},${center.lng}`);
     setOpenDirectionsDialog(true);
+     setOpenDistanceDialog(false)
+    setShowDistanceDialog(false);
   }} className="w-14 text-gray-600">
     <DirectionsOutlinedIcon/>
   </Button>
@@ -1266,23 +1459,6 @@ Radius: {radius / 1000} km
 
 </div>
 </>)}
-
-
-
-
-
-
-<DistanceDialog open={showDistanceDialog} onOpenChange={setShowDistanceDialog} handleDistance={handleDistance}/>
-<GetDirectionsDialog
-        open={openDirectionsDialog}
-        onOpenChange={setOpenDirectionsDialog}
-        destination={destination}
-      />
-       <ShowDistanceDialog
-        open={openDistanceDialog}
-        onOpenChange={setOpenDistanceDialog}
-        handleRouteFromUser={handleRouteFromUser}
-      />
-  </div>
+</div>
 );
 }

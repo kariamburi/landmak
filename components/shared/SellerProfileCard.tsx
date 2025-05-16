@@ -195,7 +195,7 @@ const SellerProfileCard = ({ ad, fee, userId, userImage, userName, handlePay, ha
              // router.push(`/shop/${ad.organizer._id}`);
              handleOpenShop(ad.organizer);
             }}
-            className="ml-2 text-xl cursor-pointer font-bold hover:underline hover:text-emerald-600"
+            className="ml-2 cursor-pointer font-bold hover:underline hover:text-emerald-600"
           >
             {ad.organizer.firstName} {ad.organizer.lastName}
           </div>

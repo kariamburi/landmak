@@ -172,7 +172,7 @@ const handlewhatsappClick = () => {
             )}
           </div>
 
-          <div className="ml-2 text-xl font-bold">
+          <div className="ml-2 font-bold">
             {user.firstName} {user.lastName}
           </div>
           <div className="m-1">

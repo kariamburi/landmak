@@ -33,6 +33,10 @@ import Barsscale from "@iconify-icons/svg-spinners/bars-scale";
 import HorizontalCardPublic from "./HorizontalCardPublic";
 import { formUrlQuery, removeKeysFromQuery } from "@/lib/utils";
 import { useRouter, useSearchParams } from "next/navigation";
+import GooglePlacesAutocomplete, {
+  geocodeByAddress,
+  getLatLng,
+} from "react-google-places-autocomplete";
 import {
   Tooltip,
   TooltipContent,
@@ -144,7 +148,9 @@ export default function MapDrawingTool({queryObject, coordinates, handleCategory
   const router = useRouter();
   const [isOpenP, setIsOpenP] = useState(false);
    const [selectedControlD, setSelectedControlD] = useState("none");
-  
+   const [showDistanceDialog, setShowDistanceDialog] = useState(false);
+  const [openDirectionsDialog, setOpenDirectionsDialog] = useState(false);
+  const [openDistanceDialog, setOpenDistanceDialog] = useState(false);
   // Sync refs when state updates
   useEffect(() => {
     shapesRef.current = shapes;
@@ -448,7 +454,9 @@ const handleShowAmenity = (amenityType: AmenityType) => {
 
   setLoadingAmenity(amenityType);
   setActiveAmenity(amenityType);
-
+ setShowDistanceDialog(false);
+    setOpenDistanceDialog(false);
+    setOpenDirectionsDialog(false);
   // Clear previous markers and circle
   amenityMarkers.forEach(marker => marker.setMap(null));
   setAmenityMarkers([]);
@@ -1203,6 +1211,87 @@ labelMarkersRef.current.push(labelOverlay);
   
     reader.readAsText(file);
   };
+const handleDistance = (lat:number, lng:number) => {
+ if (selectedControl !== "route" || !lat || !lng) return;
+
+    const directionsService = new google.maps.DirectionsService();
+    if (directionsRendererRef.current) {
+      directionsRendererRef.current.setMap(null);
+    }
+    // Clear any existing route before creating a new one
+    const newRenderer = new google.maps.DirectionsRenderer({
+      suppressMarkers: false,
+      map: mapInstance.current,
+    });
+
+    directionsRendererRef.current = newRenderer;
+
+    directionsService.route(
+      {
+        origin: {lat, lng},
+        destination: center,
+        travelMode: google.maps.TravelMode.DRIVING,
+      },
+      (result, status) => {
+        if (status === google.maps.DirectionsStatus.OK && result) {
+          newRenderer.setDirections(result);
+
+          const route = result.routes[0];
+          const distanceInMeters = route.legs[0].distance?.value || 0;
+          const distanceInKm = (distanceInMeters / 1000).toFixed(2);
+
+          setDistance(distanceInKm);
+          console.log(`Distance: ${distanceInKm} km`);
+        } else {
+          console.error("Directions request failed:", status);
+        }
+      }
+    );
+  
+  }
+
+
+
+const [step, setStep] = useState<"options" | "addressInput">("options");
+
+   const [destination, setDestination] = useState('');
+  const [searchQuery, setSearchQuery] = useState("");
+   const [error, setError] = useState("");
+  const [centerSource, setCenterSource] = useState<{lat:number, lng:number}>({lat:0, lng:0});
+  const handleSelectOption = (option: "map" | "address") => {
+    if (option === "map") {
+      setShowDistanceDialog(false);
+      // Trigger map tap mode here
+    } else if (option === "address") {
+      setStep("addressInput");
+    }
+  };
+
+  const handleSearch = () => {
+    // Trigger search logic here with `searchQuery`
+     setError("")
+    if(centerSource.lat && centerSource.lng){
+    handleDistance(centerSource.lat, centerSource.lng);
+    setStep("options");
+    setShowDistanceDialog(false);
+    }else{
+     setError("Select location")
+    }
+  };
+const handleSelect = (e: any) => {
+    geocodeByAddress(e.value.description)
+      .then((results) => getLatLng(results[0]))
+      .then(({ lat, lng }) => {
+        setCenterSource({ lat, lng })
+      });
+  };
+   const handleRedirect = () => {
+    const googleMapsUrl = destination;
+    window.open(googleMapsUrl, "_blank");
+   setOpenDirectionsDialog(false);
+  };
+
+
   return ( 
 <div className="flex w-full h-[100vh] relative">
 {!isLoaded && (
@@ -1212,60 +1301,7 @@ labelMarkersRef.current.push(labelOverlay);
     </div>
   )}
     {/* Sidebar with Toggle Button */}
-        {uploadPopup && (
-      <div className="fixed inset-0 flex items-center justify-center bg-gray-900 bg-opacity-50 p-2 z-50">
-        <div className="dark:bg-[#131B1E] dark:text-gray-300 bg-[#e4ebeb] rounded-xl p-4 w-full max-w-xl shadow-lg space-y-4">
-          
-          {/* Close Button */}
-          <div className="flex justify-end">
-            <Button variant="outline" onClick={() => setUploadPopup(false)}>
-              <CloseOutlinedIcon fontSize="small" />
-            </Button>
-          </div>
-    
-          {/* Upload Section */}
-          <div className="flex flex-col gap-2 items-center w-full">
-            <div className="flex gap-2 items-center">
-              <UploadFileOutlinedIcon />
-              <p className="text-lg font-medium">Import Digital Beacons GeoJSON</p>
-            </div>
-            <input 
-              type="file" 
-              accept=".geojson" 
-              onChange={handleFileUpload} 
-              className="p-2 border bg-white dark:bg-[#2D3236] dark:text-gray-100 rounded-lg w-full" 
-            />
-          </div>
-    
-          {/* Sample File Section */}
-          <div className="bg-white dark:bg-[#1E2528] rounded-md p-3 text-sm shadow-inner border border-gray-300 dark:border-gray-600">
-            <p className="font-semibold mb-1">📄 Sample file:</p>
-            <a 
-              href="/digital_beacons.json" 
-              download 
-              className="text-blue-600 dark:text-blue-400 underline text-sm"
-            >
-              Download digital_beacons.json
-            </a>
-            <pre className="mt-2 overflow-x-auto text-xs max-h-48 bg-gray-100 dark:bg-[#2D3236] p-2 rounded">
-    {`{
-      "type": "FeatureCollection",
-      "features": [
-        {
-          "type": "Feature",
-          "properties": { "name": "Plot A" },
-          "geometry": {
-            "type": "Polygon",
-            "coordinates": [[[36.8219, -1.2921], [36.8225, -1.2921], ...]]
-          }
-        }
-      ]
-    }`}
-            </pre>
-          </div>
-        </div>
-      </div>
-    )}
+  
 <div
   className={`bg-white h-[100dvh] shadow-lg transition-transform duration-300 ease-in-out fixed md:relative ${
     showSidebar ? "w-full md:w-1/3 p-1" : "-translate-x-full md:w-0 md:translate-x-0"
@@ -1498,6 +1534,143 @@ labelMarkersRef.current.push(labelOverlay);
     </div>
   </div>
 )}
+
+{openDirectionsDialog && (<>
+<div className="absolute top-20 left-[60px] p-2 w-[300px] bg-[#e4ebeb] z-5 rounded-md shadow-lg">
+      {/* Close Button */}
+      <button
+        onClick={() => {
+          setOpenDirectionsDialog(false);
+        }}
+        className="absolute top-2 right-2 text-gray-500 hover:text-black text-sm"
+        title="Close"
+      >
+        ✕
+      </button>
+   <p className="font-bold">📍 Redirect to Google Maps</p>
+    <p>
+      This will open Google Maps to navigate to the property location. Do you want to proceed?
+    </p>
+    <div className="p-2 w-full">
+    <Button variant="default" className="w-full" onClick={()=>{handleRedirect();}}>Accept</Button>
+    </div>
+<div>
+
+
+</div>
+</div>
+</>)}
+
+
+
+{openDistanceDialog && (<>
+<div className="absolute top-20 left-[60px] p-2 w-[300px] bg-[#e4ebeb] z-5 rounded-md shadow-lg">
+      {/* Close Button */}
+      <button
+        onClick={() => {
+           setStep("options"); setOpenDistanceDialog(false);
+        }}
+        className="absolute top-2 right-2 text-gray-500 hover:text-black text-sm"
+        title="Close"
+      >
+        ✕
+      </button>
+   <p className="font-bold">Distance to Property</p>
+    <p>
+      Show approximately distance from your current location to the property.
+    </p>
+    <div className="p-2 w-full">
+    <Button variant="default" className="w-full" onClick={()=>{setOpenDistanceDialog(false); handleRouteFromUser();}}>Accept</Button>
+    </div>
+<div>
+
+
+</div>
+</div>
+</>)}
+
+ {showDistanceDialog && (<>
+ <div className="absolute top-20 left-[60px] p-2 bg-[#e4ebeb] z-5 w-[300px] rounded-md shadow-lg">
+      {/* Close Button */}
+      <button
+        onClick={() => {
+           setStep("options"); setShowDistanceDialog(false);
+        }}
+        className="absolute top-2 right-2 text-gray-500 hover:text-black text-sm"
+        title="Close"
+      >
+        ✕
+      </button>
+   <p className="font-bold">Distance Options</p>
+<div>
+     {step === "options" ? (
+                <>
+                  <div
+                    onClick={() => handleSelectOption("map")}
+                    className="cursor-pointer p-2 border rounded mb-2 hover:bg-gray-100"
+                  >
+                    1. Tap on the map
+                  </div>
+                  <div
+                    onClick={() => handleSelectOption("address")}
+                    className="cursor-pointer p-2 border rounded hover:bg-gray-100"
+                  >
+                    2. Select location from address
+                  </div>
+                </>
+              ) : (
+                <>
+                  <label className="block mb-2">Enter address to calculate distance:</label>
+                    <GooglePlacesAutocomplete
+                                        apiKey={process.env.NEXT_PUBLIC_GOOGLEAPIKEY!}
+                                        selectProps={{
+                    placeholder: "Search location",
+                    onChange: handleSelect,
+                    styles: {
+                      control: (provided) => ({
+                        ...provided,
+                        padding: '6px',
+                        borderRadius: '4px',
+                        borderColor: '#ccc',
+                        boxShadow: 'none',
+                        minHeight: '55px',
+                      }),
+                      placeholder: (provided) => ({
+                        ...provided,
+                        color: '#888',
+                      }),
+                      menu: (provided) => ({
+                        ...provided,
+                        zIndex: 9999, // ensure it appears on top
+                      }),
+                    },
+                  }}
+                                        autocompletionRequest={{
+                                          componentRestrictions: {
+                                            country: ["KE"], // Limits results to Kenya
+                                          },
+                                        }}
+                                      />
+                                      {error && (<><p className="text-red-400 p-1">{error} </p></>)}
+                                   
+                                   <div className="p-2 w-full flex justify-between">
+                                                {step === "addressInput" ? (
+                                                  <Button variant="default" className="w-full" onClick={handleSearch}>Search</Button>
+                                                ) : null}
+                                                </div>
+                </>
+              )}
+</div>
+
+
+
+</div>
+</>)}
+
+
+
+
+
 {activeAmenity && amenityCount !== null && (<>
   <div className="absolute top-[60px] left-2 p-2 text-white bg-green-600 z-5 rounded-md shadow-lg">
  <div className="mt-2 text-sm text-white dark:text-gray-300">
@@ -1589,8 +1762,11 @@ Radius: {radius / 1000} km
   onClick={() => {
     setSelectedControl("route");
     setSelectedControlD("none");
-    handleRoute();
+    //handleRoute();
     setActiveAmenity(null); // unselect other controls
+    setShowDistanceDialog(true);
+    setOpenDistanceDialog(false);
+    setOpenDirectionsDialog(false);
   }}
   variant={selectedControl === "route" ? "default" : "outline"}
   className={`w-14 text-gray-600 ${
@@ -1601,7 +1777,7 @@ Radius: {radius / 1000} km
 </Button>
                      </TooltipTrigger>
                      <TooltipContent>
-                       <p>Get Route to Property</p>
+                       <p>Distance</p>
                      </TooltipContent>
                    </Tooltip>
                  </TooltipProvider>
@@ -1615,7 +1791,10 @@ Radius: {radius / 1000} km
     setSelectedControl("userRoute");
     setSelectedControlD("none");
     setActiveAmenity(null); // unselect other controls
-    handleRouteFromUser();
+    setOpenDistanceDialog(true)
+    setShowDistanceDialog(false);
+    setOpenDirectionsDialog(false);
+    //handleRouteFromUser();
   }}
   className={`w-14 text-gray-600 ${
     selectedControl === "userRoute" ? "bg-green-600 text-white hover:bg-green-700 text-white" : ""
@@ -1626,7 +1805,7 @@ Radius: {radius / 1000} km
 </Button>
                      </TooltipTrigger>
                      <TooltipContent>
-                       <p>Route From My Location</p>
+                       <p>Distance to Property</p>
                      </TooltipContent>
                    </Tooltip>
                  </TooltipProvider>
@@ -1634,16 +1813,19 @@ Radius: {radius / 1000} km
                  <TooltipProvider>
                    <Tooltip>
                      <TooltipTrigger asChild>
-                     <a
-  href={`https://www.google.com/maps/dir/?api=1&destination=${center.lat},${center.lng}`}
-  target="_blank"
-  rel="noopener noreferrer"
+                     <div
+  onClick={() => {
+    setDestination(`https://www.google.com/maps/dir/?api=1&destination=${center.lat},${center.lng}`);
+    setOpenDirectionsDialog(true);
+     setOpenDistanceDialog(false)
+    setShowDistanceDialog(false);
+  }}
 >
   <Button variant="outline" className="w-14 text-gray-600">
     <DirectionsOutlinedIcon/>
   </Button>
 
-</a>
+</div>
                      </TooltipTrigger>
                      <TooltipContent>
                        <p> 📍 Get Directions (Google Maps)</p>
@@ -1671,7 +1853,60 @@ Radius: {radius / 1000} km
 </div>
 
   </div>
-
+  {uploadPopup && (
+      <div className="fixed inset-0 flex items-center justify-center bg-gray-900 bg-opacity-50 p-2 z-50">
+        <div className="dark:bg-[#131B1E] dark:text-gray-300 bg-[#e4ebeb] rounded-xl p-4 w-full max-w-xl shadow-lg space-y-4">
+          
+          {/* Close Button */}
+          <div className="flex justify-end">
+            <Button variant="outline" onClick={() => setUploadPopup(false)}>
+              <CloseOutlinedIcon fontSize="small" />
+            </Button>
+          </div>
+    
+          {/* Upload Section */}
+          <div className="flex flex-col gap-2 items-center w-full">
+            <div className="flex gap-2 items-center">
+              <UploadFileOutlinedIcon />
+              <p className="text-lg font-medium">Import Digital Beacons GeoJSON</p>
+            </div>
+            <input 
+              type="file" 
+              accept=".geojson" 
+              onChange={handleFileUpload} 
+              className="p-2 border bg-white dark:bg-[#2D3236] dark:text-gray-100 rounded-lg w-full" 
+            />
+          </div>
+    
+          {/* Sample File Section */}
+          <div className="bg-white dark:bg-[#1E2528] rounded-md p-3 text-sm shadow-inner border border-gray-300 dark:border-gray-600">
+            <p className="font-semibold mb-1">📄 Sample file:</p>
+            <a 
+              href="/digital_beacons.json" 
+              download 
+              className="text-blue-600 dark:text-blue-400 underline text-sm"
+            >
+              Download digital_beacons.json
+            </a>
+            <pre className="mt-2 overflow-x-auto text-xs max-h-48 bg-gray-100 dark:bg-[#2D3236] p-2 rounded">
+    {`{
+      "type": "FeatureCollection",
+      "features": [
+        {
+          "type": "Feature",
+          "properties": { "name": "Plot A" },
+          "geometry": {
+            "type": "Polygon",
+            "coordinates": [[[36.8219, -1.2921], [36.8225, -1.2921], ...]]
+          }
+        }
+      ]
+    }`}
+            </pre>
+          </div>
+        </div>
+      </div>
+    )}
   {!latitude && !longitude && (
   <div className="fixed inset-0 h-screen flex items-center justify-center bg-black bg-opacity-80 z-50">
     <div className="justify-center items-center dark:text-gray-300 rounded-lg p-1 lg:p-6 w-full md:max-w-3xl lg:max-w-4xl h-screen flex flex-col">

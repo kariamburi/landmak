@@ -524,7 +524,25 @@ useEffect(() => {
     setFormErrors({});
     return true;
   };
-  const uploadFiles = async (): Promise<string[] | null> => {
+
+   const uploadFiles = async () => {
+    const uploadedUrls: string[] = [];
+    let i = 0;
+    for (const file of files) {
+      try {
+        i++;
+        const uploadedImages = await startUpload([file]);
+        if (uploadedImages && uploadedImages.length > 0) {
+          uploadedUrls.push(uploadedImages[0].url);
+          setUploadProgress(Math.round((i / files.length) * 100));
+        }
+      } catch (error) {
+        console.error("Error uploading file:", error);
+      }
+    }
+    return uploadedUrls.filter((url) => !url.includes("blob:"));
+  };
+  const uploadFilesxx = async (): Promise<string[] | null> => {
   const uploadedUrls: string[] = [];
   let i = 0;
   let failedUploads = 0;
@@ -829,11 +847,11 @@ useEffect(() => {
     }
 
     if (type === "Update") {
-      const uploadedUrls = await uploadFiles();
-      if (!uploadedUrls) return;
-
-      const finalImageUrls =
-        uploadedUrls.length > 0 ? uploadedUrls : formData.imageUrls;
+   
+        const uploadedUrls = await uploadFiles();
+        // Preserve existing imageUrls if no new files are uploaded
+        const finalImageUrls =
+          uploadedUrls.length > 0 ? uploadedUrls : formData.imageUrls;
 
       const finalData = {
         ...formData,

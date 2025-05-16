@@ -1142,6 +1142,10 @@ polyline.addListener("click", () => {
       document.exitFullscreen?.();
     }
   };
+  const [openTooltip, setopenTooltip] = useState(false);
+  const [title, setTitle] = useState('');
+  const [description, setDescription] = useState('');
+  
   return (
   <div id="map-container" className="w-full relative h-[100vh]">
        {!isLoaded && (
@@ -1150,61 +1154,7 @@ polyline.addListener("click", () => {
       <span className="ml-2 text-gray-700 font-medium">Loading map...</span>
     </div>
   )}  
-        {uploadPopup && (
-  <div className="fixed inset-0 flex items-center justify-center bg-gray-900 bg-opacity-50 p-2 z-50">
-    <div className="dark:bg-[#131B1E] dark:text-gray-300 bg-[#e4ebeb] rounded-xl p-4 w-full max-w-xl shadow-lg space-y-4">
       
-      {/* Close Button */}
-      <div className="flex justify-end">
-        <Button variant="outline" onClick={() => setUploadPopup(false)}>
-          <CloseOutlinedIcon fontSize="small" />
-        </Button>
-      </div>
-
-      {/* Upload Section */}
-      <div className="flex flex-col gap-2 items-center w-full">
-        <div className="flex gap-2 items-center">
-          <UploadFileOutlinedIcon />
-          <p className="text-lg font-medium">Import Digital Beacons GeoJSON</p>
-        </div>
-        <input 
-          type="file" 
-          accept=".geojson" 
-          onChange={handleFileUpload} 
-          className="p-2 border bg-white dark:bg-[#2D3236] dark:text-gray-100 rounded-lg w-full" 
-        />
-      </div>
-
-      {/* Sample File Section */}
-      <div className="bg-white dark:bg-[#1E2528] rounded-md p-3 text-sm shadow-inner border border-gray-300 dark:border-gray-600">
-        <p className="font-semibold mb-1">📄 Sample file:</p>
-        <a 
-          href="/digital_beacons.json" 
-          download 
-          className="text-blue-600 dark:text-blue-400 underline text-sm"
-        >
-          Download digital_beacons.json
-        </a>
-        <pre className="mt-2 overflow-x-auto text-xs max-h-48 bg-gray-100 dark:bg-[#2D3236] p-2 rounded">
-{`{
-  "type": "FeatureCollection",
-  "features": [
-    {
-      "type": "Feature",
-      "properties": { "name": "Plot A" },
-      "geometry": {
-        "type": "Polygon",
-        "coordinates": [[[36.8219, -1.2921], [36.8225, -1.2921], ...]]
-      }
-    }
-  ]
-}`}
-        </pre>
-      </div>
-    </div>
-  </div>
-)}
-
   {selectedShape && selectedShapePosition && (
   
   <div className="fixed top-1/2 left-1/2 transform -translate-x-1/2 -translate-y-1/2 z-50 bg-[#e4ebeb] p-4 rounded shadow-md min-w-[240px]">
@@ -1381,6 +1331,9 @@ polyline.addListener("click", () => {
      
   <div className="h-[100vh] relative">
   <div ref={mapRef} className="w-full h-full rounded-xl shadow-md border" />
+
+
+
   <div className="absolute flex gap-2 items-center left-2 bottom-10">
   <div
           onClick={onSave}
@@ -1433,7 +1386,14 @@ polyline.addListener("click", () => {
         className={`w-14 lg:w-full ${
           selectedControl === "marker" ? "bg-green-600 hover:bg-green-700 text-white" : "text-gray-600"
         }`}
-        onClick={() => setSelectedControl("marker")}
+    
+        onClick={() => {
+           setopenTooltip(true);
+           setTitle('Add Marker');
+           setDescription('Place markers on property amenities');
+           setSelectedControl("marker");
+        }
+          }
         variant={selectedControl === "marker" ? "default" : "outline"}
       >
         <RoomOutlinedIcon />
@@ -1482,13 +1442,43 @@ polyline.addListener("click", () => {
   </div>
 )}
 
+{openTooltip && (<>
+<div className="absolute top-20 left-[60px] p-2 w-[300px] bg-[#e4ebeb] z-5 rounded-md shadow-lg">
+      {/* Close Button */}
+      <button
+        onClick={() => {
+          setopenTooltip(false);
+        }}
+        className="absolute top-2 right-2 text-gray-500 hover:text-black text-sm"
+        title="Close"
+      >
+        ✕
+      </button>
+   <p className="font-bold">{title}</p>
+    <p>
+      {description}
+    </p>
+    <div className="p-2 w-full">
+    <Button variant="default" className="w-full" onClick={()=>{setopenTooltip(false)}}>Okay</Button>
+    </div>
+<div>
+
+
+</div>
+</div>
+</>)}
 
 {/* Polyline Button */}
 <TooltipProvider>
   <Tooltip>
     <TooltipTrigger asChild>
       <Button
-        onClick={() => setSelectedControl("polyline")}
+        onClick={() => {
+           setSelectedControl("polyline");
+           setopenTooltip(true);
+           setTitle('Add Line');
+           setDescription('Draw road, footpath, etc. within the property');}
+        }
         className={`w-14 lg:w-full ${
           selectedControl === "polyline" ? "bg-green-600 hover:bg-green-700 text-white" : "text-gray-600"
         }`}
@@ -1509,7 +1499,12 @@ polyline.addListener("click", () => {
   <Tooltip>
     <TooltipTrigger asChild>
       <Button
-        onClick={() => setSelectedControl("polygon")}
+        onClick={() => {
+          setSelectedControl("polygon");
+           setopenTooltip(true);
+           setTitle('Draw Boundaries');
+         setDescription('Mark the boundaries of the property');}
+        }
         className={`w-14 lg:w-full ${
           selectedControl === "polygon" ? "bg-green-600 hover:bg-green-700 text-white" : "text-gray-600"
         }`}
@@ -1530,7 +1525,12 @@ polyline.addListener("click", () => {
   <Tooltip>
     <TooltipTrigger asChild>
       <Button
-        onClick={() => setSelectedControl("none")}
+        onClick={() => {
+            setSelectedControl("none");
+           setopenTooltip(true);
+           setTitle('Control Off');
+           setDescription('You can now edit polylines, polygons, or drag markers');}
+        }
         className={`w-14 lg:w-full ${
           selectedControl === "none" ? "bg-green-600 hover:bg-green-700 text-white" : "text-gray-600"
         }`}
@@ -1578,6 +1578,65 @@ polyline.addListener("click", () => {
 </div>
 </div>
 
+
+
+
+
+
+  {uploadPopup && (
+  <div className="fixed inset-0 flex items-center justify-center bg-gray-900 bg-opacity-50 p-2 z-50">
+    <div className="dark:bg-[#131B1E] dark:text-gray-300 bg-[#e4ebeb] rounded-xl p-4 w-full max-w-xl shadow-lg space-y-4">
+      
+      {/* Close Button */}
+      <div className="flex justify-end">
+        <Button variant="outline" onClick={() => setUploadPopup(false)}>
+          <CloseOutlinedIcon fontSize="small" />
+        </Button>
+      </div>
+
+      {/* Upload Section */}
+      <div className="flex flex-col gap-2 items-center w-full">
+        <div className="flex gap-2 items-center">
+          <UploadFileOutlinedIcon />
+          <p className="text-lg font-medium">Import Digital Beacons GeoJSON</p>
+        </div>
+        <input 
+          type="file" 
+          accept=".geojson" 
+          onChange={handleFileUpload} 
+          className="p-2 border bg-white dark:bg-[#2D3236] dark:text-gray-100 rounded-lg w-full" 
+        />
+      </div>
+
+      {/* Sample File Section */}
+      <div className="bg-white dark:bg-[#1E2528] rounded-md p-3 text-sm shadow-inner border border-gray-300 dark:border-gray-600">
+        <p className="font-semibold mb-1">📄 Sample file:</p>
+        <a 
+          href="/digital_beacons.json" 
+          download 
+          className="text-blue-600 dark:text-blue-400 underline text-sm"
+        >
+          Download digital_beacons.json
+        </a>
+        <pre className="mt-2 overflow-x-auto text-xs max-h-48 bg-gray-100 dark:bg-[#2D3236] p-2 rounded">
+{`{
+  "type": "FeatureCollection",
+  "features": [
+    {
+      "type": "Feature",
+      "properties": { "name": "Plot A" },
+      "geometry": {
+        "type": "Polygon",
+        "coordinates": [[[36.8219, -1.2921], [36.8225, -1.2921], ...]]
+      }
+    }
+  ]
+}`}
+        </pre>
+      </div>
+    </div>
+  </div>
+)}
 
 
 
