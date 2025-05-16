@@ -948,10 +948,10 @@ polyline.addListener("click", () => {
           const label = feature.properties?.name || "Land";
           const status = "available";
           const color = "#00FF00";
-      
+           const path = coordinates;
           return {
             type,
-            path:coordinates,
+            path,
             label,
             area,
             color,
@@ -967,7 +967,7 @@ polyline.addListener("click", () => {
       
           if (shapeData.type === "polygon") {
             const polyshape = new google.maps.Polygon({
-              paths: shapeData.coordinates,
+              paths: shapeData.path,
               strokeColor: shapeData.color,
               strokeWeight: 2,
               fillColor: shapeData.color,
@@ -978,7 +978,7 @@ polyline.addListener("click", () => {
       
           // Add label marker
           const bounds = new google.maps.LatLngBounds();
-          shapeData.coordinates.forEach((coord:any) => bounds.extend(coord));
+          shapeData.path.forEach((coord:any) => bounds.extend(coord));
           const center = bounds.getCenter();
       
           const labelMarker = new google.maps.Marker({
@@ -1005,8 +1005,8 @@ polyline.addListener("click", () => {
           polyshape.addListener("mouseover", (e: google.maps.MapMouseEvent) => {
             const path = polyshape.getPath();
             const matchedShape = shapesRef.current.find((s:any) =>
-              s.coordinates.length === path.getLength() &&
-              s.coordinates.every((pt: any, idx: number) => {
+              s.path.length === path.getLength() &&
+              s.path.every((pt: any, idx: number) => {
                 const shapePt = path.getAt(idx);
                 return pt.lat === shapePt.lat() && pt.lng === shapePt.lng();
               })
@@ -1054,8 +1054,8 @@ polyline.addListener("click", () => {
         
           if (shapeData.type === "polygon") {
             const matchedShape = shapesRef.current.find((s:any) =>
-              s.coordinates.length === path.getLength() &&
-              s.coordinates.every((pt:any, idx:any) => {
+              s.path.length === path.getLength() &&
+              s.path.every((pt:any, idx:any) => {
                 const shapePt = path.getAt(idx);
                 return pt.lat === shapePt.lat() && pt.lng === shapePt.lng();
               })
@@ -1064,8 +1064,8 @@ polyline.addListener("click", () => {
             currentLabel = matchedShape?.label || shapeData.label;
           } else if (shapeData.type === "polyline") {
             const matchedPolyline = polylinesRef.current.find((p:any) =>
-              p.coordinates.length === path.getLength() &&
-              p.coordinates.every((pt:any, idx:any) => {
+              p.path.length === path.getLength() &&
+              p.path.every((pt:any, idx:any) => {
                 const shapePt = path.getAt(idx);
                 return pt.lat === shapePt.lat() && pt.lng === shapePt.lng();
               })
@@ -1087,8 +1087,8 @@ polyline.addListener("click", () => {
         let centerSet = false;
         const bounds = new google.maps.LatLngBounds();
         newShapes.forEach((shapeData: any) => {
-          if (shapeData.coordinates && Array.isArray(shapeData.coordinates)) {
-            shapeData.coordinates.forEach((coord: any) => {
+          if (shapeData.path && Array.isArray(shapeData.path)) {
+            shapeData.path.forEach((coord: any) => {
               if (!centerSet) {
                 setCenter({ lat: coord.lat, lng: coord.lng });
                 setLatitude(coord.lat);
@@ -1128,6 +1128,8 @@ polyline.addListener("click", () => {
     reader.readAsText(file);
   };
   const handleOpenUploadPopup = () => {
+    setLatitude(defaultcenter.lat.toString());
+    setLongitude(defaultcenter.lng.toString());
     setUploadPopup(true);
   };
   const handleFullscreen = () => {
@@ -1591,7 +1593,10 @@ polyline.addListener("click", () => {
       >
         <CloseOutlinedIcon />
       </button>
-
+     <Button onClick={handleOpenUploadPopup} className="mb-3" variant="outline">
+        <UploadFileOutlinedIcon />
+        <div>Import digital beacons</div>
+      </Button>
       {/* Drawer Component */}
       <div className="flex flex-col gap-2 text-[#30D32C] items-center">
         <DrawerPublic

@@ -100,8 +100,8 @@ const DashboardSellMain = ({
        
       <div className="z-10 top-0 fixed w-full">
     <Navbar
-      user={user.user}
-      userstatus={user.user.status}
+      user={user?.user ?? []}
+      userstatus={user.user?.status ?? "User"}
       userId={userId}
       onClose={onClose}
       popup={popup}

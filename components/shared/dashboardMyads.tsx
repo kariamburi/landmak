@@ -180,7 +180,7 @@ CollectionProps) => {
     <>
         <ScrollArea className="h-[100vh] bg-[#e4ebeb] dark:bg-[#131B1E] text-black dark:text-[#F1F3F3]">
        <div className="top-0 z-10 fixed w-full">
-                        <Navbar user={user.user} userstatus={user.user.status} userId={userId} onClose={onClose} popup={"shop"} handleOpenSell={handleOpenSell} handleOpenBook={handleOpenBook} handleOpenPlan={handleOpenPlan} handleOpenChat={handleOpenChat}
+                        <Navbar user={user.user ?? []} userstatus={user.user?.status ?? "User"} userId={userId} onClose={onClose} popup={"shop"} handleOpenSell={handleOpenSell} handleOpenBook={handleOpenBook} handleOpenPlan={handleOpenPlan} handleOpenChat={handleOpenChat}
                                             handleOpenPerfomance={handleOpenPerfomance}
                                             handleOpenSettings={handleOpenSettings}
                                             handleOpenAbout={handleOpenAbout}
@@ -353,7 +353,7 @@ CollectionProps) => {
                   </div>
                 </div>
  */}
- {loans && (<>
+ {loans && isAdCreator && (<>
   <div className="container mx-auto p-1 lg:p-4 border rounded-xl">
               <h1 className="text-2xl font-bold mb-4">Property Financing Requests</h1>
               <div className="flex flex-col lg:flex-row gap-3"></div>
