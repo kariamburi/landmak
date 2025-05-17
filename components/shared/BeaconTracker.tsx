@@ -543,7 +543,7 @@ const refreshLocation = () => {
     </ul>
 
    <p className="mt-3">
-  After capturing all beacons, click the <strong>Save</strong> button to export the boundary as a <strong>QR code</strong>, Share link or download it as a <strong>GeoJSON</strong> file.
+  After capturing all beacons, click the <strong>Save</strong> button to export the boundary as a <strong>QR code</strong>, <strong>Share link</strong> or download it as a <strong>GeoJSON</strong> file.
 </p>
 
     <div className="mt-4 flex gap-4 flex-col">

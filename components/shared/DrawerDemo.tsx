@@ -105,7 +105,7 @@ export function DrawerDemo({
 
   const handleViewRequests = () => {
    const isVerified =
-      user?.verified && user.verified[0]?.accountverified === true;
+      user?.user?.verified && user?.user?.verified[0]?.accountverified === true;
     const hasSubscription = user?.subscriptionStatus === "Active";
 
     if (!isVerified) {

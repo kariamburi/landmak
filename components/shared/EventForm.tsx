@@ -542,46 +542,7 @@ useEffect(() => {
     }
     return uploadedUrls.filter((url) => !url.includes("blob:"));
   };
-  const uploadFilesxx = async (): Promise<string[] | null> => {
-  const uploadedUrls: string[] = [];
-  let i = 0;
-  let failedUploads = 0;
-
-  for (const file of files) {
-    try {
-      const uploadedImages = await startUpload([file]);
-      if (uploadedImages && uploadedImages.length > 0) {
-        const url = uploadedImages[0].url;
-        if (!url.includes("blob:")) {
-          uploadedUrls.push(url);
-        } else {
-          failedUploads++;
-        }
-      } else {
-        failedUploads++;
-      }
-    } catch (error) {
-      console.error("Error uploading file:", error);
-      failedUploads++;
-    }
-
-    i++;
-    setUploadProgress(Math.round((i / files.length) * 100));
-  }
-
-  if (failedUploads > 0 || uploadedUrls.length !== files.length) {
-    toast({
-      variant: "destructive",
-      title: "Upload Failed",
-      description: `Only ${uploadedUrls.length} out of ${files.length} images uploaded successfully.`,
-      duration: 5000,
-    });
-    return null;
-  }
-
-  return uploadedUrls;
-};
-
+ 
   const handleInputChange = (field: string, value: any) => {
     setFormData({ ...formData, [field]: value });
  

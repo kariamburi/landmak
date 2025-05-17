@@ -34,7 +34,7 @@ export default async function Home({ searchParams }: SearchParamProps) {
   const loans = await getallPendingLaons();
  
   //const migration = await syncSubcategoryImages("68144b998d7305e3676767a0");
-  console.log(myloans);
+ // console.log(myloans);
  
 //const categoryList:any = [];
 //const subcategoryList:any = [];

@@ -275,7 +275,7 @@ export function FileUploader({
         
         </div>
         {processingStatus && (
-        <div className="flex gap-2 text-gray-500 justify-center items-center">
+        <div className="flex p-2 gap-2 text-gray-500 justify-center items-center">
           <CircularProgress sx={{ color: "gray" }} size={30}/> processing images...
         </div>
       )}
