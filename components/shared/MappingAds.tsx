@@ -1190,138 +1190,6 @@ Radius: {radius / 1000} km
 </>)}
 
 
-{openDirectionsDialog && (<>
-<div className="absolute top-2 lg:top-20 left-2 lg:left-[60px] p-2 w-[300px] bg-[#e4ebeb] z-5 rounded-md shadow-lg">
-      {/* Close Button */}
-      <button
-        onClick={() => {
-          setOpenDirectionsDialog(false);
-        }}
-        className="absolute top-2 right-2 text-gray-500 hover:text-black text-sm"
-        title="Close"
-      >
-        ✕
-      </button>
-   <p className="font-bold">📍 Redirect to Google Maps</p>
-    <p>
-      This will open Google Maps to navigate to the property location. Do you want to proceed?
-    </p>
-    <div className="p-2 w-full">
-    <Button variant="default" className="w-full" onClick={()=>{handleRedirect();}}> Got it</Button>
-    </div>
-<div>
-
-
-</div>
-</div>
-</>)}
-
-
-
-{openDistanceDialog && (<>
-<div className="absolute top-2 lg:top-20 left-2 lg:left-[60px] p-2 w-[300px] bg-[#e4ebeb] z-5 rounded-md shadow-lg">
-      {/* Close Button */}
-      <button
-        onClick={() => {
-           setStep("options"); setOpenDistanceDialog(false);
-        }}
-        className="absolute top-2 right-2 text-gray-500 hover:text-black text-sm"
-        title="Close"
-      >
-        ✕
-      </button>
-   <p className="font-bold">Distance to Property</p>
-    <p>
-      Show approximately distance from your current location to the property.
-    </p>
-    <div className="p-2 w-full">
-    <Button variant="default" className="w-full" onClick={()=>{setOpenDistanceDialog(false); handleRouteFromUser();}}> Got it</Button>
-    </div>
-<div>
-
-
-</div>
-</div>
-</>)}
-
- {showDistanceDialog && (<>
- <div className="absolute top-2 lg:top-20 left-2 lg:left-[60px] p-2 bg-[#e4ebeb] z-5 w-[300px] rounded-md shadow-lg">
-      {/* Close Button */}
-      <button
-        onClick={() => {
-           setStep("options"); setShowDistanceDialog(false);
-        }}
-        className="absolute top-2 right-2 text-gray-500 hover:text-black text-sm"
-        title="Close"
-      >
-        ✕
-      </button>
-   <p className="font-bold">Distance Options</p>
-<div>
-     {step === "options" ? (
-                <>
-                  <div
-                    onClick={() => handleSelectOption("map")}
-                    className="cursor-pointer p-2 border rounded mb-2 hover:bg-gray-100"
-                  >
-                    1. Tap on the map
-                  </div>
-                  <div
-                    onClick={() => handleSelectOption("address")}
-                    className="cursor-pointer p-2 border rounded hover:bg-gray-100"
-                  >
-                    2. Select location from address
-                  </div>
-                </>
-              ) : (
-                <>
-                  <label className="block mb-2">Enter address to calculate distance:</label>
-                    <GooglePlacesAutocomplete
-                                        apiKey={process.env.NEXT_PUBLIC_GOOGLEAPIKEY!}
-                                        selectProps={{
-                    placeholder: "Search location",
-                    onChange: handleSelect,
-                    styles: {
-                      control: (provided) => ({
-                        ...provided,
-                        padding: '6px',
-                        borderRadius: '4px',
-                        borderColor: '#ccc',
-                        boxShadow: 'none',
-                        minHeight: '55px',
-                      }),
-                      placeholder: (provided) => ({
-                        ...provided,
-                        color: '#888',
-                      }),
-                      menu: (provided) => ({
-                        ...provided,
-                        zIndex: 9999, // ensure it appears on top
-                      }),
-                    },
-                  }}
-                                        autocompletionRequest={{
-                                          componentRestrictions: {
-                                            country: ["KE"], // Limits results to Kenya
-                                          },
-                                        }}
-                                      />
-                                      {error && (<><p className="text-red-400 p-1">{error} </p></>)}
-                                   
-                                   <div className="p-2 w-full flex justify-between">
-                                                {step === "addressInput" ? (
-                                                  <Button variant="default" className="w-full" onClick={handleSearch}>Search</Button>
-                                                ) : null}
-                                                </div>
-                </>
-              )}
-</div>
-
-
-
-</div>
-</>)}
-
 
 
 
@@ -1383,6 +1251,7 @@ Radius: {radius / 1000} km
   </TooltipProvider>
     
   </div> ))}
+
    <TooltipProvider>
                    <Tooltip>
                      <TooltipTrigger asChild>
@@ -1456,9 +1325,145 @@ Radius: {radius / 1000} km
                      </TooltipContent>
                    </Tooltip>
                  </TooltipProvider>
-
 </div>
 </>)}
+                 {openDirectionsDialog && (<>
+<div className="fixed inset-0 bg-black bg-opacity-40 z-50 flex items-center justify-center">
+    <div className="bg-[#e4ebeb] p-3 rounded-md shadow-lg w-[320px] relative">
+      <button
+        onClick={() => {
+          setOpenDirectionsDialog(false);
+        }}
+        className="absolute top-2 right-2 text-gray-500 hover:text-black text-sm"
+        title="Close"
+      >
+        ✕
+      </button>
+   <p className="font-bold">📍 Redirect to Google Maps</p>
+    <p>
+      This will open Google Maps to navigate to the property location. Do you want to proceed?
+    </p>
+    <div className="p-2 w-full">
+    <Button variant="default" className="w-full" onClick={()=>{handleRedirect();}}> Got it</Button>
+    </div>
+<div>
+
+
+</div>
+</div>
+</div>
+</>)}
+
+
+
+{openDistanceDialog && (<>
+<div className="fixed inset-0 bg-black bg-opacity-40 z-50 flex items-center justify-center">
+    <div className="bg-[#e4ebeb] p-3 rounded-md shadow-lg w-[320px] relative">
+      <button
+        onClick={() => {
+           setStep("options"); setOpenDistanceDialog(false);
+        }}
+        className="absolute top-2 right-2 text-gray-500 hover:text-black text-sm"
+        title="Close"
+      >
+        ✕
+      </button>
+   <p className="font-bold">Distance to Property</p>
+    <p>
+      Show approximately distance from your current location to the property.
+    </p>
+    <div className="p-2 w-full">
+    <Button variant="default" className="w-full" onClick={()=>{setOpenDistanceDialog(false); handleRouteFromUser();}}> Got it</Button>
+    </div>
+<div>
+</div>
+
+</div>
+</div>
+</>)}
+
+ {showDistanceDialog && (<>
+ <div className="fixed inset-0 bg-black bg-opacity-40 z-50 flex items-center justify-center">
+    <div className="bg-[#e4ebeb] p-3 rounded-md shadow-lg w-[320px] relative">
+      <button
+        onClick={() => {
+           setStep("options"); setShowDistanceDialog(false);
+        }}
+        className="absolute top-2 right-2 text-gray-500 hover:text-black text-sm"
+        title="Close"
+      >
+        ✕
+      </button>
+   <p className="font-bold">Distance Options</p>
+<div>
+     {step === "options" ? (
+                <>
+                  <div
+                    onClick={() => handleSelectOption("map")}
+                    className="cursor-pointer p-2 border rounded mb-2 hover:bg-gray-100"
+                  >
+                    1. Tap on the map
+                  </div>
+                  <div
+                    onClick={() => handleSelectOption("address")}
+                    className="cursor-pointer p-2 border rounded hover:bg-gray-100"
+                  >
+                    2. Select location from address
+                  </div>
+                </>
+              ) : (
+                <>
+                  <label className="block mb-2">Enter address to calculate distance:</label>
+                    <GooglePlacesAutocomplete
+                                        apiKey={process.env.NEXT_PUBLIC_GOOGLEAPIKEY!}
+                                        selectProps={{
+                    placeholder: "Search location",
+                    onChange: handleSelect,
+                    styles: {
+                      control: (provided) => ({
+                        ...provided,
+                        padding: '6px',
+                        borderRadius: '4px',
+                        borderColor: '#ccc',
+                        boxShadow: 'none',
+                        minHeight: '55px',
+                      }),
+                      placeholder: (provided) => ({
+                        ...provided,
+                        color: '#888',
+                      }),
+                      menu: (provided) => ({
+                        ...provided,
+                        zIndex: 9999, // ensure it appears on top
+                      }),
+                    },
+                  }}
+                                        autocompletionRequest={{
+                                          componentRestrictions: {
+                                            country: ["KE"], // Limits results to Kenya
+                                          },
+                                        }}
+                                      />
+                                      {error && (<><p className="text-red-400 p-1">{error} </p></>)}
+                                   
+                                   <div className="p-2 w-full flex justify-between">
+                                                {step === "addressInput" ? (
+                                                  <Button variant="default" className="w-full" onClick={handleSearch}>Search</Button>
+                                                ) : null}
+                                                </div>
+                </>
+              )}
+</div>
+
+
+</div>
+</div>
+</>)}
+
+
+
+
+
 </div>
 );
 }

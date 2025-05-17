@@ -1468,31 +1468,6 @@ polyline.addListener("click", () => {
   </div>
 )}
 
-{openTooltip && (<>
-<div className="absolute top-2 lg:top-20 left-2 lg:left-[60px] p-2 w-[300px] bg-[#e4ebeb] z-5 rounded-md shadow-lg">
-      {/* Close Button */}
-      <button
-        onClick={() => {
-          setopenTooltip(false);
-        }}
-        className="absolute top-2 right-2 text-gray-500 hover:text-black text-sm"
-        title="Close"
-      >
-        ✕
-      </button>
-   <p className="font-bold">{title}</p>
-    <p>
-      {description}
-    </p>
-    <div className="p-2 w-full">
-    <Button variant="default" className="w-full" onClick={()=>{setopenTooltip(false)}}>Okay</Button>
-    </div>
-<div>
-
-
-</div>
-</div>
-</>)}
 
 {/* Polyline Button */}
 <TooltipProvider>
@@ -1576,7 +1551,7 @@ polyline.addListener("click", () => {
 <TooltipProvider>
   <Tooltip>
     <TooltipTrigger asChild>
-      <Button onClick={handleOpenUploadPopup} className="w-14 lg:w-full" variant="outline">
+      <Button onClick={()=>{ setopenTooltip(false); handleOpenUploadPopup();}} className="w-14 lg:w-full" variant="outline">
         <UploadFileOutlinedIcon />
         <div className="hidden lg:inline">Import</div>
       </Button>
@@ -1610,9 +1585,9 @@ polyline.addListener("click", () => {
 
 
   {uploadPopup && (
-  <div className="fixed inset-0 flex items-center justify-center bg-gray-900 bg-opacity-50 p-2 z-50">
-    <div className="dark:bg-[#131B1E] dark:text-gray-300 bg-[#e4ebeb] rounded-xl p-4 w-full max-w-xl shadow-lg space-y-4">
-      
+  <div className="fixed inset-0 p-2 bg-black bg-opacity-40 z-50 flex items-center justify-center">
+    <div className="bg-[#e4ebeb] p-3 rounded-md shadow-lg w-full max-w-xl relative">
+     
       {/* Close Button */}
       <div className="flex justify-end">
         <Button variant="outline" onClick={() => setUploadPopup(false)}>
@@ -1662,8 +1637,35 @@ polyline.addListener("click", () => {
       </div>
     </div>
   </div>
+    
 )}
 
+{openTooltip && (<>
+<div className="fixed inset-0 bg-black bg-opacity-40 z-50 flex items-center justify-center">
+    <div className="bg-[#e4ebeb] p-3 rounded-md shadow-lg w-[320px] relative">
+      {/* Close Button */}
+      <button
+        onClick={() => {
+          setopenTooltip(false);
+        }}
+        className="absolute top-2 right-2 text-gray-500 hover:text-black text-sm"
+        title="Close"
+      >
+        ✕
+      </button>
+   <p className="font-bold">{title}</p>
+    <p>
+      {description}
+    </p>
+    <div className="p-2 w-full">
+    <Button variant="default" className="w-full" onClick={()=>{setopenTooltip(false)}}>Okay</Button>
+    </div>
+<div>
+
+</div>
+</div>
+</div>
+</>)}
 
 
 {!latitude && !longitude && (

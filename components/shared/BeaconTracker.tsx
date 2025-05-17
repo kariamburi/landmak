@@ -522,10 +522,8 @@ const refreshLocation = () => {
         </div>
       )}
    {openShowInfo && (
-  <div
-    className="absolute top-2 lg:top-20 left-2 lg:left-[60px] p-4 w-[320px] bg-[#e4ebeb] z-50 rounded-md shadow-lg text-sm text-gray-800
-      animate-slide-in"
-  >
+  <div className="fixed inset-0 bg-black bg-opacity-40 z-50 flex items-center justify-center">
+    <div className="bg-[#e4ebeb] p-6 rounded-md shadow-lg w-[320px] relative">
     {/* Close Button */}
     <button
       onClick={() => setOpenShowInfo(false)}
@@ -545,7 +543,7 @@ const refreshLocation = () => {
     </ul>
 
    <p className="mt-3">
-  After capturing all beacons, click the <strong>Save</strong> button to export the boundary as a <strong>QR code</strong> or download it as a <strong>GeoJSON</strong> file.
+  After capturing all beacons, click the <strong>Save</strong> button to export the boundary as a <strong>QR code</strong>, Share link or download it as a <strong>GeoJSON</strong> file.
 </p>
 
     <div className="mt-4 flex gap-4 flex-col">
@@ -561,6 +559,7 @@ const refreshLocation = () => {
         Got it
       </Button>
     </div>
+  </div>
   </div>
 )}
 <button
@@ -587,6 +586,7 @@ const refreshLocation = () => {
       <button
         className="w-full bg-green-600 hover:bg-green-700 text-white px-4 py-2 rounded"
         onClick={() => {
+          setShowHelp(false);
           window.location.href = "intent://maps.google.com/#Intent;scheme=https;package=com.google.android.apps.maps;end";
         }}
       >
