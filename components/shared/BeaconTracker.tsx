@@ -153,6 +153,7 @@ const refreshLocation = () => {
       lng: currentPos.lng
     };
     addBeacon(newBeacon);
+    setOpenShowInfo(false)
     // Only set openShowInfo the first time
   
   };
@@ -201,6 +202,7 @@ const refreshLocation = () => {
   };
 
   const handleManualInput = () => {
+    setOpenShowInfo(false)
     const lat = parseFloat(manualInput.lat);
     const lng = parseFloat(manualInput.lng);
     if (isNaN(lat) || isNaN(lng) || !manualInput.name.trim()) {
@@ -299,6 +301,8 @@ const refreshLocation = () => {
     }
   };
  const [openShowInfo, setOpenShowInfo] = useState(false);
+ const [showHelp, setShowHelp] = useState(false);
+ 
   //if (!isLoaded) return (
    // <div className="flex justify-center items-center h-full">
   //    <Icon icon={Barsscale} className="w-10 h-10 text-gray-500" />
@@ -327,8 +331,9 @@ const refreshLocation = () => {
             <TooltipContent><p>Toggle Fullscreen</p></TooltipContent>
           </Tooltip>
         </TooltipProvider>
-  <TooltipProvider>
-<Tooltip>
+ 
+
+{/*  <TooltipProvider><Tooltip>
   <TooltipTrigger asChild>
     <Button onClick={refreshLocation} className="w-14 text-gray-600" variant="outline">
       <MyLocationOutlinedIcon />
@@ -338,7 +343,7 @@ const refreshLocation = () => {
     Refresh Location
   </TooltipContent>
 </Tooltip>
-</TooltipProvider>
+</TooltipProvider>*/}
         <TooltipProvider>
           <Tooltip>
             <TooltipTrigger asChild>
@@ -515,7 +520,38 @@ const refreshLocation = () => {
     </div>
   </div>
 )}
+<button
+  onClick={() => setShowHelp(true)}
+  className="fixed bottom-4 right-4 bg-blue-600 text-white px-4 py-2 rounded-full shadow-lg z-50"
+>
+  Help
+</button>
+{showHelp && (
+  <div className="fixed inset-0 bg-black bg-opacity-40 z-50 flex items-center justify-center">
+    <div className="bg-white p-6 rounded-md shadow-lg w-[320px] relative">
+      <button
+        className="absolute top-2 right-2 text-gray-500 hover:text-black"
+        onClick={() => setShowHelp(false)}
+      >
+        ✕
+      </button>
 
+      <h2 className="text-lg font-semibold mb-2"><MyLocationOutlinedIcon /> Having trouble with GPS?</h2>
+      <p className="text-sm mb-4">
+        If it&apos;s taking too long to get your precise GPS position, try opening the Google Maps app to help improve location accuracy. After that, return to the Digital Beacon app.
+      </p>
+
+      <button
+        className="w-full bg-green-600 hover:bg-green-700 text-white px-4 py-2 rounded"
+        onClick={() => {
+          window.location.href = "intent://maps.google.com/#Intent;scheme=https;package=com.google.android.apps.maps;end";
+        }}
+      >
+        Open Google Maps
+      </button>
+    </div>
+  </div>
+)}
 
 
     </div>
