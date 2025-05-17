@@ -15,6 +15,7 @@ import DeleteOutlineOutlinedIcon from '@mui/icons-material/DeleteOutlineOutlined
 import QrCode2OutlinedIcon from '@mui/icons-material/QrCode2Outlined';
 import FileDownloadOutlinedIcon from '@mui/icons-material/FileDownloadOutlined';
 import QRCode from 'qrcode';
+import { Copy, Share2 } from "lucide-react";
 import EditLocationOutlinedIcon from '@mui/icons-material/EditLocationOutlined';
 import { DropdownMenu, DropdownMenuContent, DropdownMenuItem, DropdownMenuTrigger } from '../ui/dropdown-menu';
 type Beacon = {
@@ -214,6 +215,37 @@ const refreshLocation = () => {
     // Ensure the polygon is updated with the new beacon
     updatePolygon([...beacons, { name: manualInput.name, lat, lng }]);
   };
+   
+    const handleShare = async () => {
+      if (navigator.share) {
+        try {
+
+            if (beacons.length < 3) {
+      alert("At least 3 points are needed to create a polygon.");
+      return;
+    }
+    const coordinates = beacons.map((b) => [b.lng, b.lat]);
+    if (coordinates[0][0] !== coordinates[coordinates.length - 1][0] ||
+        coordinates[0][1] !== coordinates[coordinates.length - 1][1]) {
+      coordinates.push(coordinates[0]);
+    }
+    //const encoded = encodeURIComponent(JSON.stringify(coordinates));
+    const url = `https://mapa.co.ke/?coordinates=${coordinates}`;
+          await navigator.share({
+            title: "Digital beacons",
+            text: "Explore this property location on mapa!",
+            url: url,
+          });
+          console.log("Share was successful.");
+        } catch (error) {
+          console.error("Sharing failed:", error);
+        }
+      } else {
+        // Fallback for browsers that do not support the Web Share API
+        console.log("Share not supported on this browser.");
+        // You can also show a modal or a tooltip with the URL or instructions here.
+      }
+    };
   const saveQRcode = async () => {
     if (beacons.length < 3) {
       alert("At least 3 points are needed to create a polygon.");
@@ -386,6 +418,9 @@ const refreshLocation = () => {
         <DropdownMenuItem onClick={saveQRcode}>
        <QrCode2OutlinedIcon/> Save as QR Code
         </DropdownMenuItem>
+         <DropdownMenuItem onClick={handleShare}>
+       <Share2/> Share link
+        </DropdownMenuItem>
       </DropdownMenuContent>
     </DropdownMenu>
   </Tooltip>
@@ -513,8 +548,16 @@ const refreshLocation = () => {
   After capturing all beacons, click the <strong>Save</strong> button to export the boundary as a <strong>QR code</strong> or download it as a <strong>GeoJSON</strong> file.
 </p>
 
-    <div className="mt-4">
-      <Button variant="default" className="w-full" onClick={() => setOpenShowInfo(false)}>
+    <div className="mt-4 flex gap-4 flex-col">
+     <button
+        className="w-full bg-green-600 hover:bg-green-700 text-white px-4 py-2 rounded"
+        onClick={() => {
+          setOpenShowInfo(false);
+          window.location.href = "intent://maps.google.com/#Intent;scheme=https;package=com.google.android.apps.maps;end";
+        }}
+      >
+         Open Google Maps for Better GPS Accuracy
+      </button>  <Button variant="default" className="w-full" onClick={() => setOpenShowInfo(false)}>
         Got it
       </Button>
     </div>
