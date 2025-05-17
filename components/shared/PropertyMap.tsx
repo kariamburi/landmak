@@ -1290,7 +1290,10 @@ const handleSelect = (e: any) => {
     window.open(googleMapsUrl, "_blank");
    setOpenDirectionsDialog(false);
   };
-
+ const [openTooltip, setopenTooltip] = useState(false);
+  const [title, setTitle] = useState('');
+  const [description, setDescription] = useState('');
+  
 
   return ( 
 <div className="flex w-full h-[100vh] relative">
@@ -1475,11 +1478,14 @@ const handleSelect = (e: any) => {
                     <Button onClick={() => {
                     setSelectedControlD("polygon"); 
                     setSelectedControl("polygon");
+                    setopenTooltip(true);
+           setTitle('Draw Boundaries');
+         setDescription('Mark the boundaries of the property');
                     handleRoute();}} 
                     variant={selectedControlD === "polygon" ? "default" : "outline"}><RectangleOutlinedIcon/><div className="hidden lg:inline">Draw Area</div></Button>
                     </TooltipTrigger>
                     <TooltipContent>
-                      <p>Draw Area</p>
+                      <p>Draw Boundaries</p>
                     </TooltipContent>
                   </Tooltip>
                 </TooltipProvider>
@@ -1487,7 +1493,11 @@ const handleSelect = (e: any) => {
                 <TooltipProvider>
                   <Tooltip>
                     <TooltipTrigger asChild>
-                    <Button onClick={() => setSelectedControlD("none")} variant={selectedControlD === "none" ? "default" : "outline"}><BlockOutlinedIcon/><div className="hidden lg:inline">Control Off</div></Button>
+                    <Button onClick={() => {setSelectedControlD("none");
+                        setopenTooltip(true);
+           setTitle('Control Off');
+           setDescription('Disable bounderies draw mode');}
+                    } variant={selectedControlD === "none" ? "default" : "outline"}><BlockOutlinedIcon/><div className="hidden lg:inline">Control Off</div></Button>
                     </TooltipTrigger>
                     <TooltipContent>
                       <p>Control Off</p>
@@ -1552,7 +1562,7 @@ const handleSelect = (e: any) => {
       This will open Google Maps to navigate to the property location. Do you want to proceed?
     </p>
     <div className="p-2 w-full">
-    <Button variant="default" className="w-full" onClick={()=>{handleRedirect();}}>Accept</Button>
+    <Button variant="default" className="w-full" onClick={()=>{handleRedirect();}}> Got it</Button>
     </div>
 <div>
 
@@ -1580,7 +1590,7 @@ const handleSelect = (e: any) => {
       Show approximately distance from your current location to the property.
     </p>
     <div className="p-2 w-full">
-    <Button variant="default" className="w-full" onClick={()=>{setOpenDistanceDialog(false); handleRouteFromUser();}}>Accept</Button>
+    <Button variant="default" className="w-full" onClick={()=>{setOpenDistanceDialog(false); handleRouteFromUser();}}> Got it</Button>
     </div>
 <div>
 
@@ -1907,6 +1917,32 @@ Radius: {radius / 1000} km
         </div>
       </div>
     )}
+    {openTooltip && (<>
+    <div className="absolute top-2 lg:top-20 left-2 lg:left-[60px] p-2 w-[300px] bg-[#e4ebeb] z-5 rounded-md shadow-lg">
+          {/* Close Button */}
+          <button
+            onClick={() => {
+              setopenTooltip(false);
+            }}
+            className="absolute top-2 right-2 text-gray-500 hover:text-black text-sm"
+            title="Close"
+          >
+            ✕
+          </button>
+       <p className="font-bold">{title}</p>
+        <p>
+          {description}
+        </p>
+        <div className="p-2 w-full">
+        <Button variant="default" className="w-full" onClick={()=>{setopenTooltip(false)}}>Okay</Button>
+        </div>
+    <div>
+    
+    
+    </div>
+    </div>
+    </>)}
+    
   {!latitude && !longitude && (
   <div className="fixed inset-0 h-screen flex items-center justify-center bg-black bg-opacity-80 z-50">
     <div className="justify-center items-center dark:text-gray-300 rounded-lg p-1 lg:p-6 w-full md:max-w-3xl lg:max-w-4xl h-screen flex flex-col">

@@ -1207,7 +1207,7 @@ Radius: {radius / 1000} km
       This will open Google Maps to navigate to the property location. Do you want to proceed?
     </p>
     <div className="p-2 w-full">
-    <Button variant="default" className="w-full" onClick={()=>{handleRedirect();}}>Accept</Button>
+    <Button variant="default" className="w-full" onClick={()=>{handleRedirect();}}> Got it</Button>
     </div>
 <div>
 
@@ -1235,7 +1235,7 @@ Radius: {radius / 1000} km
       Show approximately distance from your current location to the property.
     </p>
     <div className="p-2 w-full">
-    <Button variant="default" className="w-full" onClick={()=>{setOpenDistanceDialog(false); handleRouteFromUser();}}>Accept</Button>
+    <Button variant="default" className="w-full" onClick={()=>{setOpenDistanceDialog(false); handleRouteFromUser();}}> Got it</Button>
     </div>
 <div>
 

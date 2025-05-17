@@ -15,6 +15,7 @@ import DeleteOutlineOutlinedIcon from '@mui/icons-material/DeleteOutlineOutlined
 import QrCode2OutlinedIcon from '@mui/icons-material/QrCode2Outlined';
 import FileDownloadOutlinedIcon from '@mui/icons-material/FileDownloadOutlined';
 import QRCode from 'qrcode';
+import EditLocationOutlinedIcon from '@mui/icons-material/EditLocationOutlined';
 import { DropdownMenu, DropdownMenuContent, DropdownMenuItem, DropdownMenuTrigger } from '../ui/dropdown-menu';
 type Beacon = {
   name: string;
@@ -47,7 +48,9 @@ export default function BeaconTracker({ onClose }: Props) {
 
     useEffect(() => {
       if (!isLoaded || !navigator.geolocation) return;
-    
+   
+    setOpenShowInfo(true);
+ 
       navigator.geolocation.getCurrentPosition(
         (pos) => {
           const position = {
@@ -115,7 +118,33 @@ export default function BeaconTracker({ onClose }: Props) {
       userMarker.current?.setPosition(position);
     }
   };
+const refreshLocation = () => {
+  if (!navigator.geolocation) {
+    alert("Geolocation is not supported by your browser.");
+    return;
+  }
 
+  navigator.geolocation.getCurrentPosition(
+    (pos) => {
+      const position = {
+        lat: pos.coords.latitude,
+        lng: pos.coords.longitude,
+      };
+      setCurrentPos(position);
+      updateMap(position);
+    },
+    (err) => {
+      console.error("Error getting current position:", err);
+      alert("Unable to retrieve your location.");
+    },
+    {
+      enableHighAccuracy: true,
+      timeout: 5000,
+      maximumAge: 0,
+    }
+  );
+};
+//const hasShownInfoRef = useRef(false);
   const captureBeacon = () => {
     if (!currentPos) return;
     const newBeacon = {
@@ -124,6 +153,8 @@ export default function BeaconTracker({ onClose }: Props) {
       lng: currentPos.lng
     };
     addBeacon(newBeacon);
+    // Only set openShowInfo the first time
+  
   };
 
   const addBeacon = (beacon: Beacon) => {
@@ -267,7 +298,7 @@ export default function BeaconTracker({ onClose }: Props) {
       document.exitFullscreen?.();
     }
   };
-
+ const [openShowInfo, setOpenShowInfo] = useState(false);
   //if (!isLoaded) return (
    // <div className="flex justify-center items-center h-full">
   //    <Icon icon={Barsscale} className="w-10 h-10 text-gray-500" />
@@ -296,12 +327,23 @@ export default function BeaconTracker({ onClose }: Props) {
             <TooltipContent><p>Toggle Fullscreen</p></TooltipContent>
           </Tooltip>
         </TooltipProvider>
-
+  <TooltipProvider>
+<Tooltip>
+  <TooltipTrigger asChild>
+    <Button onClick={refreshLocation} className="w-14 text-gray-600" variant="outline">
+      <MyLocationOutlinedIcon />
+    </Button>
+  </TooltipTrigger>
+  <TooltipContent>
+    Refresh Location
+  </TooltipContent>
+</Tooltip>
+</TooltipProvider>
         <TooltipProvider>
           <Tooltip>
             <TooltipTrigger asChild>
-              <Button onClick={captureBeacon} className="w-14 text-gray-600" variant="outline">
-                <MyLocationOutlinedIcon />
+              <Button onClick={()=> { captureBeacon();}} className="w-14 text-gray-600" variant="outline">
+                <AddLocationAltOutlinedIcon />
               </Button>
             </TooltipTrigger>
             <TooltipContent><p>Capture Gps Beacon</p></TooltipContent>
@@ -313,7 +355,7 @@ export default function BeaconTracker({ onClose }: Props) {
         <Tooltip>
           <TooltipTrigger asChild>
             <Button onClick={() => setManualInputVisible(true)} className="w-14 text-gray-600" variant="outline">
-              <AddLocationAltOutlinedIcon />
+              <EditLocationOutlinedIcon />
             </Button>
           </TooltipTrigger>
           <TooltipContent><p>Add manual beacon</p></TooltipContent>
@@ -370,13 +412,13 @@ export default function BeaconTracker({ onClose }: Props) {
         <div className="absolute bottom-10 left-10 z-10 p-4 bg-white shadow-md rounded-md">
          
          <div className='flex justify-between items-center'> <h3 className="text-lg font-semibold">Add Manual Beacon</h3>
-          <Button
-                type="button"
-                onClick={() => setManualInputVisible(false)}  // Close the form
-                className="p-2 text-gray-700"
-              >
-                <CloseOutlinedIcon />
-              </Button>
+         <button
+         onClick={() => setManualInputVisible(false)}  // Close the form
+        className="absolute top-2 right-2 text-gray-500 hover:text-black text-sm"
+        title="Close"
+      >
+        ✕
+      </button>
               </div>
           <p className='text-sm text-gray-400'>Survey documents or paper maps</p>
        
@@ -418,7 +460,7 @@ export default function BeaconTracker({ onClose }: Props) {
              
               <button
                 type="submit"
-                className="px-4 py-2 bg-green-600 text-white rounded"
+                className="px-4 py-2 w-full bg-green-600 text-white rounded"
               >
                 Add Beacon
               </button>
@@ -439,6 +481,43 @@ export default function BeaconTracker({ onClose }: Props) {
           </ul>
         </div>
       )}
+   {openShowInfo && (
+  <div
+    className="absolute top-2 lg:top-20 left-2 lg:left-[60px] p-4 w-[320px] bg-[#e4ebeb] z-50 rounded-md shadow-lg text-sm text-gray-800
+      animate-slide-in"
+  >
+    {/* Close Button */}
+    <button
+      onClick={() => setOpenShowInfo(false)}
+      className="absolute top-2 right-2 text-gray-500 hover:text-black text-sm"
+      title="Close"
+    >
+      ✕
+    </button>
+
+    <p className="font-bold text-base mb-2">📌 How to Capture Beacons</p>
+
+    <ul className="list-disc list-inside space-y-1">
+      <li>Walk or move around the land boundary on the map.</li>
+      <li>Click <strong>Capture Beacon</strong> at each turn or corner.</li>
+      <li>Capture points in a <strong>clockwise</strong> or <strong>anticlockwise</strong> order.</li>
+      <li>You can <strong>drag markers</strong> to the exact location if needed.</li>
+    </ul>
+
+   <p className="mt-3">
+  After capturing all beacons, click the <strong>Save</strong> button to export the boundary as a <strong>QR code</strong> or download it as a <strong>GeoJSON</strong> file.
+</p>
+
+    <div className="mt-4">
+      <Button variant="default" className="w-full" onClick={() => setOpenShowInfo(false)}>
+        Got it
+      </Button>
+    </div>
+  </div>
+)}
+
+
+
     </div>
   );
 }
