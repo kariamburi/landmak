@@ -93,6 +93,7 @@ const PopupPerfomance = ({ isOpen, userId,userName,userImage, user, handlePay, h
                           handleOpenShop={handleOpenShop}
                           handleOpenReview={handleOpenReview}
                           handlePay={handlePay}
+                          handleOpenChatId={handleOpenChatId}
                           
                         />
   
