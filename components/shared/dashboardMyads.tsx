@@ -38,7 +38,8 @@ import SellerProfile from "./SellerProfile";
 import SubscriptionSkeleton from "./SubscriptionSkeleton";
 import CollectionLoans from "./CollectionLoans";
 import CollectionMyLoans from "./CollectionMyLoans";
-
+import ListOutlinedIcon from '@mui/icons-material/ListOutlined';
+import ChecklistRtlOutlinedIcon from '@mui/icons-material/ChecklistRtlOutlined';
 // Correct import
 //const CollectionMyads = dynamic(() => import("./CollectionMyads"), {
  // ssr: false,
@@ -204,7 +205,7 @@ CollectionProps) => {
                              daysRemaining > 0 ? (
                                <>
                                 
-                                 <div className="flex gap-1 w-full items-center bg-green-100 px-3 py-1 rounded-lg">
+                                 <div className="flex gap-1 w-full items-center border border-green-600 bg-green-100 px-3 py-1 rounded-lg">
                                  <div
                                    style={{
                                      backgroundColor: user.currentpack.color,
@@ -221,7 +222,7 @@ CollectionProps) => {
                              ) : (
                                <>
 
-<div className="flex w-full items-center gap-1 bg-green-100 px-3 py-1 rounded-lg">
+<div className="flex w-full items-center gap-1 border border-green-600 bg-green-100 px-3 py-1 rounded-lg">
 <div
                                    style={{
                                      backgroundColor: user.currentpack.color,
@@ -261,7 +262,7 @@ CollectionProps) => {
                                <>
                                 
 
-                                 <div className="flex gap-1 w-full items-center bg-green-100 px-3 py-1 rounded-lg">
+                                 <div className="flex gap-1 w-full items-center border border-green-600 bg-green-100 px-3 py-1 rounded-lg">
                                  <div
                                    style={{
                                      backgroundColor: user.currentpack.color,
@@ -278,7 +279,7 @@ CollectionProps) => {
                              ) : (
                                <>
 
-<div className="flex w-full items-center gap-1 bg-green-100 px-3 py-1 rounded-lg">
+<div className="flex w-full items-center gap-1 border border-green-600 bg-green-100 px-3 py-1 rounded-lg">
 <div
                                    style={{
                                      backgroundColor: user.currentpack.color,
@@ -353,28 +354,12 @@ CollectionProps) => {
                   </div>
                 </div>
  */}
- {loans && isAdCreator && (<>
-  <div className="container mx-auto p-1 lg:p-4 border rounded-xl">
-              <h1 className="text-2xl font-bold mb-4">Property Financing Requests</h1>
-              <div className="flex flex-col lg:flex-row gap-3"></div>
-              {/* Date Filter Section */}
 
-              <ScrollArea className="w-[300px] lg:w-full">
-                <CollectionMyLoans
-                  data={loans.data}
-                  emptyTitle={`No request`}
-                  emptyStateSubtext="(0) Finance Request"
-                  limit={200}
-                  page={1}
-                  userId={userId}
-                  totalPages={loans.totalPages}
-                  handleOpenChatId={handleOpenChatId}
-                />
-                <ScrollBar orientation="horizontal" />
-              </ScrollArea>
-            </div>
- </>)}
-              <CollectionMyads
+ 
+     {/* Content Sections */}
+ 
+
+  <CollectionMyads
                   emptyTitle="No ads have been created yet"
                   emptyStateSubtext="Go create some now"
                   collectionType="Ads_Organized"
@@ -389,7 +374,13 @@ CollectionProps) => {
                   handleAdEdit={handleAdEdit}
                   handleOpenPlan={handleOpenPlan}
                   handleOpenChatId={handleOpenChatId}
+                  loans={loans}
                 />
+
+ 
+
+ 
+            
               </section>
             </div>
           </div>

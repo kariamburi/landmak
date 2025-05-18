@@ -26,11 +26,13 @@ type FileUploaderProps = {
   adId: string;
   setFiles: Dispatch<SetStateAction<File[]>>;
 };
-const compressImage = async (file: File): Promise<File> => {
+const compressImagee = async (file: File): Promise<File> => {
   const options = {
-    maxSizeMB: 2, // Target size in MB
-    maxWidthOrHeight: 1280,
-    useWebWorker: true,
+   // maxSizeMB: 2, // Target size in MB
+   // maxWidthOrHeight: 1280,
+   maxSizeMB: 0.8,           // Slightly higher quality, still compressed
+  maxWidthOrHeight: 1280,   // Better clarity on retina screens
+  useWebWorker: true,
   };
 
   try {
@@ -40,6 +42,53 @@ const compressImage = async (file: File): Promise<File> => {
     console.error("Image compression error:", error);
     return file;
   }
+};
+const getNetworkType = (): "4g" | "3g" | "2g" | "slow-2g" | "unknown" => {
+  if (typeof navigator !== "undefined" && "connection" in navigator) {
+    // @ts-ignore
+    return navigator.connection.effectiveType || "unknown";
+  }
+  return "unknown";
+};
+
+const isMobile = (): boolean => {
+  return typeof window !== "undefined" && window.innerWidth < 768;
+};
+
+const getSmartCompressionOptions = () => {
+  const network = getNetworkType();
+  const mobile = isMobile();
+
+  if (network === "2g" || network === "slow-2g") {
+    return {
+      maxSizeMB: 0.3,
+      maxWidthOrHeight: mobile ? 800 : 1024,
+    };
+  }
+
+  if (network === "3g") {
+    return {
+      maxSizeMB: 0.5,
+      maxWidthOrHeight: mobile ? 1024 : 1280,
+    };
+  }
+
+  // Good network (4g or unknown)
+  return {
+    maxSizeMB: 0.8,
+    maxWidthOrHeight: mobile ? 1280 : 1600,
+  };
+};
+
+const compressImage = async (file: File): Promise<File> => {
+  const smartOptions = getSmartCompressionOptions();
+
+  const options = {
+    ...smartOptions,
+    useWebWorker: true,
+  };
+
+  return await imageCompression(file, options);
 };
 
 const applyWatermark = (
@@ -174,10 +223,10 @@ export function FileUploader({
           return false;
         }
 
-        if (file.size > 5 * 1024 * 1024) {
+        if (file.size > 0.8 * 1024 * 1024) {
           try {
             const compressed = await compressImage(file);
-            if (compressed.size > 5 * 1024 * 1024) {
+            if (compressed.size > 0.8 * 1024 * 1024) {
               setmessage(
                 `${file.name} is still too large after compression. Skipped.`
               );

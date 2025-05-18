@@ -116,185 +116,126 @@ const CollectionMyLoans = ({
   return (
     <div className="dark:bg-[#2D3236]">
       {data.length > 0 ? (
-        <div>
-          <table className="min-w-full border-collapse border border-gray-300 dark:border-gray-600">
-            <thead className="dark:bg-gray-800 bg-[#e4ebeb] text-xs">
-              <tr>
-               
-                <th className="border border-gray-300 dark:border-gray-600 px-4 py-2">
-               Property
-                </th>
-                <th className="border border-gray-300 dark:border-gray-600 px-4 py-2">
-               Application Details
-                </th>
-                
-               {/*  <th className="border border-gray-300 dark:border-gray-600 px-4 py-2">
-                 Financer
-                </th> */}
-                <th className="border border-gray-300 dark:border-gray-600 px-4 py-2">
-                  Actions
-                </th>
-              </tr>
-            </thead>
-            <tbody>
-              {data.map((loan: any, index: number) => (
-                <tr
-                  key={index}
-                  className="bg-gray-100 rounded-sm p-1 hover:bg-gray-100 dark:hover:bg-gray-600 text-xs"
+      
+      <div className="w-full">
+  {/* Header Row */}
+  <div className="hidden md:grid grid-cols-3 gap-4 bg-[#e4ebeb] dark:bg-gray-800 text-xs font-semibold border border-gray-300 dark:border-gray-600 p-2">
+    <div className="px-2 py-1 border border-gray-300 dark:border-gray-600">Property</div>
+    <div className="px-2 py-1 border border-gray-300 dark:border-gray-600">Application Details</div>
+    <div className="px-2 py-1 border border-gray-300 dark:border-gray-600">Actions</div>
+  </div>
+
+  {/* Data Rows */}
+  {data.map((loan: any, index: number) => (
+    <div
+      key={index}
+      className="bg-black grid grid-cols-1 md:grid-cols-3 gap-4 border border-gray-300 dark:border-gray-600 p-3 rounded mb-2 bg-gray-100 dark:bg-gray-700 text-xs w-full"
+    >
+      {/* Property */}
+      <div className="border border-gray-300 dark:border-gray-600 p-2 w-full">
+        {loan.adId ? (
+          <div className="flex flex-col">
+            <div className="flex gap-2 items-start">
+              <div className="relative rounded">
+                {isLoadingsmall && (
+                  <div className="absolute inset-0 flex justify-center items-center bg-gray-100">
+                    <Icon icon={threeDotsScale} className="w-6 h-6 text-gray-500" />
+                  </div>
+                )}
+                <a
+                  href={`${process.env.NEXT_PUBLIC_DOMAIN_URL}?Ad=${loan.adId._id}`}
+                  target="_blank"
+                  rel="noopener noreferrer"
                 >
-                  <td className="border border-gray-300 dark:border-gray-600 px-4 py-2">
-                {loan.adId ? (<> <div className="flex flex-col">  
-                   <div className="flex gap-1 lg:gap-4 w-full items-start"> {/* Changed items-center to items-start for top alignment */}
-     <div className="relative rounded">
-        {isLoadingsmall && (
-                        <div 
-                         className="absolute inset-0 flex justify-center items-center bg-gray-100">
-                          <Icon icon={threeDotsScale} className="w-6 h-6 text-gray-500" />
-                        </div>
-                      )}
-              <a
-              href={process.env.NEXT_PUBLIC_DOMAIN_URL+"?Ad="+loan.adId._id}
-              target="_blank"
-              rel="noopener noreferrer"
-            > <Image
-              src={loan.adId.data.imageUrls[0]}
-              alt={loan.adId.data.title}
-              width={150}
-              height={100}
-              className={`w-[150px] h-[100px] rounded object-cover cursor-pointer ${
-                isLoadingsmall ? "opacity-0" : "opacity-100"
-              } transition-opacity duration-300`}
-              onLoadingComplete={() => setIsLoadingsmall(false)}
-              placeholder="empty" // Optional: you can use "empty" if you want a placeholder before loading
-            /></a>
-  </div>
-  <div className="flex flex-col justify-between h-full"> {/* Ensures vertical spacing if needed */}
-    <p className="text-sm font-semibold mb-1">
-      {loan.adId.data.title.length > 50
-        ? `${loan.adId.data.title.substring(0, 50)}...`
-        : loan.adId.data.title}
-    </p>
-    <p className="text-sm text-gray-600 dark:text-gray-300 mb-1 max-w-[200px]">
-      <span
-        dangerouslySetInnerHTML={{
-          __html: truncateDescription(loan.adId.data.description ?? "", 65),
-        }}
-      />
-    </p>
-    <span className="font-bold text-green-600 dark:text-green-600 mt-1">
-      {formatKsh(loan.adId.data.price)}
-    </span>
-    
-  </div>
-</div>
+                  <Image
+                    src={loan.adId.data.imageUrls[0]}
+                    alt={loan.adId.data.title}
+                    width={150}
+                    height={100}
+                    className={`w-[150px] h-[100px] rounded object-cover cursor-pointer ${
+                      isLoadingsmall ? "opacity-0" : "opacity-100"
+                    } transition-opacity duration-300`}
+                    onLoadingComplete={() => setIsLoadingsmall(false)}
+                    placeholder="empty"
+                  />
+                </a>
+              </div>
+              <div className="flex flex-col justify-between h-full">
+                <p className="text-sm font-semibold mb-1">
+                  {loan.adId.data.title.length > 50
+                    ? `${loan.adId.data.title.substring(0, 50)}...`
+                    : loan.adId.data.title}
+                </p>
+                <p className="text-sm text-gray-600 dark:text-gray-300 mb-1 max-w-[200px]">
+                  <span
+                    dangerouslySetInnerHTML={{
+                      __html: truncateDescription(loan.adId.data.description ?? "", 65),
+                    }}
+                  />
+                </p>
+                <span className="font-bold text-green-600 dark:text-green-600 mt-1">
+                  {formatKsh(loan.adId.data.price)}
+                </span>
+              </div>
+            </div>
+          </div>
+        ) : (
+          <div className="flex items-center justify-center">No specific property</div>
+        )}
+      </div>
 
-                
-                   </div>
-                   </>):(<div className="flex items-center justify-center">No specific property</div>)}
-                  </td>
-                  
-                  <td className="border border-gray-300 dark:border-gray-600 px-4 py-2">
-                    <div className="flex flex-col">  
-                      <div className="flex gap-2 items-center">
-                     
-                       {/*  <div className="w-10 h-10 rounded-full bg-white">  <Zoom>
-                           <Image
-                             className="w-full h-w-full border-1 border-green-600 rounded-full object-cover"
-                             src={loan.userId.photo ?? "/avator.png"}
-                             alt="Avator"
-                             width={200}
-                             height={200}
-                           />
-                         </Zoom>  </div>*/}
-                     
-                        <div className="flex flex-col"> 
-                       <p className="text-sm font-semibold">
-                         {loan.userId.firstName} {loan.userId.lastName}
-                       </p>
-                       <p className="text-sm flex flex-col font-semibold mb-1 border-b">
-                        {loan.userId.email}
-                       </p>
-                        <p className="text-sm flex flex-col font-semibold mb-1 border-b">
-                        {loan.userId.phone}
-                       </p>
-                        </div>
-                        </div>
-                      <p className="text-xs flex gap-2 text-gray-600 dark:text-gray-300 mb-1">
-                      Loan Request Type: 
-                       <span className="font-semibold">{loan.loanType ? (<>{loan.loanType}</>):(<>Property Financing Loan</>)}
-                      </span>
-                    </p>
-                        
-                     <p className="text-xs flex gap-2 text-gray-600 dark:text-gray-300 mb-1">
-                       Monthly Income: 
-                       <span className="font-semibold">KES {loan.monthlyIncome.toLocaleString()}
-                      </span>
-                    </p>
-                     <p className="text-xs flex gap-2 text-gray-600 dark:text-gray-300 mb-1">
-                       Deposit Amount:
-                       <span className="font-semibold">KES {loan.deposit.toLocaleString()}
-                      </span>
-                    </p>
+      {/* Application Details */}
+      <div className="border border-gray-300 dark:border-gray-600 p-2 w-full">
+        <div className="flex flex-col gap-1">
+          <div className="flex gap-2 items-center">
+            <div className="flex flex-col">
+              <p className="text-sm font-semibold">
+                {loan.userId.firstName} {loan.userId.lastName}
+              </p>
+              <p className="text-sm font-semibold border-b">{loan.userId.email}</p>
+              <p className="text-sm font-semibold border-b">{loan.userId.phone}</p>
+            </div>
+          </div>
+          <p className="text-xs text-gray-600 dark:text-gray-300">
+            Loan Request Type: <span className="font-semibold">{loan.loanType ?? "Property Financing Loan"}</span>
+          </p>
+          <p className="text-xs text-gray-600 dark:text-gray-300">
+            Monthly Income: <span className="font-semibold">KES {loan.monthlyIncome.toLocaleString()}</span>
+          </p>
+          <p className="text-xs text-gray-600 dark:text-gray-300">
+            Deposit Amount: <span className="font-semibold">KES {loan.deposit.toLocaleString()}</span>
+          </p>
+          <p className="text-xs text-gray-600 dark:text-gray-300">
+            Preferred Loan Term: <span className="font-semibold">{loan.loanterm}</span>
+          </p>
+          <p className="text-xs text-gray-600 dark:text-gray-300">
+            Employment Status: <span className="font-semibold">{loan.employmentStatus}</span>
+          </p>
+          <p className="text-xs text-gray-600 dark:text-gray-300">
+            Message Comments: <span className="font-semibold">{loan.messageComments}</span>
+          </p>
+        </div>
+      </div>
 
-                     <p className="text-xs flex gap-2 text-gray-600 dark:text-gray-300 mb-1">
-                       Preffered Loan Term: 
-                       <span className="font-semibold">{loan.loanterm}
-                      </span>
-                    </p>
-                     <p className="text-xs flex gap-2 text-gray-600 dark:text-gray-300 mb-1">
-                      Employment Status: 
-                       <span className="font-semibold">{loan.employmentStatus}
-                      </span>
-                    </p>
-                   
-                      <p className="text-xs flex gap-2 text-gray-600 dark:text-gray-300 mb-1">
-                      Message Comments: 
-                       <span className="font-semibold">{loan.messageComments}
-                      </span>
-                    </p>
-                          
-                  {/*       <p className="text-xs flex gap-2 text-gray-600 dark:text-gray-300 mb-1">
-                     Status: 
-                       <span
-                      className={`flex flex-col p-1 justify-center items-center w-[70px] rounded-full ${
-                        loan.status === "Pending"
-                          ? "bg-orange-100"
-                          : loan.status === "Failed"
-                          ? "bg-red-100 "
-                          : "bg-green-100"
-                      }`}
-                    >
-                      {loan.status}
-                  
-                      </span>
-                    </p>  */}
-                            
-                       <p className="text-xs items-center flex gap-2 text-gray-600 dark:text-gray-300 mb-1">
-                    
-                      
-                    </p>         
-                     </div>
-                    
-                  </td>
-                {/*   <td className="border border-gray-300 dark:border-gray-600 px-4 py-2">
-                    {loan.financerId}
-                  </td>*/}
-                  <td className="border border-gray-300 dark:border-gray-600 px-4 py-2">
-                    <DeleteLoan _id={loan._id}/>
-                  </td>
-                </tr>
-              ))}
-            </tbody>
-          </table>
-
-          {totalPages > 1 && (
+      {/* Actions */}
+      <div className="border border-gray-300 dark:border-gray-600 p-2 w-full flex items-center justify-start md:justify-center">
+        <DeleteLoan _id={loan._id} />
+      </div>
+    </div>
+  ))}
+    {totalPages > 1 && (
             <Pagination
               urlParamName={urlParamName}
               page={page}
               totalPages={totalPages}
             />
           )}
-        </div>
+</div>
+
+
+
+        
+      
       ) : (
         <div className="flex-center wrapper min-h-[200px] w-full flex-col gap-3 rounded-[14px] bg-grey-50 py-28 text-center">
           <h3 className="font-bold text-[16px] lg:text-[25px]">{emptyTitle}</h3>

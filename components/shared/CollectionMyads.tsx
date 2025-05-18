@@ -8,6 +8,10 @@ import { getAdByUser } from "@/lib/actions/dynamicAd.actions";
 import Masonry from "react-masonry-css";
 import ProgressPopup from "./ProgressPopup";
 import Skeleton from "@mui/material/Skeleton";
+import ListOutlinedIcon from '@mui/icons-material/ListOutlined';
+import ChecklistRtlOutlinedIcon from '@mui/icons-material/ChecklistRtlOutlined';
+import { ScrollArea, ScrollBar } from "../ui/scroll-area";
+import CollectionMyLoans from "./CollectionMyLoans";
 //import { Icon } from "@iconify/react";
 //import sixDotsScale from "@iconify-icons/svg-spinners/6-dots-scale"; // Correct import
  // Correct import
@@ -19,7 +23,7 @@ type CollectionProps = {
   emptyStateSubtext: string;
   limit: number;
   //page: number | string;
-  //totalPages?: number;
+  loans: any;
   urlParamName?: string;
   isAdCreator: boolean;
   isVertical: boolean;
@@ -32,7 +36,7 @@ type CollectionProps = {
 };
 
 const CollectionMyads = ({
-  // data,
+ loans,
   userId,
   emptyTitle,
   emptyStateSubtext,
@@ -122,11 +126,44 @@ const categories = Array.from(new Set(data.map((item: any) => item.data.category
 const filteredAds = selectedCategory
   ? data.filter((item: any) => item.data.category === selectedCategory)
   : data;
-
+ const [inputMode, setInputMode] = useState<'Ads' | 'Loans'>('Ads');
 
   return (
     <div>
-  <div className="flex flex-col lg:flex-row items-center justify-between w-full">
+      <div className="grid grid-cols-2 gap-1">
+            <button
+              title="Ads"
+              onClick={() => setInputMode("Ads")}
+              className={`h-12 p-3 rounded-tl-0 lg:rounded-tl-xl flex gap-2 justify-center items-center ${
+                inputMode === "Ads"
+                  ? "bg-white"
+                  : "bg-green-600 hover:bg-green-700 text-white"
+              }`}
+            >
+              <ListOutlinedIcon /> My Ads
+            </button>
+      
+            <button
+              title="Loans"
+              onClick={() => setInputMode("Loans")}
+              className={`h-12 p-3 rounded-0 lg:rounded-tr-xl flex gap-2 justify-center items-center ${
+                inputMode === "Loans"
+                  ? "bg-white"
+                  : "bg-green-600 hover:bg-green-700 text-white"
+              }`}
+            >
+              <ChecklistRtlOutlinedIcon  /> Property Financing Requests
+            </button>
+          </div>
+       { inputMode==="Ads" && (<div
+          className={`rounded-b-lg p-2 flex flex-col min-h-screen ${
+            inputMode === "Ads"
+              ? "bg-white"
+              : "bg-[#131B1E]"
+          }`}
+        > 
+        
+         <div className="flex flex-col lg:flex-row items-center justify-between w-full">
   <h3 className="font-bold text-[25px] text-center sm:text-left">
                     My Ads
                   </h3>
@@ -258,6 +295,44 @@ const filteredAds = selectedCategory
                              </div>
                   
                   </>)}
+        
+        
+        
+        
+        </div>
+      )} 
+        { inputMode==="Loans" && ( <div
+          className={`rounded-b-lg p-2 flex flex-col min-h-screen ${
+            inputMode === "Loans"
+              ? "bg-white"
+              : "bg-[#131B1E]"
+          }`}
+        >
+      
+      {loans && isAdCreator && (<>
+        <div className="container mx-auto p-1 lg:p-4 border rounded-xl">
+                    <h1 className="text-2xl font-bold mb-4">Property Financing Requests</h1>
+                    <div className="flex flex-col lg:flex-row gap-3"></div>
+                    {/* Date Filter Section */}
+      
+                    <ScrollArea className="w-[300px] lg:w-full">
+                      <CollectionMyLoans
+                        data={loans.data}
+                        emptyTitle={`No request`}
+                        emptyStateSubtext="(0) Finance Request"
+                        limit={200}
+                        page={1}
+                        userId={userId}
+                        totalPages={loans.totalPages}
+                        handleOpenChatId={handleOpenChatId}
+                      />
+                      <ScrollBar orientation="horizontal" />
+                    </ScrollArea>
+                  </div>
+       </>)}
+      
+        </div>)}
+       
       
     </div>
   );

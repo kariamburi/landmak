@@ -73,6 +73,7 @@ type CollectionProps = {
   handleAdEdit: (ad:any) => void;
   handleAdView: (ad:any) => void;
   handleOpenReview: (value:any) => void;
+  handleOpenChatId: (value:any) => void;
   handleOpenShop: (shopId:any) => void;
   handleOpenSettings: () => void;
   handleOpenPerfomance: () => void;
@@ -86,7 +87,7 @@ const DashboardPerformance = ({
   sortby,
  // packname,
  // daysRemaining,
- // color,
+ handleOpenChatId,
   emptyTitle,
   emptyStateSubtext,
   collectionType,

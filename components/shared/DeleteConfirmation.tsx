@@ -21,8 +21,9 @@ import { deleteAd } from "@/lib/actions/dynamicAd.actions";
 type deleteProps = {
   adId: string;
   imageUrls: string[];
+  onDeleteSuccess?:()=> void;
 };
-export const DeleteConfirmation = ({ adId, imageUrls }: deleteProps) => {
+export const DeleteConfirmation = ({ adId, imageUrls, onDeleteSuccess }: deleteProps) => {
   const pathname = usePathname();
   let [isPending, startTransition] = useTransition();
   let deleteImages: string[] = [];
@@ -61,7 +62,7 @@ export const DeleteConfirmation = ({ adId, imageUrls }: deleteProps) => {
             onClick={() =>
               startTransition(async () => {
                 await deleteAd({ adId, deleteImages, path: pathname });
-              
+               onDeleteSuccess?.();
               })
             }
           >

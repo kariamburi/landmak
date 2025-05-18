@@ -61,7 +61,7 @@ const VerticalCard = ({
 }: CardProps) => {
   const pathname = usePathname();
   const { toast } = useToast();
-
+const [isDeleted, setIsDeleted] = useState(false);
   const router = useRouter();
 
   //const isAdCreator = userId === ad.organizer._id.toString();
@@ -308,7 +308,7 @@ const VerticalCard = ({
     
     
     </>):(<>
-    
+      {!isDeleted && (
      <div
         className={`mb-2 w-full lg:min-w-[200px] rounded-lg border shadow-sm bg-white dark:bg-[#2D3236] overflow-hidden`}
       >
@@ -389,7 +389,7 @@ const VerticalCard = ({
                   height={20}
                 />
               </div>
-              <DeleteConfirmation adId={ad._id} imageUrls={ad.data.imageUrls} />
+              <DeleteConfirmation adId={ad._id} imageUrls={ad.data.imageUrls} onDeleteSuccess={() => setIsDeleted(true)}/>
             </div>
           )}
 
@@ -601,7 +601,7 @@ const VerticalCard = ({
             )}
           </div>
         </div>
-      </div>
+      </div>)}
     
     </>)}
       <ContactUser isOpen={isOpenContact} user={selectUser} handleOpenChatId={handleOpenChatId} onClose={handleCloseContact}/>

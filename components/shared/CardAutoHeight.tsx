@@ -121,6 +121,7 @@ const CardAutoHeight = ({
       return truncatedMessage;
     };
   //console.log(ad.imageUrls);
+  const [isDeleted, setIsDeleted] = useState(false);
   return (
     <>{ad.loanterm ?(<><div className="bg-white hover:bg-gray-100 dark:hover:bg-gray-600 rounded-lg text-xs border border-gray-300 dark:border-gray-600">
   <div className="relative rounded w-full"
@@ -254,14 +255,14 @@ const CardAutoHeight = ({
   </div>
   </div>
 </div>
-</>):(<>
+</>):(<>{!isDeleted && (<>
       <div
         className={`mb-2 w-full lg:min-w-[200px] rounded-lg border shadow-sm bg-white dark:bg-[#2D3236]`}
      
       >
         {/* Image section with dynamic height */}
 
-  {ad.data.imageUrls.length > 0 && (<>
+ 
   <div className="relative rounded-t-lg w-full"
         style={
           ad.plan.name !== "Free"
@@ -273,8 +274,8 @@ const CardAutoHeight = ({
         }
         >
           
-
-           {isLoadingsmall && (
+ 
+           {isLoadingsmall && ad.data.imageUrls.length > 0 && (
                   <div 
                   onClick={() => {
                     handleAdView(ad);
@@ -284,7 +285,8 @@ const CardAutoHeight = ({
                   </div>
                 )}
 
-          <Image
+        {ad.data.imageUrls.length > 0 && (<>  
+        <Image
             onClick={() => {
               handleAdView(ad);
             }}
@@ -298,8 +300,7 @@ const CardAutoHeight = ({
             } transition-opacity duration-300`}
             onLoadingComplete={() => setIsLoadingsmall(false)}
             placeholder="empty" // Optional: you can use "empty" if you want a placeholder before loading
-          />
-
+          /></>)}
           {ad.plan.name !== "Free" && (
             <div
               style={{
@@ -341,7 +342,7 @@ const CardAutoHeight = ({
                   height={20}
                 />
               </div>
-              <DeleteConfirmation adId={ad._id} imageUrls={ad.data.imageUrls} />
+              <DeleteConfirmation adId={ad._id} imageUrls={ad.data.imageUrls}  onDeleteSuccess={() => setIsDeleted(true)}/>
             </div>
           )}
 
@@ -417,7 +418,7 @@ const CardAutoHeight = ({
               </div>
             </SignedOut>
           </div>
-        </div></>)}  
+        </div> 
 
         {/* Text section */}
         <div className="p-2 lg:p-4">
@@ -511,6 +512,7 @@ const CardAutoHeight = ({
           </div>
         </div>
       </div>
+      </>)}
     </>)}</>
   );
 };
