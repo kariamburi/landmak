@@ -285,22 +285,20 @@ const CardAutoHeight = ({
                   </div>
                 )}
 
-        {ad.data.imageUrls.length > 0 && (<>  
-        <Image
-            onClick={() => {
-              handleAdView(ad);
-            }}
-            src={`${ad.data.imageUrls[0]}`}
-            alt={`${ad.data.title}`}
-            width={400} // Set a width to control layout consistency
-            height={0} // Proportional height
-            style={{ minHeight: "200px" }} // Set the minimum height here
-            className={`w-full rounded-t-lg h-auto object-cover cursor-pointer ${
-              isLoadingsmall ? "opacity-0" : "opacity-100"
-            } transition-opacity duration-300`}
-            onLoadingComplete={() => setIsLoadingsmall(false)}
-            placeholder="empty" // Optional: you can use "empty" if you want a placeholder before loading
-          /></>)}
+      <Image
+  onClick={() => handleAdView(ad)}
+  src={ad.data.imageUrls.length > 0 ? ad.data.imageUrls[0] : "/fallback.jpg"}
+  alt={ad.data.title || "Ad image"}
+  width={400}
+  height={0}
+  style={{ minHeight: "200px" }}
+  className={`w-full rounded-t-lg h-auto object-cover cursor-pointer ${
+    isLoadingsmall ? "opacity-0" : "opacity-100"
+  } transition-opacity duration-300`}
+  onLoadingComplete={() => setIsLoadingsmall(false)}
+  placeholder="empty"
+/>
+
           {ad.plan.name !== "Free" && (
             <div
               style={{
