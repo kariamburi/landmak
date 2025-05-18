@@ -89,7 +89,7 @@ packagesList,
             onClick={() => {
               handleOpenSell();
             }}
-            className="h-[140px] bg-green-600 text-white flex flex-col items-center justify-center cursor-pointer rounded-sm p-1 border-0 border-emerald-300 hover:bg-emerald-600"
+            className="h-[140px] bg-green-600 text-white flex flex-col items-center justify-center cursor-pointer rounded-sm p-1 border-0 border-green-300 hover:bg-green-700"
           >
             <div className="flex flex-col items-center text-center justify-center">
               <div className="h-12 w-12 rounded-full p-2">
@@ -106,7 +106,7 @@ packagesList,
               setIsOpenP(true);
               router.push("/sign-in");
             }}
-            className="h-[140px] bg-emerald-500 text-white flex flex-col items-center justify-center cursor-pointer rounded-sm p-1 border-0 border-emerald-300 hover:bg-emerald-600"
+            className="h-[140px] bg-green-600 text-white flex flex-col items-center justify-center cursor-pointer rounded-sm p-1 border-0 border-green-300 hover:bg-green-700"
           >
             <div className="flex flex-col items-center text-center justify-center">
               <div className="h-12 w-12 rounded-full p-2">

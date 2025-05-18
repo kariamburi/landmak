@@ -189,94 +189,77 @@ export function FileUploader({
   const [processingStatus, setProcessingStatus] = useState(false);
   const [showmessage, setmessage] = useState("");
   const onDrop = useCallback(
-    async (acceptedFiles: File[]) => {
-      try{
-      const filteredFiles = acceptedFiles.filter(async (file) => {
-        setProcessingStatus(true);
+  async (acceptedFiles: File[]) => {
+    setProcessingStatus(true);
+    try {
+      const processedFiles: File[] = [];
+
+      for (const originalFile of acceptedFiles) {
         const isScreenshot =
-          /screenshot/i.test(file.name) || /Screen\s?Shot/i.test(file.name);
+          /screenshot/i.test(originalFile.name) || /Screen\s?Shot/i.test(originalFile.name);
         if (isScreenshot) {
-          setmessage(
-            `${file.name} appears to be a screenshot and will not be uploaded.`
-          );
-          //  setShowAlert(true);
           toast({
             variant: "destructive",
             title: "Failed!",
-            description: showmessage,
+            description: `${originalFile.name} appears to be a screenshot and will not be uploaded.`,
             duration: 5000,
           });
-         
-          return false;
+          continue;
         }
 
-        if (imageUrls.includes(convertFileToUrl(file))) {
-          setmessage(`${file.name} has already been uploaded.`);
-          //  setShowAlert(true);
+        const previewUrl = convertFileToUrl(originalFile);
+        if (imageUrls.includes(previewUrl)) {
           toast({
             variant: "destructive",
             title: "Failed!",
-            description: showmessage,
+            description: `${originalFile.name} has already been uploaded.`,
             duration: 5000,
           });
-          
-          return false;
+          continue;
         }
+
+        let file = originalFile;
 
         if (file.size > 0.8 * 1024 * 1024) {
           try {
             const compressed = await compressImage(file);
             if (compressed.size > 0.8 * 1024 * 1024) {
-              setmessage(
-                `${file.name} is still too large after compression. Skipped.`
-              );
               toast({
                 variant: "destructive",
                 title: "Failed!",
-                description: showmessage,
+                description: `${file.name} is still too large after compression. Skipped.`,
                 duration: 5000,
               });
-             
-              return false;
+              continue;
             }
-            file = compressed; // Replace original file with compressed one
+            file = compressed;
           } catch (err) {
             console.error("Compression failed", err);
-        
-            return false;
+            continue;
           }
         }
-        return true;
-      });
 
+        try {
+          const watermarked = await applyWatermark(file, userName.toUpperCase(), "Posted on mapa");
+          processedFiles.push(watermarked);
+        } catch (error) {
+          console.error("Watermarking failed, proceeding with original image:", error);
+          processedFiles.push(file);
+        }
+      }
 
-      const processedFiles: File[] = await Promise.all(
-        filteredFiles.map(async (file) => {
-          try {
-            return await applyWatermark(
-              file,
-              userName.toUpperCase(),
-              "Posted on mapa"
-            );
-          } catch (error) {
-            console.error("Watermark failed, proceeding without:", error);
-            return file; // Return the original file if watermarking fails
-          }
-        })
-      );
-
-      setFiles((prevFiles: File[]) => [...prevFiles, ...processedFiles]);
-      const urls = processedFiles.map((file: File) => convertFileToUrl(file));
+      setFiles((prevFiles) => [...prevFiles, ...processedFiles]);
+      const urls = processedFiles.map((file) => convertFileToUrl(file));
       onFieldChange([...imageUrls, ...urls]);
     } catch (err) {
       console.error("Processing failed", err);
-     
     } finally {
       setProcessingStatus(false);
     }
-    },
-    [imageUrls, setFiles, onFieldChange]
-  );
+  },
+  [imageUrls, setFiles, onFieldChange, userName, toast]
+);
+
 
   const { getRootProps, getInputProps } = useDropzone({
     onDrop,
