@@ -488,11 +488,16 @@ const CardAutoHeight = ({
           </div>
 
           <div className="flex gap-2 text-gray-500 text-sm mt-2">
-            {ad.data.period && (
-              <div className="flex gap-2 text-[8px] lg:text-[10px] dark:bg-[#131B1E] dark:text-gray-300 bg-[#ebf2f7] rounded-lg p-1 justify-center border">
-                Rent
-              </div>
-            )}
+             {ad.data.category?.toLowerCase().includes("rent") && ( 
+  <div className="flex gap-2 text-[8px] lg:text-[10px] dark:bg-[#131B1E] dark:text-gray-300 bg-[#ebf2f7] rounded-lg p-1 justify-center border">
+    Rent
+  </div>
+)}
+{ad.data.category?.toLowerCase().includes("sale") && ( 
+  <div className="flex gap-2 text-[8px] lg:text-[10px] dark:bg-[#131B1E] dark:text-gray-300 bg-[#ebf2f7] rounded-lg p-1 justify-center border">
+    Sale
+  </div>
+)}
             {ad.data.condition && (
               <div className="flex gap-2 text-[8px] lg:text-[10px] dark:bg-[#131B1E] dark:text-gray-300 bg-[#ebf2f7] rounded-lg p-1 justify-center border">
                 {ad.data.condition}

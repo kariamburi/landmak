@@ -536,9 +536,7 @@ const [isDeleted, setIsDeleted] = useState(false);
           <p className="dark:text-gray-300 text-gray-700 text-[12px] hidden lg:inline">
         <span dangerouslySetInnerHTML={{ __html:  truncateDescription(ad.data.description, 180) }} />
         </p>
-        <p className="dark:text-gray-300 text-gray-700 text-[12px] lg:inline">
-        <span dangerouslySetInnerHTML={{ __html:  truncateDescription(ad.data.description, 100) }} />
-        </p>
+       
          {ad.data.propertyarea?.mapaddress && (
                   <div className="text-gray-500 flex gap-1 items-center dark:text-gray-500 text-[12px] lg:text-xs">
                   <LocationOnIcon sx={{ fontSize: 14 }} />
@@ -581,11 +579,16 @@ const [isDeleted, setIsDeleted] = useState(false);
           </div>
 
           <div className="flex gap-2 text-gray-500 text-sm mt-2">
-            {ad.data.period && (
-              <div className="flex gap-2 text-[8px] lg:text-[10px] dark:bg-[#131B1E] dark:text-gray-300 bg-[#ebf2f7] rounded-lg p-1 justify-center border">
-                Rent
-              </div>
-            )}
+          {ad.data.category?.toLowerCase().includes("rent") && ( 
+  <div className="flex gap-2 text-[8px] lg:text-[10px] dark:bg-[#131B1E] dark:text-gray-300 bg-[#ebf2f7] rounded-lg p-1 justify-center border">
+    Rent
+  </div>
+)}
+{ad.data.category?.toLowerCase().includes("sale") && ( 
+  <div className="flex gap-2 text-[8px] lg:text-[10px] dark:bg-[#131B1E] dark:text-gray-300 bg-[#ebf2f7] rounded-lg p-1 justify-center border">
+    Sale
+  </div>
+)}
             {ad.data.condition && (
               <div className="flex gap-2 text-[8px] lg:text-[10px] dark:bg-[#131B1E] dark:text-gray-300 bg-[#ebf2f7] rounded-lg p-1 justify-center border">
                 {ad.data.condition}
