@@ -83,11 +83,11 @@ async function checkExpiredSubscriptions() {
 
     // Update createdAt for Premium ads
     premiumAds.forEach(async (ad) => {
-      const lastUpdatedTime = new Date(ad.createdAt).getTime();
+      const lastUpdatedTime = new Date(ad.updatedAt).getTime();
       const currentTime = new Date().getTime();
 
       if (currentTime - lastUpdatedTime >= 24 * 60 * 60 * 1000) { // 24 hours
-        ad.createdAt = new Date(); // Update to current time
+        ad.updatedAt = new Date(); // Update to current time
         await ad.save();
         console.log(`Updated Premium ad: ${ad._id}`);
       }
@@ -99,13 +99,13 @@ async function checkExpiredSubscriptions() {
       adstatus: 'Active',
     });
 
-    // Update createdAt for Diamond ads
+    // Update updatedAt for Diamond ads
     diamondAds.forEach(async (ad) => {
-      const lastUpdatedTime = new Date(ad.createdAt).getTime();
+      const lastUpdatedTime = new Date(ad.updatedAt).getTime();
       const currentTime = new Date().getTime();
 
       if (currentTime - lastUpdatedTime >= 12 * 60 * 60 * 1000) { // 12 hours
-        ad.createdAt = new Date(); // Update to current time
+        ad.updatedAt = new Date(); // Update to current time
         await ad.save();
         console.log(`Updated Diamond ad: ${ad._id}`);
       }
