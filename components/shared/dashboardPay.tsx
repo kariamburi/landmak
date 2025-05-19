@@ -194,7 +194,7 @@ from: '"mapa" <support@mapa.co.ke>'
         title: "Order successful!",
         description: "Your subscription is successful",
         duration: 5000,
-        className: "bg-[#30AF5B] text-white",
+        className: "bg-black text-white",
       });
       // router.push(`/shop/${userId}`);
     }

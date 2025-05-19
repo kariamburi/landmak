@@ -30,6 +30,12 @@ import CircularProgress from "@mui/material/CircularProgress";
 import sanitizeHtml from "sanitize-html";
 import { Icon } from "@iconify/react";
 import threeDotsScale from "@iconify-icons/svg-spinners/3-dots-scale"; // Correct import
+import { formatDistanceToNow, isBefore, subMonths } from "date-fns";
+import { updateCreatedAt } from "@/lib/actions/dynamicAd.actions";
+const shouldShowRenewButton = (updatedAt: Date, priority: number) => {
+  const oneMonthAgo = subMonths(new Date(), 1);
+  return priority === 1 && isBefore(new Date(updatedAt), oneMonthAgo);
+};
  // Correct import
 type CardProps = {
   userId: string;
@@ -88,7 +94,7 @@ const [isDeleted, setIsDeleted] = useState(false);
           title: "Alert",
           description: newBookmark,
           duration: 5000,
-          className: "bg-[#30AF5B] text-white",
+          className: "bg-black text-white",
         });
       } else {
         toast({
@@ -134,7 +140,22 @@ const [isDeleted, setIsDeleted] = useState(false);
     }
     return address;
   };
-  // console.log(ad.imageUrls);
+  const handleRenew = async (_id: string) => {
+   try {
+    await updateCreatedAt(
+           _id
+         );
+         toast({
+           title: "Alert",
+           description: "Renewal successful",
+           duration: 5000,
+           className: "bg-black text-white",
+         });
+   } catch (error) {
+     console.error(error);
+     alert("Error renewing ad.");
+   }
+ };
   return (
     <>
     {!isDeleted && (
@@ -169,11 +190,9 @@ const [isDeleted, setIsDeleted] = useState(false);
                           )}
 
             <Image
-              onClick={() => {
-                handleAdView(ad);
-              }}
-              src={ad.data.imageUrls[0]}
-              alt="ad image"
+              onClick={() => handleAdView(ad)}
+             src={ad.data.imageUrls.length > 0 ? ad.data.imageUrls[0] : "/fallback.jpg"}
+             alt={ad.data.title || "Ad image"}
               width={400} // Adjust width to match the `w-36` Tailwind class
               height={400} // Adjust height to match the `h-24` Tailwind class
               className={`rounded-l-lg object-cover cursor-pointer w-full h-full ${
@@ -476,6 +495,22 @@ const [isDeleted, setIsDeleted] = useState(false);
               </div>
             )}
           </div>
+           {shouldShowRenewButton(ad.updatedAt, ad.priority) && (<div className="flex mt-2 w-full text-xs justify-between items-center">
+             <button
+    className="bg-green-600 hover:bg-gren-700 text-white p-2 rounded"
+    onClick={() => handleRenew(ad._id)}
+  >
+    Renew Ad
+  </button>
+  <button
+  className="bg-yellow-500 hover:bg-yellow-600 text-white p-2 rounded"
+  onClick={() => handleOpenPlan()}
+>
+  Top Ad
+</button>
+          </div>
+ 
+)}
         </div>
       </div>)}
     </>

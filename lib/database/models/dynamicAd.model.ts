@@ -33,7 +33,7 @@ const dynamicAdSchema = new Schema({
   views: { type: String },
   priority: { type: Number },
   expirely: { type: Date },
-  adstatus: { type: String },
+  adstatus: { type: String, index: true },
   inquiries: { type: String },
   whatsapp: { type: String },
   calls: { type: String },
@@ -43,10 +43,12 @@ const dynamicAdSchema = new Schema({
   subcategory: { type: Schema.Types.ObjectId, ref: 'Subcategory' },
   category: { type: Schema.Types.ObjectId, ref: 'Category' },
   organizer: { type: Schema.Types.ObjectId, ref: 'User' },
-  plan: { type: Schema.Types.ObjectId, ref: 'Packages' }
+  plan: { type: Schema.Types.ObjectId, ref: 'Packages' },
 },
   { timestamps: true });
-delete mongoose.models.DynamicAd;
+//delete mongoose.models.DynamicAd;
+// ✅ Add compound index for performance
+//dynamicAdSchema.index({ "data.category": 1, "data.subcategory": 1, adstatus: 1 });
 const DynamicAd = models.DynamicAd || model('DynamicAd', dynamicAdSchema);
 
 export default DynamicAd;

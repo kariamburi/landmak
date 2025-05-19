@@ -494,15 +494,13 @@ export default function Ads({ ad, user, userId, userImage, userName, onClose,han
       <div className="relative">
         <Carousel setApi={setApi} plugins={[plugin.current as any]} className="w-full">
           <CarouselContent>
+            {ad.data.imageUrls.length > 0 ? (<>
+                        
             {ad.data.imageUrls.map((image: string, index: number) => (
               <CarouselItem key={index}>
                 <div className="relative w-full">
                   {isLoading && (<>
-                   {/*  <div className="absolute inset-0 flex justify-center items-center bg-black bg-opacity-50">
-                      <Icon icon={threeDotsScale} className="w-6 h-6 text-gray-500" />
-                    </div>*/}
-
-<div className="absolute inset-0 flex items-center justify-center bg-[#000000] bg-opacity-50">
+                  <div className="absolute inset-0 flex items-center justify-center bg-[#000000] bg-opacity-50">
 <CircularProgress sx={{ color: "white" }} />
 </div>
 </>  )}
@@ -518,20 +516,24 @@ export default function Ads({ ad, user, userId, userImage, userName, onClose,han
                           onLoadingComplete={() => setIsLoading(false)}
                           placeholder="empty" // Optional: you can use "empty" if you want a placeholder before loading
                         />
-                   {/*  <Image
-                      src={image}
-                      alt={`Image ${index + 1}`}
-                      layout="fill"
-                      className={`object-contain cursor-pointer ${
-                        isLoading ? "opacity-0" : "opacity-100"
-                      } transition-opacity duration-300`}
-                      onLoadingComplete={() => setIsLoading(false)}
-                      placeholder="empty"
-                    />*/}
+                  
                   </Zoom>
                 </div>
               </CarouselItem>
             ))}
+</>):(<><CarouselItem> <Image
+                     src={"/fallback.jpg"}
+                    alt={"Ad image"}
+                    width={800} // Adjust the width as needed
+                    height={500} // Adjust the height as needed
+                    layout="fill"
+                    className={`object-cover h-[400px] cursor-pointer ${
+                        isLoading ? "opacity-0" : "opacity-100"
+                      } transition-opacity duration-300`}
+                    onLoadingComplete={() => setIsLoading(false)}
+                    placeholder="empty"
+                    /> </CarouselItem>
+                    </>)}
           </CarouselContent>
           <CarouselPrevious className="h-[50px] w-[50px] ml-20 font-bold border-0 text-white bg-white bg-opacity-50 p-2" />
           <CarouselNext className="h-[50px] w-[50px] mr-20 font-bold border-0 bg-white bg-opacity-50 text-white p-2" />

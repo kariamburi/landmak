@@ -24,13 +24,21 @@ import {
 import { createBookmark, deleteBookmark } from "@/lib/actions/bookmark.actions";
 import { usePathname, useRouter } from "next/navigation";
 import { useToast } from "../ui/use-toast";
-import { updatebookmarked } from "@/lib/actions/ad.actions";
+
 import { SignedIn, SignedOut } from "@clerk/nextjs";
 import sanitizeHtml from "sanitize-html";
 import { Email, Phone } from '@mui/icons-material'; // Or from 'react-icons/md'
 import ChatBubbleOutlineOutlinedIcon from "@mui/icons-material/ChatBubbleOutlineOutlined";
 import { Icon } from "@iconify/react";
 import threeDotsScale from "@iconify-icons/svg-spinners/3-dots-scale"; // Correct import
+import { formatDistanceToNow, isBefore, subMonths } from "date-fns";
+import { updatebookmarked, updateCreatedAt } from "@/lib/actions/dynamicAd.actions";
+
+const shouldShowRenewButton = (updatedAt: Date, priority: number) => {
+  const oneMonthAgo = subMonths(new Date(), 1);
+  return priority === 1 && isBefore(new Date(updatedAt), oneMonthAgo);
+  //return true
+};
  // Correct import
 type CardProps = {
   ad: any;
@@ -97,7 +105,7 @@ const CardAutoHeight = ({
           title: "Alert",
           description: newBookmark,
           duration: 5000,
-          className: "bg-[#30AF5B] text-white",
+          className: "bg-black text-white",
         });
       } else {
         toast({
@@ -120,6 +128,22 @@ const CardAutoHeight = ({
         : safeMessage;
       return truncatedMessage;
     };
+    const handleRenew = async (_id: string) => {
+  try {
+   await updateCreatedAt(
+          _id
+        );
+        toast({
+          title: "Alert",
+          description: "Renewal successful",
+          duration: 5000,
+          className: "bg-black text-white",
+        });
+  } catch (error) {
+    console.error(error);
+    alert("Error renewing ad.");
+  }
+};
   //console.log(ad.imageUrls);
   const [isDeleted, setIsDeleted] = useState(false);
   return (
@@ -508,6 +532,22 @@ const CardAutoHeight = ({
               </div>
             )}
           </div>
+          {shouldShowRenewButton(ad.updatedAt, ad.priority) && (<div className="flex mt-2 w-full text-xs justify-between items-center">
+             <button
+    className="bg-green-600 hover:bg-gren-700 text-white p-2 rounded"
+    onClick={() => handleRenew(ad._id)}
+  >
+    Renew Ad
+  </button>
+  <button
+  className="bg-yellow-500 hover:bg-yellow-600 text-white p-2 rounded"
+  onClick={() => handleOpenPlan()}
+>
+  Top Ad
+</button>
+          </div>
+ 
+)}
         </div>
       </div>
       </>)}

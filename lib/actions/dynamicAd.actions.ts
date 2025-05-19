@@ -17,7 +17,7 @@ import Subcategory from "../database/models/subcategory.model"
 import { PipelineStage } from "mongoose"
 import Loan from "../database/models/loans.model"
 import { FaClosedCaptioning } from "react-icons/fa"
-
+import { subMonths } from "date-fns";
 const populateLoans = (query: any) => {
   return query
     .populate({
@@ -121,121 +121,6 @@ export const createData = async (
   }
 };
 
-
-
-// GET ALL Ad
-export async function getAlldynamicAdXXXX({ limit = 20, page, queryObject
-}: GetAlldynamicAdParams) {
-  try {
-    await connectToDatabase()
-    const parseCurrencyToNumber = (value: string): number => {
-      // Remove any commas from the string and convert to number
-      return Number(value.replace(/,/g, ""));
-    };
-
-    const conditionsAdstatus = { adstatus: "Active" };
-
-    // Dynamically build conditions from queryObject
-    const dynamicConditions: any = {};
-
-    Object.entries(queryObject || {}).forEach(([key, value]) => {
-      if (value) {
-        switch (key) {
-          case 'price':
-            const [minPrice, maxPrice] = (value as string).split("-");
-            dynamicConditions["data.price"] = {
-              $gte: parseCurrencyToNumber(minPrice),
-              $lte: parseCurrencyToNumber(maxPrice)
-            };
-            break;
-          case 'query':
-            //  dynamicConditions[`data.title`] = { $regex: value, $options: 'i' };
-
-            dynamicConditions["$or"] = [
-              { "data.title": { $regex: value, $options: 'i' } },
-              { "data.description": { $regex: value, $options: 'i' } }
-            ];
-            break;
-          case 'membership':
-            break;
-          case 'action':
-            break;
-          case 'PrivacyPolicy':
-            break;
-          case 'source':
-            break;
-          case 'Ad':
-            break;
-          case 'Profile':
-            break;
-          case 'sortby':
-            break;
-          default:
-            dynamicConditions[`data.${key}`] = { $regex: value, $options: 'i' };
-        }
-      }
-    });
-
-    // Membership-based conditions
-    let conditions = { ...conditionsAdstatus, ...dynamicConditions };
-    if (queryObject.membership as string === "verified") {
-      const verifiedUsers = await User.find({ "verified.accountverified": true });
-      const verifiedUserIds = verifiedUsers.map(user => user._id);
-      conditions = {
-        ...conditions,
-        organizer: { $in: verifiedUserIds },
-      };
-    } else if (queryObject.membership as string === "unverified") {
-      const unverifiedUsers = await User.find({ "verified.accountverified": false });
-      const unverifiedUserIds = unverifiedUsers.map(user => user._id);
-      conditions = {
-        ...conditions,
-        organizer: { $in: unverifiedUserIds },
-      };
-    }
-
-    const skipAmount = (Number(page) - 1) * limit
-    let AdQuery: any = [];
-    if (queryObject.sortby === "recommeded") {
-      AdQuery = DynamicAd.find(conditions)
-        .sort({ priority: -1, createdAt: -1 }) // Both sorted in descending order
-        .skip(skipAmount)
-        .limit(limit)
-
-    } else if (queryObject.sortby === "new") {
-      AdQuery = DynamicAd.find(conditions)
-        .sort({ priority: -1, createdAt: -1 }) // Both sorted in descending order
-        .skip(skipAmount)
-        .limit(limit)
-    } else if (queryObject.sortby === "lowest") {
-      AdQuery = DynamicAd.find(conditions)
-        .sort({ priority: -1, "data.price": 1 })
-        .skip(skipAmount)
-        .limit(limit)
-    } else if (queryObject.sortby === "highest") {
-      AdQuery = DynamicAd.find(conditions)
-        .sort({ priority: -1, "data.price": -1 }) // Both sorted in descending order
-        .skip(skipAmount)
-        .limit(limit)
-    } else {
-
-      AdQuery = DynamicAd.find(conditions)
-        .sort({ priority: -1, "data.price": -1 })
-        .skip(skipAmount)
-        .limit(limit)
-    }
-    const Ads = await populateAd(AdQuery);
-    const AdCount = await DynamicAd.countDocuments(conditions)
-    //console.log(Ads);
-    return {
-      data: JSON.parse(JSON.stringify(Ads)),
-      totalPages: Math.ceil(AdCount / limit),
-    }
-
-  } catch (error) {
-    handleError(error)
-  }
-}
 
 export async function getAlldynamicAd({ limit = 20, page = 1, queryObject }: GetAlldynamicAdParams) {
   try {
@@ -358,7 +243,7 @@ export async function getAlldynamicAd({ limit = 20, page = 1, queryObject }: Get
     switch (queryObject.sortby) {
       case "recommeded":
       case "new":
-        AdQuery = AdQuery.sort({ priority: -1, createdAt: -1 });
+        AdQuery = AdQuery.sort({ priority: -1, updatedAt: -1 });
         break;
       case "lowest":
         AdQuery = AdQuery.sort({ priority: -1, "data.price": 1 });
@@ -367,7 +252,7 @@ export async function getAlldynamicAd({ limit = 20, page = 1, queryObject }: Get
         AdQuery = AdQuery.sort({ priority: -1, "data.price": -1 });
         break;
       default:
-        AdQuery = AdQuery.sort({ priority: -1, createdAt: -1 });
+        AdQuery = AdQuery.sort({ priority: -1, updatedAt: -1 });
     }
 
     const ads = await populateAd(AdQuery);
@@ -509,8 +394,8 @@ export async function getRelatedAdByCategory({
     const conditions = { $and: [{ subcategory: subcategory }, { _id: { $ne: adId } }, { adstatus: "Active" }] }
 
     const AdQuery = DynamicAd.find(conditions)
-      //  .sort({ createdAt: 'desc' })
-      .sort({ priority: -1, createdAt: -1 })
+      //  .sort({ updatedAt: 'desc' })
+      .sort({ priority: -1, updatedAt: -1 })
       .skip(skipAmount)
       .limit(limit)
 
@@ -561,12 +446,12 @@ export async function getAdByUser({ userId, limit = 20, page, sortby, myshop }: 
     let AdQuery: any = [];
     if (sortby === "recommeded") {
       AdQuery = DynamicAd.find(conditions)
-        .sort({ priority: -1, createdAt: -1 }) // Both sorted in descending order
+        .sort({ priority: -1, updatedAt: -1 }) // Both sorted in descending order
         .skip(skipAmount)
         .limit(limit)
     } else if (sortby === "new") {
       AdQuery = DynamicAd.find(conditions)
-        .sort({ priority: -1, createdAt: -1 })
+        .sort({ priority: -1, updatedAt: -1 })
         .skip(skipAmount)
         .limit(limit)
     } else if (sortby === "lowest") {
@@ -628,7 +513,28 @@ export async function updatevideo({ _id, youtube, path }: UpdateVideoParams) {
     throw error;
   }
 }
+
 // UPDATE
+
+export async function updateCreatedAt(_id: string) {
+  try {
+    await connectToDatabase();
+
+    const update = await DynamicAd.findByIdAndUpdate(
+      _id,
+      {
+        updatedAt: new Date()
+      },
+      { new: true }
+    );
+
+    return JSON.parse(JSON.stringify(update));
+  } catch (error) {
+    handleError(error);
+    throw error;
+  }
+}
+
 export async function updateview({ _id, views, path }: UpdateViewsParams) {
   try {
     await connectToDatabase();

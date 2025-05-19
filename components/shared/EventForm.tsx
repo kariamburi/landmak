@@ -794,7 +794,7 @@ useEffect(() => {
         title: "Submitted",
         description: "Ad submitted successfully.",
         duration: 5000,
-        className: "bg-[#30AF5B] text-white",
+        className: "bg-black text-white",
       });
 
       if (newAd) {
@@ -833,7 +833,7 @@ useEffect(() => {
         title: "Updated",
         description: "Ad updated successfully.",
         duration: 5000,
-        className: "bg-[#30AF5B] text-white",
+        className: "bg-black text-white",
       });
 
       handleAdView?.(updatedAd);
