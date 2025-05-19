@@ -537,9 +537,9 @@ const CardAutoHeight = ({
               </div>
             )}
           </div>
-          {shouldShowRenewButton(ad.updatedAt, ad.priority) && (<div className="flex mt-2 w-full text-xs justify-between items-center">
+          {isAdCreator && shouldShowRenewButton(ad.updatedAt, ad.priority) && (<div className="flex mt-2 w-full text-xs justify-between items-center">
              <button
-    className="bg-green-600 hover:bg-gren-700 text-white p-2 rounded"
+    className="bg-green-600 hover:bg-green-700 text-white p-2 rounded"
     onClick={() => handleRenew(ad._id)}
   >
     Renew Ad
