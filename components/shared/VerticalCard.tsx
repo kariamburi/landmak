@@ -424,6 +424,15 @@ const [isDeleted, setIsDeleted] = useState(false);
               />
               {ad.data.imageUrls.length}
             </div>
+                 {ad.data["propertyarea"] && (
+                          <div className="gap-1 cursor-pointer bg-[#000000] bg-opacity-70 text-[10px] text-white flex rounded-sm p-1 shadow-sm transition-all">
+                            <LocationOnIcon
+                              sx={{ fontSize: 16, cursor: "pointer" }}
+                            
+                            />
+                         
+                          </div>
+                        )}
             {ad.data["youtube-link"] && (
               <div className="gap-1 cursor-pointer bg-[#000000] bg-opacity-70 text-[10px] text-white flex rounded-sm p-1 shadow-sm transition-all">
                 <YouTubeIcon

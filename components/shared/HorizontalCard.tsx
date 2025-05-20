@@ -433,6 +433,15 @@ const [isDeleted, setIsDeleted] = useState(false);
             <FilterOutlinedIcon sx={{ fontSize: 16 }} />
             {ad.data.imageUrls.length}
           </div>
+               {ad.data["propertyarea"] && (
+                        <div className="gap-1 cursor-pointer bg-[#000000] bg-opacity-70 text-[10px] text-white flex rounded-sm p-1 shadow-sm transition-all">
+                          <LocationOnIcon
+                            sx={{ fontSize: 16, cursor: "pointer" }}
+                          
+                          />
+                       
+                        </div>
+                      )}
           {ad.data["youtube-link"] && (
             <div className="mb-1 mr-1 cursor-pointer bg-[#000000] bg-opacity-70 text-[10px] text-white right-0 top-100 flex rounded-lg p-1 shadow-sm transition-all">
               <YouTubeIcon
