@@ -900,6 +900,10 @@ const handleCloseAdView = () => {
     <div className="relative flex w-full h-screen">
       <Head>
   <title>mapa | Buy, Sell & Rent Properties and More in Kenya</title>
+    <meta
+          name="viewport"
+          content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no"
+        />
   <meta
     name="description"
     content="mapa.co.ke is Kenya's trusted online marketplace for buying, selling, and renting properties. Explore land, homes, apartments, and a wide range of other products and services."
