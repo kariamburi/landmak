@@ -18,10 +18,20 @@ import QRCode from 'qrcode';
 import { Copy, Share2 } from "lucide-react";
 import EditLocationOutlinedIcon from '@mui/icons-material/EditLocationOutlined';
 import { DropdownMenu, DropdownMenuContent, DropdownMenuItem, DropdownMenuTrigger } from '../ui/dropdown-menu';
+import { useToast } from '../ui/use-toast';
+import AddOutlinedIcon from '@mui/icons-material/AddOutlined';
 type Beacon = {
   name: string;
   lat: number;
   lng: number;
+};
+type Feature = {
+  type: "Feature";
+  properties: { [key: string]: any };
+  geometry: {
+    type: string;
+    coordinates: any[];
+  };
 };
 
 interface Props {
@@ -46,6 +56,11 @@ export default function BeaconTracker({ onClose }: Props) {
   const userMarker = useRef<google.maps.Marker>();
   const beaconMarkers = useRef<google.maps.Marker[]>([]);
   const polygonRef = useRef<google.maps.Polygon>();
+ const { toast } = useToast();
+  const [openShowInfo, setOpenShowInfo] = useState(false);
+ const [showHelp, setShowHelp] = useState(false);
+ const [mode, setMode] = useState<'single' | 'subdivided'>('single');
+ const [parcels, setParcels] = useState<Feature[]>([]);
 
     useEffect(() => {
       if (!isLoaded || !navigator.geolocation) return;
@@ -279,6 +294,8 @@ const refreshLocation = () => {
     }
 
   }
+
+  
   const saveBeaconsToGeoJSON = () => {
   
     if (beacons.length < 3) {
@@ -332,14 +349,155 @@ const refreshLocation = () => {
       document.exitFullscreen?.();
     }
   };
- const [openShowInfo, setOpenShowInfo] = useState(false);
- const [showHelp, setShowHelp] = useState(false);
  
-  //if (!isLoaded) return (
-   // <div className="flex justify-center items-center h-full">
-  //    <Icon icon={Barsscale} className="w-10 h-10 text-gray-500" />
-   // </div>
- // );
+
+const handleDraw = () => {
+  if (beacons.length < 3) {
+    toast({
+      variant: "destructive",
+      title: "Failed!",
+      description: "At least 3 points are needed to create a polygon.",
+      duration: 5000,
+    });
+    return;
+  }
+
+  const coordinates = beacons.map((b) => [b.lng, b.lat]);
+
+  // Close the polygon if not already
+  const [startLng, startLat] = coordinates[0];
+  const [endLng, endLat] = coordinates[coordinates.length - 1];
+  if (startLng !== endLng || startLat !== endLat) {
+    coordinates.push([startLng, startLat]);
+  }
+
+  const plotName = `Parcel ${parcels.length + 1}`;
+
+  const featureWithType: Feature = {
+    type: "Feature",
+    properties: {
+      name: plotName,
+    },
+    geometry: {
+      type: "Polygon",
+      coordinates: [coordinates],
+    },
+  };
+
+  if (mode === "single") {
+    setParcels([featureWithType]);
+  } else {
+    setParcels((prev) => [...prev, featureWithType]);
+  }
+};
+
+
+const exportToGeoJSON = () => {
+  
+  if (parcels.length === 0) {
+    
+        toast({
+          variant: "destructive",
+          title: "Failed!",
+          description: "No parcels to export.",
+          duration: 5000,
+        });
+      return;
+    }
+  const geoJson = {
+    type: "FeatureCollection",
+    features: parcels,
+  };
+
+  const blob = new Blob([JSON.stringify(geoJson, null, 2)], {
+    type: "application/json",
+  });
+
+  const url = URL.createObjectURL(blob);
+  const link = document.createElement("a");
+  link.href = url;
+  link.download = "digital_beacons.geojson";
+  link.click();
+  URL.revokeObjectURL(url);
+  setParcels([]);
+};
+const generateMultipleParcelQRCode = async () => {
+  if (parcels.length === 0) return;
+
+  // Build URL with encoded coordinates
+  const params = parcels
+    .map((parcel, index) => {
+      const encoded = encodeURIComponent(JSON.stringify(parcel.geometry.coordinates));
+      return `parcel${index + 1}=${encoded}`;
+    })
+    .join("&");
+
+  const url = `https://mapa.co.ke/?${params}`;
+
+  try {
+    // Generate QR code data URL
+    const qrDataURL = await QRCode.toDataURL(url);
+
+    // Create and trigger download link
+    const link = document.createElement("a");
+    link.href = qrDataURL;
+    link.download = "mapa-qr-code.png";
+    document.body.appendChild(link);
+    link.click();
+    document.body.removeChild(link);
+
+    // Optional cleanup logic
+    setParcels([]);
+    polygonRef.current?.setMap(null);
+    polygonRef.current = undefined;
+    beaconMarkers.current.forEach((marker) => marker.setMap(null));
+    beaconMarkers.current = [];
+
+  } catch (err) {
+    console.error("Failed to generate QR code", err);
+  }
+
+  console.log("URL with multiple parcels:", url);
+  return url;
+};
+
+
+const generateMultipleParcelLink = async () => {
+  if (parcels.length === 0) return;
+
+  // Build URL with encoded coordinates
+  const params = parcels
+    .map((parcel, index) => {
+      const encoded = encodeURIComponent(JSON.stringify(parcel.geometry.coordinates));
+      return `parcel${index + 1}=${encoded}`;
+    })
+    .join("&");
+
+  const url = `https://mapa.co.ke/?${params}`;
+
+  try {
+    // Generate QR code data URL
+    await navigator.share({
+            title: "Digital beacons",
+            text: "Explore this property location on mapa!",
+            url: url,
+          });
+          console.log("Share was successful.");
+
+    // Optional cleanup logic
+    setParcels([]);
+    polygonRef.current?.setMap(null);
+    polygonRef.current = undefined;
+    beaconMarkers.current.forEach((marker) => marker.setMap(null));
+    beaconMarkers.current = [];
+
+  } catch (err) {
+    console.error("Failed to generate QR code", err);
+  }
+
+  console.log("URL with multiple parcels:", url);
+  return url;
+};
 
   return (
     <div id="map-container" className="h-[100vh] w-full relative">
@@ -412,13 +570,13 @@ const refreshLocation = () => {
       <TooltipContent><p>Save</p></TooltipContent>
 
       <DropdownMenuContent align="end">
-        <DropdownMenuItem onClick={saveBeaconsToGeoJSON}>
+        <DropdownMenuItem onClick={exportToGeoJSON}>
         <FileDownloadOutlinedIcon/>Save as GeoJSON
         </DropdownMenuItem>
-        <DropdownMenuItem onClick={saveQRcode}>
+        <DropdownMenuItem onClick={generateMultipleParcelQRCode}>
        <QrCode2OutlinedIcon/> Save as QR Code
         </DropdownMenuItem>
-         <DropdownMenuItem onClick={handleShare}>
+         <DropdownMenuItem onClick={generateMultipleParcelLink}>
        <Share2/> Share link
         </DropdownMenuItem>
       </DropdownMenuContent>
@@ -519,8 +677,48 @@ const refreshLocation = () => {
               </li>
             ))}
           </ul>
+          <button
+  onClick={() => handleDraw()}
+  className="bg-green-600 text-white px-4 py-2 rounded-full shadow-lg z-50"
+>
+  <AddOutlinedIcon/>Add
+</button>
         </div>
       )}
+
+
+        {/* Beacon List */}
+   {parcels.length > 0 && (
+  <div className="absolute flex gap-5 bottom-2 left-2 p-2 text-white bg-green-600 z-10 rounded-md shadow-lg text-sm">
+    Parcels drawn: {parcels.length}
+      <TooltipProvider>
+  <Tooltip>
+    <DropdownMenu>
+      <TooltipTrigger asChild>
+        <DropdownMenuTrigger asChild>
+          <Button className="w-14 text-gray-600" variant="outline">
+            💾
+          </Button>
+        </DropdownMenuTrigger>
+      </TooltipTrigger>
+      <TooltipContent><p>Save</p></TooltipContent>
+
+      <DropdownMenuContent align="end">
+        <DropdownMenuItem onClick={exportToGeoJSON}>
+        <FileDownloadOutlinedIcon/>Save as GeoJSON
+        </DropdownMenuItem>
+        <DropdownMenuItem onClick={generateMultipleParcelQRCode}>
+       <QrCode2OutlinedIcon/> Save as QR Code
+        </DropdownMenuItem>
+         <DropdownMenuItem onClick={generateMultipleParcelLink}>
+       <Share2/> Share link
+        </DropdownMenuItem>
+      </DropdownMenuContent>
+    </DropdownMenu>
+  </Tooltip>
+</TooltipProvider>
+  </div>
+)}
    {openShowInfo && (
   <div className="fixed inset-0 bg-black bg-opacity-40 z-50 flex items-center justify-center">
     <div className="bg-[#e4ebeb] p-6 rounded-md shadow-lg w-[320px] relative">
