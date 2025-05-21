@@ -1975,6 +1975,7 @@ useEffect(() => {
   onSave={handleSaveMap}
   onClose={handleOnClose}
   onChange={(name, data) => {
+    console.log(data);
    setMapData(data);
   }}
 />

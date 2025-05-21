@@ -17,6 +17,8 @@ import FullscreenOutlinedIcon from '@mui/icons-material/FullscreenOutlined';
 import UploadFileOutlinedIcon from '@mui/icons-material/UploadFileOutlined';
 import { AnyAaaaRecord } from "node:dns";
 import { useMediaQuery } from "react-responsive";
+import { BrowserQRCodeReader } from '@zxing/browser';
+import QrCode2OutlinedIcon from '@mui/icons-material/QrCode2Outlined';
 import {
   Tooltip,
   TooltipContent,
@@ -97,7 +99,22 @@ const markerOptions = [
   { label: "Gravel Road", icon: "/assets/map/roadtype_gravel.png" },
   { label: "Police Station", icon: "/assets/map/police.png" },
 ];
+const getParcelsFromURL = (searchParams: URLSearchParams) => {
+  const parcels: any[] = [];
 
+  searchParams.forEach((value: string, key: string) => {
+    if (key.startsWith("parcel")) {
+      try {
+        const decoded = JSON.parse(decodeURIComponent(value));
+        parcels.push(decoded);
+      } catch (error) {
+        console.error(`Failed to parse ${key}:`, error);
+      }
+    }
+  });
+
+  return parcels;
+};
 export default function MapDrawingTool({ name, selectedCategory, data, onChange, onSave, onClose }: Props) {
    const [center, setCenter] = useState<any>(data.location?.coordinates ? {lat:data.location.coordinates[0], lng:data.location.coordinates[1]}:defaultcenter);
    const [latitude, setLatitude] = useState(data.location?.coordinates ? data.location.coordinates[0]: '');
@@ -108,6 +125,7 @@ export default function MapDrawingTool({ name, selectedCategory, data, onChange,
   const shapeOriginalColors = useRef<Map<any, string>>(new Map());
   const [selectedShapePosition, setSelectedShapePosition] = useState<google.maps.LatLng | null>(null);
   const [shapes, setShapes] = useState<Shape[]>(data.shapes ? data.shapes: []);
+   const [shapesA, setShapesA] = useState<Shape[]>(data.shapes ? data.shapes: []);
   const [shapeRefs, setShapeRefs] = useState<google.maps.Polygon[]>([]);
   const [polylines, setPolylines] = useState<Polyline[]>(data.polylines ? data.polylines: []);
   const [polylineRefs, setPolylineRefs] = useState<google.maps.Polyline[]>([]);
@@ -130,7 +148,9 @@ export default function MapDrawingTool({ name, selectedCategory, data, onChange,
   // const isMobile = useMediaQuery({ maxWidth: 768 });
   const [isMobile, setisMobile] = useState(true);
   const [mapaddress, setAddress] = useState('');
-
+ const [loadedParcels, setLoadedParcels] = useState<any>([]);
+   const [selectedOption, setSelectedOption] = useState<"geojson" | "qrcode" | null>(null);
+  // Sync refs when state updates
   useEffect(() => {
     const fetchAddress = async () => {
       const mapaddress = await getAddressFromLatLng(center.lat, center.lng);
@@ -942,7 +962,179 @@ polyline.addListener("click", () => {
       } 
     }
   };
-  
+  useEffect(() => {
+  if (!mapInstance.current || loadedParcels.length === 0) return;
+
+  const interval = setInterval(() => {
+    if (mapInstance.current && window.google) {
+      clearInterval(interval);
+
+      let centerSet = false;
+
+      loadedParcels.forEach((parcel: any, index: number) => {
+        const latLngPairs: { lat: number; lng: number }[] = [];
+        const bounds = new google.maps.LatLngBounds();
+
+        const type = "polygon";
+        const status = "Available";
+        const label = `Parcel ${index + 1}`;
+        const map = mapInstance.current;
+
+        // Build coordinates for polygon and calculate bounds
+        parcel[0].forEach(([lng, lat]: [number, number], i: number) => {
+          const coord = { lat, lng };
+          latLngPairs.push(coord);
+          bounds.extend(new google.maps.LatLng(lat, lng));
+
+          // Set center only once for the very first coordinate
+          if (!centerSet && index === 0 && i === 0) {
+            setCenter(coord);
+            setLatitude(lat.toString());
+            setLongitude(lng.toString());
+
+            if (map) {
+              map.setCenter(coord);
+              map.setZoom(17);
+              if (markerRef.current) {
+                markerRef.current.setPosition(coord);
+              }
+            }
+
+            centerSet = true;
+          }
+        });
+
+        const center = bounds.getCenter();
+        const color = "#00FF00";
+
+        // Draw polygon
+        const polygon = new google.maps.Polygon({
+          paths: latLngPairs,
+          map,
+          fillColor: color,
+          strokeColor: color,
+          fillOpacity: 0.1,
+          strokeWeight: 2,
+          editable: false,
+        });
+        polygon.setMap(map);
+        shapeOriginalColors.current.set(polygon, color);
+
+        // Compute area for label
+        const path = polygon.getPath().getArray().map((latlng) => ({
+          lat: latlng.lat(),
+          lng: latlng.lng(),
+        }));
+        const areaSqM = google.maps.geometry.spherical.computeArea(path);
+
+        // Add label marker
+        const labelMarker = new google.maps.Marker({
+          position: center,
+          map,
+          label: {
+            text: label,
+            color: "#fff",
+            fontSize: "14px",
+            fontWeight: "bold",
+          },
+          icon: {
+            path: google.maps.SymbolPath.CIRCLE,
+            scale: 0, // hidden
+          },
+          clickable: false,
+          zIndex: google.maps.Marker.MAX_ZINDEX + 1,
+        });
+        labelMarkersRef.current.push(labelMarker);
+
+        // InfoWindow on hover (only for desktop)
+        const sharedInfoWindow = new google.maps.InfoWindow();
+        let infoWindowTimeout: NodeJS.Timeout;
+
+        if (!isMobile) {
+          polygon.addListener("mouseover", (e: google.maps.MapMouseEvent) => {
+            const path = polygon.getPath();
+            const matchedShape = shapesRef.current.find((s) =>
+              s.path.length === path.getLength() &&
+              s.path.every((pt: any, idx: number) => {
+                const shapePt = path.getAt(idx);
+                return pt.lat === shapePt.lat() && pt.lng === shapePt.lng();
+              })
+            );
+
+            const currentLabel = matchedShape?.label || label;
+            const perimeter = google.maps.geometry.spherical.computeLength(path);
+            const readablePerimeter = perimeter > 1000
+              ? `${(perimeter / 1000).toFixed(2)} km`
+              : `${perimeter.toFixed(0)} m`;
+
+            const areaHa = areaSqM / 10000;
+            const areaAcres = areaSqM / 4046.85642;
+
+            const readableArea = `
+              <div>${areaSqM.toFixed(0)} m²</div>
+              <div>${areaHa.toFixed(2)} ha</div>
+              <div>${areaAcres.toFixed(2)} acres</div>
+            `;
+
+            sharedInfoWindow.setContent(`
+              <div style="font-size: 13px;">
+                <div><strong>Label:</strong> ${currentLabel}</div>
+                <div><strong>Perimeter:</strong> ${readablePerimeter}</div>
+                <div><strong>Area:</strong> ${readableArea}</div>
+              </div>
+            `);
+            sharedInfoWindow.setPosition(e.latLng!);
+            sharedInfoWindow.open(map);
+
+            if (infoWindowTimeout) clearTimeout(infoWindowTimeout);
+          });
+
+          polygon.addListener("mouseout", () => {
+            infoWindowTimeout = setTimeout(() => {
+              sharedInfoWindow.close();
+            }, 300);
+          });
+        }
+
+        // Handle polygon click
+        polygon.addListener("click", () => {
+          const path = polygon.getPath();
+          const matchedShape = shapesRef.current.find((s) =>
+            s.path.length === path.getLength() &&
+            s.path.every((pt: any, idx: number) => {
+              const shapePt = path.getAt(idx);
+              return pt.lat === shapePt.lat() && pt.lng === shapePt.lng();
+            })
+          );
+          const currentLabel = matchedShape?.label || label;
+          handleShapeClick(polygon, currentLabel);
+        });
+
+        // Add to shape list
+        const newShape = {
+          label,
+          path: polygon.getPath().getArray(),
+          type,
+          color,
+          area: areaSqM,
+          status,
+        };
+       
+       
+       setShapes((prevShapes) => [...prevShapes, newShape]);
+       setShapeRefs((prevRefs) => [...prevRefs, polygon]);
+
+       
+      });
+
+      // Close popup after drawing is done
+      setUploadPopup(false);
+    }
+  }, 200);
+
+  return () => clearInterval(interval);
+}, [loadedParcels]);
+
   
   const handleFileUpload = (event: React.ChangeEvent<HTMLInputElement>) => {
     if (!mapInstance.current) return;
@@ -1171,6 +1363,36 @@ polyline.addListener("click", () => {
   const [openTooltip, setopenTooltip] = useState(false);
   const [title, setTitle] = useState('');
   const [description, setDescription] = useState('');
+  const handleUploadQRCode = async (file: File) => {
+      if (!mapInstance.current) return;
+    try {
+      const reader = new FileReader();
+      reader.onload = async () => {
+        const imageDataUrl = reader.result as string;
+  
+        // Decode QR code from image
+        const codeReader = new BrowserQRCodeReader();
+        const result:any = await codeReader.decodeFromImageUrl(imageDataUrl);
+  
+        if (result?.text) {
+          const url = new URL(result.text);
+          const searchParams = url.searchParams;
+          const parcels = getParcelsFromURL(searchParams);
+  
+          console.log('Decoded parcels:', parcels);
+          setLoadedParcels(parcels); // Or however you display/map them
+          setUploadPopup(false); // Close popup if needed
+        } else {
+          alert('No QR code found.');
+        }
+      };
+      reader.readAsDataURL(file);
+    } catch (error) {
+      console.error('Error reading QR code:', error);
+      alert('Failed to read QR code.');
+    }
+  };
+  
   
   return (
   <div id="map-container" className="w-full relative h-[100vh]">
@@ -1339,6 +1561,7 @@ polyline.addListener("click", () => {
       </button>
       <button
         onClick={() => {
+        
           setSelectedShape(null);
           setSelectedColor(null);
           setSelectedLabel("");
@@ -1362,7 +1585,10 @@ polyline.addListener("click", () => {
 
   <div className="absolute flex gap-2 items-center left-2 bottom-10">
   <div
-          onClick={onSave}
+          onClick={()=>{  
+             
+        onSave();
+      }}
           className="p-2 text-white rounded-lg text-sm lg:text-base cursor-pointer bg-green-600 hover:bg-green-700 z-5 bg-green-600 hover:bg-green-700 text-white px-4 py-2 rounded"
         >
           <AddOutlinedIcon/> Save
@@ -1585,60 +1811,102 @@ polyline.addListener("click", () => {
 
 
   {uploadPopup && (
-  <div className="fixed inset-0 p-2 bg-black bg-opacity-40 z-50 flex items-center justify-center">
-    <div className="bg-[#e4ebeb] p-3 rounded-md shadow-lg w-full max-w-xl relative">
-     
-      {/* Close Button */}
-      <div className="flex justify-end">
-        <Button variant="outline" onClick={() => setUploadPopup(false)}>
-          <CloseOutlinedIcon fontSize="small" />
-        </Button>
-      </div>
-
-      {/* Upload Section */}
-      <div className="flex flex-col gap-2 items-center w-full">
-        <div className="flex gap-2 items-center">
-          <UploadFileOutlinedIcon />
-          <p className="text-lg font-medium">Import Digital Beacons GeoJSON</p>
+    <div className="fixed inset-0 p-2 bg-black bg-opacity-40 z-50 flex items-center justify-center">
+      <div className="bg-[#e4ebeb] p-3 rounded-md shadow-lg w-full max-w-xl relative">
+        
+        {/* Close Button */}
+        <div className="flex justify-end">
+          <Button variant="outline" onClick={() => setUploadPopup(false)}>
+            <CloseOutlinedIcon fontSize="small" />
+          </Button>
         </div>
-        <input 
-          type="file" 
-          accept=".geojson" 
-          onChange={handleFileUpload} 
-          className="p-2 border bg-white dark:bg-[#2D3236] dark:text-gray-100 rounded-lg w-full" 
-        />
-      </div>
-
-      {/* Sample File Section */}
-      <div className="bg-white dark:bg-[#1E2528] rounded-md p-3 text-sm shadow-inner border border-gray-300 dark:border-gray-600">
-        <p className="font-semibold mb-1">📄 Sample file:</p>
-        <a 
-          href="/digital_beacons.json" 
-          download 
-          className="text-blue-600 dark:text-blue-400 underline text-sm"
-        >
-          Download digital_beacons.json
-        </a>
-        <pre className="mt-2 overflow-x-auto text-xs max-h-48 bg-gray-100 dark:bg-[#2D3236] p-2 rounded">
-{`{
-  "type": "FeatureCollection",
-  "features": [
-    {
-      "type": "Feature",
-      "properties": { "name": "Plot A" },
-      "geometry": {
-        "type": "Polygon",
-        "coordinates": [[[36.8219, -1.2921], [36.8225, -1.2921], ...]]
+  
+        {/* Expandable Upload Options */}
+        <div className="flex flex-col gap-4 mt-4">
+          {/* Toggle Options */}
+          <div className="flex gap-2">
+            <Button
+              variant={selectedOption === "geojson" ? "default" : "outline"}
+              onClick={() => setSelectedOption("geojson")}
+            >
+              Upload from GeoJSON
+            </Button>
+            <Button
+              variant={selectedOption === "qrcode" ? "default" : "outline"}
+              onClick={() => setSelectedOption("qrcode")}
+            >
+              Upload from QR Code
+            </Button>
+          </div>
+  
+          {/* GeoJSON Upload Expanded */}
+          {selectedOption === "geojson" && (
+            <div className="flex flex-col gap-2 items-center w-full">
+              <div className="flex gap-2 items-center">
+                <UploadFileOutlinedIcon />
+                <p className="text-lg font-medium">Import Digital Beacons GeoJSON</p>
+              </div>
+              <input 
+                type="file" 
+                accept=".geojson" 
+                onChange={handleFileUpload} 
+                className="p-2 border bg-white dark:bg-[#2D3236] dark:text-gray-100 rounded-lg w-full" 
+              />
+            </div>
+          )}
+  
+          {/* QR Code Upload Expanded */}
+          {selectedOption === "qrcode" && (
+            <div className="flex flex-col gap-2 items-center w-full">
+              <div className="flex gap-2 items-center">
+                <QrCode2OutlinedIcon />
+                <p className="text-lg font-medium">Import from QR Code</p>
+              </div>
+              <input 
+                type="file" 
+                accept="image/*" 
+                onChange={(e) => {
+                  const file = e.target.files?.[0];
+                  if (file) handleUploadQRCode(file);
+                }} 
+                className="p-2 border bg-white dark:bg-[#2D3236] dark:text-gray-100 rounded-lg w-full" 
+              />
+            </div>
+          )}
+        </div>
+  
+        {/* Sample File Section */}
+        {selectedOption === "geojson" && (
+          <div className="bg-white dark:bg-[#1E2528] rounded-md p-3 text-sm shadow-inner border border-gray-300 dark:border-gray-600 mt-4">
+            <p className="font-semibold mb-1">📄 Sample file:</p>
+            <a 
+              href="/digital_beacons.json" 
+              download 
+              className="text-blue-600 dark:text-blue-400 underline text-sm"
+            >
+              Download digital_beacons.json
+            </a>
+            <pre className="mt-2 overflow-x-auto text-xs max-h-48 bg-gray-100 dark:bg-[#2D3236] p-2 rounded">
+  {`{
+    "type": "FeatureCollection",
+    "features": [
+      {
+        "type": "Feature",
+        "properties": { "name": "Plot A" },
+        "geometry": {
+          "type": "Polygon",
+          "coordinates": [[[36.8219, -1.2921], [36.8225, -1.2921], ...]]
+        }
       }
-    }
-  ]
-}`}
-        </pre>
+    ]
+  }`}
+            </pre>
+          </div>
+        )}
       </div>
     </div>
-  </div>
-    
-)}
+  )}
+  
 
 {openTooltip && (<>
 <div className="fixed inset-0 bg-black bg-opacity-40 z-50 flex items-center justify-center">

@@ -20,6 +20,7 @@ import EditLocationOutlinedIcon from '@mui/icons-material/EditLocationOutlined';
 import { DropdownMenu, DropdownMenuContent, DropdownMenuItem, DropdownMenuTrigger } from '../ui/dropdown-menu';
 import { useToast } from '../ui/use-toast';
 import AddOutlinedIcon from '@mui/icons-material/AddOutlined';
+import SaveAltOutlinedIcon from '@mui/icons-material/SaveAltOutlined';
 type Beacon = {
   name: string;
   lat: number;
@@ -384,11 +385,14 @@ const handleDraw = () => {
     },
   };
 
-  if (mode === "single") {
-    setParcels([featureWithType]);
-  } else {
+ 
     setParcels((prev) => [...prev, featureWithType]);
-  }
+    setBeacons([]);
+    polygonRef.current?.setMap(null);
+    polygonRef.current = undefined;
+    beaconMarkers.current.forEach(marker => marker.setMap(null));
+    beaconMarkers.current = [];
+ 
 };
 
 
@@ -433,7 +437,7 @@ const generateMultipleParcelQRCode = async () => {
     .join("&");
 
   const url = `https://mapa.co.ke/?${params}`;
-
+console.log(url);
   try {
     // Generate QR code data URL
     const qrDataURL = await QRCode.toDataURL(url);
@@ -605,7 +609,61 @@ const generateMultipleParcelLink = async () => {
         </TooltipProvider>
       </div>
 
-       {/* Manual Input Form */}
+   
+      {/* Beacon List */}
+      {beacons.length > 0 && (
+        <div className="absolute items-center top-20 left-2 p-2 text-white bg-green-600 z-10 rounded-md shadow-lg max-h-[200px] overflow-auto text-sm">
+          <ul>
+            {beacons.map((b, i) => (
+              <li key={i}>
+                {b.name}: {b.lat.toFixed(6)}, {b.lng.toFixed(6)}
+              </li>
+            ))}
+          </ul>
+          <Button
+  onClick={() => handleDraw()}
+  variant={"outline"}
+  className="shadow-lg mt-2 text-gray-900 text-sm"
+>
+  <AddOutlinedIcon sx={{ fontSize: 14 }}/>Add
+</Button>
+        </div>
+      )}
+
+
+        {/* Beacon List */}
+   {parcels.length > 0 && (
+  <div className="absolute flex gap-5 bottom-2 left-2 p-2 text-white bg-green-600 z-10 rounded-md shadow-lg text-sm">
+    Parcels drawn: {parcels.length}
+      <TooltipProvider>
+  <Tooltip>
+    <DropdownMenu>
+      <TooltipTrigger asChild>
+        <DropdownMenuTrigger asChild>
+          <Button className="text-gray-600 text-sm" variant="outline">
+            <SaveAltOutlinedIcon sx={{ fontSize: 14 }}/>Save
+          </Button>
+        </DropdownMenuTrigger>
+      </TooltipTrigger>
+      <TooltipContent><p>Save</p></TooltipContent>
+
+      <DropdownMenuContent align="end">
+        <DropdownMenuItem onClick={exportToGeoJSON}>
+        <FileDownloadOutlinedIcon/>Save as GeoJSON
+        </DropdownMenuItem>
+        <DropdownMenuItem onClick={generateMultipleParcelQRCode}>
+       <QrCode2OutlinedIcon/> Save as QR Code
+        </DropdownMenuItem>
+         <DropdownMenuItem onClick={generateMultipleParcelLink}>
+       <Share2/> Share link
+        </DropdownMenuItem>
+      </DropdownMenuContent>
+    </DropdownMenu>
+  </Tooltip>
+</TooltipProvider>
+  </div>
+)}
+    {/* Manual Input Form */}
        {manualInputVisible && (
         <div className="absolute bottom-10 left-10 z-10 p-4 bg-white shadow-md rounded-md">
          
@@ -667,58 +725,6 @@ const generateMultipleParcelLink = async () => {
         </div>
       )}
 
-      {/* Beacon List */}
-      {beacons.length > 0 && (
-        <div className="absolute top-20 left-2 p-2 text-white bg-green-600 z-10 rounded-md shadow-lg max-h-[200px] overflow-auto text-sm">
-          <ul>
-            {beacons.map((b, i) => (
-              <li key={i}>
-                {b.name}: {b.lat.toFixed(6)}, {b.lng.toFixed(6)}
-              </li>
-            ))}
-          </ul>
-          <button
-  onClick={() => handleDraw()}
-  className="bg-green-600 text-white px-4 py-2 rounded-full shadow-lg z-50"
->
-  <AddOutlinedIcon/>Add
-</button>
-        </div>
-      )}
-
-
-        {/* Beacon List */}
-   {parcels.length > 0 && (
-  <div className="absolute flex gap-5 bottom-2 left-2 p-2 text-white bg-green-600 z-10 rounded-md shadow-lg text-sm">
-    Parcels drawn: {parcels.length}
-      <TooltipProvider>
-  <Tooltip>
-    <DropdownMenu>
-      <TooltipTrigger asChild>
-        <DropdownMenuTrigger asChild>
-          <Button className="w-14 text-gray-600" variant="outline">
-            💾
-          </Button>
-        </DropdownMenuTrigger>
-      </TooltipTrigger>
-      <TooltipContent><p>Save</p></TooltipContent>
-
-      <DropdownMenuContent align="end">
-        <DropdownMenuItem onClick={exportToGeoJSON}>
-        <FileDownloadOutlinedIcon/>Save as GeoJSON
-        </DropdownMenuItem>
-        <DropdownMenuItem onClick={generateMultipleParcelQRCode}>
-       <QrCode2OutlinedIcon/> Save as QR Code
-        </DropdownMenuItem>
-         <DropdownMenuItem onClick={generateMultipleParcelLink}>
-       <Share2/> Share link
-        </DropdownMenuItem>
-      </DropdownMenuContent>
-    </DropdownMenu>
-  </Tooltip>
-</TooltipProvider>
-  </div>
-)}
    {openShowInfo && (
   <div className="fixed inset-0 bg-black bg-opacity-40 z-50 flex items-center justify-center">
     <div className="bg-[#e4ebeb] p-6 rounded-md shadow-lg w-[320px] relative">
@@ -760,6 +766,7 @@ const generateMultipleParcelLink = async () => {
   </div>
   </div>
 )}
+
 <button
   onClick={() => setShowHelp(true)}
   className="fixed bottom-4 right-4 bg-blue-600 text-white px-4 py-2 rounded-full shadow-lg z-50"

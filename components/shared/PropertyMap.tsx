@@ -49,6 +49,8 @@ import { getListingsNearLocation } from "@/lib/actions/dynamicAd.actions";
 import { IdynamicAd } from "@/lib/database/models/dynamicAd.model";
 import KeyboardArrowLeftOutlinedIcon from '@mui/icons-material/KeyboardArrowLeftOutlined';
 import KeyboardArrowRightOutlinedIcon from '@mui/icons-material/KeyboardArrowRightOutlined';
+import QrCode2OutlinedIcon from '@mui/icons-material/QrCode2Outlined';
+import { BrowserQRCodeReader } from '@zxing/browser';
 const defaultcenter = {
   lat: -1.286389, // Default center (Nairobi, Kenya)
   lng: 36.817223,
@@ -84,7 +86,7 @@ type Shape = {
 };
 interface Props {
   queryObject: any;
-  coordinates?: string;
+  Parcels?: any;
   onClose:() => void;
   handleAdEdit: (id:string) => void;
   handleAdView: (id:string) => void;
@@ -111,7 +113,26 @@ const markerOptions = [
   { label: "Police Station", icon: "/assets/map/police.png" },
 ];
 
-export default function MapDrawingTool({queryObject, coordinates, handleCategory, handleOpenPlan, handleOpenSell, onClose, handleAdEdit, handleAdView}:Props) {
+
+
+const getParcelsFromURL = (searchParams: URLSearchParams) => {
+  const parcels: any[] = [];
+
+  searchParams.forEach((value: string, key: string) => {
+    if (key.startsWith("parcel")) {
+      try {
+        const decoded = JSON.parse(decodeURIComponent(value));
+        parcels.push(decoded);
+      } catch (error) {
+        console.error(`Failed to parse ${key}:`, error);
+      }
+    }
+  });
+
+  return parcels;
+};
+
+export default function MapDrawingTool({queryObject, Parcels, handleCategory, handleOpenPlan, handleOpenSell, onClose, handleAdEdit, handleAdView}:Props) {
  //const [uploadPopup, setUploadPopup] = useState(false);
   const [center, setCenter] = useState<any>(defaultcenter);
   const [latitude, setLatitude] = useState("");
@@ -151,6 +172,8 @@ export default function MapDrawingTool({queryObject, coordinates, handleCategory
    const [showDistanceDialog, setShowDistanceDialog] = useState(false);
   const [openDirectionsDialog, setOpenDirectionsDialog] = useState(false);
   const [openDistanceDialog, setOpenDistanceDialog] = useState(false);
+   const [loadedParcels, setLoadedParcels] = useState<any>(Parcels);
+   const [selectedOption, setSelectedOption] = useState<"geojson" | "qrcode" | null>(null);
   // Sync refs when state updates
   useEffect(() => {
     shapesRef.current = shapes;
@@ -828,77 +851,78 @@ useEffect(() => {
     setUploadPopup(true);
   };
 
-  useEffect(() => {
-    if (!coordinates) return;
+ useEffect(() => {
   
-    const interval = setInterval(() => {
-      if (mapInstance.current && window.google) {
-        clearInterval(interval);
-  
-        const coordsArray = coordinates.split(',').map(Number);
-        const latLngPairs = [];
-        let centerSet = false;
+  if (!mapInstance.current || loadedParcels.length === 0) return;
+
+  const interval = setInterval(() => {
+    if (mapInstance.current && window.google) {
+      clearInterval(interval);
+
+      let centerSet = false;
+
+      loadedParcels.forEach((parcel: any, index: number) => {
+        const latLngPairs: { lat: number; lng: number }[] = [];
         const bounds = new google.maps.LatLngBounds();
-        for (let i = 0; i < coordsArray.length - 1; i += 2) {
-          const lng = coordsArray[i];
-          const lat = coordsArray[i + 1];
-  
-          if (!centerSet) {
-            setCenter({ lat, lng });
+
+        parcel[0].forEach(([lng, lat]: [number, number], i: number) => {
+          const coord = { lat, lng };
+          latLngPairs.push(coord);
+          bounds.extend(new google.maps.LatLng(lat, lng));
+
+          // Set center for the first point of the first parcel only
+          if (!centerSet && index === 0 && i === 0) {
+            setCenter(coord);
             setLatitude(lat.toString());
             setLongitude(lng.toString());
             handlePostLocation(lat.toString(), lng.toString());
-  
+
             const map = mapInstance.current;
-            const position = { lat, lng };
             if (map) {
-              map.setCenter(position);
+              map.setCenter(coord);
               map.setZoom(18);
               if (markerRef.current) {
-                markerRef.current.setPosition(position);
+                markerRef.current.setPosition(coord);
               }
             }
+
             centerSet = true;
           }
-  
-          latLngPairs.push({ lat, lng });
-          bounds.extend(new google.maps.LatLng(lat, lng));
-        }
-  
+        });
+
         if (latLngPairs.length > 2) {
           const map = mapInstance.current;
-  
-          // Optional: clear existing polygon if needed
+
           class CustomLabel extends google.maps.OverlayView {
             div: HTMLDivElement | null = null;
-          
+
             constructor(private position: google.maps.LatLngLiteral, private text: string) {
               super();
             }
-          
+
             onAdd() {
               this.div = document.createElement("div");
               this.div.innerHTML = `<div style="background: black; color: white; padding: 4px 8px; border-radius: 4px;">${this.text}</div>`;
               this.getPanes()?.overlayLayer.appendChild(this.div);
             }
-          
+
             draw() {
               if (!this.div) return;
               const projection = this.getProjection();
               const point = projection.fromLatLngToDivPixel(new google.maps.LatLng(this.position));
               if (point) {
-                this.div.style.left = point.x + "px";
-                this.div.style.top = point.y + "px";
+                this.div.style.left = `${point.x}px`;
+                this.div.style.top = `${point.y}px`;
                 this.div.style.position = "absolute";
               }
             }
-          
+
             onRemove() {
               this.div?.remove();
             }
           }
-  
-          const polygon = new window.google.maps.Polygon({
+
+          const polygon = new google.maps.Polygon({
             paths: latLngPairs,
             strokeColor: "#00FF00",
             strokeOpacity: 0.8,
@@ -906,74 +930,68 @@ useEffect(() => {
             fillColor: "#00FF00",
             fillOpacity: 0.1,
           });
-  
+
           polygon.setMap(map);
-         
-          // Add label marker
-          const bounds = new google.maps.LatLngBounds();
-          latLngPairs.forEach((coord:any) => bounds.extend(coord));
+
+          // Add label
           const center = bounds.getCenter();
-      
-          
+
           shapeOriginalColors.current.set(polygon, "#00FF00");
-          const path = polygon.getPath().getArray().map((latlng: any) => ({ lat: latlng.lat(), lng: latlng.lng() }));
+
+          const path = polygon.getPath().getArray().map((latlng: any) => ({
+            lat: latlng.lat(),
+            lng: latlng.lng(),
+          }));
           const perimeter = google.maps.geometry.spherical.computeLength(path);
           const areaSqM = google.maps.geometry.spherical.computeArea(path);
           const areaHa = areaSqM / 10000;
           const areaAcres = areaSqM / 4046.85642;
-        
-          const readablePerimeter = perimeter > 1000
-            ? `${(perimeter / 1000).toFixed(2)} km`
-            : `${perimeter.toFixed(0)} m`;
-        
-        const labelOverlay = new CustomLabel( {
-          lat: center.lat(),
-          lng: center.lng()
-        }, `
-  <div style=" background-color: rgba(0, 0, 0, 0.3);
-      padding: 6px 10px;
-      color: white;
-      font-size: 10px;
-      border-radius: 4px;
-     
-      position: absolute;
-      transform: translate(-50%, -50%);
-      white-space: nowrap;">
-                  <div><strong>Perimeter:</strong> ${readablePerimeter}</div>
-                  <div className="flex w-full items-center gap-x-2">
-  <strong>Area:</strong>
-  <div>${areaSqM.toFixed(0)} m²</div>
- 
-  <div>${areaHa.toFixed(2)} ha</div>
 
-  <div>${areaAcres.toFixed(2)} acres</div>
-</div>
-</div>
-  </div>
-`);
-labelOverlay.setMap(mapInstance.current!);
-labelMarkersRef.current.push(labelOverlay);
-if (mapInstance.current) {
-   mapInstance.current.fitBounds(bounds);
- 
-   google.maps.event.addListenerOnce(mapInstance.current, "bounds_changed", () => {
-     if (mapInstance.current) {
-   
-     mapInstance.current.setZoom(18);
-       
-     }
-   });
- }
-          // Store reference globally to clear later if needed
-         // setShapes((prev) => [...prev, ...polygon]);
+          const readablePerimeter =
+            perimeter > 1000
+              ? `${(perimeter / 1000).toFixed(2)} km`
+              : `${perimeter.toFixed(0)} m`;
+const centerLatLngLiteral = {
+  lat: center.lat(),
+  lng: center.lng(),
+};
+          const labelOverlay = new CustomLabel(centerLatLngLiteral, `
+            <div style="background-color: rgba(0, 0, 0, 0.3);
+                        padding: 6px 10px;
+                        color: white;
+                        font-size: 10px;
+                        border-radius: 4px;
+                        position: absolute;
+                        transform: translate(-50%, -50%);
+                        white-space: nowrap;">
+              <div><strong>Perimeter:</strong> ${readablePerimeter}</div>
+              <div style="display:flex; gap:6px;">
+                <strong>Area:</strong>
+                <div>${areaSqM.toFixed(0)} m²</div>
+                <div>${areaHa.toFixed(2)} ha</div>
+                <div>${areaAcres.toFixed(2)} acres</div>
+              </div>
+            </div>
+          `);
+
+          labelOverlay.setMap(map);
+          labelMarkersRef.current.push(labelOverlay);
           setShapeRefs((prev) => [...prev, polygon]);
+
+          if (map) {
+            map.fitBounds(bounds);
+            google.maps.event.addListenerOnce(map, "bounds_changed", () => {
+              map.setZoom(18);
+            });
+          }
         }
-  
-      }
-    }, 200);
-  
-    return () => clearInterval(interval);
-  }, [coordinates]);
+      });
+    }
+  }, 200);
+
+  return () => clearInterval(interval);
+}, [loadedParcels]);
+
   
     
 const handleFileUpload = (event: React.ChangeEvent<HTMLInputElement>) => {
@@ -1293,7 +1311,38 @@ const handleSelect = (e: any) => {
  const [openTooltip, setopenTooltip] = useState(false);
   const [title, setTitle] = useState('');
   const [description, setDescription] = useState('');
-  
+
+const handleUploadQRCode = async (file: File) => {
+    if (!mapInstance.current) return;
+  try {
+    const reader = new FileReader();
+    reader.onload = async () => {
+      const imageDataUrl = reader.result as string;
+
+      // Decode QR code from image
+      const codeReader = new BrowserQRCodeReader();
+      const result:any = await codeReader.decodeFromImageUrl(imageDataUrl);
+
+      if (result?.text) {
+        const url = new URL(result.text);
+        const searchParams = url.searchParams;
+        const parcels = getParcelsFromURL(searchParams);
+
+        console.log('Decoded parcels:', parcels);
+        setLoadedParcels(parcels); // Or however you display/map them
+        setUploadPopup(false); // Close popup if needed
+      } else {
+        alert('No QR code found.');
+      }
+    };
+    reader.readAsDataURL(file);
+  } catch (error) {
+    console.error('Error reading QR code:', error);
+    alert('Failed to read QR code.');
+  }
+};
+
+
 
   return ( 
 <div className="flex w-full h-[100vh] relative">
@@ -1863,19 +1912,37 @@ Radius: {radius / 1000} km
 </div>
 </>)}
 
-
-  {uploadPopup && (
-    <div className="fixed inset-0 p-2 bg-black bg-opacity-40 z-50 flex items-center justify-center">
+{uploadPopup && (
+  <div className="fixed inset-0 p-2 bg-black bg-opacity-40 z-50 flex items-center justify-center">
     <div className="bg-[#e4ebeb] p-3 rounded-md shadow-lg w-full max-w-xl relative">
-         
-          {/* Close Button */}
-          <div className="flex justify-end">
-            <Button variant="outline" onClick={() => setUploadPopup(false)}>
-              <CloseOutlinedIcon fontSize="small" />
-            </Button>
-          </div>
-    
-          {/* Upload Section */}
+      
+      {/* Close Button */}
+      <div className="flex justify-end">
+        <Button variant="outline" onClick={() => setUploadPopup(false)}>
+          <CloseOutlinedIcon fontSize="small" />
+        </Button>
+      </div>
+
+      {/* Expandable Upload Options */}
+      <div className="flex flex-col gap-4 mt-4">
+        {/* Toggle Options */}
+        <div className="flex gap-2">
+          <Button
+            variant={selectedOption === "geojson" ? "default" : "outline"}
+            onClick={() => setSelectedOption("geojson")}
+          >
+            Upload from GeoJSON
+          </Button>
+          <Button
+            variant={selectedOption === "qrcode" ? "default" : "outline"}
+            onClick={() => setSelectedOption("qrcode")}
+          >
+            Upload from QR Code
+          </Button>
+        </div>
+
+        {/* GeoJSON Upload Expanded */}
+        {selectedOption === "geojson" && (
           <div className="flex flex-col gap-2 items-center w-full">
             <div className="flex gap-2 items-center">
               <UploadFileOutlinedIcon />
@@ -1888,36 +1955,61 @@ Radius: {radius / 1000} km
               className="p-2 border bg-white dark:bg-[#2D3236] dark:text-gray-100 rounded-lg w-full" 
             />
           </div>
-    
-          {/* Sample File Section */}
-          <div className="bg-white dark:bg-[#1E2528] rounded-md p-3 text-sm shadow-inner border border-gray-300 dark:border-gray-600">
-            <p className="font-semibold mb-1">📄 Sample file:</p>
-            <a 
-              href="/digital_beacons.json" 
-              download 
-              className="text-blue-600 dark:text-blue-400 underline text-sm"
-            >
-              Download digital_beacons.json
-            </a>
-            <pre className="mt-2 overflow-x-auto text-xs max-h-48 bg-gray-100 dark:bg-[#2D3236] p-2 rounded">
-    {`{
-      "type": "FeatureCollection",
-      "features": [
-        {
-          "type": "Feature",
-          "properties": { "name": "Plot A" },
-          "geometry": {
-            "type": "Polygon",
-            "coordinates": [[[36.8219, -1.2921], [36.8225, -1.2921], ...]]
-          }
-        }
-      ]
-    }`}
-            </pre>
+        )}
+
+        {/* QR Code Upload Expanded */}
+        {selectedOption === "qrcode" && (
+          <div className="flex flex-col gap-2 items-center w-full">
+            <div className="flex gap-2 items-center">
+              <QrCode2OutlinedIcon />
+              <p className="text-lg font-medium">Import from QR Code</p>
+            </div>
+            <input 
+              type="file" 
+              accept="image/*" 
+              onChange={(e) => {
+                const file = e.target.files?.[0];
+                if (file) handleUploadQRCode(file);
+              }} 
+              className="p-2 border bg-white dark:bg-[#2D3236] dark:text-gray-100 rounded-lg w-full" 
+            />
           </div>
+        )}
+      </div>
+
+      {/* Sample File Section */}
+      {selectedOption === "geojson" && (
+        <div className="bg-white dark:bg-[#1E2528] rounded-md p-3 text-sm shadow-inner border border-gray-300 dark:border-gray-600 mt-4">
+          <p className="font-semibold mb-1">📄 Sample file:</p>
+          <a 
+            href="/digital_beacons.json" 
+            download 
+            className="text-blue-600 dark:text-blue-400 underline text-sm"
+          >
+            Download digital_beacons.json
+          </a>
+          <pre className="mt-2 overflow-x-auto text-xs max-h-48 bg-gray-100 dark:bg-[#2D3236] p-2 rounded">
+{`{
+  "type": "FeatureCollection",
+  "features": [
+    {
+      "type": "Feature",
+      "properties": { "name": "Plot A" },
+      "geometry": {
+        "type": "Polygon",
+        "coordinates": [[[36.8219, -1.2921], [36.8225, -1.2921], ...]]
+      }
+    }
+  ]
+}`}
+          </pre>
         </div>
+      )}
     </div>
-    )}
+  </div>
+)}
+
+
     {openTooltip && (<>
    <div className="fixed inset-0 bg-black bg-opacity-40 z-50 flex items-center justify-center">
     <div className="bg-[#e4ebeb] p-3 rounded-md shadow-lg w-[320px] relative">
@@ -1960,7 +2052,7 @@ Radius: {radius / 1000} km
      
       <Button onClick={handleOpenUploadPopup} className="" variant="outline">
         <UploadFileOutlinedIcon />
-        <div>Import digital beacons</div>
+        <div>Import beacons</div>
       </Button>
    
       {/* Drawer & Info */}

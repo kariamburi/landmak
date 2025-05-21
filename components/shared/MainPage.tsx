@@ -127,7 +127,24 @@ type CollectionProps = {
   myloans:any;
   collectionType?: "Ads_Organized" | "My_Tickets" | "All_Ads";
 };
+const getParcelsFromURL = () => {
+  const searchParams = new URLSearchParams(window.location.search);
+  const parcels: any[] = [];
 
+  // Loop through all query parameters
+  searchParams.forEach((value, key) => {
+    if (key.startsWith("parcel")) {
+      try {
+        const decoded = JSON.parse(decodeURIComponent(value));
+        parcels.push(decoded); // Add coordinates array or GeoJSON geometry
+      } catch (error) {
+        console.error(`Failed to parse ${key}:`, error);
+      }
+    }
+  });
+
+  return parcels;
+};
 const MainPage = ({
   userprofile,
   emptyTitle,
@@ -184,7 +201,7 @@ const [showWantedPopup, setShowWantedPopup] = useState(false);
  const [isOpenSearchTab, setIsOpenSearchTab] = useState(false);
  const [isOpenSearchByTitle, setIsOpenSearchByTitle] = useState(false);
  const [showPopupMap, setShowPopupMap] = useState(false);
- const [coordinates, setCoordinates] = useState('');
+ const [coordinates, setCoordinates] = useState<any>([]);
  const [CategorySelect, setCategorySelect] = useState('');
 const [wantedsubcategory, setWantedsubcategory] = useState('');
 const [wantedcategory, setWantedcategory] = useState('');
@@ -237,7 +254,7 @@ const [wantedcategory, setWantedcategory] = useState('');
       const id = params.get("Ad");
       const Profile = params.get("Profile");
       const action = params.get("action");
-      const coordinates = params.get("coordinates");
+      const coordinates = params.get("parcel1");
       const PrivacyPolicy = params.get("PrivacyPolicy");
       if (id) {
         const ad = await getAdById(id);
@@ -263,8 +280,8 @@ const [wantedcategory, setWantedcategory] = useState('');
       }
 
       if (coordinates) {
-       
-        setCoordinates(coordinates)
+        const loadedParcels = getParcelsFromURL();
+        setCoordinates(loadedParcels)
         setShowPopupMap(true);
       } else {
         setShowPopupMap(false);
@@ -382,7 +399,7 @@ const [wantedcategory, setWantedcategory] = useState('');
     const Profile = params.get("Profile");
     const Ad = params.get("Ad");
     const action = params.get("action");
-    const coordinates = params.get("coordinates");
+    const coordinates = params.get("parcel1");
     const PrivacyPolicy = params.get("PrivacyPolicy");
     if(Profile || Ad || action || coordinates || PrivacyPolicy){
       router.push("/", { scroll: false });
@@ -401,7 +418,7 @@ const [wantedcategory, setWantedcategory] = useState('');
     const Profile = params.get("Profile");
     const Ad = params.get("Ad");
     const action = params.get("action");
-    const coordinates = params.get("coordinates");
+    const coordinates = params.get("parcel1");
     const PrivacyPolicy = params.get("PrivacyPolicy");
     if(Profile || Ad || action || coordinates || PrivacyPolicy){
       router.push("/", { scroll: false });
@@ -432,7 +449,7 @@ const [wantedcategory, setWantedcategory] = useState('');
     const Profile = params.get("Profile");
     const Ad = params.get("Ad");
     const action = params.get("action");
-    const coordinates = params.get("coordinates");
+    const coordinates = params.get("parcel1");
     const PrivacyPolicy = params.get("PrivacyPolicy");
     if(Profile || Ad || action || coordinates || PrivacyPolicy){
       router.push("/", { scroll: false });
@@ -453,7 +470,7 @@ const [wantedcategory, setWantedcategory] = useState('');
     const Profile = params.get("Profile");
     const Ad = params.get("Ad");
     const action = params.get("action");
-    const coordinates = params.get("coordinates");
+    const coordinates = params.get("parcel1");
     const PrivacyPolicy = params.get("PrivacyPolicy");
     if(Profile || Ad || action || coordinates || PrivacyPolicy){
       router.push("/", { scroll: false });
@@ -474,7 +491,7 @@ const [wantedcategory, setWantedcategory] = useState('');
     const Profile = params.get("Profile");
     const Ad = params.get("Ad");
     const action = params.get("action");
-    const coordinates = params.get("coordinates");
+    const coordinates = params.get("parcel1");
     const PrivacyPolicy = params.get("PrivacyPolicy");
     if(Profile || Ad || action || coordinates || PrivacyPolicy){
       router.push("/", { scroll: false });
@@ -494,7 +511,7 @@ const [wantedcategory, setWantedcategory] = useState('');
     const Profile = params.get("Profile");
     const Ad = params.get("Ad");
     const action = params.get("action");
-   const coordinates = params.get("coordinates");
+   const coordinates = params.get("parcel1");
     const PrivacyPolicy = params.get("PrivacyPolicy");
     if(Profile || Ad || action || coordinates || PrivacyPolicy){
       router.push("/", { scroll: false });
@@ -512,7 +529,7 @@ const [wantedcategory, setWantedcategory] = useState('');
     const Profile = params.get("Profile");
     const Ad = params.get("Ad");
     const action = params.get("action");
-   const coordinates = params.get("coordinates");
+   const coordinates = params.get("parcel1");
     const PrivacyPolicy = params.get("PrivacyPolicy");
     if(Profile || Ad || action || coordinates || PrivacyPolicy){
       router.push("/", { scroll: false });
@@ -530,7 +547,7 @@ const [wantedcategory, setWantedcategory] = useState('');
     const Profile = params.get("Profile");
     const Ad = params.get("Ad");
     const action = params.get("action");
-   const coordinates = params.get("coordinates");
+   const coordinates = params.get("parcel1");
     const PrivacyPolicy = params.get("PrivacyPolicy");
     if(Profile || Ad || action || coordinates || PrivacyPolicy){
       router.push("/", { scroll: false });
@@ -549,7 +566,7 @@ const [wantedcategory, setWantedcategory] = useState('');
     const Profile = params.get("Profile");
     const Ad = params.get("Ad");
     const action = params.get("action");
-   const coordinates = params.get("coordinates");
+   const coordinates = params.get("parcel1");
     const PrivacyPolicy = params.get("PrivacyPolicy");
     if(Profile || Ad || action || coordinates || PrivacyPolicy){
       router.push("/", { scroll: false });
@@ -566,7 +583,7 @@ const [wantedcategory, setWantedcategory] = useState('');
     const Profile = params.get("Profile");
     const Ad = params.get("Ad");
     const action = params.get("action");
-   const coordinates = params.get("coordinates");
+   const coordinates = params.get("parcel1");
     const PrivacyPolicy = params.get("PrivacyPolicy");
     if(Profile || Ad || action || coordinates || PrivacyPolicy){
       router.push("/", { scroll: false });
@@ -583,7 +600,7 @@ const [wantedcategory, setWantedcategory] = useState('');
     const Profile = params.get("Profile");
     const Ad = params.get("Ad");
     const action = params.get("action");
-   const coordinates = params.get("coordinates");
+   const coordinates = params.get("parcel1");
     const PrivacyPolicy = params.get("PrivacyPolicy");
     if(Profile || Ad || action || coordinates || PrivacyPolicy){
       router.push("/", { scroll: false });
@@ -602,7 +619,7 @@ const [wantedcategory, setWantedcategory] = useState('');
       const Profile = params.get("Profile");
       const Ad = params.get("Ad");
       const action = params.get("action");
-     const coordinates = params.get("coordinates");
+     const coordinates = params.get("parcel1");
     const PrivacyPolicy = params.get("PrivacyPolicy");
     if(Profile || Ad || action || coordinates || PrivacyPolicy){
         router.push("/", { scroll: false });
@@ -623,7 +640,7 @@ const [wantedcategory, setWantedcategory] = useState('');
     const Profile = params.get("Profile");
     const Ad = params.get("Ad");
     const action = params.get("action");
-   const coordinates = params.get("coordinates");
+   const coordinates = params.get("parcel1");
     const PrivacyPolicy = params.get("PrivacyPolicy");
     if(Profile || Ad || action || coordinates || PrivacyPolicy){
       router.push("/", { scroll: false });
@@ -651,7 +668,7 @@ const handlePay = (id:string) => {
     const Profile = params.get("Profile");
     const Ad = params.get("Ad");
     const action = params.get("action");
-   const coordinates = params.get("coordinates");
+   const coordinates = params.get("parcel1");
     const PrivacyPolicy = params.get("PrivacyPolicy");
     if(Profile || Ad || action || coordinates || PrivacyPolicy){
       router.push("/", { scroll: false });
@@ -665,7 +682,7 @@ const handleCloseAdEdit = () => {
     const Profile = params.get("Profile");
     const Ad = params.get("Ad");
     const action = params.get("action");
-   const coordinates = params.get("coordinates");
+   const coordinates = params.get("parcel1");
     const PrivacyPolicy = params.get("PrivacyPolicy");
     if(Profile || Ad || action || coordinates || PrivacyPolicy){
       router.push("/", { scroll: false });
@@ -699,7 +716,7 @@ const handleCloseAdView = () => {
     const Profile = params.get("Profile");
     const Ad = params.get("Ad");
     const action = params.get("action");
-   const coordinates = params.get("coordinates");
+   const coordinates = params.get("parcel1");
     const PrivacyPolicy = params.get("PrivacyPolicy");
     if(Profile || Ad || action || coordinates || PrivacyPolicy){
       router.push("/", { scroll: false });
@@ -725,7 +742,7 @@ const handleCloseAdView = () => {
     const Profile = params.get("Profile");
     const Ad = params.get("Ad");
     const action = params.get("action");
-   const coordinates = params.get("coordinates");
+   const coordinates = params.get("parcel1");
     const PrivacyPolicy = params.get("PrivacyPolicy");
     if(Profile || Ad || action || coordinates || PrivacyPolicy){
       router.push("/", { scroll: false });
@@ -1756,7 +1773,7 @@ const handleCloseAdView = () => {
                            
                                       <div className="flex flex-col items-center justify-center dark:bg-[#2D3236] bg-[#e4ebeb]">
                                   
-              <PropertyMap queryObject={queryObject} onClose={handleClosePopupMap} coordinates={coordinates}
+              <PropertyMap queryObject={queryObject} onClose={handleClosePopupMap} Parcels={coordinates}
               handleAdEdit={handleAdEdit}
                handleAdView={handleAdView} 
                handleCategory={handleCategory}
