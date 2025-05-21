@@ -437,7 +437,7 @@ const generateMultipleParcelQRCode = async () => {
     .join("&");
 
   const url = `https://mapa.co.ke/?${params}`;
-console.log(url);
+
   try {
     // Generate QR code data URL
     const qrDataURL = await QRCode.toDataURL(url);

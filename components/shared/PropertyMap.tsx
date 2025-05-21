@@ -87,6 +87,7 @@ type Shape = {
 interface Props {
   queryObject: any;
   Parcels?: any;
+  coordinates?:any;
   onClose:() => void;
   handleAdEdit: (id:string) => void;
   handleAdView: (id:string) => void;
@@ -132,7 +133,7 @@ const getParcelsFromURL = (searchParams: URLSearchParams) => {
   return parcels;
 };
 
-export default function MapDrawingTool({queryObject, Parcels, handleCategory, handleOpenPlan, handleOpenSell, onClose, handleAdEdit, handleAdView}:Props) {
+export default function MapDrawingTool({queryObject, Parcels, coordinates, handleCategory, handleOpenPlan, handleOpenSell, onClose, handleAdEdit, handleAdView}:Props) {
  //const [uploadPopup, setUploadPopup] = useState(false);
   const [center, setCenter] = useState<any>(defaultcenter);
   const [latitude, setLatitude] = useState("");
@@ -1341,7 +1342,152 @@ const handleUploadQRCode = async (file: File) => {
     alert('Failed to read QR code.');
   }
 };
+useEffect(() => {
+    if (!coordinates) return;
+  
+    const interval = setInterval(() => {
+      if (mapInstance.current && window.google) {
+        clearInterval(interval);
+  
+        const coordsArray = coordinates.split(',').map(Number);
+        const latLngPairs = [];
+        let centerSet = false;
+        const bounds = new google.maps.LatLngBounds();
+        for (let i = 0; i < coordsArray.length - 1; i += 2) {
+          const lng = coordsArray[i];
+          const lat = coordsArray[i + 1];
+  
+          if (!centerSet) {
+            setCenter({ lat, lng });
+            setLatitude(lat.toString());
+            setLongitude(lng.toString());
+            handlePostLocation(lat.toString(), lng.toString());
+  
+            const map = mapInstance.current;
+            const position = { lat, lng };
+            if (map) {
+              map.setCenter(position);
+              map.setZoom(18);
+              if (markerRef.current) {
+                markerRef.current.setPosition(position);
+              }
+            }
+            centerSet = true;
+          }
+  
+          latLngPairs.push({ lat, lng });
+          bounds.extend(new google.maps.LatLng(lat, lng));
+        }
+  
+        if (latLngPairs.length > 2) {
+          const map = mapInstance.current;
+  
+          // Optional: clear existing polygon if needed
+          class CustomLabel extends google.maps.OverlayView {
+            div: HTMLDivElement | null = null;
+          
+            constructor(private position: google.maps.LatLngLiteral, private text: string) {
+              super();
+            }
+          
+            onAdd() {
+              this.div = document.createElement("div");
+              this.div.innerHTML = `<div style="background: black; color: white; padding: 4px 8px; border-radius: 4px;">${this.text}</div>`;
+              this.getPanes()?.overlayLayer.appendChild(this.div);
+            }
+          
+            draw() {
+              if (!this.div) return;
+              const projection = this.getProjection();
+              const point = projection.fromLatLngToDivPixel(new google.maps.LatLng(this.position));
+              if (point) {
+                this.div.style.left = point.x + "px";
+                this.div.style.top = point.y + "px";
+                this.div.style.position = "absolute";
+              }
+            }
+          
+            onRemove() {
+              this.div?.remove();
+            }
+          }
+  
+          const polygon = new window.google.maps.Polygon({
+            paths: latLngPairs,
+            strokeColor: "#00FF00",
+            strokeOpacity: 0.8,
+            strokeWeight: 2,
+            fillColor: "#00FF00",
+            fillOpacity: 0.1,
+          });
+  
+          polygon.setMap(map);
+         
+          // Add label marker
+          const bounds = new google.maps.LatLngBounds();
+          latLngPairs.forEach((coord:any) => bounds.extend(coord));
+          const center = bounds.getCenter();
+      
+          
+          shapeOriginalColors.current.set(polygon, "#00FF00");
+          const path = polygon.getPath().getArray().map((latlng: any) => ({ lat: latlng.lat(), lng: latlng.lng() }));
+          const perimeter = google.maps.geometry.spherical.computeLength(path);
+          const areaSqM = google.maps.geometry.spherical.computeArea(path);
+          const areaHa = areaSqM / 10000;
+          const areaAcres = areaSqM / 4046.85642;
+        
+          const readablePerimeter = perimeter > 1000
+            ? `${(perimeter / 1000).toFixed(2)} km`
+            : `${perimeter.toFixed(0)} m`;
+        
+        const labelOverlay = new CustomLabel( {
+          lat: center.lat(),
+          lng: center.lng()
+        }, `
+  <div style=" background-color: rgba(0, 0, 0, 0.3);
+      padding: 6px 10px;
+      color: white;
+      font-size: 10px;
+      border-radius: 4px;
+     
+      position: absolute;
+      transform: translate(-50%, -50%);
+      white-space: nowrap;">
+                  <div><strong>Perimeter:</strong> ${readablePerimeter}</div>
+                  <div className="flex w-full items-center gap-x-2">
+  <strong>Area:</strong>
+  <div>${areaSqM.toFixed(0)} m²</div>
+ 
+  <div>${areaHa.toFixed(2)} ha</div>
 
+  <div>${areaAcres.toFixed(2)} acres</div>
+</div>
+</div>
+  </div>
+`);
+labelOverlay.setMap(mapInstance.current!);
+labelMarkersRef.current.push(labelOverlay);
+if (mapInstance.current) {
+   mapInstance.current.fitBounds(bounds);
+ 
+   google.maps.event.addListenerOnce(mapInstance.current, "bounds_changed", () => {
+     if (mapInstance.current) {
+   
+     mapInstance.current.setZoom(18);
+       
+     }
+   });
+ }
+          // Store reference globally to clear later if needed
+         // setShapes((prev) => [...prev, ...polygon]);
+          setShapeRefs((prev) => [...prev, polygon]);
+        }
+  
+      }
+    }, 200);
+  
+    return () => clearInterval(interval);
+  }, [coordinates]);
 
 
   return ( 
