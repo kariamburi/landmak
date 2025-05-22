@@ -1829,13 +1829,13 @@ polyline.addListener("click", () => {
               variant={selectedOption === "geojson" ? "default" : "outline"}
               onClick={() => setSelectedOption("geojson")}
             >
-              Upload from GeoJSON
+              GeoJSON
             </Button>
             <Button
               variant={selectedOption === "qrcode" ? "default" : "outline"}
               onClick={() => setSelectedOption("qrcode")}
             >
-              Upload from QR Code
+              QR Code
             </Button>
           </div>
   
