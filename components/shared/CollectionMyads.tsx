@@ -12,11 +12,18 @@ import ListOutlinedIcon from '@mui/icons-material/ListOutlined';
 import ChecklistRtlOutlinedIcon from '@mui/icons-material/ChecklistRtlOutlined';
 import { ScrollArea, ScrollBar } from "../ui/scroll-area";
 import CollectionMyLoans from "./CollectionMyLoans";
+import OwnerBookingRequests from "./OwnerBookingRequests";
+import ClientBookingRequests from "./ClientBookingRequests";
+import SiteVisitSummary from "./SiteVisitSummary";
+import PeopleOutlineOutlinedIcon from '@mui/icons-material/PeopleOutlineOutlined';
+import { getBookingByOwnerId, getBookingByuserId, getSiteVisitSummary } from "@/lib/actions/booking.actions";
 //import { Icon } from "@iconify/react";
 //import sixDotsScale from "@iconify-icons/svg-spinners/6-dots-scale"; // Correct import
  // Correct import
 type CollectionProps = {
   userId: string;
+  userName:string;
+  userImage:string;
   sortby: string;
   // data: IAd[];
   emptyTitle: string;
@@ -34,10 +41,26 @@ type CollectionProps = {
    handleOpenChatId: (value:any) => void;
   collectionType?: "Ads_Organized" | "My_Tickets" | "All_Ads";
 };
+interface Client {
+  name: string;
+  phone: string;
+}
 
+interface Slot {
+  time: string;
+  count: number;
+  clients: Client[];
+}
+interface Summary {
+  propertyTitle: string;
+  date: string;
+  slots: Slot[];
+}
 const CollectionMyads = ({
  loans,
   userId,
+  userName,
+  userImage,
   emptyTitle,
   emptyStateSubtext,
   sortby,
@@ -56,10 +79,73 @@ const CollectionMyads = ({
   const [totalPages, setTotalPages] = useState(1);
   const [loading, setLoading] = useState(true);
    const [isInitialLoading, setIsInitialLoading] = useState(true);
+   
  // const [isOpenP, setIsOpenP] = useState(false);
   // const observer = useRef();
   const observer = useRef<IntersectionObserver | null>(null);
 
+ const [summaries, setSummaries] = useState<Summary[]>([]);
+  const [loadingSUM, setLoadingSUM] = useState(true);
+  
+  useEffect(() => {
+    const fetchSummary = async () => {
+      try {
+        const data = await getSiteVisitSummary(userId);
+        setSummaries(data);
+      } catch (error) {
+        console.error('Error fetching site visit summary:', error);
+      } finally {
+        setLoadingSUM(false);
+      }
+    };
+
+    if (userId && isAdCreator) fetchSummary();
+  }, [userId]);
+
+ const [bookings, setBookings] = useState<any[]>([]);
+ const [loadingCl, setLoadingCl] = useState(true);
+ 
+  useEffect(() => {
+  const fetchBookings = async () => {
+    setLoadingCl(true);
+    try {
+      const data = await getBookingByuserId(userId);
+      setBookings(data);
+    } catch (error) {
+      console.error('Failed to fetch slots:', error);
+    } finally {
+      setLoadingCl(false);
+    }
+  };
+
+  if (userId && isAdCreator) fetchBookings();
+}, [userId]);
+
+
+ const [bookingsO, setBookingsO] = useState<any[]>([]);
+ const [loadingO, setLoadingO] = useState(true);
+ 
+ useEffect(() => {
+   const fetchBookings = async () => {
+     setLoadingO(true);
+     try {
+       const data = await getBookingByOwnerId(userId);
+      setBookingsO(data);
+     } catch (error) {
+       console.error('Failed to fetch slots:', error);
+     } finally {
+       setLoadingO(false);
+     }
+   };
+ 
+   if (userId && isAdCreator) fetchBookings();
+ }, [userId]);
+ 
+ const upbooking =  (id:string, status:string) => {
+ setBookingsO((prev:any) =>
+      prev.map((b:any) => (b._id === id ? { ...b, status } : b))
+    );
+  }
   const fetchAds = async () => {
     setLoading(true);
 
@@ -126,34 +212,51 @@ const categories = Array.from(new Set(data.map((item: any) => item.data.category
 const filteredAds = selectedCategory
   ? data.filter((item: any) => item.data.category === selectedCategory)
   : data;
- const [inputMode, setInputMode] = useState<'Ads' | 'Loans'>('Ads');
+ const [inputMode, setInputMode] = useState<'Ads' | 'Booking' | 'Loans'>('Ads');
 
   return (
     <div>
-      <div className="grid grid-cols-2 gap-1">
+      <div 
+      className={`grid gap-1 ${
+          isAdCreator ?
+          "grid-cols-3":"grid-cols-1"
+        }`}
+        >
             <button
               title="Ads"
               onClick={() => setInputMode("Ads")}
-              className={`h-12 p-3 rounded-tl-0 lg:rounded-tl-xl flex gap-2 justify-center items-center ${
+              className={`h-12 p-3 text-xs lg:text-base rounded-tl-0 lg:rounded-tl-xl flex gap-2 justify-center items-center ${
                 inputMode === "Ads"
                   ? "bg-white"
                   : "bg-green-600 hover:bg-green-700 text-white"
               }`}
             >
-              <ListOutlinedIcon /> My Ads
+              <ListOutlinedIcon /> {isAdCreator ? (<>My Ads</>):(<>Seller Ads</>)}
             </button>
-      
+            {isAdCreator && (<>
+       <button
+              title="Booking"
+              onClick={() => setInputMode("Booking")}
+              className={`h-12 p-3 text-xs lg:text-base rounded-0 flex gap-2 justify-center items-center ${
+                inputMode === "Booking"
+                  ? "bg-white"
+                  : "bg-green-600 hover:bg-green-700 text-white"
+              }`}
+            >
+              <PeopleOutlineOutlinedIcon  /> Booking
+            </button>
             <button
               title="Loans"
               onClick={() => setInputMode("Loans")}
-              className={`h-12 p-3 rounded-0 lg:rounded-tr-xl flex gap-2 justify-center items-center ${
+              className={`h-12 p-3 text-xs lg:text-base rounded-0 lg:rounded-tr-xl flex gap-2 justify-center items-center ${
                 inputMode === "Loans"
                   ? "bg-white"
                   : "bg-green-600 hover:bg-green-700 text-white"
               }`}
             >
-              <ChecklistRtlOutlinedIcon  /> Property Financing Requests
+              <ChecklistRtlOutlinedIcon  /> Financing Requests
             </button>
+            </>)}
           </div>
        { inputMode==="Ads" && (<div
           className={`rounded-b-lg p-2 flex flex-col min-h-screen ${
@@ -165,7 +268,7 @@ const filteredAds = selectedCategory
         
          <div className="flex flex-col lg:flex-row items-center justify-between w-full">
   <h3 className="font-bold text-[25px] text-center sm:text-left">
-                    My Ads
+                  {isAdCreator ? (<>My Ads</>):(<>Seller Ads</>)}
                   </h3>
    <div className="w-full lg:w-[450px] justify-between lg:justify-end flex items-center gap-4 mb-2 p-1 rounded-md">   
       <label className="text-xs lg:text-base">Filter by Category: </label>
@@ -301,6 +404,52 @@ const filteredAds = selectedCategory
         
         </div>
       )} 
+
+  { inputMode==="Booking" && ( <div
+          className={`rounded-b-lg p-2 flex flex-col min-h-screen ${
+            inputMode === "Booking"
+              ? "bg-white"
+              : "bg-[#131B1E]"
+          }`}
+        >
+      
+      {loans && isAdCreator && (<>
+       <div className="container mx-auto p-4 border rounded-2xl shadow-sm bg-white space-y-8">
+   {/* Section: Clients Booking Requests */}
+  <section>
+    <h2 className="text-2xl font-semibold text-gray-800 mb-4 border-b pb-2">Booking summary</h2>
+    <div className="bg-gray-50 p-4 rounded-lg shadow-inner">
+      <SiteVisitSummary handleAdView={handleAdView} summaries={summaries} loadingSUM={loadingSUM}/>
+    </div>
+  </section>
+   {/* Section: Clients Booking Requests */}
+  <section>
+    <h2 className="text-2xl font-semibold text-gray-800 mb-4 border-b pb-2">Client Booking Requests</h2>
+    <div className="bg-gray-50 p-4 rounded-lg shadow-inner">
+      <OwnerBookingRequests bookings={bookingsO} loading={loadingO} upbooking={upbooking} userImage={userImage} userName={userName} handleAdView={handleAdView} handleOpenChatId={handleOpenChatId} userId={userId}/>
+    </div>
+  </section>
+  {/* Section: My Bookings */}
+  
+  <section>
+    <h2 className="text-2xl font-semibold text-gray-800 mb-4 border-b pb-2">My Bookings</h2>
+    <div className="bg-gray-50 p-4 rounded-lg shadow-inner">
+      <ClientBookingRequests bookings={bookings} loading={loadingCl} userId={userId} handleAdView={handleAdView}/>
+    </div>
+  </section>
+
+ 
+</div>
+
+       </>)}
+      
+        </div>)}
+
+
+
+
+
+
         { inputMode==="Loans" && ( <div
           className={`rounded-b-lg p-2 flex flex-col min-h-screen ${
             inputMode === "Loans"
@@ -332,6 +481,11 @@ const filteredAds = selectedCategory
        </>)}
       
         </div>)}
+
+
+
+
+
        
       
     </div>

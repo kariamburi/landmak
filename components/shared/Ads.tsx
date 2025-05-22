@@ -21,6 +21,7 @@ import CheckCircleIcon from "@mui/icons-material/CheckCircle";
 import WhatsAppIcon from "@mui/icons-material/WhatsApp";
 import HelpOutlineOutlinedIcon from "@mui/icons-material/HelpOutlineOutlined";
 import CreditScoreOutlinedIcon from '@mui/icons-material/CreditScoreOutlined';
+import CalendarMonthOutlinedIcon from '@mui/icons-material/CalendarMonthOutlined';
 import {
   Accordion,
   AccordionContent,
@@ -94,6 +95,10 @@ import PropertyShapesGrid from "./PropertyShapesGrid";
 import ArrowForwardIosOutlinedIcon from '@mui/icons-material/ArrowForwardIosOutlined';
 import { RequestFinancing } from "./RequestFinancing";
 import AccountBalanceOutlinedIcon from '@mui/icons-material/AccountBalanceOutlined';
+import { Schedule } from "@mui/icons-material";
+import Booking from "@/lib/database/models/booking.model";
+import ScheduleVisitForm from "./Schedule";
+import BookingForm from "./Booking";
  // Correct import
 type CardProps = {
   ad: any;
@@ -127,7 +132,7 @@ export default function Ads({ ad, user, userId, userImage, userName, onClose,han
   const [videoAdId, setvideoAdId] = React.useState<string | null>(null);
   const [tiktokvideoAdId, setTiktokvideoAdId] = React.useState<string | null>(null);
   const [selectedIndex, setSelectedIndex] = React.useState<number | null>(null);
-  const hideAddVideo = userId === ad.organizer._id;
+  const isAdCreator = userId === ad.organizer._id;
  
   const [showphone, setshowphone] = useState(false);
   const { toast } = useToast();
@@ -261,6 +266,21 @@ export default function Ads({ ad, user, userId, userImage, userName, onClose,han
   const [isPopupOpenLoan, setIsPopupOpenLoan] = useState(false);
   const [isPopupOpenAAv, setIsPopupOpenAv] = useState(false);
   const [abuseDescription, setAbuseDescription] = useState("");
+   const [isPopupOpenBooking, setIsPopupOpenBooking] = useState(false);
+    const [isPopupOpenSchedule, setIsPopupOpenSchedule] = useState(false);
+
+const handleOpenPopupSchedule = () => {
+    setIsPopupOpenSchedule(true);
+  };
+  const handleClosePopupSchedule = () => {
+    setIsPopupOpenSchedule(false);
+  };
+  const handleOpenPopupBooking = () => {
+    setIsPopupOpenBooking(true);
+  };
+  const handleClosePopupBooking = () => {
+    setIsPopupOpenBooking(false);
+  };
 
    const handleOpenPopupLoan = () => {
     setIsPopupOpenLoan(true);
@@ -1366,22 +1386,71 @@ export default function Ads({ ad, user, userId, userImage, userName, onClose,han
  {(ad.data.category !== 'Property Services' || ad.data.category !== 'Wanted Ads') && (<>
  <div className="flex w-full items-center">
               <SignedIn>
-              <button onClick={handleOpenPopupLoan} className="flex rounded-sm w-full py-3 px-2 text-lg text-white bg-green-600 hover:bg-green-700 justify-center items-center gap-1">
+
+<div className="flex flex-col gap-4 w-full">
+ 
+    {isAdCreator ? (
+      
+      <>{!ad.hasSiteVisit && (<button onClick={handleOpenPopupSchedule} className="flex rounded-sm w-full py-3 px-2 text-lg text-white bg-blue-600 hover:bg-blue-700 justify-center items-center gap-1">
+              <CalendarMonthOutlinedIcon/>
+             Schedule Site Visit
+      </button>)}</>
+      ):(<> 
+      
+      {ad.hasSiteVisit && ( <button onClick={handleOpenPopupBooking} className="flex rounded-sm w-full py-3 px-2 text-lg text-white bg-black hover:bg-gray-900 justify-center items-center gap-1">
+              <CalendarMonthOutlinedIcon/>
+              Booking Site Visit
+      </button>)}
+     
+     <button onClick={handleOpenPopupLoan} className="flex rounded-sm w-full py-3 px-2 text-lg text-white bg-green-600 hover:bg-green-700 justify-center items-center gap-1">
               <CreditScoreOutlinedIcon/>
               Request this property Financing
       </button>
+    </>)}    
+       
+</div>
+
+            
        
         </SignedIn>
 
         <SignedOut>
-        <button onClick={() => {
+          <div className="flex flex-col gap-4 w-full">
+
+
+ {isAdCreator ? (
+    <>{!ad.hasSiteVisit && (<button onClick={() => {
               setIsOpenP(true);
               router.push("/sign-in");
-            }}
-             className="flex text-white justify-center rounded-sm w-full py-3 px-2 text-lg bg-green-600 hover:bg-green-700 items-center">
+            }} className="flex rounded-sm w-full py-3 px-2 text-lg text-white bg-blue-600 hover:bg-blue-700 justify-center items-center gap-1">
+              <CalendarMonthOutlinedIcon/>
+             Schedule Site Visit
+      </button>)}</>
+  
+  
+  ):(<> 
+      
+      
+         
+      {ad.hasSiteVisit && ( <button onClick={() => {
+              setIsOpenP(true);
+              router.push("/sign-in");
+            }} className="flex rounded-sm w-full py-3 px-2 text-lg text-white bg-black hover:bg-gray-900 justify-center items-center gap-1">
+              <CalendarMonthOutlinedIcon/>
+              Booking Site Visit
+      </button>)}
+      
+      
+     <button onClick={() => {
+              setIsOpenP(true);
+              router.push("/sign-in");
+            }} className="flex rounded-sm w-full py-3 px-2 text-lg text-white bg-green-600 hover:bg-green-700 justify-center items-center gap-1">
               <CreditScoreOutlinedIcon/>
               Request this property Financing
       </button>
+    </>)}   
+
+      </div>
       </SignedOut>
 
         </div>
@@ -1391,6 +1460,8 @@ export default function Ads({ ad, user, userId, userImage, userName, onClose,han
             <ReportAbuse  userId={userId} ad={ad} isOpen={isPopupOpen} onClose={handleClosePopup} userName={userName} userImage={userImage}/>
             <RequestFinancing  userId={userId} ad={ad} isOpen={isPopupOpenLoan} onClose={handleClosePopupLoan} userName={userName} userImage={userImage}/>
             <ProgressPopup isOpen={isOpenP} onClose={handleCloseP} /> 
+            <ScheduleVisitForm userId={userId} ad={ad} isOpen={isPopupOpenSchedule} onClose={handleClosePopupSchedule} userName={userName} userImage={userImage}/>
+            <BookingForm userId={userId} ad={ad} isOpen={isPopupOpenBooking} onClose={handleClosePopupBooking} userName={userName} userImage={userImage}/>
             </div>
           </div>
         </div>

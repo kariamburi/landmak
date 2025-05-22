@@ -8,7 +8,7 @@ export interface IReported extends Document {
   description: string;
 }
 const ReportedSchema = new Schema({
-  adId: { type: Schema.Types.ObjectId, ref: 'Ad' },
+  adId: { type: Schema.Types.ObjectId, ref: 'DynamicAd' },
   userId: { type: Schema.Types.ObjectId, ref: 'User' },
   reason: { type: String, required: true },
   description: { type: String, required: true },

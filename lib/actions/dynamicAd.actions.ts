@@ -18,6 +18,7 @@ import { PipelineStage } from "mongoose"
 import Loan from "../database/models/loans.model"
 import { FaClosedCaptioning } from "react-icons/fa"
 import { subMonths } from "date-fns";
+import Sitevisit from "../database/models/sitevisit.model"
 const populateLoans = (query: any) => {
   return query
     .populate({
@@ -255,7 +256,23 @@ export async function getAlldynamicAd({ limit = 20, page = 1, queryObject }: Get
         AdQuery = AdQuery.sort({ priority: -1, updatedAt: -1 });
     }
 
-    const ads = await populateAd(AdQuery);
+    // Get ads and convert to plain JS objects
+    const ads = (await populateAd(AdQuery)).map((ad: any) => ad.toObject());
+
+    // Extract ad IDs
+    const adIds = ads.map((ad: any) => ad._id);
+
+    // Query for related site visits
+    const siteVisits = await Sitevisit.find({ propertyId: { $in: adIds } }).select("propertyId");
+
+    // Build a set of visited ad IDs
+    const visitedAdIds = new Set(siteVisits.map((visit: any) => visit.propertyId.toString()));
+
+    // Add hasSiteVisit to each ad
+    ads.forEach((ad: any) => {
+      ad.hasSiteVisit = visitedAdIds.has(ad._id.toString());
+    });
+    // console.log(ads);
     const adCount = await DynamicAd.countDocuments(conditions);
 
     return {

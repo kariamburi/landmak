@@ -231,6 +231,36 @@ export type DeleteLoanParams = {
   path: string
 }
 
+//==========SiteVisit
+export type CreateSitevisitParams = {
+  sitevisit: {
+    propertyId: string
+    ownerId: string
+    date: string
+    timeSlots: string[]
+  }
+  path: string
+}
+export type DeleteSitevisitParams = {
+  _id: string
+  path: string
+}
+
+//==========Booking
+export type CreateBookingParams = {
+  booking: {
+    propertyId: string
+    userId: string
+    date: string
+    time: string
+    message: string
+  }
+  path: string
+}
+export type DeleteBookingParams = {
+  _id: string
+  path: string
+}
 
 //==========Reported
 export type CreateReportedParams = {
