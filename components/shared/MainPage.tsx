@@ -1814,7 +1814,9 @@ const handleCloseAdView = () => {
         handleAdView={handleAdView}
         handleOpenPlan={handleOpenPlan}
         handleOpenChatId={handleOpenChatId}
-        queryObject={queryObject} />
+        queryObject={queryObject} 
+         userName={userName} 
+                          userImage={userImage}  />
         <DrawerDemo 
           handleOpenSell={handleOpenSell}
           handlePayNow={handlePay}

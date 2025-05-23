@@ -40,6 +40,8 @@ import { Button } from "../ui/button";
 interface ChatWindowProps {
   isOpen: boolean;
   userId: string;
+  userName: string;
+  userImage: string;
   onClose: () => void;
   handleAdEdit: (ad:any) => void;
   handleAdView: (ad:any) => void;
@@ -60,6 +62,8 @@ const SearchByTitle: React.FC<ChatWindowProps> = ({
   handleOpenSearchByTitle,
   handleOpenChatId,
   queryObject,
+  userName, 
+userImage,
 }) => {
   const { toast } = useToast();
  
@@ -191,8 +195,9 @@ const fetchAds = async (value:string) => {
                           handleOpenChatId={handleOpenChatId}
                           handleAdEdit={handleAdEdit}
                           handleAdView={handleAdView}
-                          handleOpenPlan={handleOpenPlan}
-                        
+                          handleOpenPlan={handleOpenPlan} 
+                          userName={userName} 
+                          userImage={userImage}                        
                         />
                       </div>
                     );
