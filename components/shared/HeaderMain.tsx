@@ -25,8 +25,8 @@ import LandPolygonRecorder from "./BeaconTracker";
 import LandTargetNavigator from "./LandTargetNavigator";
 import AddLocationAltOutlinedIcon from '@mui/icons-material/AddLocationAltOutlined';
 import BeaconTracker from "./BeaconTracker";
-export default function HeaderMain({ handleFilter ,handleOpenSearchByTitle, handleCategory, handleOpenPlan, handleOpenSell, handleAdView, handleAdEdit, AdsCountPerRegion,queryObject }: { handleOpenSearchByTitle:() => void, handleOpenPlan:() => void, handleOpenSell:() => void, handleFilter: (value:any) => void, AdsCountPerRegion:any,queryObject:any , handleAdEdit: (id:string) => void, handleCategory: (value:string) => void,
-  handleAdView: (id:string) => void}) {
+export default function HeaderMain({ userName, userImage,handleFilter ,handleOpenSearchByTitle, handleCategory, handleOpenPlan, handleOpenSell, handleAdView, handleAdEdit, AdsCountPerRegion, queryObject }: { handleOpenSearchByTitle:() => void, handleOpenPlan:() => void, handleOpenSell:() => void, handleFilter: (value:any) => void, AdsCountPerRegion:any,queryObject:any , handleAdEdit: (id:string) => void, handleCategory: (value:string) => void,
+  handleAdView: (id:string) => void, userName:string, userImage:string}) {
   const router = useRouter();
   const [search, setSearch] = useState<string>();
   const [region, setRegion] = useState("All Kenya");
@@ -196,7 +196,7 @@ const handleClosePopupBeacon = () => {
 
         {showPopupMap && (
                     <div className="fixed inset-0 flex items-center justify-center bg-[#e4ebeb] z-50">
-                      <PropertyMap queryObject={queryObject} handleOpenSell={handleOpenSell} handleOpenPlan={handleOpenPlan} onClose={handleClosePopupMap} handleAdView={handleAdView} handleAdEdit={handleAdEdit} handleCategory={handleCategory}/>
+                      <PropertyMap queryObject={queryObject} handleOpenSell={handleOpenSell} handleOpenPlan={handleOpenPlan} onClose={handleClosePopupMap} handleAdView={handleAdView} handleAdEdit={handleAdEdit} handleCategory={handleCategory} userName={userName} userImage={userImage}/>
                     </div>
                      
                   )}

@@ -1423,6 +1423,8 @@ const handleCloseAdView = () => {
          handleCategory={handleCategory}
          handleOpenSell={handleOpenSell}
          handleOpenSearchByTitle={handleOpenSearchByTitle}
+         userName={userName}
+        userImage={userImage}
          />
         <AppPopup />
        
