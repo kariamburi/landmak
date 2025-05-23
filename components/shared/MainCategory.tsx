@@ -1301,19 +1301,20 @@ const SCROLL_THRESHOLD = 150; // pixels
     </div>
 
     <CollectionSearch
-      emptyTitle="No ads have been created yet"
-      emptyStateSubtext="Go create some now"
-      limit={20}
-      userId={userId}
-      activeButton={activeButton}
-      queryObject={newqueryObject}
-      loadPopup={loading}
-      handleAdEdit={handleAdEdit}
-      handleOpenSell={handleOpenSell}
-      handleAdView={handleAdView}
-      handleOpenPlan={handleOpenPlan}
-      handleOpenChatId={handleOpenChatId}
-    />
+                  emptyTitle="No ads have been created yet"
+                  emptyStateSubtext="Go create some now"
+                  limit={20}
+                  userId={userId}
+                  activeButton={activeButton}
+                  queryObject={newqueryObject}
+                  loadPopup={loading}
+                  handleAdEdit={handleAdEdit}
+                  handleOpenSell={handleOpenSell}
+                  handleAdView={handleAdView}
+                  handleOpenPlan={handleOpenPlan}
+                  handleOpenChatId={handleOpenChatId} 
+                  userName={userName} 
+                  userImage={userImage}/>
   </section>
 
   {userId && (
