@@ -130,7 +130,9 @@ const match = message.text.match(regex);
                handleAdView={handleAdView} 
                handleCategory={handleCategory}
                handleOpenSell={handleOpenSell}
-              handleOpenPlan={handleOpenPlan}/>
+              handleOpenPlan={handleOpenPlan}
+               userName={displayName}
+       userImage={photoURL}/>
                                       </div>
                                       
                                     </div>

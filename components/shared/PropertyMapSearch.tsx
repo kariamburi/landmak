@@ -73,6 +73,8 @@ type CollectionProps = {
   queryObject: any;
   lat?: string;
   lng?: string;
+  userName:string; 
+  userImage:string;
   onClose:() => void;
   handleOpenSell:() => void;
   handleOpenPlan:() => void;
@@ -86,7 +88,8 @@ interface Property {
   location: { lat: number; lng: number };
 }
 
-export default function PropertyMapSearch({queryObject, lat, lng, onClose, handleOpenPlan, handleOpenSell, handleAdEdit, handleAdView}:CollectionProps) {
+export default function PropertyMapSearch({queryObject, lat, lng, userName, 
+  userImage, onClose, handleOpenPlan, handleOpenSell, handleAdEdit, handleAdView}:CollectionProps) {
   const router = useRouter();
   const [showSidebar, setShowSidebar] = useState(true);
    const [newpage, setnewpage] = useState(false);
@@ -189,6 +192,8 @@ useEffect(() => {
       handleAdView={handleAdView}
       handleAdEdit={handleAdEdit}
       handleOpenPlan={handleOpenPlan}
+       userName={userName}
+       userImage={userImage}
     />
   </div>
 ))}

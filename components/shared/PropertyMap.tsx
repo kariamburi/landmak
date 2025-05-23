@@ -88,6 +88,8 @@ interface Props {
   queryObject: any;
   Parcels?: any;
   coordinates?:any;
+  userName:string; 
+  userImage:string;  
   onClose:() => void;
   handleAdEdit: (id:string) => void;
   handleAdView: (id:string) => void;
@@ -133,7 +135,8 @@ const getParcelsFromURL = (searchParams: URLSearchParams) => {
   return parcels;
 };
 
-export default function MapDrawingTool({queryObject, Parcels, coordinates, handleCategory, handleOpenPlan, handleOpenSell, onClose, handleAdEdit, handleAdView}:Props) {
+export default function MapDrawingTool({queryObject, Parcels, coordinates, userName, 
+  userImage, handleCategory, handleOpenPlan, handleOpenSell, onClose, handleAdEdit, handleAdView}:Props) {
  //const [uploadPopup, setUploadPopup] = useState(false);
   const [center, setCenter] = useState<any>(defaultcenter);
   const [latitude, setLatitude] = useState("");
@@ -1556,8 +1559,9 @@ if (mapInstance.current) {
                     isAdCreator={isAdCreator}
                     handleAdView={handleAdView}
                     handleAdEdit={handleAdEdit}
-                    handleOpenPlan={handleOpenPlan}
-                  />
+                    handleOpenPlan={handleOpenPlan} 
+                    userName={userName} 
+                    userImage={userImage}                  />
                 </div>
               );
             })}

@@ -1061,6 +1061,8 @@ const SCROLL_THRESHOLD = 150; // pixels
                 handleAdEdit={handleAdEdit}
                 handleAdView={handleAdView}
                 handleOpenSell={handleOpenSell}
+                 userName={userName}
+                 userImage={userImage}
               />
            
         </div>

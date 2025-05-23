@@ -1781,6 +1781,8 @@ const handleCloseAdView = () => {
               <PropertyMap queryObject={queryObject} onClose={handleClosePopupMap} Parcels={coordinates}
               handleAdEdit={handleAdEdit}
                handleAdView={handleAdView} 
+                userName={userName}
+               userImage={userImage}
                handleCategory={handleCategory}
                handleOpenSell={handleOpenSell}
               handleOpenPlan={handleOpenPlan}/>
