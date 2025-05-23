@@ -159,6 +159,10 @@ export const adminLinks = [
     route: '/financeRequest',
 
   }, {
+    label: 'Bookings',
+    route: '/bookings',
+
+  }, {
     label: 'Abuse',
     route: '/abused',
 

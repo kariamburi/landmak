@@ -22,7 +22,9 @@ import SendChat from './SendChat';
 import { sendEmail } from '@/lib/actions/sendEmail';
 import { createBooking } from '@/lib/actions/booking.actions';
 import { getSitevisitByPropertyId } from '@/lib/actions/sitevisit.actions';
-
+import ArrowBackOutlinedIcon from "@mui/icons-material/ArrowBackOutlined";
+import CircularProgress from '@mui/material/CircularProgress';
+import DirectionsWalkOutlinedIcon from '@mui/icons-material/DirectionsWalkOutlined';
 interface Props {
   ad: any;
   userId: string;
@@ -39,7 +41,7 @@ export default function BookingForm({ ad, userId, userName, userImage, isOpen, o
   const [message, setMessage] = useState('');
   const [loading, setLoading] = useState(false);
   const [availableTimes, setAvailableTimes] = useState<string[]>([]);
-
+ const [isSending, setIsSending] = useState(false);
   const { NotifyUser } = SendChat();
   const { toast } = useToast();
   const pathname = usePathname();
@@ -70,6 +72,28 @@ export default function BookingForm({ ad, userId, userName, userImage, isOpen, o
   }, [selectedDate, slots]);
 
   const handleSubmit = async () => {
+      if (!selectedDate) {
+
+            toast({
+                variant: "destructive",
+                title: "Failed!",
+                description: "Select Date.",
+                duration: 5000,
+              });
+            return;
+          }
+           if (!selectedTime) {
+
+            toast({
+                variant: "destructive",
+                title: "Failed!",
+                description: "Select Time.",
+                duration: 5000,
+              });
+            return;
+          }
+    try{
+    setIsSending(true);
     const newResponse = await createBooking({
       booking: {
         propertyId: ad._id,
@@ -120,6 +144,11 @@ export default function BookingForm({ ad, userId, userName, userImage, isOpen, o
     setSelectedDate('');
     setSelectedTime('');
     onClose();
+      } catch (error) {
+      console.error("Error sending message: ", error);
+    } finally {
+      setIsSending(false); // Re-enable the button and hide progress
+    }
   };
 
   const handleDateClick = (arg: any) => {
@@ -174,12 +203,21 @@ export default function BookingForm({ ad, userId, userName, userImage, isOpen, o
         value={message}
         onChange={(e) => setMessage(e.target.value)}
       />
-      <button
-        onClick={handleSubmit}
-        className="mt-4 bg-black hover:bg-gray-900 rounded-sm text-white px-4 py-2"
-      >
-        Book Visit
-      </button>
+       <button
+                      onClick={handleSubmit}
+                      className={`"mt-4 px-4 py-2 text-white rounded hover:bg-green-600 focus:outline-none mr-2  ${
+                        isSending ? "bg-green-200" : "bg-green-600"
+                      }`}
+                      disabled={isSending} // Disable button while sending
+                    >
+                      <div className="flex gap-1 items-center">
+                        {isSending && (
+                          <CircularProgress sx={{ color: "white" }} size={30} />
+                        )}
+                        {isSending ? "Booking..." : (<><DirectionsWalkOutlinedIcon sx={{ fontSize: 16 }} />Book Visit</>)}
+                      </div>
+                    </button>
+     
     </div>
   );
 
@@ -187,7 +225,16 @@ export default function BookingForm({ ad, userId, userName, userImage, isOpen, o
     <>
       {isMobile && isOpen ? (
         <div className="fixed inset-0 z-20 bg-[#e4ebeb] dark:bg-[#222528] dark:text-gray-100 p-4 flex flex-col overflow-auto">
+          <div className="flex flex-col w-full gap-2 items-center dark:bg-[#131B1E] border-b pb-2">
           <div className="flex w-full gap-2 items-center dark:bg-[#131B1E] border-b pb-2">
+  <button
+    onClick={onClose}
+    className="flex justify-center p-2 items-center text-gray-600 dark:text-[#e4ebeb] dark:hover:bg-gray-700 hover:text-green-600 rounded-full"
+  >
+    <ArrowBackOutlinedIcon />
+  </button>
+</div>
+
             {loading ? (
               <div className="w-full h-[50px] flex justify-center items-center">
                 <Icon icon={Barsscale} className="w-10 h-10 text-gray-500" />

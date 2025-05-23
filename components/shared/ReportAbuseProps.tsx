@@ -85,7 +85,7 @@ export const ReportAbuse: React.FC<ReportAbuseProps> = ({ ad, isOpen,userId, use
           title: "Alert",
           description: newResponse,
           duration: 5000,
-          className: "bg-[#30AF5B] text-white",
+          className: "bg-black text-white",
         });
       } else {
         toast({
@@ -108,15 +108,13 @@ export const ReportAbuse: React.FC<ReportAbuseProps> = ({ ad, isOpen,userId, use
                   // Fullscreen Popover for Mobile
                   <div className="fixed inset-0 z-20 bg-[#e4ebeb] dark:bg-[#222528] dark:text-gray-100 p-4 flex flex-col">
                     <div className="flex w-full gap-2 items-center dark:bg-[#131B1E] border-b pb-2">
-                                                                                         
-                                                                                          <button
-                                                                                           onClick={onClose}
-                                                                                            className="flex justify-center p-2 items-center text-gray-600 dark:text-[#e4ebeb] dark:hover:bg-gray-700 hover:text-green-600 rounded-full"
-                                                                                          >
-                                                                                            <ArrowBackOutlinedIcon />
-                                                                                          </button>
-                                                                                        
-                                                                                        </div>
+  <button
+    onClick={onClose}
+    className="flex justify-center p-2 items-center text-gray-600 dark:text-[#e4ebeb] dark:hover:bg-gray-700 hover:text-green-600 rounded-full"
+  >
+    <ArrowBackOutlinedIcon />
+  </button>
+</div>
 
                   
                       {/* Report Reason Select */}

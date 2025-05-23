@@ -115,6 +115,64 @@ export async function getBookingById(_id: string) {
   }
 }
 
+export async function getAllSiteVisitSummary(limit: number, page: number) {
+  await connectToDatabase();
+
+  const skipAmount = (page - 1) * limit;
+
+  // Count total site visits
+  const totalCount = await Sitevisit.countDocuments();
+
+  // Get paginated site visits with populated propertyId
+  const sitevisits = await Sitevisit.find()
+    .skip(skipAmount)
+    .limit(limit)
+    .populate('propertyId');
+
+  const results = [];
+
+  for (const site of sitevisits) {
+    const { date, timeSlots, propertyId } = site;
+
+    const slotSummaries = await Promise.all(
+      timeSlots.map(async (time: string) => {
+        const bookings = await Booking.find({
+          propertyId: propertyId._id,
+          date,
+          time,
+          status: 'confirmed',
+        }).populate('userId', 'firstName lastName phone');
+
+        const clients = bookings.map((booking) => {
+          const user = booking.userId as any;
+          return {
+            name: `${(user.firstName || '')} ${(user.lastName || '')}`.trim(),
+            phone: user.phone || '',
+          };
+        });
+
+        return {
+          time,
+          count: clients.length,
+          clients,
+        };
+      })
+    );
+
+    results.push({
+      propertyTitle: propertyId?.data?.title || 'Untitled Property',
+      propertyId: propertyId?._id,
+      date,
+      slots: slotSummaries,
+    });
+  }
+
+  return {
+    data: JSON.parse(JSON.stringify(results)),
+    totalPages: Math.ceil(totalCount / limit),
+  };
+}
+
 export async function getSiteVisitSummary(ownerId: string) {
   await connectToDatabase();
 
@@ -154,6 +212,7 @@ export async function getSiteVisitSummary(ownerId: string) {
 
     results.push({
       propertyTitle: propertyId?.data?.title || 'Untitled Property',
+      propertyId: propertyId?._id,
       date,
       slots: slotSummaries,
     });
@@ -181,7 +240,7 @@ export async function getallBooking(limit = 16, page = 1) {
 
 
 // Function to delete a bookmark
-export const deleteBooking = async ({ booking, path }: CreateBookingParams) => {
+export const deleteBookingX = async ({ booking, path }: CreateBookingParams) => {
   try {
     await connectToDatabase();
     const conditions = { $and: [{ propertyId: booking.propertyId }, { userId: booking.userId }] };
@@ -194,6 +253,25 @@ export const deleteBooking = async ({ booking, path }: CreateBookingParams) => {
     }
 
     revalidatePath(path); // Revalidate the path to update cache
+    return response;
+  } catch (error) {
+    handleError(error); // Handle any errors
+  }
+};
+// Function to delete a bookmark
+export const deleteBooking = async (_id: string) => {
+  try {
+    await connectToDatabase();
+    // const conditions = { $and: [{ propertyId: booking.propertyId }, { userId: booking.userId }] };
+    // const reportResponse = await Booking.findOne(conditions); // Find the matching bookmark
+
+    //let response = "Booking not found";
+    // if (reportResponse) {
+    await Booking.findByIdAndDelete(_id); // Delete the bookmark if it exists
+    const response = "Booking deleted successfully";
+    //}
+
+    // revalidatePath(path); // Revalidate the path to update cache
     return response;
   } catch (error) {
     handleError(error); // Handle any errors

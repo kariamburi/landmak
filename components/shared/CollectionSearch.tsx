@@ -20,6 +20,8 @@ import CircularProgress from "@mui/material/CircularProgress";
  // Correct import
 type CollectionProps = {
   userId: string;
+   userName: string;
+  userImage: string;
   emptyTitle: string;
   emptyStateSubtext: string;
   limit: number;
@@ -35,6 +37,8 @@ type CollectionProps = {
 
 const CollectionSearch = ({
   userId,
+  userName, 
+  userImage,
   emptyTitle,
   emptyStateSubtext,
   limit,
@@ -155,6 +159,8 @@ const CollectionSearch = ({
                           handleAdView={handleAdView}
                           handleOpenPlan={handleOpenPlan}
                           handleOpenChatId={handleOpenChatId}
+                          userName={userName} 
+                        userImage={userImage}
                         />
                       </div>
                     );
@@ -170,6 +176,8 @@ const CollectionSearch = ({
                           handleAdView={handleAdView}
                           handleOpenPlan={handleOpenPlan}
                           handleOpenChatId={handleOpenChatId}
+                          userName={userName} 
+                        userImage={userImage}
                         />
                       </div>
                     );
@@ -205,6 +213,8 @@ const CollectionSearch = ({
                             handleAdView={handleAdView}
                             handleOpenPlan={handleOpenPlan}
                             handleOpenChatId={handleOpenChatId}
+                            userName={userName} 
+                        userImage={userImage}
                           />
                         </div>
                       );
@@ -219,7 +229,9 @@ const CollectionSearch = ({
                             handleAdView={handleAdView} 
                             handleAdEdit={handleAdEdit}
                             handleOpenPlan={handleOpenPlan}  
-                            handleOpenChatId={handleOpenChatId} />
+                            handleOpenChatId={handleOpenChatId}
+                            userName={userName} 
+                        userImage={userImage} />
                         </div>
                       );
                     }

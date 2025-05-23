@@ -12,19 +12,23 @@ import { Email, Phone } from '@mui/icons-material';
 import Image from "next/image";
 import threeDotsScale from "@iconify-icons/svg-spinners/3-dots-scale"; // Correct import
 import DeleteOutlinedIcon from '@mui/icons-material/DeleteOutlined';
+import {DeleteBookings } from './DeleteBooking';
 interface Props {
   userId: string;
   handleAdView:(value:any)=>void;
+  updatebooking:(id:string)=>void;
   bookings:any;
   loading:boolean;
 }
-export default function ClientBookingRequests({userId, bookings, loading, handleAdView}:Props) {
+export default function ClientBookingRequests({userId, updatebooking, bookings, loading, handleAdView}:Props) {
  
- const [deleted, setDeleted] = useState(false);
- const deleteBooking = async (id: string) => {
-    await deleteBooking(id);
-    setDeleted(true);
+ 
+ const updatigBooking = async (id: string) => {
+  //  await deleteBooking(id);
+     updatebooking(id);
+   
  }
+ 
   return (
     <div>
        {loading ? (
@@ -35,10 +39,18 @@ export default function ClientBookingRequests({userId, bookings, loading, handle
       {bookings.map((booking:any) => (
        
        <div key={booking._id} className="border p-4 rounded mb-3">
-{!deleted && ( <>
-          <div className='flex gap-2 items-center'><strong>Property:</strong><p className='underline cursor-pointer hover:text-green-600'  onClick={() => {
+
+         
+
+ <div className='w-full flex justify-between items-center'>
+  <div className='flex gap-2 items-center'><strong>Property:</strong><p className='underline cursor-pointer hover:text-green-600'  onClick={() => {
                        handleAdView(booking.propertyId);
                       }}>{booking.propertyId.data.title}</p> </div>
+ 
+               <DeleteBookings _id={booking._id} updatigBooking={updatigBooking}/> 
+            </div>
+
+
           <p><strong>Location:</strong> {booking.propertyId.data.propertyarea.mapaddress}</p>
           <p><strong>Date:</strong> {format(new Date(booking.date), 'PPP')}</p>
           <p><strong>Time:</strong> {booking.time}</p>
@@ -54,10 +66,6 @@ export default function ClientBookingRequests({userId, bookings, loading, handle
           {booking.status}
         </span></p>
        
-            <div className="flex gap-2 mt-2">
-              <Button onClick={() => deleteBooking(booking._id)} className="bg-red-500 gap-1 text-white"><DeleteOutlinedIcon/>Delete</Button>
-              
-            </div></>)}
         
         
         </div>

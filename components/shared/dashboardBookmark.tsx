@@ -16,6 +16,8 @@ import { ScrollArea } from "../ui/scroll-area";
 
 type CollectionProps = {
   userId: string;
+  userName: string;
+  userImage: string;
   user: CreateUserParams;
   emptyTitle: string;
   emptyStateSubtext: string;
@@ -41,6 +43,8 @@ type CollectionProps = {
 
 const DashboardBookmark = ({
   userId,
+  userName,
+  userImage,
   user,
   emptyTitle,
   emptyStateSubtext,
@@ -111,6 +115,8 @@ CollectionProps) => {
                 handleAdEdit={handleAdEdit}
                 handleOpenPlan={handleOpenPlan}
                 handleOpenChatId={handleOpenChatId}
+                userName={userName} 
+                userImage={userImage}
               />
             </section>
           </div>

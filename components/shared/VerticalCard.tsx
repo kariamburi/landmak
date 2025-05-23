@@ -35,6 +35,8 @@ import { Email, Phone } from '@mui/icons-material'; // Or from 'react-icons/md'
 import ChatBubbleOutlineOutlinedIcon from "@mui/icons-material/ChatBubbleOutlineOutlined";
 import { formatDistanceToNow, isBefore, subMonths } from "date-fns";
 import { updateCreatedAt } from "@/lib/actions/dynamicAd.actions";
+import ScheduleVisitForm from "./Schedule";
+import CalendarMonthOutlinedIcon from '@mui/icons-material/CalendarMonthOutlined';
 const shouldShowRenewButton = (updatedAt: Date, priority: number) => {
   const oneMonthAgo = subMonths(new Date(), 1);
   return priority === 1 && isBefore(new Date(updatedAt), oneMonthAgo);
@@ -45,6 +47,8 @@ type CardProps = {
   hasOrderLink?: boolean;
   hidePrice?: boolean;
   userId: string;
+   userName:string;
+  userImage:string;
  isAdCreator?: boolean;
   popup?: string;
   handleAdEdit: (ad:any) => void;
@@ -59,6 +63,8 @@ const VerticalCard = ({
   hidePrice,
   userId,
   isAdCreator,
+   userName,
+  userImage,
   handleAdEdit,
   handleAdView,
   handleOpenPlan,
@@ -180,6 +186,18 @@ const [isDeleted, setIsDeleted] = useState(false);
               alert("Error renewing ad.");
             }
           };
+
+
+          const [isPopupOpenSchedule, setIsPopupOpenSchedule] = useState(false);
+              const [selectedAd, setSelectedAd] = useState<any>([]);
+            
+            const handleOpenPopupSchedule = (ad:any) => {
+                setSelectedAd(ad);
+                setIsPopupOpenSchedule(true);
+              };
+              const handleClosePopupSchedule = () => {
+                setIsPopupOpenSchedule(false);
+              };
   return (
     <>
     {ad.loanterm ? (<>
@@ -636,6 +654,10 @@ const [isDeleted, setIsDeleted] = useState(false);
               </div>
             )}
           </div>
+            {!ad.hasSiteVisit && isAdCreator && (<div className="flex mt-2 w-full text-xs justify-between items-center"><button onClick={()=> handleOpenPopupSchedule(ad)} className="flex rounded w-full p-2 text-xs text-green-600 border border-green-600 bg-green-100 hover:bg-green-200 justify-center items-center gap-1">
+                                  <CalendarMonthOutlinedIcon sx={{ fontSize: 16 }}/>
+                                 Schedule Site Visit
+                          </button></div>)}
            {isAdCreator && shouldShowRenewButton(ad.updatedAt, ad.priority) && (<div className="flex mt-2 w-full text-xs justify-between items-center">
              <button
     className="bg-green-600 hover:bg-green-700 text-white p-2 rounded"
@@ -657,7 +679,7 @@ const [isDeleted, setIsDeleted] = useState(false);
     
     </>)}
       <ContactUser isOpen={isOpenContact} user={selectUser} handleOpenChatId={handleOpenChatId} onClose={handleCloseContact}/>
-          
+      <ScheduleVisitForm userId={userId} ad={selectedAd} isOpen={isPopupOpenSchedule} onClose={handleClosePopupSchedule} userName={userName} userImage={userImage}/>   
     </>
   );
 };

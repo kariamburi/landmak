@@ -61,6 +61,8 @@ import MonetizationOnOutlinedIcon from '@mui/icons-material/MonetizationOnOutlin
 import TopAdvertiser from "./TopAdvertiser";
 import AdvertiserSubscriptions from "./AdvertiserSubscriptions";
 import CollectionLoans from "./CollectionLoans";
+import MenuBookOutlinedIcon from '@mui/icons-material/MenuBookOutlined';
+import CollectionBookings from "./CollectionBookings";
 type homeProps = {
   userId: string;
   userName: string;
@@ -80,6 +82,7 @@ type homeProps = {
   subscriptionsExpirely:any;
   topadvertiser:any;
   financeRequests:any;
+  bookings:any;
 };
 const HomeDashboard = ({
   userId,
@@ -100,6 +103,7 @@ const HomeDashboard = ({
   subscriptionsExpirely,
   topadvertiser,
   financeRequests,
+  bookings,
 }: homeProps) => {
   const router = useRouter();
   const searchParams = useSearchParams();
@@ -386,6 +390,11 @@ const HomeDashboard = ({
                           <ChatBubbleOutlineOutlinedIcon className="w-10 p-1" />
                         </span>
                       )}
+                       {link.label === "Booking" && (
+                        <span>
+                          <MenuBookOutlinedIcon className="w-10 p-1" />
+                        </span>
+                      )}
                       {link.label === "Abuse" && (
                         <span>
                           <AssistantPhotoOutlinedIcon className="w-10 p-1" />
@@ -466,6 +475,11 @@ const HomeDashboard = ({
                             <ChatBubbleOutlineOutlinedIcon className="w-10 p-1" />
                           </span>
                         )}
+                          {link.label === "Booking" && (
+                        <span>
+                          <MenuBookOutlinedIcon className="w-10 p-1" />
+                        </span>
+                      )}
                          {link.label === "Abuse" && (
                         <span>
                           <AssistantPhotoOutlinedIcon className="w-10 p-1" />
@@ -942,6 +956,29 @@ const HomeDashboard = ({
                   page={page}
                   userId={userId}
                   totalPages={financeRequests.totalPages}
+                  handleOpenChatId={handleOpenChatId}
+                />
+                <ScrollBar orientation="horizontal" />
+              </ScrollArea>
+            </div>
+          </>
+        )}
+           {activeTab === "Bookings" && (
+          <>
+            <div className="container mx-auto p-1 lg:p-4 border rounded-xl">
+              <h1 className="text-2xl font-bold mb-4">Site Visits Bookings</h1>
+              <div className="flex flex-col lg:flex-row gap-3"></div>
+              {/* Date Filter Section */}
+
+              <ScrollArea className="w-[340px] lg:w-full">
+                <CollectionBookings
+                  data={bookings.data}
+                  emptyTitle={`No Bookings Request`}
+                  emptyStateSubtext="Come back later"
+                  limit={limit}
+                  page={page}
+                  userId={userId}
+                  totalPages={bookings.totalPages}
                   handleOpenChatId={handleOpenChatId}
                 />
                 <ScrollBar orientation="horizontal" />

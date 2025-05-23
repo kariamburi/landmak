@@ -5,6 +5,10 @@ import { useEffect, useState } from 'react';
 import CalendarMonthOutlinedIcon from '@mui/icons-material/CalendarMonthOutlined';
 import QueryBuilderOutlinedIcon from '@mui/icons-material/QueryBuilderOutlined';
 import PeopleOutlineOutlinedIcon from '@mui/icons-material/PeopleOutlineOutlined';
+import { deleteBookingsByPropertyId } from '@/lib/actions/sitevisit.actions';
+import DeleteOutlinedIcon from '@mui/icons-material/DeleteOutlined';
+import { useToast } from '../ui/use-toast';
+import { DeleteVisitSite } from './DeleteVisitSite';
 
 interface Client {
   name: string;
@@ -25,19 +29,25 @@ interface Summary {
 
 export default function SiteVisitSummary({
   handleAdView,
+  updatesitevisit,
   summaries,
   loadingSUM
 }: {
   summaries:any,
   loadingSUM:boolean,
   handleAdView: (value: any) => void;
+  updatesitevisit:(id:string)=>void;
 }) {
   
   const [expanded, setExpanded] = useState<{ [key: string]: boolean }>({}); // Track expanded slots
 
-  
+   const { toast } = useToast();
   const toggleExpanded = (key: string) => {
     setExpanded((prev) => ({ ...prev, [key]: !prev[key] }));
+  };
+   const updateVisits = async (propertyId: string) => {
+   updatesitevisit(propertyId);
+  
   };
 
   if (loadingSUM) return <p>Loading summary...</p>;
@@ -54,12 +64,17 @@ export default function SiteVisitSummary({
     <div className="space-y-6">
       {summaries.map((summary:any, idx:number) => (
         <div key={idx} className="border p-4 rounded-lg shadow-sm bg-white">
+       <div className='w-full flex justify-between items-center'>
           <h3
             className="text-lg font-semibold mb-2"
-           // onClick={() => handleAdView(summary.propertyId)}
+           
           >
             {summary.propertyTitle}
           </h3>
+ 
+              <DeleteVisitSite updateVisits={updateVisits} propertyId={summary.propertyId} />
+              
+            </div>
 
           <p className="text-sm text-gray-600 flex gap-2 items-center mb-3">
             <CalendarMonthOutlinedIcon sx={{ fontSize: 16 }} />

@@ -52,7 +52,7 @@ export async function getLoanById(_id: string) {
     handleError(error)
   }
 }
-export async function getallLaons(limit = 16, page = 1) {
+export async function getallLaons(limit:number, page:number) {
   try {
     await connectToDatabase();
     const conditions = {}

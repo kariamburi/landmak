@@ -483,6 +483,7 @@ const [wantedcategory, setWantedcategory] = useState('');
  
   const handleOpenShop = (shopId:any) => {
     handleClose();
+    console.log(shopId);
     setshopId(shopId)
     setIsOpenShop(true);
     };
@@ -1475,6 +1476,8 @@ const handleCloseAdView = () => {
                 hasOrderLink={hasOrderLink}
                 hidePrice={hidePrice}
                 userId={userId}
+                userName={userName}
+                userImage={userImage}
                 handleAdEdit={handleAdEdit}
                 handleAdView={handleAdView}
                 handleOpenPlan={handleOpenPlan}
@@ -1622,7 +1625,7 @@ const handleCloseAdView = () => {
       handleOpenSettings={handleOpenSettings}
       handleCategory={handleCategory}
       subcategoryList={subcategoryList}
-      user={userprofile?.user ?? []} 
+      user={userprofile} 
       packagesList={packagesList}
       userImage={userImage} />
  
@@ -1652,7 +1655,9 @@ const handleCloseAdView = () => {
       handleOpenShop={handleOpenShop} 
       handleOpenChatId={handleOpenChatId} 
       handleOpenSettings={handleOpenSettings}
-      user={userprofile?.user ?? []}/>
+      user={userprofile?.user ?? []}
+      userName={userName}
+      userImage={userImage}/>
 
       <PopupPerfomance isOpen={isOpenPerfomance} onClose={handleClosePerfomance} userId={userId} handleOpenSell={handleOpenSell} handleAdEdit={handleAdEdit} handleAdView={handleAdView} handleOpenAbout={handleOpenAbout} handleOpenTerms={handleOpenTerms} handleOpenPrivacy={handleOpenPrivacy} handleOpenSafety={handleOpenSafety} handleOpenBook={handleOpenBook} handleOpenPlan={handleOpenPlan} handleOpenChat={handleOpenChat} userName={userName} userImage={userImage}
       handleOpenPerfomance={handleOpenPerfomance}

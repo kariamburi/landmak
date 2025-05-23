@@ -202,12 +202,31 @@ export async function getAlldynamicAd({ limit = 20, page = 1, queryObject }: Get
         { $limit: limit },
       ]);
 
-      const populatedAds = await DynamicAd.populate(ads, [
+      //const populatedAds = await DynamicAd.populate(ads, [
+      //  { path: "organizer", model: User, select: "_id clerkId email firstName lastName photo businessname aboutbusiness businessaddress latitude longitude businesshours businessworkingdays phone whatsapp website facebook twitter instagram tiktok imageUrl verified" },
+      //   { path: "subcategory", model: Subcategory, select: "fields" },
+      //   { path: "plan", model: Packages, select: "_id name color imageUrl" },
+      // ]);
+      // Get ads and convert to plain JS objects
+      const populatedAds = (await DynamicAd.populate(ads, [
         { path: "organizer", model: User, select: "_id clerkId email firstName lastName photo businessname aboutbusiness businessaddress latitude longitude businesshours businessworkingdays phone whatsapp website facebook twitter instagram tiktok imageUrl verified" },
         { path: "subcategory", model: Subcategory, select: "fields" },
         { path: "plan", model: Packages, select: "_id name color imageUrl" },
-      ]);
+      ])).map((ad: any) => ad.toObject());
 
+      // Extract ad IDs
+      const adIds = populatedAds.map((ad: any) => ad._id);
+
+      // Query for related site visits
+      const siteVisits = await Sitevisit.find({ propertyId: { $in: adIds } }).select("propertyId");
+
+      // Build a set of visited ad IDs
+      const visitedAdIds = new Set(siteVisits.map((visit: any) => visit.propertyId.toString()));
+
+      // Add hasSiteVisit to each ad
+      populatedAds.forEach((ad: any) => {
+        ad.hasSiteVisit = visitedAdIds.has(ad._id.toString());
+      });
       const adCount = await DynamicAd.countDocuments(conditions);
 
       return {
@@ -224,6 +243,9 @@ export async function getAlldynamicAd({ limit = 20, page = 1, queryObject }: Get
         const response = await populateLoans(Loan.find(conditions)
           .skip(skipAmount)
           .limit(limit));
+
+
+
         const AdCount = await Loan.countDocuments(conditions)
 
         return { data: JSON.parse(JSON.stringify(response)), totalPages: Math.ceil(AdCount / limit) }
@@ -244,7 +266,7 @@ export async function getAlldynamicAd({ limit = 20, page = 1, queryObject }: Get
     switch (queryObject.sortby) {
       case "recommeded":
       case "new":
-        AdQuery = AdQuery.sort({ priority: -1, updatedAt: -1 });
+        AdQuery = AdQuery.sort({ priority: -1, createdAt: -1 });
         break;
       case "lowest":
         AdQuery = AdQuery.sort({ priority: -1, "data.price": 1 });
@@ -253,7 +275,7 @@ export async function getAlldynamicAd({ limit = 20, page = 1, queryObject }: Get
         AdQuery = AdQuery.sort({ priority: -1, "data.price": -1 });
         break;
       default:
-        AdQuery = AdQuery.sort({ priority: -1, updatedAt: -1 });
+        AdQuery = AdQuery.sort({ priority: -1, createdAt: -1 });
     }
 
     // Get ads and convert to plain JS objects
@@ -411,15 +433,31 @@ export async function getRelatedAdByCategory({
     const conditions = { $and: [{ subcategory: subcategory }, { _id: { $ne: adId } }, { adstatus: "Active" }] }
 
     const AdQuery = DynamicAd.find(conditions)
-      //  .sort({ updatedAt: 'desc' })
-      .sort({ priority: -1, updatedAt: -1 })
+      //  .sort({ createdAt: 'desc' })
+      .sort({ priority: -1, createdAt: -1 })
       .skip(skipAmount)
       .limit(limit)
 
-    const Ads = await populateAd(AdQuery)
+    //const Ads = await populateAd(AdQuery)
+    // Get ads and convert to plain JS objects
+    const ads = (await populateAd(AdQuery)).map((ad: any) => ad.toObject());
+
+    // Extract ad IDs
+    const adIds = ads.map((ad: any) => ad._id);
+
+    // Query for related site visits
+    const siteVisits = await Sitevisit.find({ propertyId: { $in: adIds } }).select("propertyId");
+
+    // Build a set of visited ad IDs
+    const visitedAdIds = new Set(siteVisits.map((visit: any) => visit.propertyId.toString()));
+
+    // Add hasSiteVisit to each ad
+    ads.forEach((ad: any) => {
+      ad.hasSiteVisit = visitedAdIds.has(ad._id.toString());
+    });
     const AdCount = await DynamicAd.countDocuments(conditions)
     //console.log(JSON.parse(JSON.stringify(Ads)))
-    return { data: JSON.parse(JSON.stringify(Ads)), totalPages: Math.ceil(AdCount / limit) }
+    return { data: JSON.parse(JSON.stringify(ads)), totalPages: Math.ceil(AdCount / limit) }
   } catch (error) {
     handleError(error)
   }
@@ -463,12 +501,12 @@ export async function getAdByUser({ userId, limit = 20, page, sortby, myshop }: 
     let AdQuery: any = [];
     if (sortby === "recommeded") {
       AdQuery = DynamicAd.find(conditions)
-        .sort({ priority: -1, updatedAt: -1 }) // Both sorted in descending order
+        .sort({ priority: -1, createdAt: -1 }) // Both sorted in descending order
         .skip(skipAmount)
         .limit(limit)
     } else if (sortby === "new") {
       AdQuery = DynamicAd.find(conditions)
-        .sort({ priority: -1, updatedAt: -1 })
+        .sort({ priority: -1, createdAt: -1 })
         .skip(skipAmount)
         .limit(limit)
     } else if (sortby === "lowest") {
@@ -483,11 +521,25 @@ export async function getAdByUser({ userId, limit = 20, page, sortby, myshop }: 
         .limit(limit)
     }
 
+    // Get ads and convert to plain JS objects
+    const ads = (await populateAd(AdQuery)).map((ad: any) => ad.toObject());
 
-    const Ads = await populateAd(AdQuery)
+    // Extract ad IDs
+    const adIds = ads.map((ad: any) => ad._id);
+
+    // Query for related site visits
+    const siteVisits = await Sitevisit.find({ propertyId: { $in: adIds } }).select("propertyId");
+
+    // Build a set of visited ad IDs
+    const visitedAdIds = new Set(siteVisits.map((visit: any) => visit.propertyId.toString()));
+
+    // Add hasSiteVisit to each ad
+    ads.forEach((ad: any) => {
+      ad.hasSiteVisit = visitedAdIds.has(ad._id.toString());
+    });
     const AdCount = await DynamicAd.countDocuments(conditions)
 
-    return { data: JSON.parse(JSON.stringify(Ads)), totalPages: Math.ceil(AdCount / limit) }
+    return { data: JSON.parse(JSON.stringify(ads)), totalPages: Math.ceil(AdCount / limit) }
   } catch (error) {
     handleError(error)
   }
@@ -540,7 +592,7 @@ export async function updateCreatedAt(_id: string) {
     const update = await DynamicAd.findByIdAndUpdate(
       _id,
       {
-        updatedAt: new Date()
+        createdAt: new Date()
       },
       { new: true }
     );

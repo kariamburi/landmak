@@ -15,7 +15,7 @@ const SitevisitSchema = new Schema({
   timeSlots: [String], // e.g., ['10:00', '12:00']
 },
   { timestamps: true })
-SitevisitSchema.index({ propertyId: 1 });
+//SitevisitSchema.index({ propertyId: 1 });
 const Sitevisit = models.Sitevisit || model('Sitevisit', SitevisitSchema);
 
 export default Sitevisit;

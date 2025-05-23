@@ -91,6 +91,7 @@ const CollectionMyads = ({
     const fetchSummary = async () => {
       try {
         const data = await getSiteVisitSummary(userId);
+        console.log(data)
         setSummaries(data);
       } catch (error) {
         console.error('Error fetching site visit summary:', error);
@@ -141,11 +142,24 @@ const CollectionMyads = ({
    if (userId && isAdCreator) fetchBookings();
  }, [userId]);
  
- const upbooking =  (id:string, status:string) => {
+ const upbooking =  (id:string, status?:string) => {
+  if(status){
  setBookingsO((prev:any) =>
       prev.map((b:any) => (b._id === id ? { ...b, status } : b))
     );
+    }else{
+       setBookingsO((prev: any[]) => prev.filter(b => b._id !== id));
+    }
   }
+
+const updatebooking =  (id:string) => {
+   setBookings((prev: any[]) => prev.filter(b => b._id !== id));
+  }
+  const updatesitevisit =  (propertyId:string) => {
+   setSummaries((prev: any[]) => prev.filter(b => b.propertyId !== propertyId));
+  }
+  
+ 
   const fetchAds = async () => {
     setLoading(true);
 
@@ -308,7 +322,9 @@ const filteredAds = selectedCategory
                       handleAdView={handleAdView}
                       handleAdEdit={handleAdEdit}
                       handleOpenPlan={handleOpenPlan} 
-                      handleOpenChatId={handleOpenChatId}                    />
+                      handleOpenChatId={handleOpenChatId} 
+                      userName={userName} 
+                        userImage={userImage}                   />
                   </div>
                 );
               } else {
@@ -323,6 +339,8 @@ const filteredAds = selectedCategory
                       handleAdEdit={handleAdEdit}
                       handleOpenPlan={handleOpenPlan}
                       handleOpenChatId={handleOpenChatId} 
+                      userName={userName} 
+                        userImage={userImage}
                     />
                   </div>
                 );
@@ -349,6 +367,8 @@ const filteredAds = selectedCategory
                       handleAdEdit={handleAdEdit}
                       handleOpenPlan={handleOpenPlan}
                         handleOpenChatId={handleOpenChatId} 
+                        userName={userName} 
+                        userImage={userImage}
                       />
                     </div>
                   );
@@ -360,11 +380,12 @@ const filteredAds = selectedCategory
                         ad={ad}
                         userId={userId}
                         isAdCreator={isAdCreator}
-                        handleAdView={handleAdView} 
-                      handleAdEdit={handleAdEdit}
-                      handleOpenPlan={handleOpenPlan}
+                        handleAdView={handleAdView}
+                        handleAdEdit={handleAdEdit}
+                        handleOpenPlan={handleOpenPlan}
                         handleOpenChatId={handleOpenChatId} 
-                      />
+                        userName={userName} 
+                        userImage={userImage} />
                     </div>
                   );
                 }
@@ -419,7 +440,7 @@ const filteredAds = selectedCategory
   <section>
     <h2 className="text-2xl font-semibold text-gray-800 mb-4 border-b pb-2">Booking summary</h2>
     <div className="bg-gray-50 p-4 rounded-lg shadow-inner">
-      <SiteVisitSummary handleAdView={handleAdView} summaries={summaries} loadingSUM={loadingSUM}/>
+      <SiteVisitSummary updatesitevisit={updatesitevisit} handleAdView={handleAdView} summaries={summaries} loadingSUM={loadingSUM}/>
     </div>
   </section>
    {/* Section: Clients Booking Requests */}
@@ -434,7 +455,7 @@ const filteredAds = selectedCategory
   <section>
     <h2 className="text-2xl font-semibold text-gray-800 mb-4 border-b pb-2">My Bookings</h2>
     <div className="bg-gray-50 p-4 rounded-lg shadow-inner">
-      <ClientBookingRequests bookings={bookings} loading={loadingCl} userId={userId} handleAdView={handleAdView}/>
+      <ClientBookingRequests bookings={bookings} updatebooking={updatebooking} loading={loadingCl} userId={userId} handleAdView={handleAdView}/>
     </div>
   </section>
 

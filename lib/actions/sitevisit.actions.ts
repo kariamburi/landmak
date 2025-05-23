@@ -9,6 +9,8 @@ import User from "../database/models/user.model"
 import Reported from "../database/models/reported.model"
 import DynamicAd from "../database/models/dynamicAd.model"
 import Sitevisit from "../database/models/sitevisit.model"
+import Booking from "../database/models/booking.model"
+import mongoose from "mongoose"
 
 
 const populateAd = (query: any) => {
@@ -62,7 +64,7 @@ export async function getSitevisitByPropertyId(_id: string) {
   try {
     await connectToDatabase()
 
-    const conditions = {propertyId: _id };
+    const conditions = { propertyId: _id };
     const response = await Sitevisit.findOne(conditions); // Find the matching bookmark
 
 
@@ -109,5 +111,16 @@ export const deleteSitevisit = async ({ sitevisit, path }: CreateSitevisitParams
     return response;
   } catch (error) {
     handleError(error); // Handle any errors
+  }
+};
+export const deleteBookingsByPropertyId = async (propertyId: string) => {
+  try {
+    const objectId = new mongoose.Types.ObjectId(propertyId); // Ensure valid ObjectId
+    await Sitevisit.deleteOne({ propertyId: objectId });
+    const result = await Booking.deleteMany({ propertyId: objectId });
+    console.log(`${result.deletedCount} booking(s) deleted for propertyId: ${propertyId}`);
+  } catch (error) {
+    console.error("Error deleting bookings:", error);
+    throw error;
   }
 };

@@ -11,7 +11,8 @@ import Skeleton from "@mui/material/Skeleton";
 
 type CollectionProps = {
   userId: string;
-  //data: IAd[];
+  userName: string;
+  userImage: string;
   emptyTitle: string;
   emptyStateSubtext: string;
   limit: number;
@@ -30,6 +31,8 @@ type CollectionProps = {
 const CollectionBookmark = ({
   //data,
   userId,
+  userName,
+  userImage,
   emptyTitle,
   emptyStateSubtext,
   // page,
@@ -131,6 +134,8 @@ const CollectionBookmark = ({
                       handleAdEdit={handleAdEdit} 
                       handleOpenPlan={handleOpenPlan}
                       handleOpenChatId={handleOpenChatId} 
+                        userName={userName} 
+                        userImage={userImage}
                       popup={"bookmark"}/>
                       </>)}   
                   </div>
@@ -148,6 +153,8 @@ const CollectionBookmark = ({
                       handleAdEdit={handleAdEdit}
                       handleOpenPlan={handleOpenPlan}
                       handleOpenChatId={handleOpenChatId} 
+                        userName={userName} 
+                        userImage={userImage}
                       popup={"bookmark"}
                     /></>)}  
                   </div>
@@ -177,6 +184,8 @@ const CollectionBookmark = ({
                         handleAdEdit={handleAdEdit}
                         handleOpenPlan={handleOpenPlan}
                         handleOpenChatId={handleOpenChatId} 
+                          userName={userName} 
+                        userImage={userImage}
                         popup={"bookmark"}
                       /></>)}  
                     </div>
@@ -194,6 +203,8 @@ const CollectionBookmark = ({
                         handleAdEdit={handleAdEdit}
                         handleOpenPlan={handleOpenPlan}
                         handleOpenChatId={handleOpenChatId}
+                          userName={userName} 
+                        userImage={userImage}
                         popup={"bookmark"} 
                       /></>)}  
                     </div>

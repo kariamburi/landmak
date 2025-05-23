@@ -13,19 +13,21 @@ import Barsscale from '@iconify-icons/svg-spinners/bars-scale';
 import { Email, Phone } from '@mui/icons-material';
 import ChatBubbleOutlineOutlinedIcon from "@mui/icons-material/ChatBubbleOutlineOutlined";
 import Image from "next/image";
+import DeleteOutlinedIcon from '@mui/icons-material/DeleteOutlined';
 import threeDotsScale from "@iconify-icons/svg-spinners/3-dots-scale"; // Correct import
+import { DeleteBookings } from './DeleteBooking';
 interface Props {
   userId: string;
   userImage: string;
   userName: string;
   handleOpenChatId:(value:any)=>void;
   handleAdView:(value:any)=>void;
-  upbooking:(id:string, status:string)=>void;
+  upbooking:(id:string, status?:string)=>void;
    bookings:any;
   loading:boolean;
 }
 
-export default function OwnerBookingRequests({ userId, userImage, bookings,loading,userName, upbooking, handleAdView, handleOpenChatId }: Props) {
+export default function OwnerBookingRequests({ userId, userImage, bookings, loading,userName, upbooking, handleAdView, handleOpenChatId }: Props) {
  
   const { NotifyUser } = SendChat();
  
@@ -72,6 +74,10 @@ export default function OwnerBookingRequests({ userId, userImage, bookings,loadi
     upbooking(id,status);
   };
 
+ const updatigBooking = async (id: string) => {
+   // await deleteBooking(id);
+    upbooking(id);
+ }
   return (
     <div>
  {loading ? (
@@ -88,9 +94,18 @@ export default function OwnerBookingRequests({ userId, userImage, bookings,loadi
 }
       {bookings.map((booking:any) => (
         <div key={booking._id} className="border p-4 rounded mb-3 bg-white shadow-sm">
-          <div className='flex gap-2 items-center'><strong>Property:</strong><p className='underline cursor-pointer hover:text-green-600'  onClick={() => {
+         
+  <div className='w-full flex justify-between items-center'>
+  <div className='flex gap-2 items-center'><strong>Property:</strong><p className='underline cursor-pointer hover:text-green-600'  onClick={() => {
                        handleAdView(booking.propertyId);
                       }}>{booking.propertyId.data.title}</p> </div>
+ 
+             <DeleteBookings _id={booking._id} updatigBooking={updatigBooking}/> 
+              
+            </div>
+
+
+
           <p><strong>Location:</strong> {booking.propertyId.data.propertyarea.mapaddress}</p>
           <p><strong>Message:</strong> {booking.message}</p>
           <p><strong>Date:</strong> {format(new Date(booking.date), 'PPP')}</p>

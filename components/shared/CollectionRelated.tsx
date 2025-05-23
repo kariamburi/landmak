@@ -156,6 +156,8 @@ const CollectionRelated = ({
                                            handleAdView={handleAdView}
                                            handleOpenPlan={handleOpenPlan}
                                              handleOpenChatId={handleOpenChatId} 
+                                             userName={userName} 
+                        userImage={userImage}
                                          />
                 </div>
               );
@@ -171,6 +173,8 @@ const CollectionRelated = ({
                                             handleAdView={handleAdView}
                                             handleOpenPlan={handleOpenPlan}
                                               handleOpenChatId={handleOpenChatId} 
+                                              userName={userName} 
+                        userImage={userImage}
                                           />
                 </div>
               );

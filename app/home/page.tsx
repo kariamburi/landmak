@@ -3,6 +3,7 @@
 import HomeDashboard from "@/components/shared/HomeDashboard";
 import Navbar from "@/components/shared/navbar";
 import { Toaster } from "@/components/ui/toaster";
+import { getAllSiteVisitSummary } from "@/lib/actions/booking.actions";
 import {
   getAllCategories,
   getselectedCategories,
@@ -53,6 +54,7 @@ const Home = async ({ searchParams }: SearchParamProps) => {
   const fee = await getVerifyfee();
    const subscriptionsExpirely = await checkExpiredLatestSubscriptionsPerUser();
   const topadvertiser = await getToAdvertiser();
+   const bookings = await getAllSiteVisitSummary(limit, page);
   const financeRequests = await getallLaons(limit, page);
  // console.log(reported);
   return (
@@ -76,6 +78,7 @@ const Home = async ({ searchParams }: SearchParamProps) => {
           subscriptionsExpirely={subscriptionsExpirely}
           topadvertiser={topadvertiser}
           financeRequests={financeRequests}
+          bookings={bookings}
         />
       
   );

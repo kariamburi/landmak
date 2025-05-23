@@ -1088,7 +1088,7 @@ const handleOpenPopupSchedule = () => {
                             <SellerProfileCard
                               userId={userId}
                               ad={ad}
-                              fee={user?.user?.fee ?? 500}
+                              fee={user?.fee ?? 500}
                               userImage={userImage}
                               userName={userName} 
                               handleOpenReview={handleOpenReview}
@@ -1391,7 +1391,7 @@ const handleOpenPopupSchedule = () => {
  
     {isAdCreator ? (
       
-      <>{!ad.hasSiteVisit && (<button onClick={handleOpenPopupSchedule} className="flex rounded-sm w-full py-3 px-2 text-lg text-white bg-blue-600 hover:bg-blue-700 justify-center items-center gap-1">
+      <>{!ad.hasSiteVisit && (<button onClick={handleOpenPopupSchedule} className="flex rounded-sm w-full py-3 px-2 text-lg text-green-600 border border-green-600 bg-green-100 hover:bg-green-200 justify-center items-center gap-1">
               <CalendarMonthOutlinedIcon/>
              Schedule Site Visit
       </button>)}</>
@@ -1694,7 +1694,7 @@ const handleOpenPopupSchedule = () => {
                 <SellerProfileCard
                   userId={userId}
                   ad={ad}
-                  fee={user?.user?.fee ?? 500}
+                  fee={user?.fee ?? 500}
                   userImage={userImage}
                   userName={userName} 
                   handleOpenReview={handleOpenReview}

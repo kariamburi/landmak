@@ -54,8 +54,8 @@ interface AdsProps {
     handlePay: (id:string) => void;
     handleSubCategory:(category: string, subcategory: string) => void;
     handleOpenReview: (value:any) => void;
-    handleOpenShop: (value:string) => void;
-    handleOpenChatId: (value:string) => void;
+    handleOpenShop: (value:any) => void;
+    handleOpenChatId: (value:any) => void;
     handleOpenSettings: () => void;
     handleOpenPerfomance: () => void;
 }
@@ -150,7 +150,7 @@ const SCROLL_THRESHOLD = 100; // pixels
     <ScrollArea.Viewport ref={scrollRefB} className="h-full overflow-y-auto bg-[#e4ebeb] border">
          
       <div className="top-0 z-10 fixed w-full">
-                    <Navbar user={user?.user ?? null} userstatus={user?.user?.status ?? "User"} userId={userId} onClose={onClose} popup={"sell"} handleOpenSell={handleOpenSell} handleOpenBook={handleOpenBook} handleOpenPlan={handleOpenPlan} handleOpenChat={handleOpenChat}
+                    <Navbar user={user?? []} userstatus={user?.status ?? "User"} userId={userId} onClose={onClose} popup={"sell"} handleOpenSell={handleOpenSell} handleOpenBook={handleOpenBook} handleOpenPlan={handleOpenPlan} handleOpenChat={handleOpenChat}
                     handleOpenPerfomance={handleOpenPerfomance}
                     handleOpenSettings={handleOpenSettings}
                     handleOpenAbout={handleOpenAbout}

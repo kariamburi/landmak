@@ -76,7 +76,7 @@ const Contact = ({ ad, user, userId, userName, userImage, handleOpenEnquire, han
         <Verificationmobile
           user={ad.organizer}
           userId={userId}
-          fee={user?.user?.fee ?? 500}
+          fee={user?.fee ?? 500}
           isAdCreator={isAdCreator}
           handlePayNow={handlePay}
         />

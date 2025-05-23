@@ -44,10 +44,13 @@ interface WindowProps {
     handleOpenPerfomance: () => void;
   //type: string;
   userId: string;
+  userName: string;
+  userImage: string;
   user: any;
 }
 
-const PopupBookmark = ({ isOpen, userId, user, onClose, handleOpenShop,
+const PopupBookmark = ({ isOpen, userId, user,userName,
+  userImage, onClose, handleOpenShop,
   handleOpenChatId,
   handleOpenSettings,
   handleOpenPerfomance, handleOpenChat, handleOpenBook, handleOpenPlan, handleOpenSell, handleAdEdit,handleAdView, handleOpenAbout,handleOpenTerms,handleOpenPrivacy,handleOpenSafety }: WindowProps) => {
@@ -80,7 +83,10 @@ const PopupBookmark = ({ isOpen, userId, user, onClose, handleOpenShop,
               handleOpenChatId={handleOpenChatId}
               handleOpenShop={handleOpenShop}
               handleOpenPerfomance={handleOpenPerfomance}
-              handleOpenSettings={handleOpenSettings}/>
+              handleOpenSettings={handleOpenSettings}
+              userName={userName}
+              userImage={userImage}
+              />
      
         <Toaster />
       </div>
