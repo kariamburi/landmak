@@ -25,8 +25,10 @@ import { getSitevisitByPropertyId } from '@/lib/actions/sitevisit.actions';
 import ArrowBackOutlinedIcon from "@mui/icons-material/ArrowBackOutlined";
 import CircularProgress from '@mui/material/CircularProgress';
 import DirectionsWalkOutlinedIcon from '@mui/icons-material/DirectionsWalkOutlined';
+import { updateUserPhone } from '@/lib/actions/user.actions';
 interface Props {
   ad: any;
+  user:any;
   userId: string;
   userName: string;
   userImage: string;
@@ -34,10 +36,11 @@ interface Props {
   onClose: () => void;
 }
 
-export default function BookingForm({ ad, userId, userName, userImage, isOpen, onClose }: Props) {
+export default function BookingForm({ ad, user, userId, userName, userImage, isOpen, onClose }: Props) {
   const [slots, setSlots] = useState<{ date: string; timeSlots: string[] }[]>([]);
   const [selectedDate, setSelectedDate] = useState('');
   const [selectedTime, setSelectedTime] = useState('');
+  const [phonenumber, setPhone] = useState(user.phone ?? '');
   const [message, setMessage] = useState('');
   const [loading, setLoading] = useState(false);
   const [availableTimes, setAvailableTimes] = useState<string[]>([]);
@@ -46,7 +49,55 @@ export default function BookingForm({ ad, userId, userName, userImage, isOpen, o
   const { toast } = useToast();
   const pathname = usePathname();
   const isMobile = useMediaQuery({ maxWidth: 768 });
+const [isValid, setIsValid] = useState(true);
+const normalizePhoneNumber = (input: string): string | null => {
+  // Remove non-digit characters
+  const digits = input.replace(/\D/g, '');
 
+  if (digits.startsWith('0') && digits.length === 10) {
+    // e.g., 0728820092 => +254728820092
+    return '+254' + digits.substring(1);
+  }
+
+  if (digits.startsWith('254') && digits.length === 12) {
+    // e.g., 254728820092 => +254728820092
+    return '+' + digits;
+  }
+
+  if (digits.startsWith('7') && digits.length === 9) {
+    // e.g., 728820092 => +254728820092
+    return '+254' + digits;
+  }
+
+  if (digits.startsWith('1') && digits.length === 9) {
+    // e.g., 112345678 => +254112345678 (for Safaricom's 011... numbers)
+    return '+254' + digits;
+  }
+
+  if (digits.startsWith('254') && digits.length === 13) {
+    // e.g., mistakenly added an extra digit: 2547288200920
+    return null;
+  }
+
+  if (digits.startsWith('254') && digits.length === 9) {
+    // Too short
+    return null;
+  }
+
+  return null; // Not valid
+};
+
+const handlePhoneChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+  const value = e.target.value;
+  setPhone(value);
+
+  const phoneRegex = /^(?:254|\+254|0)?(7\d{8}|1\d{8})$/;
+  setIsValid(phoneRegex.test(value));
+};
+function isValidKenyanPhoneNumber(phone: string): boolean {
+    const kenyanPhoneRegex = /^(?:\+254|254|0)?(7\d{8})$/;
+    return kenyanPhoneRegex.test(phone.trim());
+  }
   useEffect(() => {
     const getSlots = async () => {
       try {
@@ -92,8 +143,25 @@ export default function BookingForm({ ad, userId, userName, userImage, isOpen, o
               });
             return;
           }
+      
+
+    if (!isValidKenyanPhoneNumber(phonenumber)) {
+      toast({
+        variant: "destructive",
+        title: "Invalid Phone",
+        description: "Invalid Phone Number.",
+        duration: 5000,
+      });
+    
+      return;
+    }
     try{
     setIsSending(true);
+          const phone = normalizePhoneNumber(phonenumber);
+          if (!user.phone && phone) {
+              await updateUserPhone(userId, phone);
+            }
+         
     const newResponse = await createBooking({
       booking: {
         propertyId: ad._id,
@@ -164,7 +232,7 @@ export default function BookingForm({ ad, userId, userName, userImage, isOpen, o
       });
     }
   };
-
+ 
   const FormContent = (
     <div className="p-4 border rounded mt-4">
      {/*  <h3 className="text-lg font-semibold mb-2">Book Site Visit</h3>*/}
@@ -197,6 +265,13 @@ export default function BookingForm({ ad, userId, userName, userImage, isOpen, o
           </select>
         </>
       )}
+      <input
+  placeholder="Phone"
+  className={`border p-2 w-full mt-2 ${!isValid ? 'border-red-500' : ''}`}
+  value={phonenumber}
+  onChange={handlePhoneChange}
+/>
+{!isValid && <p className="text-red-500 text-sm mt-1">Invalid phone number</p>}
       <textarea
         placeholder="Optional message"
         className="border p-2 w-full mt-2"

@@ -1382,7 +1382,10 @@ const handleOpenPopupSchedule = () => {
                 </div>
               </>
             )}
- 
+ <button onClick={handleOpenPopupBooking} className="flex rounded-sm w-full py-3 px-2 text-lg text-white bg-black hover:bg-gray-900 justify-center items-center gap-1">
+              <CalendarMonthOutlinedIcon/>
+              Booking Site Visit
+      </button>
  {(ad.data.category !== 'Property Services' || ad.data.category !== 'Wanted Ads') && (<>
  <div className="flex w-full items-center">
               <SignedIn>
@@ -1461,7 +1464,7 @@ const handleOpenPopupSchedule = () => {
             <RequestFinancing  userId={userId} ad={ad} isOpen={isPopupOpenLoan} onClose={handleClosePopupLoan} userName={userName} userImage={userImage}/>
             <ProgressPopup isOpen={isOpenP} onClose={handleCloseP} /> 
             <ScheduleVisitForm userId={userId} ad={ad} isOpen={isPopupOpenSchedule} onClose={handleClosePopupSchedule} userName={userName} userImage={userImage}/>
-            <BookingForm userId={userId} ad={ad} isOpen={isPopupOpenBooking} onClose={handleClosePopupBooking} userName={userName} userImage={userImage}/>
+            <BookingForm userId={userId} user={user} ad={ad} isOpen={isPopupOpenBooking} onClose={handleClosePopupBooking} userName={userName} userImage={userImage}/>
             </div>
           </div>
         </div>
