@@ -1382,10 +1382,7 @@ const handleOpenPopupSchedule = () => {
                 </div>
               </>
             )}
- <button onClick={handleOpenPopupBooking} className="flex rounded-sm w-full py-3 px-2 text-lg text-white bg-black hover:bg-gray-900 justify-center items-center gap-1">
-              <CalendarMonthOutlinedIcon/>
-              Booking Site Visit
-      </button>
+ 
  {(ad.data.category !== 'Property Services' || ad.data.category !== 'Wanted Ads') && (<>
  <div className="flex w-full items-center">
               <SignedIn>
