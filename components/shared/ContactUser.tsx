@@ -129,7 +129,7 @@ export default function ContactUser({
              </div>
             <button
             onClick={()=> handleOpenChatId(user._id)}
-            className="underline hover:font-bold text-xs cursor-pointer text-gray-300 px-6 py-2 rounded-full"
+            className="underline hover:font-bold text-xs cursor-pointer px-6 py-2 rounded-full"
           >
            History
           </button>

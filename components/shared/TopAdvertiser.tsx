@@ -80,16 +80,16 @@ const TopAdvertiser = ({ handleOpenChatId, topadvertiser }: Props) => {
                       {user.totalPaid || "0"}
                     </td>
                     <td className="border flex gap-2 border-gray-300 dark:border-gray-600 px-4 py-2">
-                      <div className="rounded-sm bg-blue-600 p-2 flex flex-col items-center justify-center text-xs">
+                      <div className="rounded-sm bg-blue-100 p-2 flex flex-col items-center justify-center text-xs">
                         <div>Total</div> {user.adsCount || "0"}
                       </div>
-                      <div className="rounded-sm bg-green-600 p-2 flex flex-col items-center justify-center text-xs">
+                      <div className="rounded-sm bg-green-100 p-2 flex flex-col items-center justify-center text-xs">
                         <div>Active</div> {user.activeCount || 0}
                       </div>
-                      <div className="rounded-sm bg-red-600 p-2 flex flex-col items-center justify-center text-xs">
+                      <div className="rounded-sm bg-red-100 p-2 flex flex-col items-center justify-center text-xs">
                         <div>Inactive</div> {user.inactiveCount || 0}
                       </div>
-                      <div className="rounded-sm bg-orange-700 p-2 flex flex-col items-center justify-center text-xs">
+                      <div className="rounded-sm bg-orange-100 p-2 flex flex-col items-center justify-center text-xs">
                         <div>Pending</div> {user.pendingCount || 0}
                       </div>
                     </td>

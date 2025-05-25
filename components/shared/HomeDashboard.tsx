@@ -63,6 +63,7 @@ import AdvertiserSubscriptions from "./AdvertiserSubscriptions";
 import CollectionLoans from "./CollectionLoans";
 import MenuBookOutlinedIcon from '@mui/icons-material/MenuBookOutlined';
 import CollectionBookings from "./CollectionBookings";
+import NoteAltOutlinedIcon from '@mui/icons-material/NoteAltOutlined';
 type homeProps = {
   userId: string;
   userName: string;
@@ -400,6 +401,11 @@ const HomeDashboard = ({
                           <AssistantPhotoOutlinedIcon className="w-10 p-1" />
                         </span>
                       )}
+                        {link.label === "Bookings" && (
+                        <span>
+                          <NoteAltOutlinedIcon className="w-10 p-1" />
+                        </span>
+                      )}
                        {link.label === "Verification" && (
                         <span>
                           <GppGoodOutlinedIcon className="w-10 p-1" />
@@ -478,6 +484,11 @@ const HomeDashboard = ({
                           {link.label === "Booking" && (
                         <span>
                           <MenuBookOutlinedIcon className="w-10 p-1" />
+                        </span>
+                      )}
+                       {link.label === "Bookings" && (
+                        <span>
+                          <NoteAltOutlinedIcon className="w-10 p-1" />
                         </span>
                       )}
                          {link.label === "Abuse" && (
