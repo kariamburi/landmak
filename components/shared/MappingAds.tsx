@@ -1120,48 +1120,29 @@ const toggleStreetView = () => {
 
 // 🧠 Mount StreetView when `showStreetView` becomes true
 useEffect(() => {
-  if (showStreetView && mapInstance.current) {
-    const container = document.getElementById("street-view");
-    if (container && !streetViewPanorama) {
-      const panorama = new google.maps.StreetViewPanorama(container, {
-        position: mapInstance.current.getCenter(),
-        pov: {
-          heading: 34,
-          pitch: 10,
-        },
-        visible: true,
-      });
-      setStreetViewPanorama(panorama);
-    } else if (streetViewPanorama) {
-      streetViewPanorama.setVisible(true);
-    }
-  } else if (streetViewPanorama) {
+  const container = document.getElementById("street-view");
+
+  if (showStreetView && mapInstance.current && container) {
+    // Always create a new Street View instance
+    const panorama = new google.maps.StreetViewPanorama(container, {
+      position: mapInstance.current.getCenter(),
+      pov: {
+        heading: 34,
+        pitch: 10,
+      },
+      visible: true,
+    });
+    setStreetViewPanorama(panorama);
+  }
+
+  // Optional: Clean up when hiding
+  if (!showStreetView && streetViewPanorama) {
     streetViewPanorama.setVisible(false);
+    setStreetViewPanorama(null); // <- ensures re-initialization next time
   }
 }, [showStreetView]);
-  //const [showStreetView, setShowStreetView] = useState(false);
-//const toggleStreetView = () => {
- // if (streetViewPanorama) {
-  //  const isVisible = streetViewPanorama.getVisible();
-  //  streetViewPanorama.setVisible(!isVisible);
-  //  setShowStreetView(!isVisible);
-  //}
-//};
-//const checkStreetViewAvailability = (latLng: google.maps.LatLngLiteral) => {
- // const streetViewService = new google.maps.StreetViewService();
-//  const radius = 50; // meters
 
- // streetViewService.getPanorama(
- //   { location: latLng, radius },
- //   (data, status) => {
-  //    if (status === google.maps.StreetViewStatus.OK) {
-   //     setStreetViewAvailable(true);
-   //   } else {
-   //     setStreetViewAvailable(false);
-   //   }
-  //  }
-  //);
-//};
+  
   return ( 
   <div id="map-container" className="h-[100vh] relative">
      {!isLoaded && (
@@ -1222,8 +1203,8 @@ useEffect(() => {
       onClick={toggleStreetView}
       style={{
         position: "absolute",
-        top: 20,
-        right: 20,
+        top: 10,
+        right: 10,
         zIndex: 10000,
         padding: "10px 15px",
         backgroundColor: "#fff",
@@ -1265,7 +1246,7 @@ useEffect(() => {
                  {streetViewAvailable && (
   <button
   onClick={toggleStreetView}
-  className="absolute bottom-4 left-1/2 transform -translate-x-1/2 z-30 flex items-center gap-2 px-5 py-2 bg-white text-gray-800 text-sm font-medium rounded-full shadow-lg hover:bg-gray-100 transition-all duration-200"
+  className="absolute bottom-5 left-1/2 transform -translate-x-1/2 z-30 flex items-center gap-2 px-5 py-2 bg-white text-gray-800 text-sm font-medium rounded-full shadow-lg hover:bg-gray-100 transition-all duration-200"
 >
   {showStreetView ? <EyeOff className="w-4 h-4" /> : <Eye className="w-4 h-4" />}
   {showStreetView ? "Hide Street View" : "Show Street View"}
