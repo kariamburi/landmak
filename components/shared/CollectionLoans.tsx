@@ -199,6 +199,10 @@ const CollectionLoans = ({
           <p className="text-xs text-gray-600 dark:text-gray-300">
             Loan Request Type: <span className="font-semibold">{loan.loanType ?? "Property Financing Loan"}</span>
           </p>
+            <p className="text-xs text-gray-600 dark:text-gray-300">
+       Loan Amount:
+        <span className="font-semibold"> KES {loan.LoanAmount.toLocaleString()}</span>
+      </p>
           <p className="text-xs text-gray-600 dark:text-gray-300">
             Monthly Income: <span className="font-semibold">KES {loan.monthlyIncome.toLocaleString()}</span>
           </p>

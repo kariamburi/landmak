@@ -26,7 +26,7 @@ import GooglePlacesAutocomplete, {
   geocodeByAddress,
   getLatLng,
 } from "react-google-places-autocomplete";
-
+import { BellIcon } from "lucide-react";
 import {
   FormControl,
   FormControlLabel,
@@ -98,6 +98,8 @@ interface Field {
     | "delivery"
     | "location"
     | "propertyarea"
+    | "notify"
+    | "money"
     | "virtualTourLink"
     | "related-autocompletes";
   required?: boolean;
@@ -123,6 +125,8 @@ const generateDefaultValues = (fields: Field[]) => {
       defaults[field.name] = "";
     } else if (field.type === "phone") {
       defaults[field.name] = "";
+    } else if (field.type === "money") {
+      defaults[field.name] = 0;
     } else if (field.type === "price") {
       defaults["price"] = 0;
     } else if (field.type === "budget") {
@@ -183,13 +187,8 @@ type AdFormProps = {
   userName: string;
   category?:string
   subcategory?:string
- // daysRemaining: number;
- // packname: string;
- // packagesList: any;
-  //listed: number;
- // priority: number;
-  //expirationDate: Date;
   packagesList:any;
+  handleOpenShop: (shopId:any) => void;
   handleAdView?:(ad:any) => void;
   handlePay?:(id:string) => void;
   handleOpenTerms:() => void;
@@ -210,6 +209,7 @@ const AdForm = ({
   handleAdView,
   handlePay,
   handleOpenTerms,
+  handleOpenShop,
 }: AdFormProps) => {
   const [formData, setFormData] = useState<Record<string, any>>(
     ad ? ad.data : []
@@ -505,7 +505,7 @@ useEffect(() => {
 
   const validateForm = async () => {
     //console.log("start: ");
-    const validationSchema = createValidationSchema(fields);
+     const validationSchema = createValidationSchema(fields, selectedCategory);
      console.log(formData);
 
     const result = validationSchema.safeParse(formData);
@@ -714,22 +714,26 @@ useEffect(() => {
 
  if (selectedCategory === 'Wanted Ads' && selectedSubCategory.trim().toLowerCase() === "Property Financing Requests".toLowerCase()) {
 
-  await createLoan({
-          loan: {
-          userId: userId,
-          adId: null,
-          loanType:formData["Loan Type"].toString(),
-          monthlyIncome:formData["Monthly Income"].toString(),
-          deposit:formData["Deposit Amount"].toString(),
-          loanterm:formData["Preferred Loan Term"].toString(),
-          employmentStatus:formData["Employment Status"].toString(),
-          messageComments:formData["Comment"].toString(),
-          status: "Pending",
-          },
-          path: "/create",
-            });
+    const newAd = await createLoan({
+      loan: {
+        userId: userId,
+        adId: null,
+        loanType: formData["Loan Type"]?.toString() || "",
+        LoanAmount: parseCurrencyToNumber(formData["Loan Amount"]?.toString() || 0),
+        monthlyIncome: parseCurrencyToNumber(formData["Monthly Income"]?.toString() || 0),
+        deposit: parseCurrencyToNumber(formData["Deposit Amount"]?.toString() || 0),
+        loanterm: formData["Preferred Loan Term"]?.toString() || "",
+        employmentStatus: formData["Employment Status"]?.toString() || "",
+        messageComments: formData["Comment"]?.toString() || "",
+        status: "Pending",
+      },
+      path: "/create",
+    });
       setFormData(defaults);
       setFiles([]);
+        if (handleOpenShop) {
+      handleOpenShop(user.user);
+    }
         toast({
         title: "Submitted",
         description: "Loan request submitted successfully.",
@@ -860,8 +864,11 @@ useEffect(() => {
           (c:any) => c.subcategory === value.subcategory && c._id === value._id
         )
     ); // Get unique subcategory and _id pairs
-
-  const formatToCurrency = (value: string | number) => {
+const handleInputChangeMoney = (field: string, value: string) => {
+  const numericValue = value.replace(/,/g, "");
+  setFormData((prev) => ({ ...prev, [field]: numericValue }));
+};
+ const formatToCurrency = (value: string | number) => {
     if (!value) return "0";
     const numberValue =
       typeof value === "string" ? parseFloat(value.replace(/,/g, "")) : value;
@@ -1216,7 +1223,7 @@ useEffect(() => {
                     label={capitalizeFirstLetter(field.name)}
                       value={formatToCurrency(formData[field.name] ?? 0)}
                       onChange={(e) =>
-                        handleInputChange(field.name, e.target.value)
+                        handleInputChangeMoney(field.name, e.target.value)
                       }
                     variant="outlined"
                     placeholder={`Enter ${field.name.replace("-", " ")}`}
@@ -1246,7 +1253,7 @@ useEffect(() => {
                     label={capitalizeFirstLetter(field.name)}
                     value={formatToCurrency(formData[field.name] ?? 0)}
                     onChange={(e) =>
-                      handleInputChange(field.name, e.target.value)
+                      handleInputChangeMoney(field.name, e.target.value)
                     }
                     variant="outlined"
                     placeholder={`Enter ${field.name.replace("-", " ")}`}
@@ -1328,7 +1335,7 @@ useEffect(() => {
                       label={capitalizeFirstLetter("price")}
                       value={formatToCurrency(formData["price"] ?? 0)}
                       onChange={(e) =>
-                        handleInputChange("price", e.target.value)
+                        handleInputChangeMoney("price", e.target.value)
                       }
                       variant="outlined"
                       placeholder={`Enter Price`}
@@ -1428,7 +1435,7 @@ useEffect(() => {
                       label={capitalizeFirstLetter("price")}
                       value={formatToCurrency(formData["price"] ?? 0)}
                       onChange={(e) =>
-                        handleInputChange("price", e.target.value)
+                        handleInputChangeMoney("price", e.target.value)
                       }
                       variant="outlined"
                       placeholder={`Enter Price`}
@@ -1527,7 +1534,7 @@ useEffect(() => {
                       label={capitalizeFirstLetter("price")}
                       value={formatToCurrency(formData["price"] ?? 0)}
                       onChange={(e) =>
-                        handleInputChange("price", e.target.value)
+                        handleInputChangeMoney("price", e.target.value)
                       }
                       variant="outlined"
                       placeholder={`Enter Price`}
@@ -1655,6 +1662,35 @@ useEffect(() => {
                       classes: {
                         root: "text-gray-500 dark:text-gray-400",
                         focused: "text-green-500 dark:text-green-400",
+                      },
+                    }}
+                    className="w-full"
+                  />
+                </>
+              )}
+                {field.type === "money" && (
+                <>
+                  <TextField
+                    required={field.required}
+                    id={field.name}
+                    label={capitalizeFirstLetter(field.name.replace("-", " "))}
+                    value={formatToCurrency(formData[field.name] ?? 0)}
+                    onChange={(e) =>
+                      handleInputChangeMoney(field.name, e.target.value)
+                    }
+                    variant="outlined"
+                    placeholder={`Enter ${field.name.replace("-", " ")}`}
+                    InputProps={{
+                      classes: {
+                        root: "bg-white dark:bg-[#2D3236] dark:text-gray-100",
+                        notchedOutline: "border-gray-300 dark:border-gray-600",
+                        focused: "",
+                      },
+                    }}
+                    InputLabelProps={{
+                      classes: {
+                        root: "text-gray-500 dark:text-gray-400",
+                        focused: "text-emerald-500 dark:text-emerald-400",
                       },
                     }}
                     className="w-full"
@@ -1984,6 +2020,12 @@ useEffect(() => {
                 </div>
                  
               )}
+                {field.type === "notify" && (
+  <label className="flex items-center mt-2 mb-2 gap-2 dark:text-gray-400 text-green-600 text-sm">
+    <BellIcon className="w-4 h-4" />
+    {field.options}
+  </label>
+)}
               {formErrors[field.name] && (
                 <p className="text-red-500 text-sm">{formErrors[field.name]}</p>
               )}

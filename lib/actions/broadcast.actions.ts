@@ -177,7 +177,7 @@ export async function broadcastMessage(type: string, message: string, recipient?
             body: JSON.stringify({
               token,
               notification: {
-                title: "New Message",
+                title: "💬 New Message",
                 body: message,
                 icon: "https://mapa.co.ke/logo.png",
                 click_action: `https://mapa.co.ke/?action=chat`,

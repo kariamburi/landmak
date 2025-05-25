@@ -29,6 +29,8 @@ import GpsFixedOutlinedIcon from '@mui/icons-material/GpsFixedOutlined';
 import DirectionsOutlinedIcon from '@mui/icons-material/DirectionsOutlined';
 import { Icon } from "@iconify/react";
 import Barsscale from "@iconify-icons/svg-spinners/bars-scale"; 
+import StreetviewOutlinedIcon from '@mui/icons-material/StreetviewOutlined';
+
 import {
   Tooltip,
   TooltipContent,
@@ -50,6 +52,7 @@ import CircularProgress from "@mui/material/CircularProgress";
 import { DistanceDialog } from "./DistanceDialog";
 import { GetDirectionsDialog } from "./GetDirectionsDialog";
 import { ShowDistanceDialog } from "./ShowDistanceDialogProps";
+import { Eye, EyeOff } from "lucide-react"; // Or any other icons you prefer
 import GooglePlacesAutocomplete, {
   geocodeByAddress,
   getLatLng,
@@ -183,6 +186,9 @@ export default function MapDrawingTool({ data }: Props) {
         mapTypeId: "satellite",
       });
       mapInstance.current = map;
+    
+  // 🔥 Call your map load handler here
+  onMapLoad(map);
   if (data.shapes.length === 0) {
   // remove any old marker
 
@@ -1089,6 +1095,73 @@ const handleSelect = (e: any) => {
     window.open(googleMapsUrl, "_blank");
    setOpenDirectionsDialog(false);
   };
+
+
+  
+ const [streetViewPanorama, setStreetViewPanorama] = useState<google.maps.StreetViewPanorama | null>(null);
+const [showStreetView, setShowStreetView] = useState(false);
+const [streetViewAvailable, setStreetViewAvailable] = useState(false);
+const onMapLoad = (map: google.maps.Map) => {
+  mapInstance.current = map;
+
+  const svService = new google.maps.StreetViewService();
+  svService.getPanorama({ location: map.getCenter()!, radius: 50 }, (data, status) => {
+    if (status === "OK") {
+      setStreetViewAvailable(true);
+    } else {
+      setStreetViewAvailable(false);
+    }
+  });
+};
+
+const toggleStreetView = () => {
+  setShowStreetView(prev => !prev);
+};
+
+// 🧠 Mount StreetView when `showStreetView` becomes true
+useEffect(() => {
+  if (showStreetView && mapInstance.current) {
+    const container = document.getElementById("street-view");
+    if (container && !streetViewPanorama) {
+      const panorama = new google.maps.StreetViewPanorama(container, {
+        position: mapInstance.current.getCenter(),
+        pov: {
+          heading: 34,
+          pitch: 10,
+        },
+        visible: true,
+      });
+      setStreetViewPanorama(panorama);
+    } else if (streetViewPanorama) {
+      streetViewPanorama.setVisible(true);
+    }
+  } else if (streetViewPanorama) {
+    streetViewPanorama.setVisible(false);
+  }
+}, [showStreetView]);
+  //const [showStreetView, setShowStreetView] = useState(false);
+//const toggleStreetView = () => {
+ // if (streetViewPanorama) {
+  //  const isVisible = streetViewPanorama.getVisible();
+  //  streetViewPanorama.setVisible(!isVisible);
+  //  setShowStreetView(!isVisible);
+  //}
+//};
+//const checkStreetViewAvailability = (latLng: google.maps.LatLngLiteral) => {
+ // const streetViewService = new google.maps.StreetViewService();
+//  const radius = 50; // meters
+
+ // streetViewService.getPanorama(
+ //   { location: latLng, radius },
+ //   (data, status) => {
+  //    if (status === google.maps.StreetViewStatus.OK) {
+   //     setStreetViewAvailable(true);
+   //   } else {
+   //     setStreetViewAvailable(false);
+   //   }
+  //  }
+  //);
+//};
   return ( 
   <div id="map-container" className="h-[100vh] relative">
      {!isLoaded && (
@@ -1133,7 +1206,44 @@ const handleSelect = (e: any) => {
 
 
   <div ref={mapRef} className="w-full h-full rounded-b-xl shadow-md border" />
- 
+{showStreetView && (
+  <div
+    style={{
+      position: "fixed",
+      top: 0,
+      left: 0,
+      width: "100vw",
+      height: "100vh",
+      zIndex: 9999,
+      backgroundColor: "#000",
+    }}
+  >
+    <button
+      onClick={toggleStreetView}
+      style={{
+        position: "absolute",
+        top: 20,
+        right: 20,
+        zIndex: 10000,
+        padding: "10px 15px",
+        backgroundColor: "#fff",
+        border: "none",
+        borderRadius: "5px",
+        cursor: "pointer",
+      }}
+    >
+      Exit
+    </button>
+
+    <div
+      id="street-view"
+      style={{
+        width: "100%",
+        height: "100%",
+      }}
+    ></div>
+  </div>
+)}
   {isLoaded && (<>
   
     <TooltipProvider>
@@ -1152,7 +1262,16 @@ const handleSelect = (e: any) => {
                      </TooltipContent>
                    </Tooltip>
                  </TooltipProvider>
-  
+                 {streetViewAvailable && (
+  <button
+  onClick={toggleStreetView}
+  className="absolute bottom-4 left-1/2 transform -translate-x-1/2 z-30 flex items-center gap-2 px-5 py-2 bg-white text-gray-800 text-sm font-medium rounded-full shadow-lg hover:bg-gray-100 transition-all duration-200"
+>
+  {showStreetView ? <EyeOff className="w-4 h-4" /> : <Eye className="w-4 h-4" />}
+  {showStreetView ? "Hide Street View" : "Show Street View"}
+</button>
+)}
+ 
 
         </>)}
   {distance && (

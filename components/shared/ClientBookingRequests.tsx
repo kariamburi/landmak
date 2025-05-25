@@ -38,7 +38,7 @@ export default function ClientBookingRequests({userId, updatebooking, bookings, 
                      {bookings.length > 0 ? (<>
       {bookings.map((booking:any) => (
        
-       <div key={booking._id} className="border p-4 rounded mb-3">
+       <div key={booking._id} className="border p-1 lg:p-4 rounded mb-3">
 
          
 

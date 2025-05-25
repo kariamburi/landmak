@@ -20,7 +20,7 @@ export async function sendEmailNotification(
   const mailOptions = {
     from: '"PocketShop" <support@pocketshop.co.ke>',
     to: recipientEmail,
-    subject: `Important Notification`,
+    subject: `You've got a message from mapa`,
     html: `
       <div style="font-family: Arial, sans-serif; max-width: 600px; margin: auto; padding: 20px; background-color: #f7f7f7; border-radius: 8px; color: #333;">
         <div style="text-align: center; margin-bottom: 30px;">

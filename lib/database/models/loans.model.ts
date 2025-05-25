@@ -5,6 +5,7 @@ export interface ILoan extends Document {
   userId: string;
   adId: string;
   loanType: string,
+  LoanAmount: number,
   monthlyIncome: number,
   deposit: number,
   loanterm: string,
@@ -17,6 +18,7 @@ const LoanSchema = new Schema({
   adId: { type: Schema.Types.ObjectId, ref: 'DynamicAd', default: null },
   userId: { type: Schema.Types.ObjectId, ref: 'User' },
   loanType: { type: String },
+  LoanAmount: { type: Number },
   monthlyIncome: { type: Number },
   deposit: { type: Number },
   loanterm: { type: String },

@@ -56,7 +56,7 @@ export const RequestFinancing: React.FC<loanProps> = ({
   const { toast } = useToast();
   const pathname = usePathname();
   const isMobile = useMediaQuery({ maxWidth: 768 });
-
+ const [LoanAmount, setLoanAmount] = useState(ad.data.price);
   const truncateDescription = (description: string, charLimit: number) => {
     const safeMessage = sanitizeHtml(description);
     const truncatedMessage =
@@ -107,6 +107,7 @@ export const RequestFinancing: React.FC<loanProps> = ({
           userId,
           adId: ad._id,
           loanType,
+          LoanAmount,
           monthlyIncome,
           deposit,
           loanterm,

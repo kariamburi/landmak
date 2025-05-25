@@ -11,8 +11,9 @@ export default function SendChat() {
     const truncate = (str: string, n: number) =>
       str.length > n ? str.slice(0, n - 1) + "…" : str;
   
-    const notificationTitle = `New inquiry on: ${truncate(ad.data.title, 35)}`;
-    const notificationBody = `${userName} is interested in your ${truncate(ad.data.title, 40)}. Tap to view.`;
+   const notificationTitle = `🔔 Inquiry on: ${truncate(ad.data.title, 35)}`;
+const notificationBody = `👤 ${userName} is interested in your ${truncate(ad.data.title, 40)}. Tap to view.`;
+    
     const res = await fetch("/api/send-push", {
       method: "POST",
       headers: {
@@ -53,7 +54,7 @@ export default function SendChat() {
       body: JSON.stringify({
        token: token,
        notification: {
-          title: "New Message",
+          title: "💬 New Message",
           body: message,
           icon: "https://mapa.co.ke/logo.png",
           click_action: `https://mapa.co.ke/?action=chat`,

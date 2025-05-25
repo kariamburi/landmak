@@ -93,7 +93,7 @@ export default function OwnerBookingRequests({ userId, userImage, bookings, load
 </div>
 }
       {bookings.map((booking:any) => (
-        <div key={booking._id} className="border p-4 rounded mb-3 bg-white shadow-sm">
+        <div key={booking._id} className="border p-1 lg:p-4 rounded mb-3 bg-white shadow-sm">
          
   <div className='w-full flex justify-between items-center'>
   <div className='flex gap-2 items-center'><strong>Property:</strong><p className='underline cursor-pointer hover:text-green-600'  onClick={() => {

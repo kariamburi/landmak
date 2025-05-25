@@ -2,9 +2,9 @@ import * as z from "zod";
 
 interface Field {
   name: string;
-  type: "text" | "number" | "select" | "radio" | "checkbox" | "textarea" | "multi-select" | "autocomplete" | "phone"
-  | "year" | "youtube-link" | "price" | "budget" | "rentprice" | "priceper" | "bulkprice"
-  | "delivery" | "location" | "propertyarea" | "virtualTourLink" | "serviceprice" | "related-autocompletes";
+  type: "text" | "number" | "money" | "select" | "radio" | "checkbox" | "textarea" | "multi-select" | "autocomplete" | "phone"
+  | "year" | "youtube-link" | "budget" | "price" | "rentprice" | "priceper" | "bulkprice"
+  | "delivery" | "gps" | "location" | "propertyarea" | "virtualTourLink" | "notify" | "serviceprice" | "related-autocompletes";
   required?: boolean;
   options?: string[];
 }
@@ -32,14 +32,19 @@ function isTrustedVirtualTourUrl(url: any) {
   }
 }
 
-export const createValidationSchema = (fields: Field[]) => {
+export const createValidationSchema = (fields: Field[], category: string) => {
   const schemaShape: Record<string, z.ZodTypeAny> = {};
 
   schemaShape["category"] = z.string().nonempty(`Category is required`);
   schemaShape["subcategory"] = z.string().nonempty(`Sub Category is required`);
-  schemaShape["imageUrls"] = z.array(z.string()).min(1, "At least 1 image is required");
-  //schemaShape["region"] = z.string().nonempty(`Region is required`);
-  // schemaShape["area"] = z.string().nonempty(`Area is required`);
+
+  if (category === "Buyer Requests" || category === "Services" || category === "Seeking Work CVs" || category === "Jobs") {
+    schemaShape["imageUrls"] = z.array(z.string()).min(1, "At least 1 image is required");
+  } else {
+    schemaShape["imageUrls"] = z.array(z.string()).min(3, "At least 3 images are required");
+  }
+  schemaShape["region"] = z.string().nonempty(`Region is required`);
+  schemaShape["area"] = z.string().nonempty(`Area is required`);
   // Helper function to check if a field exists in the fields array
   const fieldExists = (name: string) => fields.some((field) => field.name === name);
   // Conditionally add validation for "mode" and "make"
@@ -60,6 +65,19 @@ export const createValidationSchema = (fields: Field[]) => {
   });
 
   const deliverySchema = z.array(deliveryItemSchema);
+  //if (fieldExists("rentprice")) {
+  // schemaShape["period"] = z.string().nonempty(`Period is required`);
+  //}
+
+  //if (fieldExists("rentprice")) {
+  // schemaShape["price"] = z.union([z.string(), z.number()])
+  // .transform((value) =>
+  //   typeof value === "string" ? parseFloat(value) : value
+  //)
+  // .refine((value) => !isNaN(value), {
+  //   message: `Price must be a valid number`,
+  // });
+  //}
 
   fields.forEach((field) => {
     let fieldSchema: z.ZodTypeAny; // Declare variable
@@ -83,7 +101,61 @@ export const createValidationSchema = (fields: Field[]) => {
             })
           : z.number().optional();
         break;
-
+      case "money":
+        fieldSchema = field.required
+          ? z
+            .union([z.string(), z.number()])
+            .transform((value) => {
+              if (typeof value === "string") {
+                // Remove commas before converting to float
+                const numericValue = parseFloat(value.replace(/,/g, ""));
+                return numericValue;
+              }
+              return value;
+            })
+            .refine((value) => !isNaN(value), {
+              message: `${field.name} must be a valid number`,
+            })
+          : z
+            .union([z.string(), z.number()])
+            .transform((value) => {
+              if (typeof value === "string") {
+                return parseFloat(value.replace(/,/g, ""));
+              }
+              return value;
+            })
+            .optional();
+        break;
+      case "budget":
+        fieldSchema = field.required
+          ? z
+            .union([z.string(), z.number()])
+            .transform((value) => {
+              if (typeof value === "string") {
+                // Remove commas before converting to float
+                const numericValue = parseFloat(value.replace(/,/g, ""));
+                return numericValue;
+              }
+              return value;
+            })
+            .refine((value) => !isNaN(value), {
+              message: `${field.name} must be a valid number`,
+            })
+          : z
+            .union([z.string(), z.number()])
+            .transform((value) => {
+              if (typeof value === "string") {
+                return parseFloat(value.replace(/,/g, ""));
+              }
+              return value;
+            })
+            .optional();
+        break;
+      case "location":
+        fieldSchema = field.required
+          ? z.array(z.string()).optional()
+          : z.array(z.string()).optional();
+        break;
       case "price":
         fieldSchema = field.required
           ? z
@@ -95,18 +167,6 @@ export const createValidationSchema = (fields: Field[]) => {
               message: `${field.name} must be a valid number`,
             })
           : z.number().optional();
-        break;
-      case "budget":
-        const baseBudgetSchema = z
-          .union([z.string(), z.number()])
-          .transform((value) =>
-            typeof value === "string" ? parseFloat(value) : value
-          )
-          .refine((value) => !isNaN(value), {
-            message: `${field.name} must be a valid number`,
-          });
-
-        fieldSchema = field.required ? baseBudgetSchema : baseBudgetSchema.optional();
         break;
       case "rentprice":
         fieldSchema = field.required
@@ -159,7 +219,11 @@ export const createValidationSchema = (fields: Field[]) => {
           ? z.string().nonempty(`${field.name} is required`)
           : z.string().optional();
         break;
-
+      case "notify":
+        fieldSchema = field.required
+          ? z.string().optional()
+          : z.string().optional();
+        break;
       case "year":
         fieldSchema = field.required
           ? z.string().nonempty(`${field.name} is required`)
@@ -189,7 +253,7 @@ export const createValidationSchema = (fields: Field[]) => {
           ? z.array(z.string())
           : z.array(z.string()).optional();
         break;
-      case "location":
+      case "gps":
         fieldSchema = field.required
           ? z.array(z.string()).optional()
           : z.array(z.string()).optional();

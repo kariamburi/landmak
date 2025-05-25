@@ -215,8 +215,9 @@ export type UpdateAdParams = {
 export type CreateLoanParams = {
   loan: {
     userId: string
-    adId: string | null;
-    loanType: string;
+    adId: string | null,
+    loanType: string,
+    LoanAmount: number,
     monthlyIncome: number,
     deposit: number,
     loanterm: string,

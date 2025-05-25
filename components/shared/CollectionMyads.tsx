@@ -427,26 +427,26 @@ const filteredAds = selectedCategory
       )} 
 
   { inputMode==="Booking" && ( <div
-          className={`rounded-b-lg p-2 flex flex-col min-h-screen ${
+          className={`rounded-b-lg p-0 lg:p-2 flex flex-col min-h-screen ${
             inputMode === "Booking"
               ? "bg-white"
               : "bg-[#131B1E]"
           }`}
         >
       
-      {loans && isAdCreator && (<>
-       <div className="container mx-auto p-4 border rounded-2xl shadow-sm bg-white space-y-8">
+      {isAdCreator && (<>
+       <div className="container mx-auto p-1 lg:p-4 lg:border lg:rounded-2xl shadow-sm bg-white space-y-8">
    {/* Section: Clients Booking Requests */}
   <section>
     <h2 className="text-2xl font-semibold text-gray-800 mb-4 border-b pb-2">Booking summary</h2>
-    <div className="bg-gray-50 p-4 rounded-lg shadow-inner">
+    <div className="bg-gray-50 p-1 lg:p-4 rounded-lg shadow-inner">
       <SiteVisitSummary updatesitevisit={updatesitevisit} handleAdView={handleAdView} summaries={summaries} loadingSUM={loadingSUM}/>
     </div>
   </section>
    {/* Section: Clients Booking Requests */}
   <section>
     <h2 className="text-2xl font-semibold text-gray-800 mb-4 border-b pb-2">Client Booking Requests</h2>
-    <div className="bg-gray-50 p-4 rounded-lg shadow-inner">
+    <div className="bg-gray-50 p-1 lg:p-4 rounded-lg shadow-inner">
       <OwnerBookingRequests bookings={bookingsO} loading={loadingO} upbooking={upbooking} userImage={userImage} userName={userName} handleAdView={handleAdView} handleOpenChatId={handleOpenChatId} userId={userId}/>
     </div>
   </section>
@@ -454,7 +454,7 @@ const filteredAds = selectedCategory
   
   <section>
     <h2 className="text-2xl font-semibold text-gray-800 mb-4 border-b pb-2">My Bookings</h2>
-    <div className="bg-gray-50 p-4 rounded-lg shadow-inner">
+    <div className="bg-gray-50 p-1 lg:p-4 rounded-lg shadow-inner">
       <ClientBookingRequests bookings={bookings} updatebooking={updatebooking} loading={loadingCl} userId={userId} handleAdView={handleAdView}/>
     </div>
   </section>
@@ -472,7 +472,7 @@ const filteredAds = selectedCategory
 
 
         { inputMode==="Loans" && ( <div
-          className={`rounded-b-lg p-2 flex flex-col min-h-screen ${
+          className={`rounded-b-lg p-0 lg:p-2 flex flex-col min-h-screen w-fcull ${
             inputMode === "Loans"
               ? "bg-white"
               : "bg-[#131B1E]"
@@ -480,12 +480,12 @@ const filteredAds = selectedCategory
         >
       
       {loans && isAdCreator && (<>
-        <div className="container mx-auto p-1 lg:p-4 border rounded-xl">
+        <div className="w-full p-1 lg:p-4 border rounded-xl">
                     <h1 className="text-2xl font-bold mb-4">Property Financing Requests</h1>
                     <div className="flex flex-col lg:flex-row gap-3"></div>
                     {/* Date Filter Section */}
       
-                    <ScrollArea className="w-[300px] lg:w-full">
+                    <ScrollArea className="w-full">
                       <CollectionMyLoans
                         data={loans.data}
                         emptyTitle={`No request`}

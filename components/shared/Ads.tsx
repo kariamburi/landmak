@@ -763,7 +763,11 @@ const handleOpenPopupSchedule = () => {
                       <>
                       
                           <span className="text-lg lg:text-xl font-bold w-full rounded-full p-1 dark:text-green-500 text-green-600">
-              {ad.data.budget ? (<> Budget : Ksh {ad.data.budget.toLocaleString()}</>):(<>Ksh {ad.data.price.toLocaleString()}</>)}   
+              {ad.data.budget ? (<> Budget : Ksh {ad.data.budget.toLocaleString()}</>):(<> {ad.data.price > 0 && (
+                                   <span>
+                                  Ksh {ad.data.price.toLocaleString()}
+                                  </span>)} 
+                                  </>)}
                 </span>
                       </>
                     )}{" "}
@@ -782,6 +786,12 @@ const handleOpenPopupSchedule = () => {
                         {ad.data.period}
                       </div>
                     )}
+                     {ad.data["Maximum Amount"] && ad.data["Minimum Amount"] && (
+  <div className="flex flex-col font-bold">
+    <p>Min: Ksh {Number(ad.data["Minimum Amount"]).toLocaleString()} </p>
+    <p>Max: Ksh {Number(ad.data["Maximum Amount"]).toLocaleString()}</p>
+  </div>
+)}
                   </div>
                 </div>
                 {ad.data.bulkprice?.length > 0 && (
@@ -890,8 +900,8 @@ const handleOpenPopupSchedule = () => {
                       key !== "youtube-link" && (
                         <>
                           <div key={key} className="mb-2 md:flex-row">
-                            <div className="dark:text-gray-300 text-green-900 text-sm">
-                              {value}
+                            <div className="dark:text-gray-300 text-emerald-950 text-sm">
+                              {key ==='Maximum Amount' || key==='Minimum Amount' ? Number(value).toLocaleString():value}
                             </div>
                             <div className="dark:text-gray-500 text-gray-600 text-xs">
                               {capitalizeFirstLetter(key.replace("-", " "))}
@@ -1500,7 +1510,11 @@ const handleOpenPopupSchedule = () => {
                 ) : (
                   <>
                      <span className="flex gap-1 text-2xl font-bold w-full rounded-full px-4 py-1 dark:text-green-500 text-green-600">
-              {ad.data.budget ? (<> Budget : Ksh {ad.data.budget.toLocaleString()}</>):(<>Ksh {ad.data.price.toLocaleString()}</>)}   
+               {ad.data.budget ? (<> Budget : Ksh {ad.data.budget.toLocaleString()}</>):(<> {ad.data.price > 0 && (
+                                   <span>
+                                  Ksh {ad.data.price.toLocaleString()}
+                                  </span>)} 
+                                  </>)}
                 </span>
                    
                   </>
@@ -1516,6 +1530,12 @@ const handleOpenPopupSchedule = () => {
                     {ad.data.period}
                   </div>
                 )}
+                 {ad.data["Maximum Amount"] && ad.data["Minimum Amount"] && (
+  <div className="flex flex-col font-bold">
+    <p>Min: Ksh {Number(ad.data["Minimum Amount"]).toLocaleString()} </p>
+    <p>Max: Ksh {Number(ad.data["Maximum Amount"]).toLocaleString()}</p>
+  </div>
+)}
               </div>
               {ad.data.contact && ad.data.contact === "contact" && (
                 <div>

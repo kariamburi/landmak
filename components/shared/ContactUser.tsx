@@ -7,10 +7,20 @@ import { Icon } from "@iconify/react";
 import Barsscale from "@iconify-icons/svg-spinners/bars-scale";
  import Image from "next/image";
  import Zoom from "react-medium-image-zoom";
+ import { db, storage } from "@/lib/firebase";
+ import {
+   addDoc,
+   collection,
+   getDocs,
+   query,
+   serverTimestamp,
+   where,
+ } from "firebase/firestore";
+import { AdminId } from "@/constants";
 // Correct import
 export default function ContactUser({
-    isOpen,
-    user,
+  isOpen,
+  user,
   handleOpenChatId,
   onClose,
 }: {
@@ -34,6 +44,20 @@ export default function ContactUser({
                  
             const token = user.token;
             sendNotify(token, message)
+             const read = "1";
+             const imageUrl='';
+                  const messageData = {
+                    text: message,
+                    name: "PocketShop Team",
+                    avatar: '',
+                    createdAt: serverTimestamp(),
+                    uid:AdminId,
+                    recipientUid:user._id,
+                    imageUrl,
+                    read,
+                  };
+            
+                  await addDoc(collection(db, "messages"), messageData);
           }
           if(user.email && emailType ==='email'){
            
@@ -42,6 +66,20 @@ export default function ContactUser({
               recipientEmail,
               message
             );
+               const read = "1";
+             const imageUrl='';
+                  const messageData = {
+                    text: message,
+                    name: "PocketShop Team",
+                    avatar: '',
+                    createdAt: serverTimestamp(),
+                    uid:AdminId,
+                    recipientUid:user._id,
+                    imageUrl,
+                    read,
+                  };
+            
+                  await addDoc(collection(db, "messages"), messageData);
           }
              
      setMessage("");
@@ -58,7 +96,7 @@ export default function ContactUser({
   if (!isOpen) return null;
   return (
      <div className="fixed inset-0 flex items-center justify-center bg-gray-800 bg-opacity-50 z-50">
-          <div className="dark:bg-[#2D3236] dark:text-gray-300 bg-[#e4ebeb] rounded-lg p-4 lg:p-6 w-full max-w-4xl h-[90vh] flex flex-col">
+          <div className="dark:bg-[#2D3236] dark:text-gray-300 bg-white rounded-lg p-4 lg:p-6 w-full max-w-4xl h-[90vh] flex flex-col">
             {/* Header */}
             <div className="flex justify-end items-center mb-4">
              
@@ -89,7 +127,12 @@ export default function ContactUser({
              <h3 className="text-lg">{user.firstName} {user.lastName}</h3>
              </div>
              </div>
-           
+            <button
+            onClick={()=> handleOpenChatId(user._id)}
+            className="underline hover:font-bold text-xs cursor-pointer text-gray-300 px-6 py-2 rounded-full"
+          >
+           History
+          </button>
            </div>
 
     <div className="w-full rounded-xl h-[70vh] shadow-lg p-4 dark:bg-[#131B1E] dark:text-gray-300 bg-white">

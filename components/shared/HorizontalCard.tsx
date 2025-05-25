@@ -251,7 +251,10 @@ const [isPopupOpenSchedule, setIsPopupOpenSchedule] = useState(false);
   
 </div>
       </div>
-
+ <p className="text-xs text-gray-600 dark:text-gray-300">
+       Loan Amount:
+        <span className="font-semibold"> KES {ad.LoanAmount.toLocaleString()}</span>
+      </p>
       <p className="text-xs text-gray-600 dark:text-gray-300">
         Monthly Income:
         <span className="font-semibold"> KES {ad.monthlyIncome.toLocaleString()}</span>
@@ -534,7 +537,11 @@ const [isPopupOpenSchedule, setIsPopupOpenSchedule] = useState(false);
                   <>
                    
                       <span className="text-[12px] lg:text-lg font-bold w-min rounded-full dark:text-green-500 text-emerald-700">
-              {ad.data.budget ? (<> Budget : Ksh {ad.data.budget.toLocaleString()}</>):(<>Ksh {ad.data.price.toLocaleString()}</>)}   
+              {ad.data.budget ? (<> Budget : Ksh {ad.data.budget.toLocaleString()}</>):(<> {ad.data.price > 0 && (
+                                   <span>
+                                  Ksh {ad.data.price.toLocaleString()}
+                                  </span>)} 
+                                  </>)}   
                 </span>
                   </>
                 )}{" "}
@@ -553,6 +560,12 @@ const [isPopupOpenSchedule, setIsPopupOpenSchedule] = useState(false);
                     {ad.data.period}
                   </div>
                 )}
+                 {ad.data["Maximum Amount"] && ad.data["Minimum Amount"] && (
+  <div className="flex flex-col font-bold">
+    <p>Min: Ksh {Number(ad.data["Minimum Amount"]).toLocaleString()} </p>
+    <p>Max: Ksh {Number(ad.data["Maximum Amount"]).toLocaleString()}</p>
+  </div>
+)}
               </div>
               {ad.adstatus && isAdCreator && (
                 <div
@@ -579,9 +592,11 @@ const [isPopupOpenSchedule, setIsPopupOpenSchedule] = useState(false);
                 }}
                 className="flex gap-1 cursor-pointer items-center no-underline"
               >
-                <span className="text-[12px] lg:text-lg font-bold w-min rounded-full dark:text-green-500 text-emerald-700">
+                  {ad.data.price > 0 && (
+                                     <span className="text-[12px] lg:text-lg font-bold w-min rounded-full dark:text-green-500 text-emerald-700">
                   {formatKsh(ad.data.price)}
-                </span>{" "}
+                </span>)} 
+               {" "}
                 {ad.data.per && (
                   <div className="text-xs dark:text-white">{ad.data.per}</div>
                 )}

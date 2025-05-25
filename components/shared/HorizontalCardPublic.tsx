@@ -368,9 +368,10 @@ const [isDeleted, setIsDeleted] = useState(false);
                   </div>
                 ) : (
                   <>
-                    <span className="text-[12px] lg:text-sm font-bold w-min rounded-full dark:text-green-500 text-emerald-700">
+                  {ad.data.price > 0 && (
+                     <span className="text-[12px] lg:text-sm font-bold w-min rounded-full dark:text-green-500 text-emerald-700">
                       {formatKsh(ad.data.price)}
-                    </span>
+                    </span>)} 
                   </>
                 )}{" "}
                 {ad.data.unit && ad.data.contact === "specify" && (
@@ -388,6 +389,12 @@ const [isDeleted, setIsDeleted] = useState(false);
                     {ad.data.period}
                   </div>
                 )}
+                 {ad.data["Maximum Amount"] && ad.data["Minimum Amount"] && (
+  <div className="flex flex-col font-bold">
+    <p>Min: Ksh {Number(ad.data["Minimum Amount"]).toLocaleString()} </p>
+    <p>Max: Ksh {Number(ad.data["Maximum Amount"]).toLocaleString()}</p>
+  </div>
+)}
               </div>
               {ad.adstatus && isAdCreator && (
                 <div
@@ -414,8 +421,12 @@ const [isDeleted, setIsDeleted] = useState(false);
               >
                
                  <span className="text-[12px] lg:text-sm font-bold w-min rounded-full dark:text-green-500 text-emerald-700">
-              {ad.data.budget ? (<> Budget : Ksh {ad.data.budget.toLocaleString()}</>):(<>Ksh {ad.data.price.toLocaleString()}</>)}   
-                </span>
+              {ad.data.budget ? (<> Budget : Ksh {ad.data.budget.toLocaleString()}</>):(<> {ad.data.price > 0 && (
+                                   <span>
+                                  Ksh {ad.data.price.toLocaleString()}
+                                  </span>)} 
+                                  </>)}
+</span>
                 {ad.data.per && (
                   <div className="text-xs dark:text-white">{ad.data.per}</div>
                 )}

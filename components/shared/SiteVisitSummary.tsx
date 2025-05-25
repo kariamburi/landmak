@@ -54,7 +54,7 @@ export default function SiteVisitSummary({
 
   if (summaries.length === 0) {
     return (
-      <div className="text-center text-gray-600 p-4">
+      <div className="text-center text-gray-600 p-0 lg:p-4">
         No upcoming site visits scheduled.
       </div>
     );
@@ -63,7 +63,7 @@ export default function SiteVisitSummary({
   return (
     <div className="space-y-6">
       {summaries.map((summary:any, idx:number) => (
-        <div key={idx} className="border p-4 rounded-lg shadow-sm bg-white">
+        <div key={idx} className="border p-1 lg:p-4 rounded-lg shadow-sm bg-white">
        <div className='w-full flex justify-between items-center'>
           <h3
             className="text-lg font-semibold mb-2"

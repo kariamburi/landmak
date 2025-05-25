@@ -227,6 +227,7 @@ setSelectedCategoryCommand(filteredCategories);
                         >
                           <option value="text">Text</option>
                           <option value="number">Number</option>
+                          <option value="money">Money</option>
                           <option value="select">Select</option>
                           <option value="radio">Radio</option>
                           <option value="checkbox">Checkbox</option>
@@ -248,20 +249,25 @@ setSelectedCategoryCommand(filteredCategories);
                           <option value="virtualTourLink">3D Virtual Property Tour Link</option>
                           <option value="propertyarea"> Advanced Property Mapping</option>
                           <option value="location">Location</option>
+                           <option value="notify">notify</option>
                           <option value="related-autocompletes">
                             Related-autocompletes
                           </option>
                         </select>
                         {(field.type === "select" ||
                           field.type === "radio" ||
+                           field.type === "notify" ||
                           field.type === "checkbox" ||
                           field.type === "autocomplete" ||
                           field.type === "multi-select") && (
+                            
                           <div>
-                            <input
-                              type="text"
-                              value={field.options.join(", ")}
-                              onChange={(e) =>
+
+                             <input
+    type="text"
+    placeholder={field.type === "notify" ? "Notification" : "Comma-separated options"}
+    value={field.options.join(",")}
+    onChange={(e) =>
                                 handleEditFieldChange(
                                   index,
                                   "options",
@@ -270,9 +276,9 @@ setSelectedCategoryCommand(filteredCategories);
                                     .map((option) => option.trim())
                                 )
                               }
-                              className="border rounded p-2 w-full mb-1 dark:bg-[#2D3236] bg-white"
-                              placeholder="Comma-separated options"
-                            />
+    className="border rounded p-2 w-full mb-1 dark:bg-[#2D3236] bg-white"
+  /> 
+                          
                           </div>
                         )}
                         {field.type === "related-autocompletes" && (
