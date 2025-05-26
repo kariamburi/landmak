@@ -158,9 +158,9 @@ const [showWantedPopup, setShowWantedPopup] = useState(false);
                       >
                         <div className="flex border-b border-gray-300 p-0 dark:border-0 w-full gap-0 items-center hover:bg-green-100 dark:bg-[#222528] dark:hover:bg-gray-800">
                           <div className="flex gap-1 items-center p-3">
-                            <div className="flex h-9 w-9 rounded-lg p-1 dark:bg-[#2D3236] bg-gray-100 items-center">
+                            <div className="flex rounded-lg p-2 shadow-sm dark:bg-[#2D3236] bg-[#e4ebeb] items-center">
                               <Image
-                                className="h-5 w-8 object-cover"
+                                className="h-12 w-12 object-cover"
                                 src={sub.imageUrl[0] || ""}
                                 alt={sub.subcategory}
                                 width={60}

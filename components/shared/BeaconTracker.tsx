@@ -336,6 +336,7 @@ const refreshLocation = () => {
   };
   const deleteAll = () => {
     setBeacons([]);
+    setParcels([]);
     polygonRef.current?.setMap(null);
     polygonRef.current = undefined;
     beaconMarkers.current.forEach(marker => marker.setMap(null));
@@ -526,18 +527,6 @@ const generateMultipleParcelLink = async () => {
           </Tooltip>
         </TooltipProvider>
  
-
-{/*  <TooltipProvider><Tooltip>
-  <TooltipTrigger asChild>
-    <Button onClick={refreshLocation} className="w-14 text-gray-600" variant="outline">
-      <MyLocationOutlinedIcon />
-    </Button>
-  </TooltipTrigger>
-  <TooltipContent>
-    Refresh Location
-  </TooltipContent>
-</Tooltip>
-</TooltipProvider>*/}
         <TooltipProvider>
           <Tooltip>
             <TooltipTrigger asChild>
@@ -561,32 +550,6 @@ const generateMultipleParcelLink = async () => {
         </Tooltip>
       </TooltipProvider>
 
-      <TooltipProvider>
-  <Tooltip>
-    <DropdownMenu>
-      <TooltipTrigger asChild>
-        <DropdownMenuTrigger asChild>
-          <Button className="w-14 text-gray-600" variant="outline">
-            💾
-          </Button>
-        </DropdownMenuTrigger>
-      </TooltipTrigger>
-      <TooltipContent><p>Save</p></TooltipContent>
-
-      <DropdownMenuContent align="end">
-        <DropdownMenuItem onClick={exportToGeoJSON}>
-        <FileDownloadOutlinedIcon/>Save as GeoJSON
-        </DropdownMenuItem>
-        <DropdownMenuItem onClick={generateMultipleParcelQRCode}>
-       <QrCode2OutlinedIcon/> Save as QR Code
-        </DropdownMenuItem>
-         <DropdownMenuItem onClick={generateMultipleParcelLink}>
-       <Share2/> Share link
-        </DropdownMenuItem>
-      </DropdownMenuContent>
-    </DropdownMenu>
-  </Tooltip>
-</TooltipProvider>
 <TooltipProvider>
           <Tooltip>
             <TooltipTrigger asChild>
