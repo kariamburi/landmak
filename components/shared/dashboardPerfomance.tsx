@@ -219,16 +219,11 @@ CollectionProps) => {
                              daysRemaining &&
                              daysRemaining > 0 ? (
                                <>
-                                
-
-                                 <div className="w-full lg:max-w-2xl flex gap-1 w-full items-center bg-green-100 px-3 py-1 rounded-lg">
-                                 <div
-                                   style={{
-                                     backgroundColor: color,
-                                   }}
-                                   className="h-5 w-5 rounded-full"
-                                 ></div>
-    <span className="text-sm text-green-700 font-semibold">Active | {planPackage} Plan | {daysRemaining} Days Left </span>
+                                <div
+  className={`w-full  lg:max-w-2xl my-2 p-4 bg-white border-l-[4px] rounded-md`}
+  style={{ borderLeftColor: user.currentpack.color }}
+>
+    <span className="text-sm font-semibold">{planPackage} Plan | {daysRemaining} Days Left </span>
     <button  onClick={()=> handleOpenPlan()} className="ml-2 text-green-600 underline">Upgrade</button>
   </div>
 
@@ -238,14 +233,11 @@ CollectionProps) => {
                              ) : (
                                <>
 
-<div className="w-full lg:max-w-2xl flex w-full items-center gap-1 bg-green-100 px-3 py-1 rounded-lg">
-<div
-                                   style={{
-                                     backgroundColor: color,
-                                   }}
-                                   className="h-5 w-5 rounded-full"
-                                 ></div>
-    <span className="text-sm text-green-700 font-semibold">Active | {planPackage} Plan </span>
+  <div
+  className={`w-full  lg:max-w-2xl my-2 p-4 bg-white border-l-[4px] rounded-md`}
+  style={{ borderLeftColor: user.currentpack.color }}
+>
+    <span className="text-sm font-semibold">{planPackage} Plan </span>
     <button  onClick={()=> handleOpenPlan()} className="ml-2 text-green-600 underline">Upgrade</button>
   </div>
 

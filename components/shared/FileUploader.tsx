@@ -296,7 +296,7 @@ export function FileUploader({
         <div className="font-semibold">Add Photo</div>
         <div>
          
-         {category ==='Property Services' ?(<> 
+         {category ==='Property Services' || category ==='Wanted Ads' ? (<> 
          <small className="dark:text-gray-500 text-[#464b4f]">Add Profile Image</small>
          </>):(<><small className="dark:text-gray-500 text-[#464b4f]">Add at least 3 photos for this category</small>  <br />
           <small className="dark:text-gray-500 text-[#464b4f]">

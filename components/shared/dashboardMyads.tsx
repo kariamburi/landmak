@@ -204,15 +204,15 @@ CollectionProps) => {
                              daysRemaining &&
                              daysRemaining > 0 ? (
                                <>
-                                
-                                 <div className="flex gap-1 w-full items-center border border-green-600 bg-green-100 px-3 py-1 rounded-lg">
-                                 <div
-                                   style={{
-                                     backgroundColor: user.currentpack.color,
-                                   }}
-                                   className="h-5 w-5 rounded-full"
-                                 ></div>
-    <span className="text-sm text-green-700 font-semibold">Active | { user.currentpack.name} Plan | {daysRemaining} Days Left </span>
+                                <div
+  className={`w-full my-2 p-4 bg-white border-l-[4px] rounded-md`}
+  style={{ borderLeftColor: user.currentpack.color }}
+>
+        
+
+{/*<div className="flex gap-1 w-full items-center border border-green-600 bg-green-100 px-3 py-1 rounded-lg">*/}
+                                 
+    <span className="text-sm font-semibold">{ user.currentpack.name} Plan | {daysRemaining} Days Left </span>
     <button  onClick={()=> handleOpenPlan()} className="ml-2 text-green-600 underline">Upgrade</button>
   </div>
 
@@ -222,14 +222,11 @@ CollectionProps) => {
                              ) : (
                                <>
 
-<div className="flex w-full items-center gap-1 border border-green-600 bg-green-100 px-3 py-1 rounded-lg">
-<div
-                                   style={{
-                                     backgroundColor: user.currentpack.color,
-                                   }}
-                                   className="h-5 w-5 rounded-full"
-                                 ></div>
-    <span className="text-sm text-green-700 font-semibold">Active | { user.currentpack.name} Plan </span>
+ <div
+  className={`w-full my-2 p-4 bg-white border-l-[4px] rounded-md`}
+  style={{ borderLeftColor: user.currentpack.color }}
+>
+    <span className="text-sm font-semibold">{ user.currentpack.name} Plan </span>
     <button  onClick={()=> handleOpenPlan()} className="ml-2 text-green-600 underline">Upgrade</button>
   </div>
 
@@ -262,14 +259,11 @@ CollectionProps) => {
                                <>
                                 
 
-                                 <div className="flex gap-1 w-full items-center border border-green-600 bg-green-100 px-3 py-1 rounded-lg">
-                                 <div
-                                   style={{
-                                     backgroundColor: user.currentpack.color,
-                                   }}
-                                   className="h-5 w-5 rounded-full"
-                                 ></div>
-    <span className="text-sm text-green-700 font-semibold">Active | {user.currentpack.name} Plan | {daysRemaining} Days Left </span>
+                                  <div
+  className={`w-full my-2 p-4 bg-white border-l-[4px] rounded-md`}
+  style={{ borderLeftColor: user.currentpack.color }}
+>
+    <span className="text-sm font-semibold">{user.currentpack.name} Plan | {daysRemaining} Days Left </span>
     <button  onClick={()=> handleOpenPlan()} className="ml-2 text-green-600 underline">Upgrade</button>
   </div>
 
@@ -279,14 +273,11 @@ CollectionProps) => {
                              ) : (
                                <>
 
-<div className="flex w-full items-center gap-1 border border-green-600 bg-green-100 px-3 py-1 rounded-lg">
-<div
-                                   style={{
-                                     backgroundColor: user.currentpack.color,
-                                   }}
-                                   className="h-5 w-5 rounded-full"
-                                 ></div>
-    <span className="text-sm text-green-700 font-semibold">Active | {user.currentpack.name} Plan </span>
+ <div
+  className={`w-full my-2 p-4 bg-white border-l-[4px] rounded-md`}
+  style={{ borderLeftColor: user.currentpack.color }}
+>
+    <span className="text-sm font-semibold">{user.currentpack.name} Plan </span>
     <button  onClick={()=> handleOpenPlan()} className="ml-2 text-green-600 underline">Upgrade</button>
   </div>
 

@@ -89,7 +89,7 @@ packagesList,
             onClick={() => {
               handleOpenSell();
             }}
-            className="h-[140px] bg-green-600 text-white flex flex-col items-center justify-center cursor-pointer rounded-sm p-1 border-0 border-green-300 hover:bg-green-700"
+            className="h-[140px] shadow-sm  bg-green-600 text-white flex flex-col items-center justify-center cursor-pointer rounded-sm p-1 border-0 border-green-300 hover:bg-green-700"
           >
             <div className="flex flex-col items-center text-center justify-center">
               <div className="h-12 w-12 rounded-full p-2">
@@ -106,7 +106,7 @@ packagesList,
               setIsOpenP(true);
               router.push("/sign-in");
             }}
-            className="h-[140px] bg-green-600 text-white flex flex-col items-center justify-center cursor-pointer rounded-sm p-1 border-0 border-green-300 hover:bg-green-700"
+            className="h-[140px] shadow-sm bg-green-600 text-white flex flex-col items-center justify-center cursor-pointer rounded-sm p-1 border-0 border-green-300 hover:bg-green-700"
           >
             <div className="flex flex-col items-center text-center justify-center">
               <div className="h-12 w-12 rounded-full p-2">
@@ -122,12 +122,12 @@ packagesList,
             key={index} // Using sub.title as a unique key
             // onClick={() => handleCategory(category.name)}
             onClick={() => handleOpen(category.name)}
-            className="h-[140px] dark:bg-[#2D3236] text-black dark:text-[#F1F3F3] bg-white flex flex-col items-center justify-center cursor-pointer rounded-sm p-1 border hover:bg-emerald-100"
+            className="h-[140px] shadow-sm dark:bg-[#2D3236] text-black dark:text-[#F1F3F3] bg-white flex flex-col items-center justify-center cursor-pointer rounded-sm p-1 border hover:bg-emerald-100"
           >
             <div className="flex flex-col items-center text-center justify-center">
-              <div className="rounded-full dark:bg-[#131B1E] bg-gray-100 p-2">
+              <div className="rounded-full shadow-sm dark:bg-[#131B1E] bg-[#e4ebeb] p-2">
                 <Image
-                  className="w-12 h-12 object-cover"
+                  className="w-14 h-14 object-cover"
                   src={category.imageUrl[0]}
                   alt={category.name}
                   width={60}
@@ -135,7 +135,7 @@ packagesList,
                 />
               </div>
               <div className="flex flex-col">
-                <h2 className="text-xs">{category.name}</h2>
+                <h2 className="text-xs font-bold">{category.name}</h2>
                 <p className="text-xs text-gray-500 dark:text-gray-500">
                   {category.name === "Wanted Ads" ?  (category.adCount + loans.adCount): category.adCount} ads
                 </p>
