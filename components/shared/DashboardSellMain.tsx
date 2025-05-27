@@ -128,7 +128,7 @@ const DashboardSellMain = ({
   
   <div className="flex flex-col justify-center w-full h-full mt-[50px]">
       
-  <div className="p-1 lg: p-2 flex min-h-[100vh] flex-col w-full lg:max-w-3xl lg:mx-auto h-full rounded-lg">
+  <div className="p-1 lg: p-2 flex flex-col w-full lg:max-w-3xl lg:mx-auto h-full rounded-lg">
    
               <EventForm
                 userId={userId}
@@ -149,6 +149,8 @@ const DashboardSellMain = ({
               />
             </div>
 
+  {/**
+   
     <footer className="mt-10">
       <div>
         <div className="hidden lg:inline">
@@ -160,7 +162,7 @@ const DashboardSellMain = ({
           />
         </div>
       </div>
-    </footer>
+    </footer> */}
   </div>
 </div></div>
 

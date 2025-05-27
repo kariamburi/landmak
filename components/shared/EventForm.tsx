@@ -2223,7 +2223,7 @@ const handleInputChangeMoney = (field: string, value: string) => {
               {loading ? "Submitting..." : `${type} Ad `}
             </div>
             </button>
-          <p className="mt-2 text-xs text-gray-600 dark:text-gray-500 text-center">
+          <p className="mt-2 mb-2 text-xs text-gray-600 dark:text-gray-500 text-center">
             By clicking on Create Ad, you accept the{" "}
             <span onClick={() => handleOpenTerms()} className="text-green-600 cursor-pointer underline">
               Terms of Use
