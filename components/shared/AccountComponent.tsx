@@ -318,8 +318,15 @@ useEffect(() => {
     
   
   return (
-      <ScrollArea className="h-[100vh] bg-[#e4ebeb] dark:bg-[#131B1E] text-black dark:text-[#F1F3F3]">
-       
+    <div className="h-[100vh] bg-[#e4ebeb] p-0 dark:bg-[#131B1E] text-black dark:text-[#F1F3F3] overflow-hidden">
+    <div className="h-full overflow-y-auto bg-[#e4ebeb] border">
+       <style jsx>{`
+    @media (max-width: 1024px) {
+      div::-webkit-scrollbar {
+        display: none;
+      }
+    }
+  `}</style>   
       <div className="top-0 z-10 fixed w-full">
                               <Navbar user={user} userstatus={user.status} userId={userId} onClose={onClose} popup={"settings"} handleOpenSell={handleOpenSell} handleOpenBook={handleOpenBook} handleOpenPlan={handleOpenPlan} handleOpenChat={handleOpenChat}
                               handleOpenPerfomance={handleOpenPerfomance}
@@ -441,7 +448,8 @@ useEffect(() => {
           handleOpenP={handleOpenP} />
         </div>
       </footer>
-    </ScrollArea>
+    </div> 
+    </div>
   );
 };
 const Card: FC<{

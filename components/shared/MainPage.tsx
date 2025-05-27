@@ -2,8 +2,8 @@
 import React, { useState, useEffect, useRef } from "react";
 import { Menu, X } from "lucide-react";
 import { Button } from "../ui/button";
-//import { ScrollArea } from "../ui/scroll-area";
-import * as ScrollArea from "@radix-ui/react-scroll-area";
+import { ScrollArea } from "../ui/scroll-area";
+//import * as ScrollArea from "@radix-ui/react-scroll-area";
 import { AdminId, mode } from "@/constants";
 import { usePathname, useRouter, useSearchParams } from "next/navigation";
 import { IdynamicAd } from "@/lib/database/models/dynamicAd.model";
@@ -992,9 +992,9 @@ const handleCloseAdView = () => {
             </div>
               {/* Scroll Buttons */}
               <div className="relative flex-1 overflow-hidden">
-      <div className="absolute top-1 left-1/2 z-50 flex flex-col gap-2">
+       {/*<div className="absolute top-1 left-1/2 z-50 flex flex-col gap-2">
 
-      {showScrollUp && (
+     {showScrollUp && (
           <button
             onClick={() => scrollBy(-300)}
             className="bg-[#e4ebeb] text-black h-10 w-10 p-0 rounded-full shadow"
@@ -1004,10 +1004,10 @@ const handleCloseAdView = () => {
         )} 
        
        
-      </div>
-        <ScrollArea.Root 
-         className="h-full">
-      <ScrollArea.Viewport 
+      </div>*/} 
+      
+      
+      <ScrollArea
          ref={viewportRef_}
          className="h-full overflow-y-auto text-sm lg:text-base w-full dark:bg-[#2D3236] bg-white rounded-t-md border p-4">
       
@@ -1101,11 +1101,9 @@ const handleCloseAdView = () => {
      
       
     </div>
-    </ScrollArea.Viewport>
-     <ScrollArea.Scrollbar orientation="vertical" />
-      <ScrollArea.Corner />
-    </ScrollArea.Root>
-    <div className="absolute bottom-1 left-1/2 z-50 flex flex-col gap-2">
+    </ScrollArea>
+  
+  {/*  <div className="absolute bottom-1 left-1/2 z-50 flex flex-col gap-2">
     {!showScrollUp && (
           <button
             onClick={() => scrollBy(300)}
@@ -1115,7 +1113,7 @@ const handleCloseAdView = () => {
           </button>
         )}
        
-      </div>
+      </div>*/} 
       </div>
           </div>
         )}
@@ -1143,8 +1141,8 @@ const handleCloseAdView = () => {
           onMouseLeave={() => setHoveredCategory(null)}
         >
           <div className="text-sm font-bold w-full p-2 text-gray-600">{hoveredCategory}</div>
-          <ScrollArea.Root>
-      <ScrollArea.Viewport className="h-[450px] w-full">
+        
+      <ScrollArea className="h-[450px] w-full">
             {subcategoryList
               .filter((cat: any) => cat.category.name === hoveredCategory)
               .map((sub: any, index: number) => (
@@ -1213,10 +1211,8 @@ const handleCloseAdView = () => {
                 </div>
               
              ))}
-        </ScrollArea.Viewport>
-      <ScrollArea.Scrollbar orientation="vertical" />
-      <ScrollArea.Corner />
-    </ScrollArea.Root>
+        </ScrollArea>
+     
         </div>
       )}
         <div onMouseEnter={() => setHoveredCategory(null)} className="relative p-0 lg:p-2 h-screen flex flex-col">
@@ -1434,135 +1430,142 @@ const handleCloseAdView = () => {
 
 
 
-        
-     <ScrollArea.Root className="flex-1 overflow-hidden">
-      <ScrollArea.Viewport ref={viewportRef}  className="h-full overflow-y-auto bg-[#e4ebeb] lg:rounded-t-0 border">
-    
-  <div className="lg:hidden px-1">
-    <MenuSubmobileMain
-      categoryList={categoryList}
-      subcategoryList={subcategoryList}
-      handleSubCategory={handleSubCategory}
-      handleOpenSell={handleOpenSell}
-      handleCategory={handleCategory}
-      handleOpenChat={handleOpenChat}
-      handleOpenSearchTab={handleOpenSearchTab}
-      handleOpenSettings={handleOpenSettings}
-      handlePayNow={handlePay}
-      userId={userId}
-      loans={loans}
-      user={userprofile}
-      packagesList={packagesList}
-    />
-  </div>
-
-  {data.length > 0 ? (
    
-     <Masonry
-        breakpointCols={breakpointColumns}
-        className="p-1 mt-4 mb-20 lg:mb-0 lg:mt-0 w-full flex gap-2 lg:gap-4 overflow-hidden"
-        columnClassName="bg-clip-padding"
-      >
-        {data.map((ad: any, index: number) => {
-          const hasOrderLink = collectionType === "Ads_Organized";
-          const hidePrice = collectionType === "My_Tickets";
-
-          return (
-            <div
-              ref={data.length === index + 1 ? lastAdRef : null}
-              key={ad._id}
-              className="flex justify-center w-full"
-            >
-              <CardAutoHeight
-                ad={ad}
-                hasOrderLink={hasOrderLink}
-                hidePrice={hidePrice}
-                userId={userId}
-                userName={userName}
-                userImage={userImage}
-                handleAdEdit={handleAdEdit}
-                handleAdView={handleAdView}
-                handleOpenPlan={handleOpenPlan}
-                handleOpenChatId={handleOpenChatId}
-              />
-            </div>
-          );
-        })}
-     </Masonry> 
   
-  ) : (
-    !loading && (
-      <div className="flex items-center justify-center min-h-[400px] w-full flex-col gap-3 rounded-[14px] bg-grey-50 py-28 text-center">
-        <h3 className="font-bold text-[16px] lg:text-[25px]">{emptyTitle}</h3>
-        <p className="text-sm lg:p-regular-14">{emptyStateSubtext}</p>
-        
-        <SignedIn>
-          <Button onClick={()=>handleOpenSell()} variant="default" className="flex items-center gap-2">
-            <AddOutlinedIcon sx={{ fontSize: 16 }} /> Create Ad
-          </Button>
-        </SignedIn>
-
-        <SignedOut>
-          <Button onClick={() => { setIsOpenP(true); router.push("/sign-in"); }} variant="outline" className="flex items-center gap-2">
-            <AddOutlinedIcon sx={{ fontSize: 16 }} /> Create Ad
-          </Button>
-        </SignedOut>
+   <div
+  ref={viewportRef}
+  className="h-full overflow-y-scroll bg-[#e4ebeb] lg:rounded-t-0 border"
+ 
+>
+  <style jsx>{`
+    @media (max-width: 1024px) {
+      div::-webkit-scrollbar {
+        display: none;
+      }
+    }
+  `}</style>
+      <div className="lg:hidden px-1">
+        <MenuSubmobileMain
+          categoryList={categoryList}
+          subcategoryList={subcategoryList}
+          handleSubCategory={handleSubCategory}
+          handleOpenSell={handleOpenSell}
+          handleCategory={handleCategory}
+          handleOpenChat={handleOpenChat}
+          handleOpenSearchTab={handleOpenSearchTab}
+          handleOpenSettings={handleOpenSettings}
+          handlePayNow={handlePay}
+          userId={userId}
+          loans={loans}
+          user={userprofile}
+          packagesList={packagesList}
+        />
       </div>
-    )
-  )}
 
-  {userId && (
-    <>
-      <FloatingChatIcon onClick={toggleChat} isOpen={isChatOpen} />
-      <ChatWindow
-        isOpen={isChatOpen}
-        onClose={toggleChat}
-        senderId={userId}
-        senderName={userName}
-        senderImage={userImage}
-        recipientUid={AdminId}
-        handleAdEdit={handleAdEdit}
-        handleAdView={handleAdView} 
-        handleCategory={handleCategory}
-        handleOpenSell={handleOpenSell}
-        handleOpenPlan={handleOpenPlan}
-      />
-    </>
-  )}
+      {data.length > 0 ? (
+        <Masonry
+          breakpointCols={breakpointColumns}
+          className="p-1 mt-4 mb-20 lg:mb-0 lg:mt-0 w-full flex gap-2 lg:gap-4 overflow-hidden"
+          columnClassName="bg-clip-padding"
+        >
+          {data.map((ad: any, index: number) => {
+            const hasOrderLink = collectionType === "Ads_Organized";
+            const hidePrice = collectionType === "My_Tickets";
 
-  {loading && (
-    <div>
-      {isInitialLoading ? (
-        <div className="grid grid-cols-2 lg:grid-cols-4 gap-2">
-          {Array.from({ length: 12 }).map((_, index) => (
-            <div key={index} className="bg-[#e4ebeb] dark:bg-[#2D3236] p-4 rounded-lg shadow-md w-full">
-              <Skeleton variant="rectangular" width="100%" height={140} />
-              <Skeleton variant="text" width="80%" height={30} className="mt-2" />
-              <Skeleton variant="text" width="60%" height={25} />
-            </div>
-          ))}
-        </div>
+            return (
+              <div
+                ref={data.length === index + 1 ? lastAdRef : null}
+                key={ad._id}
+                className="flex justify-center w-full"
+              >
+                <CardAutoHeight
+                  ad={ad}
+                  hasOrderLink={hasOrderLink}
+                  hidePrice={hidePrice}
+                  userId={userId}
+                  userName={userName}
+                  userImage={userImage}
+                  handleAdEdit={handleAdEdit}
+                  handleAdView={handleAdView}
+                  handleOpenPlan={handleOpenPlan}
+                  handleOpenChatId={handleOpenChatId}
+                />
+              </div>
+            );
+          })}
+        </Masonry>
       ) : (
-        <div className="w-full min-h-[400px] h-full flex flex-col items-center justify-center">
-          <Image src="/assets/icons/loading2.gif" alt="loading" width={40} height={40} unoptimized />
+        !loading && (
+          <div className="flex items-center justify-center min-h-[400px] w-full flex-col gap-3 rounded-[14px] bg-grey-50 py-28 text-center">
+            <h3 className="font-bold text-[16px] lg:text-[25px]">{emptyTitle}</h3>
+            <p className="text-sm lg:p-regular-14">{emptyStateSubtext}</p>
+
+            <SignedIn>
+              <Button onClick={() => handleOpenSell()} variant="default" className="flex items-center gap-2">
+                <AddOutlinedIcon sx={{ fontSize: 16 }} /> Create Ad
+              </Button>
+            </SignedIn>
+
+            <SignedOut>
+              <Button onClick={() => { setIsOpenP(true); router.push("/sign-in"); }} variant="outline" className="flex items-center gap-2">
+                <AddOutlinedIcon sx={{ fontSize: 16 }} /> Create Ad
+              </Button>
+            </SignedOut>
+          </div>
+        )
+      )}
+
+      {userId && (
+        <>
+          <FloatingChatIcon onClick={toggleChat} isOpen={isChatOpen} />
+          <ChatWindow
+            isOpen={isChatOpen}
+            onClose={toggleChat}
+            senderId={userId}
+            senderName={userName}
+            senderImage={userImage}
+            recipientUid={AdminId}
+            handleAdEdit={handleAdEdit}
+            handleAdView={handleAdView}
+            handleCategory={handleCategory}
+            handleOpenSell={handleOpenSell}
+            handleOpenPlan={handleOpenPlan}
+          />
+        </>
+      )}
+
+      {loading && (
+        <div>
+          {isInitialLoading ? (
+            <div className="grid grid-cols-2 lg:grid-cols-4 gap-2">
+              {Array.from({ length: 12 }).map((_, index) => (
+                <div key={index} className="bg-[#e4ebeb] dark:bg-[#2D3236] p-4 rounded-lg shadow-md w-full">
+                  <Skeleton variant="rectangular" width="100%" height={140} />
+                  <Skeleton variant="text" width="80%" height={30} className="mt-2" />
+                  <Skeleton variant="text" width="60%" height={25} />
+                </div>
+              ))}
+            </div>
+          ) : (
+            <div className="w-full min-h-[400px] h-full flex flex-col items-center justify-center">
+              <Image src="/assets/icons/loading2.gif" alt="loading" width={40} height={40} unoptimized />
+            </div>
+          )}
         </div>
       )}
+
+      <div className="hidden lg:inline">
+        <Footersub
+          handleOpenAbout={handleOpenAbout}
+          handleOpenTerms={handleOpenTerms}
+          handleOpenPrivacy={handleOpenPrivacy}
+          handleOpenSafety={handleOpenSafety}
+        />
+      </div>
     </div>
-  )}
-  
-  <div className="hidden lg:inline">
-    <Footersub
-      handleOpenAbout={handleOpenAbout}
-      handleOpenTerms={handleOpenTerms}
-      handleOpenPrivacy={handleOpenPrivacy}
-      handleOpenSafety={handleOpenSafety}
-    />
-  </div>
-  
-</ScrollArea.Viewport>
-  <ScrollArea.Scrollbar orientation="vertical" />
-      <ScrollArea.Corner />
-    </ScrollArea.Root>
+
+ 
+
 
 
 

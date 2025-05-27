@@ -4,13 +4,13 @@ import ArrowForwardIosIcon from "@mui/icons-material/ArrowForwardIos";
 import { useRouter, useSearchParams } from "next/navigation";
 import CloseIcon from "@mui/icons-material/Close";
 import SearchIcon from "@mui/icons-material/Search";
-import * as ScrollArea from "@radix-ui/react-scroll-area";
+//import * as ScrollArea from "@radix-ui/react-scroll-area";
 import {
   formUrlQuerymultiple,
   formUrlQuery,
   removeKeysFromQuery,
 } from "@/lib/utils";
-//import { ScrollArea } from "@/components/ui/scroll-area";
+import { ScrollArea } from "@/components/ui/scroll-area";
 import Autocomplete from "@mui/material/Autocomplete";
 import TextField from "@mui/material/TextField";
 import { RadioGroup, RadioGroupItem } from "@/components/ui/radio-group";
@@ -184,9 +184,9 @@ const SidebarSearchMain = ({
           <div>
             
                <div className="relative flex-1 overflow-hidden">
-                  <div className="absolute top-1 left-1/2 z-50 flex flex-col gap-2">
+                    {/*<div className="absolute top-1 left-1/2 z-50 flex flex-col gap-2">
             
-                  {showScrollUp && (
+                 {showScrollUp && (
                       <button
                         onClick={() => scrollBy(-300)}
                         className="bg-[#e4ebeb] text-black h-10 w-10 p-0 rounded-full shadow"
@@ -196,12 +196,11 @@ const SidebarSearchMain = ({
                     )} 
                    
                    
-                  </div>
-                    <ScrollArea.Root 
-                           className="h-[70vh]">
-                        <ScrollArea.Viewport 
+                  </div>*/}
+                  
+                        <ScrollArea
                            ref={viewportRef_}
-                           className="h-full overflow-y-auto text-sm lg:text-base w-full dark:bg-[#2D3236] bg-white rounded-t-md border p-4">
+                           className="h-[70vh] overflow-y-auto text-sm lg:text-base w-full dark:bg-[#2D3236] bg-white rounded-md border p-4">
                         
                         {filteredList.map((sub: any, index: number) => (
               <div
@@ -238,10 +237,9 @@ const SidebarSearchMain = ({
             
               </div>
             ))}
- </ScrollArea.Viewport>
-     <ScrollArea.Scrollbar orientation="vertical" />
-      <ScrollArea.Corner />
-    </ScrollArea.Root>
+ </ScrollArea>
+  
+ {/*
   <div className="absolute bottom-1 left-1/2 z-50 flex flex-col gap-2">
     {!showScrollUp && (
           <button
@@ -252,7 +250,7 @@ const SidebarSearchMain = ({
           </button>
         )}
        
-      </div>
+      </div> */}
       </div>
        
          

@@ -146,9 +146,15 @@ const SCROLL_THRESHOLD = 100; // pixels
    
 
   return (
-    <ScrollArea.Root className="h-[100vh] bg-[#e4ebeb] p-0 dark:bg-[#131B1E] text-black dark:text-[#F1F3F3] overflow-hidden">
-    <ScrollArea.Viewport ref={scrollRefB} className="h-full overflow-y-auto bg-[#e4ebeb] border">
-         
+    <div className="h-[100vh] bg-[#e4ebeb] p-0 dark:bg-[#131B1E] text-black dark:text-[#F1F3F3] overflow-hidden">
+    <div ref={scrollRefB} className="h-full overflow-y-auto bg-[#e4ebeb] border">
+       <style jsx>{`
+    @media (max-width: 1024px) {
+      div::-webkit-scrollbar {
+        display: none;
+      }
+    }
+  `}</style>   
       <div className="top-0 z-10 fixed w-full">
                     <Navbar user={user?? []} userstatus={user?.status ?? "User"} userId={userId} onClose={onClose} popup={"sell"} handleOpenSell={handleOpenSell} handleOpenBook={handleOpenBook} handleOpenPlan={handleOpenPlan} handleOpenChat={handleOpenChat}
                     handleOpenPerfomance={handleOpenPerfomance}
@@ -234,10 +240,9 @@ const SCROLL_THRESHOLD = 100; // pixels
       handleOpenSafety={handleOpenSafety}/>
           </div>
         </footer>
-   </ScrollArea.Viewport>
-       <ScrollArea.Scrollbar orientation="vertical" />
-         <ScrollArea.Corner />
-       </ScrollArea.Root>
+   </div>
+       </div>
+      
   );
 };
 

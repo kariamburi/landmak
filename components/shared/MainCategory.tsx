@@ -2,7 +2,7 @@
 import React, { useState, useEffect, useRef } from "react";
 import { Menu, X } from "lucide-react";
 import { Button } from "../ui/button";
-import * as ScrollArea from "@radix-ui/react-scroll-area";
+//import * as ScrollArea from "@radix-ui/react-scroll-area";
 import { ICategory } from "@/lib/database/models/category.model";
 import ViewListIcon from "@mui/icons-material/ViewList";
 import ViewModuleIcon from "@mui/icons-material/ViewModule";
@@ -1148,9 +1148,15 @@ const SCROLL_THRESHOLD = 150; // pixels
 
         {/* List Ads Section */}
      
-     <ScrollArea.Root className="flex-1 overflow-hidden">
-      <ScrollArea.Viewport ref={scrollRefB} className="h-full overflow-y-auto bg-[#e4ebeb] border">
-      
+   
+      <div ref={scrollRefB} className="h-full overflow-y-auto bg-[#e4ebeb] border">
+      <style jsx>{`
+    @media (max-width: 1024px) {
+      div::-webkit-scrollbar {
+        display: none;
+      }
+    }
+  `}</style>
   <section className="p-1 mb-20">
     <div className="flex items-center p-1 w-full justify-between">
       <div className="flex items-center gap-1 flex-wrap justify-start items-center mb-0">
@@ -1348,10 +1354,8 @@ const SCROLL_THRESHOLD = 150; // pixels
     />
   </div>
    <ProgressPopup isOpen={isOpenP} onClose={handleCloseP} />
- </ScrollArea.Viewport>
-    <ScrollArea.Scrollbar orientation="vertical" />
-      <ScrollArea.Corner />
-    </ScrollArea.Root>
+ </div>
+  
 
 
         <footer>
