@@ -786,6 +786,47 @@ export async function updateStatus({ _id, adstatus, path }: UpdateStatusParams) 
     throw error;
   }
 }
+export async function updateReverseStatus(_id: string) {
+  try {
+    await connectToDatabase();
+
+    // Find the category by its ID and update the name field only
+    const updateAdabused = await DynamicAd.findByIdAndUpdate(
+      _id,
+      { adstatus: 'Active' }, // Update only the name field
+      { new: true }
+    );
+
+
+    // Return the updated category
+    return JSON.parse(JSON.stringify(updateAdabused));
+  } catch (error) {
+    handleError(error);
+    // Handle error appropriately (e.g., throw or return error response)
+    throw error;
+  }
+}
+
+export async function handleMarkAsSold(_id: string, status: string) {
+  try {
+    await connectToDatabase();
+
+    // Find the category by its ID and update the name field only
+    console.log(_id + '--' + status);
+    const updateAd = await DynamicAd.findByIdAndUpdate(
+      _id,
+      { adstatus: status, closedDate: new Date() },
+      { new: true }
+    );
+
+    // Return the updated category
+    return JSON.parse(JSON.stringify(updateAd));
+  } catch (error) {
+    handleError(error);
+    // Handle error appropriately (e.g., throw or return error response)
+    throw error;
+  }
+}
 
 export async function updateBanAll(phone: string, adstatus: string) {
   try {

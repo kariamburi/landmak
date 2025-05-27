@@ -34,9 +34,11 @@ import ContactUser from "./ContactUser";
 import { Email, Phone } from '@mui/icons-material'; // Or from 'react-icons/md'
 import ChatBubbleOutlineOutlinedIcon from "@mui/icons-material/ChatBubbleOutlineOutlined";
 import { formatDistanceToNow, isBefore, subMonths } from "date-fns";
-import { updateCreatedAt } from "@/lib/actions/dynamicAd.actions";
+import { updateCreatedAt, updateReverseStatus } from "@/lib/actions/dynamicAd.actions";
 import ScheduleVisitForm from "./Schedule";
 import CalendarMonthOutlinedIcon from '@mui/icons-material/CalendarMonthOutlined';
+import { SoldConfirmation } from "./SoldConfirmation";
+import { Button } from "../ui/button";
 const shouldShowRenewButton = (updatedAt: Date, priority: number) => {
   const oneMonthAgo = subMonths(new Date(), 1);
   return priority === 1 && isBefore(new Date(updatedAt), oneMonthAgo);
@@ -58,7 +60,7 @@ type CardProps = {
 };
 
 const VerticalCard = ({
-  ad,
+  ad:initialAd,
   hasOrderLink,
   hidePrice,
   userId,
@@ -73,6 +75,7 @@ const VerticalCard = ({
 }: CardProps) => {
   const pathname = usePathname();
   const { toast } = useToast();
+  const [ad, setAd] = useState(initialAd); 
 const [isDeleted, setIsDeleted] = useState(false);
   const router = useRouter();
 
@@ -198,6 +201,49 @@ const [isDeleted, setIsDeleted] = useState(false);
               const handleClosePopupSchedule = () => {
                 setIsPopupOpenSchedule(false);
               };
+               const rentCategories = [
+  'Houses & Apartments for Rent',
+  'Land & Plots for Rent',
+  'Commercial Property for Rent',
+  'Short Let Property',
+  'Event Centres, Venues & Workstations'
+];
+
+const saleCategories = [
+  'Houses & Apartments for Sale',
+  'Land & Plots for Sale',
+  'Commercial Property for Sale',
+  'New builds'
+];
+const isRent = rentCategories.includes(ad.data.category);
+const isSale = saleCategories.includes(ad.data.category);
+ const handleUndo = async (_id: string) => {
+    try {
+      
+     await updateReverseStatus(
+            _id
+          );
+             setAd((prev:any) => ({
+    ...prev,
+    adstatus: 'Active',
+  }));
+          toast({
+            title: "Alert",
+            description: "Status Reversed",
+            duration: 5000,
+            className: "bg-black text-white",
+          });
+    } catch (error) {
+      console.error(error);
+      alert("Error renewing ad.");
+    }
+  };
+  const onStatusUpdate = (newStatus:string) => {
+  setAd((prev:any) => ({
+    ...prev,
+    adstatus: newStatus,
+  }));
+}
   return (
     <>
     {ad.loanterm ? (<>
@@ -668,10 +714,25 @@ const [isDeleted, setIsDeleted] = useState(false);
               </div>
             )}
           </div>
-            {!ad.hasSiteVisit && isAdCreator && (<div className="flex mt-2 w-full text-xs justify-between items-center"><button onClick={()=> handleOpenPopupSchedule(ad)} className="flex rounded w-full p-2 text-xs text-green-600 border border-green-600 bg-green-100 hover:bg-green-200 justify-center items-center gap-1">
-                                  <CalendarMonthOutlinedIcon sx={{ fontSize: 16 }}/>
-                                 Schedule Site Visit
-                          </button></div>)}
+           {!ad.hasSiteVisit && isAdCreator && (
+            <div className="flex mt-2 w-full justify-between items-center">
+              <Button onClick={()=> handleOpenPopupSchedule(ad)} className="flex rounded w-full p-2 text-green-600 border border-green-600 bg-green-100 hover:bg-green-200 justify-center items-center gap-1">
+                        <CalendarMonthOutlinedIcon sx={{ fontSize: 16 }}/>
+                       Schedule Site Visit
+                </Button></div>)}
+
+{isAdCreator && ad.adstatus === 'Active' && (isSale || isRent) && (
+  <SoldConfirmation onStatusUpdate={onStatusUpdate} _id={ad._id} status={isSale ? 'Sold' : 'Rented'} />
+)}
+{isAdCreator && ['Sold', 'Rented'].includes(ad.adstatus) && (
+  <Button
+    onClick={() => handleUndo(ad._id)}
+    variant={"outline"}
+    className="flex mt-2 rounded w-full p-2 justify-center items-center gap-1"
+  >
+    Undo {ad.adstatus}
+  </Button>
+)}
            {isAdCreator && shouldShowRenewButton(ad.updatedAt, ad.priority) && (<div className="flex mt-2 w-full text-xs justify-between items-center">
              <button
     className="bg-green-600 hover:bg-green-700 text-white p-2 rounded"
