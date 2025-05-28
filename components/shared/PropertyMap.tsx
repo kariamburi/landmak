@@ -137,7 +137,6 @@ const getParcelsFromURL = (searchParams: URLSearchParams) => {
 
 export default function MapDrawingTool({queryObject, Parcels, coordinates, userName, 
   userImage, handleCategory, handleOpenPlan, handleOpenSell, onClose, handleAdEdit, handleAdView}:Props) {
- //const [uploadPopup, setUploadPopup] = useState(false);
   const [center, setCenter] = useState<any>(defaultcenter);
   const [latitude, setLatitude] = useState("");
   const [longitude, setLongitude] = useState("");
@@ -159,11 +158,9 @@ export default function MapDrawingTool({queryObject, Parcels, coordinates, userN
   const [selectedColor, setSelectedColor] = useState<string | null>(null);
   const [selectedLabel, setSelectedLabel] = useState<string>("");
   const [dropdownOpen, setDropdownOpen] = useState(false);
-   const [showGuide, setShowGuide] = useState(false);
-  //const drawingManagerRef = useRef<google.maps.drawing.DrawingManager | null>(null);
+  const [showGuide, setShowGuide] = useState(false);
   const shapesRef = useRef(shapes);
   const polylinesRef = useRef(polylines);
- // const labelMarkersRef = useRef<google.maps.Marker[]>([]);
   const labelMarkersRef = useRef<any>([]);
   const [distance, setDistance] = useState<string | null>(null);
   const [showMappingInfo, setShowMappingInfo] = useState(false);
@@ -856,9 +853,9 @@ useEffect(() => {
   };
 
  useEffect(() => {
-  
+ 
   if (!mapInstance.current || loadedParcels.length === 0) return;
-
+ 
   const interval = setInterval(() => {
     if (mapInstance.current && window.google) {
       clearInterval(interval);
@@ -994,7 +991,7 @@ const centerLatLngLiteral = {
   }, 200);
 
   return () => clearInterval(interval);
-}, [loadedParcels]);
+}, [loadedParcels, mapInstance.current]);
 
   
     
@@ -1347,7 +1344,6 @@ const handleUploadQRCode = async (file: File) => {
 };
 useEffect(() => {
     if (!coordinates) return;
-  
     const interval = setInterval(() => {
       if (mapInstance.current && window.google) {
         clearInterval(interval);
@@ -1490,7 +1486,7 @@ if (mapInstance.current) {
     }, 200);
   
     return () => clearInterval(interval);
-  }, [coordinates]);
+  }, [coordinates, mapInstance.current]);
 
 
   return ( 

@@ -281,6 +281,7 @@ const [wantedcategory, setWantedcategory] = useState('');
 
       if (coordinates) {
         const loadedParcels = getParcelsFromURL();
+    
         setCoordinates(loadedParcels)
         setShowPopupMap(true);
       } else {
@@ -1790,7 +1791,8 @@ const handleCloseAdView = () => {
                userImage={userImage}
                handleCategory={handleCategory}
                handleOpenSell={handleOpenSell}
-              handleOpenPlan={handleOpenPlan}/>
+              handleOpenPlan={handleOpenPlan}
+             />
                                       </div>
                                       
                                     </div>
