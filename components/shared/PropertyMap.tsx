@@ -851,11 +851,19 @@ useEffect(() => {
     setLongitude(defaultcenter.lng.toString());
     setUploadPopup(true);
   };
+//const [mapReady, setMapReady] = useState(false);
 
+// In the map initialization code
+//useEffect(() => {
+//  if (mapInstance.current) {
+ //   setMapReady(true);
+ // }
+//}, [mapInstance.current]);
  useEffect(() => {
  
-  if (!mapInstance.current || loadedParcels.length === 0) return;
- 
+ if (!mapInstance.current || !Array.isArray(loadedParcels) || loadedParcels.length === 0) return;
+            setLatitude(center.toString());
+            setLongitude(center.toString());
   const interval = setInterval(() => {
     if (mapInstance.current && window.google) {
       clearInterval(interval);
@@ -1343,7 +1351,13 @@ const handleUploadQRCode = async (file: File) => {
   }
 };
 useEffect(() => {
-    if (!coordinates) return;
+   if (
+  !mapInstance.current ||
+  typeof coordinates !== 'string' ||
+  !coordinates.includes(',')
+) return;
+      setLatitude(center.toString());
+      setLongitude(center.toString());
     const interval = setInterval(() => {
       if (mapInstance.current && window.google) {
         clearInterval(interval);
