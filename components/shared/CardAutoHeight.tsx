@@ -37,6 +37,7 @@ import CalendarMonthOutlinedIcon from '@mui/icons-material/CalendarMonthOutlined
 import ScheduleVisitForm from "./Schedule";
 import { Button } from "../ui/button";
 import { SoldConfirmation } from "./SoldConfirmation";
+import { DivIcon } from "leaflet";
 const shouldShowRenewButton = (updatedAt: Date, priority: number) => {
   const oneMonthAgo = subMonths(new Date(), 1);
   return priority === 1 && isBefore(new Date(updatedAt), oneMonthAgo);
@@ -85,22 +86,7 @@ const CardAutoHeight = ({
     }
     return title;
   };
-  const rentCategories = [
-  'Houses & Apartments for Rent',
-  'Land & Plots for Rent',
-  'Commercial Property for Rent',
-  'Short Let Property',
-  'Event Centres, Venues & Workstations'
-];
-
-const saleCategories = [
-  'Houses & Apartments for Sale',
-  'Land & Plots for Sale',
-  'Commercial Property for Sale',
-  'New builds'
-];
-const isRent = rentCategories.includes(ad.data.category);
-const isSale = saleCategories.includes(ad.data.category);
+  
   const truncateaddress = (address: string, maxLength: number) => {
     if (address.length > maxLength) {
       return address.substring(0, maxLength) + "...";
@@ -601,14 +587,14 @@ const isSale = saleCategories.includes(ad.data.category);
             )}
           </div>
 
- {!ad.hasSiteVisit && isAdCreator && (<div className="flex mt-2 w-full justify-between items-center"><Button onClick={()=> handleOpenPopupSchedule(ad)} className="flex rounded w-full p-2 text-green-600 border border-green-600 bg-green-100 hover:bg-green-200 justify-center items-center gap-1">
+ {/*{!ad.hasSiteVisit && isAdCreator && (<div className="flex mt-2 w-full justify-between items-center"><div onClick={()=> handleOpenPopupSchedule(ad)} className="flex cursor-pointer rounded w-full text-xs p-2 text-green-600 border border-green-600 bg-green-100 hover:bg-green-200 justify-center items-center gap-1">
                         <CalendarMonthOutlinedIcon sx={{ fontSize: 16 }}/>
                        Schedule Site Visit
-                </Button></div>)}
+                </div></div>)}
 
 {isAdCreator && ad.adstatus === 'Active' && (isSale || isRent) && (
   <SoldConfirmation onStatusUpdate={onStatusUpdate} _id={ad._id} status={isSale ? 'Sold' : 'Rented'} />
-)}
+)}*/}
          
                 
           {isAdCreator && shouldShowRenewButton(ad.updatedAt, ad.priority) && (<div className="flex mt-2 w-full text-xs justify-between items-center">

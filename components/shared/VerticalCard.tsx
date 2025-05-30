@@ -716,10 +716,10 @@ const isSale = saleCategories.includes(ad.data.category);
           </div>
            {!ad.hasSiteVisit && isAdCreator && (
             <div className="flex mt-2 w-full justify-between items-center">
-              <Button onClick={()=> handleOpenPopupSchedule(ad)} className="flex rounded w-full p-2 text-green-600 border border-green-600 bg-green-100 hover:bg-green-200 justify-center items-center gap-1">
-                        <CalendarMonthOutlinedIcon sx={{ fontSize: 16 }}/>
-                       Schedule Site Visit
-                </Button></div>)}
+             <div onClick={()=> handleOpenPopupSchedule(ad)} className="flex cursor-pointer rounded w-full text-xs p-2 text-green-600 border border-green-600 bg-green-100 hover:bg-green-200 justify-center items-center gap-1">
+                                      <CalendarMonthOutlinedIcon sx={{ fontSize: 16 }}/>
+                                     Schedule Site Visit
+                              </div></div>)}
 
 {isAdCreator && ad.adstatus === 'Active' && (isSale || isRent) && (
   <SoldConfirmation onStatusUpdate={onStatusUpdate} _id={ad._id} status={isSale ? 'Sold' : 'Rented'} />

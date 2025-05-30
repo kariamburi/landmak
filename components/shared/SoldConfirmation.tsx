@@ -29,10 +29,10 @@ export const SoldConfirmation = ({ _id, status, onStatusUpdate }: SoldProps) => 
   return (
     <AlertDialog>
       <AlertDialogTrigger asChild>
-        <Button variant="default" className="w-full mt-2">
+        <div className="mt-2 flex cursor-pointer rounded w-full text-xs p-2 text-blue-600 border border-blue-600 bg-blue-100 hover:bg-blue-200 justify-center items-center gap-1">
           <CheckCircle className="w-4 h-4 mr-2" />
           Mark as {status}
-        </Button>
+        </div>
       </AlertDialogTrigger>
 
       <AlertDialogContent className="bg-white">
