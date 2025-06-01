@@ -38,6 +38,8 @@ import ScheduleVisitForm from "./Schedule";
 import { Button } from "../ui/button";
 import { SoldConfirmation } from "./SoldConfirmation";
 import { DivIcon } from "leaflet";
+import { DisputeBadge } from "./DisputeBadge";
+import MapaVerifiedBadge from "./MapaVerifiedBadge";
 const shouldShowRenewButton = (updatedAt: Date, priority: number) => {
   const oneMonthAgo = subMonths(new Date(), 1);
   return priority === 1 && isBefore(new Date(updatedAt), oneMonthAgo);
@@ -586,16 +588,9 @@ const CardAutoHeight = ({
               </div>
             )}
           </div>
-
- {/*{!ad.hasSiteVisit && isAdCreator && (<div className="flex mt-2 w-full justify-between items-center"><div onClick={()=> handleOpenPopupSchedule(ad)} className="flex cursor-pointer rounded w-full text-xs p-2 text-green-600 border border-green-600 bg-green-100 hover:bg-green-200 justify-center items-center gap-1">
-                        <CalendarMonthOutlinedIcon sx={{ fontSize: 16 }}/>
-                       Schedule Site Visit
-                </div></div>)}
-
-{isAdCreator && ad.adstatus === 'Active' && (isSale || isRent) && (
-  <SoldConfirmation onStatusUpdate={onStatusUpdate} _id={ad._id} status={isSale ? 'Sold' : 'Rented'} />
-)}*/}
-         
+        {ad.disputeStatus && (<DisputeBadge status={ad.disputeStatus} />)}
+        {ad.mapaVerificationStatus && ad.mapaVerificationStatus === 'verified' && <MapaVerifiedBadge size="sm" />}
+  
                 
           {isAdCreator && shouldShowRenewButton(ad.updatedAt, ad.priority) && (<div className="flex mt-2 w-full text-xs justify-between items-center">
              <button

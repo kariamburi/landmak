@@ -166,6 +166,14 @@ export const adminLinks = [
     label: 'Abuse',
     route: '/abused',
 
+  }, {
+    label: 'Land Dispute',
+    route: '/dispute',
+
+  }, {
+    label: 'mapa Verification',
+    route: '/mapaverification',
+
   }
   , {
     label: 'Verification',

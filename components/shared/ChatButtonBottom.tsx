@@ -32,43 +32,12 @@ const ChatButtonBottom = ({ ad, userId, userName, userImage,handleCloseEnquire }
   const [message, setMessage] = useState("");
   const [isSending, setIsSending] = useState(false); // New state for sending status
   let subscription: any = [];
-
   const [daysRemaining, setdaysRemaining] = useState(0);
   const [planpackage, setplanpackage] = useState<string>("Free");
   const [sendsms, setsendsms] = useState(false);
-  const [sendemail, setsendemail] = useState(false);
-
+  const [sendemail, setsendemail] = useState(false);  
   const [messages, setMessages] = useState<{ senderName: string; message: string }[]>([]);
- 
   const { NotifyUser } = SendChat(); // Get the sendMessage function
-
-  //useEffect(() => {
-   // const checkSubscription = async () => {
-    //  try {
-       // subscription = await getData(ad.organizer._id);
-
-       // setsendsms(subscription.currentpack.features[5].checked);
-       // setsendemail(subscription.currentpack.features[6].checked);
-      // console.log(subscription);
-      //  setplanpackage(subscription.currentpack.name);
-      //  const createdAtDate = new Date(subscription.transaction.createdAt);
-      //  const periodDays = parseInt(subscription.transaction.period);
-      //  const expirationDate = new Date(
-      //    createdAtDate.getTime() + periodDays * 24 * 60 * 60 * 1000
-      //  );
-      //  const currentDate = new Date();
-      //  const daysRemaining_ = Math.ceil(
-      //    (expirationDate.getTime() - currentDate.getTime()) /
-      //      (1000 * 60 * 60 * 24)
-      //  );
-      //  setdaysRemaining(daysRemaining_);
-      //} catch (error) {
-      //  console.error("Error checking subscription: ", error);
-      //}
-   // };
-   // checkSubscription();
-  //}, [ad.organizer._id]);
-
   const handleSendMessage = async () => {
     if (message.trim() === "") return;
 
@@ -93,11 +62,8 @@ const ChatButtonBottom = ({ ad, userId, userName, userImage,handleCloseEnquire }
       if(ad.organizer.token && ad.organizer.notifications.fcm){
        
         const inquiryMessage = message;
-       // NotifyUser(ad, userId, userName, inquiryMessage)
-
-const debouncedNotifyUser = debounce(NotifyUser, 1000); // only allow once every second
-// Then call
-debouncedNotifyUser(ad, userId, userName, inquiryMessage);
+        const debouncedNotifyUser = debounce(NotifyUser, 1000); // only allow once every second
+        debouncedNotifyUser(ad, userId, userName, inquiryMessage);
       }
       if(ad.organizer.notifications.email){
      

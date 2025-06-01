@@ -64,6 +64,10 @@ import CollectionLoans from "./CollectionLoans";
 import MenuBookOutlinedIcon from '@mui/icons-material/MenuBookOutlined';
 import CollectionBookings from "./CollectionBookings";
 import NoteAltOutlinedIcon from '@mui/icons-material/NoteAltOutlined';
+import OutlinedFlagOutlinedIcon from '@mui/icons-material/OutlinedFlagOutlined';
+import VerifiedOutlinedIcon from '@mui/icons-material/VerifiedOutlined';
+import MapaVerificationsPage from "./MapaVerificationsPage";
+import AdminDisputeManager from "./AdminDisputeManager";
 type homeProps = {
   userId: string;
   userName: string;
@@ -401,6 +405,16 @@ const HomeDashboard = ({
                           <AssistantPhotoOutlinedIcon className="w-10 p-1" />
                         </span>
                       )}
+                         {link.label === "Land Dispute" && (
+                        <span>
+                          <OutlinedFlagOutlinedIcon className="w-10 p-1" />
+                        </span>
+                      )}
+                         {link.label === "mapa Verification" && (
+                        <span>
+                          <VerifiedOutlinedIcon className="w-10 p-1" />
+                        </span>
+                      )}
                         {link.label === "Bookings" && (
                         <span>
                           <NoteAltOutlinedIcon className="w-10 p-1" />
@@ -494,6 +508,16 @@ const HomeDashboard = ({
                          {link.label === "Abuse" && (
                         <span>
                           <AssistantPhotoOutlinedIcon className="w-10 p-1" />
+                        </span>
+                      )}
+                        {link.label === "Land Dispute" && (
+                        <span>
+                          <OutlinedFlagOutlinedIcon className="w-10 p-1" />
+                        </span>
+                      )}
+                         {link.label === "mapa Verification" && (
+                        <span>
+                          <VerifiedOutlinedIcon className="w-10 p-1" />
                         </span>
                       )}
                         {link.label === "Verification" && (
@@ -820,107 +844,24 @@ const HomeDashboard = ({
             </div>
           </>
         )}
-        {/*   {activeTab === "Payments" && (
-          <>
-            <div className="container mx-auto p-1 lg:p-4 border rounded-xl">
-              <h1 className="text-2xl font-bold mb-4">Payments</h1>
-              <div className="flex flex-col lg:flex-row gap-3">
-                <div className="flex flex-col lg:flex-row items-center gap-4 mb-4">
-                  <div className="flex flex-col w-full">
-                    <label
-                      className="text-xs font-semibold mb-1"
-                      htmlFor="startDate"
-                    >
-                      Start Date
-                    </label>
-                    <input
-                      type="date"
-                      id="startDate"
-                      value={startDate || ""}
-                      onChange={(e) => setStartDate(e.target.value)}
-                      className="dark:bg-[#2D3236] bg-white text-xs border p-2 w-full rounded"
-                    />
-                  </div>
-                  <div className="flex flex-col w-full">
-                    <label
-                      className="text-xs font-semibold mb-1"
-                      htmlFor="endDate"
-                    >
-                      End Date
-                    </label>
-                    <input
-                      type="date"
-                      id="endDate"
-                      value={endDate || ""}
-                      onChange={(e) => setEndDate(e.target.value)}
-                      className="dark:bg-[#2D3236] bg-white text-xs border w-full p-2 rounded"
-                    />
-                  </div>
-                  <div className="flex flex-col w-full">
-                    <label
-                      className="text-xs text-white font-semibold mb-1"
-                      htmlFor="endDate"
-                    ></label>
-                    <button
-                      onClick={handleSearchDates}
-                      className="hover:dark:bg-emerald-800 dark:bg-emerald-700 lg:mt-5 text-xs bg-black text-white px-4 py-2 rounded"
-                    >
-                      Search
-                    </button>
+        {activeTab === "Land Dispute" && (
+          <div className="container mx-auto p-1 lg:p-4 border rounded-xl">
+             
+              {/* Date Filter Section */}
+
+              <AdminDisputeManager/>
               
-                  </div>
-                </div>
-
-            
-
-                <div className="flex flex-col lg:flex-row gap-1">
-                  <div className="flex flex-col">
-                    <label
-                      className="text-xs font-semibold mb-1"
-                      htmlFor="endDate"
-                    >
-                      TransactionId
-                    </label>
-                    <div className="flex gap-1 flex-col lg:flex-row">
-                      <input
-                        type="text"
-                        placeholder="Search by Order ID"
-                        value={search}
-                        onChange={(e) => setSearch(e.target.value)}
-                        className="dark:bg-[#2D3236] bg-white text-xs border p-2 flex rounded-md"
-                      />
-                      <button
-                        type="submit"
-                        onClick={handleSearch}
-                        className="text-xs hover:dark:bg-emerald-800 dark:bg-emerald-700 bg-black text-white px-4 py-2 rounded-md hover:bg-gray-800"
-                      >
-                        Search
-                      </button>
-                      <button
-                        onClick={handleClear}
-                        className="text-xs hover:dark:bg-emerald-800 dark:bg-emerald-700 bg-black text-white px-4 py-2 rounded-md hover:bg-gray-800"
-                      >
-                        Clear
-                      </button>
-                    </div>
-                  </div>
-                </div>
-              </div>
-            
-              <ScrollArea className="w-[340px] lg:w-full">
-                <CollectionPayments
-                  data={payments.data}
-                  emptyTitle={`No Payment Found`}
-                  emptyStateSubtext="Come back later"
-                  limit={limit}
-                  page={page}
-                  totalPages={payments.totalPages}
-                />
-                <ScrollBar orientation="horizontal" />
-              </ScrollArea>
             </div>
-          </>
-        )}*/}
+                      )}
+        {activeTab === "mapa Verification" && (
+                       <div className="container mx-auto p-1 lg:p-4 border rounded-xl">
+            
+              {/* Date Filter Section */}
+
+              <MapaVerificationsPage/>
+              
+            </div>
+                      )}
           {activeTab === "Verification" && (
           <>
             <div className="container mx-auto p-1 lg:p-4 border rounded-xl">

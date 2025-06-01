@@ -38,6 +38,9 @@ import ScheduleVisitForm from "./Schedule";
 import CalendarMonthOutlinedIcon from '@mui/icons-material/CalendarMonthOutlined';
 import { Button } from "../ui/button";
 import { SoldConfirmation } from "./SoldConfirmation";
+import { DisputeBadge } from "./DisputeBadge";
+import MapaVerificationForm from "./MapaVerificationForm";
+import MapaVerifiedBadge from "./MapaVerifiedBadge";
 const shouldShowRenewButton = (updatedAt: Date, priority: number) => {
   const oneMonthAgo = subMonths(new Date(), 1);
   return priority === 1 && isBefore(new Date(updatedAt), oneMonthAgo);
@@ -751,6 +754,12 @@ const onStatusUpdate = (newStatus:string) => {
               </div>
             )}
           </div>
+          {ad.disputeStatus && (<DisputeBadge status={ad?.disputeStatus} />)}
+          {ad.mapaVerificationStatus && ad.mapaVerificationStatus === 'verified' && <MapaVerifiedBadge size="sm" />}
+            
+       {ad.mapaVerificationStatus==='unverified' && isSale && isAdCreator && (
+         <MapaVerificationForm userId={userId} ad={ad} userName={userName} userImage={userImage} />
+       )}
           {!ad.hasSiteVisit && isAdCreator && (<div className="flex mt-2 w-full justify-between items-center"><div onClick={()=> handleOpenPopupSchedule(ad)} className="flex cursor-pointer rounded w-full text-xs p-2 text-green-600 border border-green-600 bg-green-100 hover:bg-green-200 justify-center items-center gap-1">
                                       <CalendarMonthOutlinedIcon sx={{ fontSize: 16 }}/>
                                      Schedule Site Visit

@@ -39,6 +39,9 @@ import ScheduleVisitForm from "./Schedule";
 import CalendarMonthOutlinedIcon from '@mui/icons-material/CalendarMonthOutlined';
 import { SoldConfirmation } from "./SoldConfirmation";
 import { Button } from "../ui/button";
+import { DisputeBadge } from "./DisputeBadge";
+import MapaVerificationForm from "./MapaVerificationForm";
+import MapaVerifiedBadge from "./MapaVerifiedBadge";
 const shouldShowRenewButton = (updatedAt: Date, priority: number) => {
   const oneMonthAgo = subMonths(new Date(), 1);
   return priority === 1 && isBefore(new Date(updatedAt), oneMonthAgo);
@@ -721,9 +724,20 @@ const isSale = saleCategories.includes(ad.data.category);
                                      Schedule Site Visit
                               </div></div>)}
 
+  {ad.disputeStatus && (<DisputeBadge status={ad?.disputeStatus} />)}
+        {ad.mapaVerificationStatus && ad.mapaVerificationStatus === 'verified' && <MapaVerifiedBadge size="sm" />}
+  
+{ad.mapaVerificationStatus==='unverified' && isSale && isAdCreator && (
+  <MapaVerificationForm userId={userId} ad={ad} userName={userName} userImage={userImage} />
+)}
+
+
 {isAdCreator && ad.adstatus === 'Active' && (isSale || isRent) && (
   <SoldConfirmation onStatusUpdate={onStatusUpdate} _id={ad._id} status={isSale ? 'Sold' : 'Rented'} />
 )}
+
+
+
 {isAdCreator && ['Sold', 'Rented'].includes(ad.adstatus) && (
   <Button
     onClick={() => handleUndo(ad._id)}

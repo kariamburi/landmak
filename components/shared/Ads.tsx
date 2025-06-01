@@ -99,6 +99,10 @@ import { Schedule } from "@mui/icons-material";
 import Booking from "@/lib/database/models/booking.model";
 import ScheduleVisitForm from "./Schedule";
 import BookingForm from "./Booking";
+import { DisputeBadge } from "./DisputeBadge";
+import MapaVerifiedBadge from "./MapaVerifiedBadge";
+import LandDisputeReportForm from "./LandDisputeReportForm";
+import MapaVerificationForm from "./MapaVerificationForm";
  // Correct import
 type CardProps = {
   ad: any;
@@ -169,7 +173,13 @@ export default function Ads({ ad, user, userId, userImage, userName, onClose,han
   const toggleChat = () => {
     setChatOpen(!isChatOpen);
   };
-
+const saleCategories = [
+  'Houses & Apartments for Sale',
+  'Land & Plots for Sale',
+  'Commercial Property for Sale',
+  'New builds'
+];
+const isSale = saleCategories.includes(ad.data.category);
   const [api, setApi] = React.useState<CarouselApi>();
   const [api2, setApi2] = React.useState<CarouselApi>();
   const [current, setCurrent] = React.useState(0);
@@ -263,6 +273,7 @@ export default function Ads({ ad, user, userId, userImage, userName, onClose,han
     // Handle error when formatting date
   }
   const [isPopupOpen, setIsPopupOpen] = useState(false);
+   const [isPopupOpenDispute, setIsPopupOpenDispute] = useState(false);
   const [isPopupOpenLoan, setIsPopupOpenLoan] = useState(false);
   const [isPopupOpenAAv, setIsPopupOpenAv] = useState(false);
   const [abuseDescription, setAbuseDescription] = useState("");
@@ -307,6 +318,17 @@ const handleOpenPopupSchedule = () => {
     setIsPopupOpen(false);
     setAbuseDescription(""); // Clear the textarea on close
   };
+
+const handleOpenPopupDispute = () => {
+    setIsPopupOpenDispute(true);
+  };
+
+  const handleClosePopupDispute = () => {
+    setIsPopupOpenDispute(false);
+ 
+  };
+
+
   const handleDescriptionChange = (
     event: React.ChangeEvent<HTMLTextAreaElement>
   ) => {
@@ -868,6 +890,13 @@ const handleOpenPopupSchedule = () => {
                 <VisibilityIcon sx={{ fontSize: 20 }} /> {ad.views} Views
               </p>
             </div>
+            {ad.disputeStatus && (<DisputeBadge status={ad?.disputeStatus} />)}
+        {ad.mapaVerificationStatus && ad.mapaVerificationStatus === 'verified' && <MapaVerifiedBadge size="sm" />}
+  
+{!ad.mapaVerificationStatus && isSale && isAdCreator && (
+  <MapaVerificationForm userId={userId} ad={ad} userName={userName} userImage={userImage} />
+)}
+                  
             <div className="border-t dark:border-gray-600 border-gray-300 mt-4 mb-4"></div>
             <div className="grid grid-cols-3 lg:grid-cols-5 w-full gap-1 mt-4">
               {Object.entries(ad.data as Record<string, any>).map(
@@ -881,6 +910,7 @@ const handleOpenPopupSchedule = () => {
                       key !== "subcategory" &&
                       key !== "phone" &&
                       key !== "price" &&
+                      key !== "parcelNumber" &&
                       key !== "negotiable" &&
                       key !== "imageUrls" &&
                       key !== "features" &&
@@ -1394,7 +1424,7 @@ const handleOpenPopupSchedule = () => {
             )}
  
  {(ad.data.category !== 'Property Services' || ad.data.category !== 'Wanted Ads') && (<>
- <div className="flex w-full items-center">
+ <div className="flex mt-4 w-full items-center">
               <SignedIn>
 
 <div className="flex flex-col gap-4 w-full">
@@ -1466,6 +1496,11 @@ const handleOpenPopupSchedule = () => {
         </div>
         </>)}
             <div className="flex justify-between w-full items-center">
+           
+           
+           
+           
+            <LandDisputeReportForm userId={userId} ad={ad} isOpen={isPopupOpenDispute} onClose={handleClosePopupDispute} userName={userName} userImage={userImage}/>
             <ReportUnavailable  userId={userId} ad={ad} isOpen={isPopupOpenAAv} onClose={handleClosePopupAv} userName={userName} userImage={userImage}/>
             <ReportAbuse  userId={userId} ad={ad} isOpen={isPopupOpen} onClose={handleClosePopup} userName={userName} userImage={userImage}/>
             <RequestFinancing  userId={userId} ad={ad} isOpen={isPopupOpenLoan} onClose={handleClosePopupLoan} userName={userName} userImage={userImage}/>
@@ -1473,7 +1508,75 @@ const handleOpenPopupSchedule = () => {
             <ScheduleVisitForm userId={userId} ad={ad} isOpen={isPopupOpenSchedule} onClose={handleClosePopupSchedule} userName={userName} userImage={userImage}/>
             <BookingForm userId={userId} user={user} ad={ad} isOpen={isPopupOpenBooking} onClose={handleClosePopupBooking} userName={userName} userImage={userImage}/>
             </div>
-          </div>
+  <div className="mt-4 mb-4"></div>
+          
+ {!isAdCreator && (<div className="p-2 text-sm rounded-lg overflow-hidden">
+              <div className="flex justify-between">
+              <SignedIn>
+              <div onClick={handleOpenPopupAv}  className="flex p-2 rounded-sm bg-blue-100 border border-blue-600 cursor-pointer text-blue-600 items-center gap-1">
+              <AssistantPhotoOutlinedIcon sx={{ fontSize: 14 }}/>
+              Unavailable?
+      </div>
+       
+        </SignedIn>
+
+    {isSale && (<><SignedOut>
+        <div onClick={() => {
+              setIsOpenP(true);
+              router.push("/sign-in");
+            }}
+              className="flex p-2 rounded-sm bg-blue-100 border border-blue-600 cursor-pointer text-blue-600 items-center gap-1">
+              <AssistantPhotoOutlinedIcon sx={{ fontSize: 14 }}/>
+              Unavailable?
+      </div>
+
+        </SignedOut>
+
+
+   <SignedIn>
+              <div onClick={handleOpenPopupDispute}  className="flex p-2 rounded-sm bg-yellow-100 border border-yellow-600 cursor-pointer text-yellow-600 items-center gap-1">
+              <AssistantPhotoOutlinedIcon sx={{ fontSize: 14 }}/>
+              Report Dispute
+              </div>
+       
+        </SignedIn></>)}    
+
+        <SignedOut>
+        <div  onClick={() => {
+             setIsOpenP(true);
+              router.push("/sign-in");
+            }}  className="flex p-2 rounded-sm bg-orange-100 border border-orange-600 cursor-pointer text-orange-600 items-center gap-1">
+              <AssistantPhotoOutlinedIcon sx={{ fontSize: 14 }}/>
+             Report Dispute
+              </div>
+         
+        </SignedOut>
+
+              <SignedIn>
+              <div onClick={handleOpenPopup}  className="flex p-2 rounded-sm bg-orange-100 border border-orange-600 cursor-pointer text-red-600 items-center gap-1">
+              <AssistantPhotoOutlinedIcon sx={{ fontSize: 14 }}/>
+              Report Abuse
+              </div>
+       
+        </SignedIn>
+
+        <SignedOut>
+        <div  onClick={() => {
+             setIsOpenP(true);
+              router.push("/sign-in");
+            }}  className="flex p-2 rounded-sm cursor-pointer bg-red-100 border border-red-600 text-red-600 items-center gap-1">
+              <AssistantPhotoOutlinedIcon sx={{ fontSize: 14 }}/>
+              Report Abuse
+              </div>
+         
+        </SignedOut>
+
+            
+              </div>
+            </div>
+         
+)}
+   </div>
         </div>
 
         {/* Right panel */}
@@ -1725,6 +1828,7 @@ const handleOpenPopupSchedule = () => {
          
           </div>
           <div className="mt-3 border dark:bg-[#2D3236] dark:text-gray-300 bg-white p-2 text-sm rounded-lg overflow-hidden">
+          
               <div className="flex justify-between">
 
 
@@ -1764,6 +1868,8 @@ const handleOpenPopupSchedule = () => {
 
 
             <div className="mt-3 border dark:bg-[#2D3236] dark:text-gray-300 bg-white p-2 text-sm rounded-lg overflow-hidden">
+              <div className="font-bold text-lg text-center">Share Ad</div>
+              <div className="border-t dark:border-gray-600 border-gray-300 mt-4 mb-4"></div>
               <div className="flex justify-between">
 
            < CopyShareAdLink _id={ad._id} titleId={"Ad"}/>
@@ -1773,57 +1879,11 @@ const handleOpenPopupSchedule = () => {
             </div>
 
 
-          <div className="mt-3 border dark:bg-[#2D3236] dark:text-gray-300  bg-white p-2 text-sm rounded-lg overflow-hidden">
-              <div className="flex justify-between">
-              <SignedIn>
-              <Button onClick={handleOpenPopupAv} variant="outline" className="flex text-blue-600 items-center gap-1">
-              <AssistantPhotoOutlinedIcon sx={{ fontSize: 14 }}/>
-              Ad Unavailable?
-      </Button>
-       
-        </SignedIn>
-
-        <SignedOut>
-        <Button onClick={() => {
-              setIsOpenP(true);
-              router.push("/sign-in");
-            }}
-             variant="outline" className="flex text-blue-600 items-center gap-1">
-              <AssistantPhotoOutlinedIcon sx={{ fontSize: 14 }}/>
-              Ad Unavailable?
-      </Button>
-
-        </SignedOut>
-
-
-
-              <SignedIn>
-              <Button onClick={handleOpenPopup} variant="outline" className="flex text-red-600 items-center gap-1">
-              <AssistantPhotoOutlinedIcon sx={{ fontSize: 14 }}/>
-              Report Abuse
-              </Button>
-       
-        </SignedIn>
-
-        <SignedOut>
-        <Button  onClick={() => {
-             setIsOpenP(true);
-              router.push("/sign-in");
-            }} variant="outline" className="flex text-red-600 items-center gap-1">
-              <AssistantPhotoOutlinedIcon sx={{ fontSize: 14 }}/>
-              Report Abuse
-              </Button>
-         
-        </SignedOut>
-
-            
-              </div>
-            </div>
          
         
             <div className="mt-3 border dark:bg-[#2D3236] dark:text-gray-300 bg-white p-2 text-sm rounded-lg overflow-hidden">
   <div className="font-bold text-lg text-center">Safety Tips for Buyers</div>
-
+<div className="border-t dark:border-gray-600 border-gray-300 mt-4 mb-4"></div>
   <ol>
     <li>
       <div className="text-sm">

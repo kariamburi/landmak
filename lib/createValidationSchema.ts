@@ -3,7 +3,7 @@ import * as z from "zod";
 interface Field {
   name: string;
   type: "text" | "number" | "money" | "select" | "radio" | "checkbox" | "textarea" | "multi-select" | "autocomplete" | "phone"
-  | "year" | "youtube-link" | "budget" | "price" | "rentprice" | "priceper" | "bulkprice"
+  | "year" | "youtube-link" | "budget" | "parcelNumber" | "price" | "rentprice" | "priceper" | "bulkprice"
   | "delivery" | "gps" | "location" | "propertyarea" | "virtualTourLink" | "notify" | "serviceprice" | "related-autocompletes";
   required?: boolean;
   options?: string[];
@@ -208,6 +208,11 @@ export const createValidationSchema = (fields: Field[], category: string) => {
               message: `${field.name} must be a valid number`,
             })
           : z.number().optional();
+        break;
+      case "parcelNumber":
+        fieldSchema = field.required
+          ? z.string().nonempty(`${field.name} is required`)
+          : z.string().optional();
         break;
       case "delivery":
         fieldSchema = field.required

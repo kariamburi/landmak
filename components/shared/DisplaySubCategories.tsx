@@ -235,6 +235,7 @@ setSelectedCategoryCommand(filteredCategories);
                           <option value="multi-select">Multi-Select</option>
                           <option value="autocomplete">AutoComplete</option>
                           <option value="year">Year</option>
+                          <option value="parcelNumber">parcelNumber</option>
                           <option value="phone">Phone</option>
                           <option value="budget">Budget</option>
                           <option value="price">Sale Price</option>

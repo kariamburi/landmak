@@ -63,10 +63,16 @@ import Barsscale from "@iconify-icons/svg-spinners/bars-scale"; // Correct impor
 import dynamic from "next/dynamic";
 import "react-quill/dist/quill.snow.css";
 import { updateUserPhone } from "@/lib/actions/user.actions";
-
+import {
+  Tooltip,
+  TooltipContent,
+  TooltipProvider,
+  TooltipTrigger,
+} from "../ui/tooltip";
 import CircularProgress from "@mui/material/CircularProgress";
 import MapDrawingTool from "./MapDrawingTool";
 import { createLoan } from "@/lib/actions/loan.actions";
+import { MapaPricingModal } from "./MapaPricingModal";
 const ReactQuill = dynamic(() => import("react-quill"), {
   ssr: false,
   loading: () => (
@@ -88,6 +94,7 @@ interface Field {
     | "autocomplete"
     | "phone"
     | "year"
+    | "parcelNumber"
     | "youtube-link"
     | "price"
     | "budget"
@@ -125,7 +132,10 @@ const generateDefaultValues = (fields: Field[]) => {
       defaults[field.name] = "";
     } else if (field.type === "phone") {
       defaults[field.name] = "";
-    } else if (field.type === "money") {
+    } else if (field.type === "parcelNumber") {
+      defaults[field.name] = "";
+    } 
+    else if (field.type === "money") {
       defaults[field.name] = 0;
     } else if (field.type === "price") {
       defaults["price"] = 0;
@@ -1639,6 +1649,81 @@ const handleInputChangeMoney = (field: string, value: string) => {
                   />
                 </div>
               )}
+          {field.type === "parcelNumber" && (
+  <div className="space-y-1 w-full">
+    <div className="flex items-center justify-between">
+      <label
+        htmlFor={field.name}
+        className="block text-sm font-medium text-gray-700 dark:text-gray-200"
+      >
+        Parcel / LR Number
+        <span className="ml-1 text-sm text-gray-500">
+          (Optional, but recommended for verification)
+        </span>
+      </label>
+
+      <div className="flex flex-col items-end">
+        {/* Tooltip */}
+        <TooltipProvider>
+          <Tooltip>
+            <TooltipTrigger asChild>
+              <span className="text-green-600 cursor-help text-sm">🔒 Mapa Verified?</span>
+            </TooltipTrigger>
+            <TooltipContent side="top" align="end">
+              <p>✅ We use this to check for land disputes and increase trust with buyers.</p>
+            </TooltipContent>
+          </Tooltip>
+        </TooltipProvider>
+
+        {/* Popup Trigger */}
+        <MapaPricingModal /> {/* ← Inserted here */}
+      </div>
+    </div>
+
+    {/* Privacy Note */}
+    <p className="text-xs text-gray-500 dark:text-gray-400 italic">
+      🔐 Your parcel number will be used only for verification and <strong>will not be displayed publicly</strong>.
+    </p>
+
+    <TextField
+      required={false}
+      id={field.name}
+      label=""
+      value={formData[field.name] || ''}
+      onChange={(e) => handleInputChange(field.name, e.target.value)}
+      variant="outlined"
+      placeholder="Enter parcel/LR number (if available)"
+      InputProps={{
+        classes: {
+          root: "bg-white dark:bg-[#2D3236] dark:text-gray-100",
+          notchedOutline: "border-gray-300 dark:border-gray-600",
+          focused: "",
+        },
+      }}
+      InputLabelProps={{
+        classes: {
+          root: "text-gray-500 dark:text-gray-400",
+          focused: "text-green-500 dark:text-green-400",
+        },
+      }}
+      className="w-full"
+    />
+
+    {/* Badge if parcel number is entered */}
+    {formData[field.name] && (
+      <div className="inline-flex items-center gap-1 text-sm text-green-700 bg-green-100 px-2 py-1 rounded-full mt-1 border border-green-400">
+        🔒 Mapa Verified: Parcel number submitted
+      </div>
+    )}
+
+    {/* Warning for fake info */}
+    <p className="text-xs text-red-500 mt-1">
+      🚫 Submitting fake parcel numbers may result in suspension or blacklisting.
+    </p>
+  </div>
+)}
+
+
               {field.type === "number" && (
                 <>
                   <TextField
