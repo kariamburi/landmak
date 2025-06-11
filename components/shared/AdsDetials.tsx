@@ -362,7 +362,7 @@ const handleOpenPopupDispute = () => {
   return (
       <><div className="space-y-0 lg:flex lg:space-x-0 gap-2">
         <div
-          className="mt-1 relative lg:flex-1 dark:bg-[#2D3236] dark:text-gray-300"
+          className="mt-0 lg:mt-1 relative lg:flex-1 dark:bg-[#2D3236] dark:text-gray-300"
           style={
             ad.plan.name !== "Free"
               ? {
@@ -680,11 +680,12 @@ const handleOpenPopupDispute = () => {
 
           {/* Ad details */}
           <div className="p-3 lg:rounded-b-xl bg-white">
+       
             <div 
             
           className={`flex justify-end mb-2 items-center w-full ${
           isMapVisible ?
-          "inline":"hidden"
+          "inline":"inline lg:hidden"
         }`}
            >
               <div className="flex flex-col justify-center">
@@ -748,17 +749,17 @@ const handleOpenPopupDispute = () => {
                       </>
                     )}{" "}
                     {ad.data.unit && ad.data.contact === "specify" && (
-                      <div className="w-[100px] text-xs dark:text-white">
+                      <div className="w-[70px] text-xs dark:text-white">
                         {ad.data.unit}
                       </div>
                     )}{" "}
                     {ad.data.per && (
-                      <div className="w-[100px] text-xs dark:text-white">
+                      <div className="w-[70px] text-xs dark:text-white">
                         {ad.data.per}
                       </div>
                     )}
                     {ad.data.period && (
-                      <div className="w-[100px] text-xs dark:text-white">
+                      <div className="w-[70px] text-xs dark:text-white">
                         {ad.data.period}
                       </div>
                     )}
@@ -1780,8 +1781,8 @@ const handleOpenPopupDispute = () => {
           isMapVisible ?
           "hidden":"inline"
         }`}>
-       <div className="p-1 lg:p-0">
-            <div className="dark:bg-[#2D3236] dark:text-gray-300 bg-white p-2 border rounded-lg overflow-hidden flex flex-col items-center">
+       <div className="hidden lg:inline">
+            <div className=" dark:bg-[#2D3236] dark:text-gray-300 bg-white p-2 border rounded-lg overflow-hidden flex flex-col items-center">
               <div className="flex gap-1 items-center no-underline">
                 {ad.data.contact && ad.data.contact === "contact" ? (
                   <p className="flex text-2xl font-bold  dark;text-green-500 text-green-600">
@@ -1800,13 +1801,13 @@ const handleOpenPopupDispute = () => {
                   </>
                 )}
                 {ad.data.unit && ad.data.contact === "specify" && (
-                  <div className="flex w-[100px] text-xs dark:text-white">{ad.data.unit}</div>
+                  <div className="flex w-[70px] text-xs dark:text-white">{ad.data.unit}</div>
                 )}
                 {ad.data.per && (
-                  <div className="flex w-[100px] text-xs dark:text-white">{ad.data.per}</div>
+                  <div className="flex w-[70px] text-xs dark:text-white">{ad.data.per}</div>
                 )}
                 {ad.data.period && (
-                  <div className="flex w-[100px] text-xs dark:text-white">
+                  <div className="flex w-[70px] text-xs dark:text-white">
                     {ad.data.period}
                   </div>
                 )}

@@ -145,9 +145,11 @@ const [isOpenP, setIsOpenP] = useState(false);
     const isMobile = window.innerWidth < 640; // Tailwind's sm breakpoint
 
     if (isMobile) {
+      setShowCategories(false);
       setShowList(true);
       setShowMap(false); // Show only list on mobile
     } else {
+      setShowCategories(true);
       setShowList(true);
       setShowMap(true); // Show both on desktop
     }
@@ -708,17 +710,17 @@ setFilteredProperties(filtered);
 
       {/* Sidebar */}
       {showCategories && (
-    <aside className="fixed lg:static top-16 left-0 z-50 bg-white w-[280px] overflow-y-auto p-0 border-r shadow-md lg:shadow-none transform transition-transform duration-300 lg:translate-x-0 translate-x-0 lg:flex flex-col">
-    {/* Hide Button (Mobile only) */}
-    <div className="flex pr-1 justify-between items-center mb-4 lg:hidden">
-      <h2 className="text-lg font-semibold">Filters</h2>
+   <aside className="fixed lg:static top-14 left-0 z-50 bg-white w-[300px] lg:w-[280px] h-[calc(100vh-1rem)] overflow-y-auto p-0 border-r shadow-md lg:shadow-none transform transition-transform duration-300 lg:translate-x-0 translate-x-0 lg:flex flex-col">
+
+    <div className="flex justify-between items-center mb-4 lg:hidden">
+      <h2 className="ml-1 text-lg font-semibold">Filters</h2>
     
        <button
     onClick={() => setShowCategories(false)}
     className="flex items-center gap-1 px-3 py-1.5 text-sm text-white rounded-l-full bg-green-600 hover:bg-green-700 shadow-sm transition"
   >
     <ChevronLeft size={20} />
-    Hide
+    Hide Filters
   </button>
     </div>
 
@@ -728,7 +730,7 @@ setFilteredProperties(filtered);
    <div className="w-full flex justify-end items-center">
   <button
     onClick={() => setShowCategories(false)}
-    className="flex items-center gap-1 px-3 py-1.5 text-sm rounded-l-full border border-green-600 text-green-600 hover:bg-green-100 shadow-sm transition"
+    className="flex items-center gap-1 px-3 py-1.5 text-sm rounded-l-full bg-green-600 text-white hover:bg-green-700 transition"
   >
     <ChevronLeft size={20} />
     Hide Filters
@@ -946,7 +948,7 @@ setFilteredProperties(filtered);
    <main className="flex-1 bg-[#e4ebeb] flex flex-col p-2 h-full overflow-hidden pt-[60px]">
      {/* Header */}
 <div className="flex flex-wrap justify-between items-center gap-2 mb-2">
-  <div className="flex gap-1 items-center">
+  <div className="flex gap-2 items-center">
       {!showCategories && ( <button
   onClick={() => setShowCategories(true)}
   className="flex items-center gap-2 px-4 py-2 text-sm font-medium text-green-600 bg-white border border-green-600 rounded-full shadow-sm hover:bg-green-50 active:bg-green-100 transition lg:text-base"
@@ -968,7 +970,7 @@ setFilteredProperties(filtered);
   Filters
 </button>)}
    <div className="flex flex-col">
-     <div className="flex gap-2 items-center">
+    <div className="flex flex-col lg:flex-row items-center">
    <div className="text-lg font-semibold">{newqueryObject.subcategory}</div> <div className="text-sm">({data.length} ads within {distance} km)</div>
    </div>  
   {averagePricePerAcre > 0 && (
@@ -985,7 +987,7 @@ setFilteredProperties(filtered);
  
 
   <div className="flex items-center gap-3 flex-wrap">
-    <div className="flex border rounded px-2 bg-white shadow-sm items-center gap-3 flex-wrap">
+   <div className="flex border rounded px-2 bg-white shadow-sm items-center gap-3 flex-wrap">
     <div className="flex flex-col">
   
   {selectedAddress && (
@@ -1244,7 +1246,7 @@ setFilteredProperties(filtered);
 
   {/* Map View */}
   <div
-    className={`relative transition-all rounded-xl shadow-md border duration-300 overflow-hidden ${
+    className={`relative transition-all lg:rounded-xl shadow-md border duration-300 overflow-hidden ${
       showMap ? 'block' : 'hidden'
     }`}
   >

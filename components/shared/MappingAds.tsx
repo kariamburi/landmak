@@ -1186,7 +1186,7 @@ useEffect(() => {
 
 
 
-  <div ref={mapRef} className="w-full h-full rounded-xl shadow-md border" />
+  <div ref={mapRef} className="w-full h-full lg:rounded-xl shadow-md border" />
 {showStreetView && (
   <div
     style={{
