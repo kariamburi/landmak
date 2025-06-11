@@ -1075,7 +1075,7 @@ const handleOpenPopupDispute = () => {
                 </Accordion>
               </>
             )}
-
+{/* 
             {ad.organizer.businessname?.length > 0 && (
               <>
                 <div className="border-t dark:border-gray-600 border-gray-300 mt-4 mb-4"></div>
@@ -1394,7 +1394,7 @@ const handleOpenPopupDispute = () => {
                   </Accordion>
                 </div>
               </>
-            )}
+            )}*/}
  
 
 

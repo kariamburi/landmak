@@ -710,7 +710,7 @@ setFilteredProperties(filtered);
 
       {/* Sidebar */}
       {showCategories && (
-   <aside className="fixed lg:static top-14 left-0 z-50 bg-white w-[300px] lg:w-[280px] h-[calc(100vh-1rem)] overflow-y-auto p-0 border-r shadow-md lg:shadow-none transform transition-transform duration-300 lg:translate-x-0 translate-x-0 lg:flex flex-col">
+   <aside className="fixed lg:static top-14 left-0 z-50 bg-white w-[300px] lg:w-[280px] h-[calc(100vh-4rem)] lg:h-[calc(100vh-1rem)] overflow-y-auto p-0 border-r shadow-md lg:shadow-none transform transition-transform duration-300 lg:translate-x-0 translate-x-0 lg:flex flex-col">
 
     <div className="flex justify-between items-center mb-4 lg:hidden">
       <h2 className="ml-1 text-lg font-semibold">Filters</h2>
