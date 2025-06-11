@@ -712,20 +712,8 @@ setFilteredProperties(filtered);
       {showCategories && (
    <aside className="fixed lg:static top-14 left-0 z-50 bg-white w-[300px] lg:w-[280px] h-[calc(100vh-4rem)] lg:h-[calc(100vh-1rem)] overflow-y-auto p-0 border-r shadow-md lg:shadow-none transform transition-transform duration-300 lg:translate-x-0 translate-x-0 lg:flex flex-col">
 
-    <div className="flex justify-between items-center mb-4 lg:hidden">
-      <h2 className="ml-1 text-lg font-semibold">Filters</h2>
-    
-       <button
-    onClick={() => setShowCategories(false)}
-    className="flex items-center gap-1 px-3 py-1.5 text-sm text-white rounded-l-full bg-green-600 hover:bg-green-700 shadow-sm transition"
-  >
-    <ChevronLeft size={20} />
-    Hide Filters
-  </button>
-    </div>
-
     {/* Always visible on desktop */}
-   <div className="hidden lg:flex flex-col items-center mb-4">
+   <div className="flex flex-col items-center mb-4">
  
    <div className="w-full flex justify-end items-center">
   <button
@@ -986,8 +974,8 @@ setFilteredProperties(filtered);
   {/* Address (for smaller screens, wrap below header if needed) */}
  
 
-  <div className="flex items-center gap-3 flex-wrap">
-   <div className="flex border rounded px-2 bg-white shadow-sm items-center gap-3 flex-wrap">
+  <div className="flex items-center gap-2">
+   <div className="flex w-full lg:w-auto border rounded px-2 bg-white shadow-sm items-center gap-0">
     <div className="flex flex-col">
   
   {selectedAddress && (
