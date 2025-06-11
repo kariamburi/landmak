@@ -589,7 +589,7 @@ useEffect(() => {
   });
 
   setFilteredProperties(filtered);
-
+if( newqueryObject.category === 'Land & Plots for Sale'){
   // 👇 Calculate average price per acre
   const totalPricePerAcre = filtered.reduce((sum, property) => {
     const shapes = property.data?.propertyarea?.shapes ?? [];
@@ -615,7 +615,7 @@ useEffect(() => {
   const avgPricePerAcre = validCount > 0 ? totalPricePerAcre / validCount : 0;
 
   setAveragePricePerAcre(avgPricePerAcre); // 👈 Store in state
-
+}
 }, [data, priceRange, landSize, onlyVerified, postedWithin]);
 
  
@@ -972,7 +972,7 @@ setFilteredProperties(filtered);
    <div className="text-lg font-semibold">{newqueryObject.subcategory}</div> <div className="text-sm">({data.length} ads within {distance} km)</div>
    </div>  
   {averagePricePerAcre > 0 && (
-  <div className="text-[10px] text-gray-600 dark:text-gray-300 mt-2">
+  <div className="text-[10px] text-gray-600 dark:text-gray-300 mt-0">
     Avg. Price: Ksh {averagePricePerAcre.toLocaleString(undefined, {
       maximumFractionDigits: 0,
     })} per acre
