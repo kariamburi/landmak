@@ -1144,7 +1144,7 @@ useEffect(() => {
 
   
   return ( 
-  <div id="map-container" className="h-[100vh] relative">
+  <div id="map-container" className="h-full relative">
      {!isLoaded && (
     <div className="absolute inset-0 z-5 flex items-center justify-center bg-white/70">
       <div className="animate-spin rounded-full h-8 w-8 border-t-2 border-b-2 border-gray-800" />
@@ -1186,7 +1186,7 @@ useEffect(() => {
 
 
 
-  <div ref={mapRef} className="w-full h-full rounded-b-xl shadow-md border" />
+  <div ref={mapRef} className="w-full h-full rounded-xl shadow-md border" />
 {showStreetView && (
   <div
     style={{
@@ -1295,7 +1295,7 @@ Radius: {radius / 1000} km
 
  
 {isLoaded && (<>  <div className="absolute top-2 right-2 z-5 flex flex-col space-y-2">
-    {/* Default Button */}
+    {/* Default Button 
    <TooltipProvider>
                    <Tooltip>
                      <TooltipTrigger asChild>
@@ -1307,7 +1307,7 @@ Radius: {radius / 1000} km
                        <p>Toggle Fullscreen</p>
                      </TooltipContent>
                    </Tooltip>
-                 </TooltipProvider>
+                 </TooltipProvider>*/}
    
   {[
     { label: "Schools Nearby", type: "school" },

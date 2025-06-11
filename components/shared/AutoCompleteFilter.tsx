@@ -61,13 +61,13 @@ const isMobile = useMediaQuery({ maxWidth: 768 }); // Detect mobile screens
     
     <Popover open={open} onOpenChange={setOpen}>
       <PopoverTrigger asChild>
-        <div className="py-2 px-2 rounded-sm border border-gray-300 dark:border-gray-600 dark:bg-[#2D3236] dark:text-gray-100 items-start w-full rounded-lg cursor-pointer border">
+        <div className="py-2 px-2 mb-1 rounded-sm border border-gray-300 dark:border-gray-600 dark:bg-[#2D3236] dark:text-gray-100 items-start w-full rounded-lg cursor-pointer border">
           <div className="flex flex-col">
             <div className="flex justify-between">
               <label className="text-sm font-medium dark:text-gray-400 text-gray-500">
                 {capitalizeFirstLetter(name.replace("-", " "))}{" "}
               </label>
-              {/*  <div className="dark:text-gray-400 text-emerald-600 flex gap-1 mr-2">
+              {/*  <div className="dark:text-gray-400 text-black flex gap-1 mr-2">
                 {total}
                 <div>ads</div>
               </div> */}
@@ -90,7 +90,7 @@ const isMobile = useMediaQuery({ maxWidth: 768 }); // Detect mobile screens
                       const textColorClass =
                         adCount === 0
                           ? "dark:text-gray-500 text-gray-400"
-                          : "dark:text-gray-300 text-emerald-600";
+                          : "dark:text-gray-300 text-black";
 
                       return (
                         <div className={`${textColorClass} flex gap-1 mr-2`}>
@@ -157,7 +157,7 @@ const isMobile = useMediaQuery({ maxWidth: 768 }); // Detect mobile screens
                       const textColorClass =
                         adCount === 0
                           ? "dark:text-gray-500 text-gray-400"
-                          : "dark:text-gray-300 text-emerald-600";
+                          : "dark:text-gray-300 text-black";
 
                       return (
                         <div className={`${textColorClass} flex gap-1 mr-2`}>
@@ -222,7 +222,7 @@ const isMobile = useMediaQuery({ maxWidth: 768 }); // Detect mobile screens
                       const textColorClass =
                         adCount === 0
                           ? "dark:text-gray-500 text-gray-400"
-                          : "dark:text-gray-300 text-emerald-600";
+                          : "dark:text-gray-300 text-black";
 
                       return (
                         <div className={`${textColorClass} flex gap-1 mr-2`}>

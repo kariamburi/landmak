@@ -9,6 +9,20 @@ import CloseOutlinedIcon from "@mui/icons-material/CloseOutlined";
 import AddOutlinedIcon from '@mui/icons-material/AddOutlined';
 import KeyboardArrowLeftOutlinedIcon from '@mui/icons-material/KeyboardArrowLeftOutlined';
 import KeyboardArrowRightOutlinedIcon from '@mui/icons-material/KeyboardArrowRightOutlined';
+import TravelExploreOutlinedIcon from '@mui/icons-material/TravelExploreOutlined';
+import FullscreenOutlinedIcon from '@mui/icons-material/FullscreenOutlined';
+import {
+  Tooltip,
+  TooltipContent,
+  TooltipProvider,
+  TooltipTrigger,
+} from "../ui/tooltip";
+import {
+  Accordion,
+  AccordionContent,
+  AccordionItem,
+  AccordionTrigger,
+} from "@/components/ui/accordion";
 import GooglePlacesAutocomplete, {
   geocodeByAddress,
   getLatLng,
@@ -62,6 +76,7 @@ import { useRouter, useSearchParams } from "next/navigation";
 import { SignedIn, SignedOut } from "@clerk/nextjs";
 import { formatKsh } from "@/lib/help";
 import ArrowBackOutlinedIcon from "@mui/icons-material/ArrowBackOutlined";
+import { ChevronLeft, ChevronRight } from 'lucide-react';
 const GOOGLE_MAPS_API_KEY = process.env.NEXT_PUBLIC_GOOGLEAPIKEY as string;
 
 const containerStyle = {
@@ -84,6 +99,7 @@ type CollectionProps = {
   handleOpenPlan:() => void;
   handleAdEdit: (id:string) => void;
   handleAdView: (id:string) => void;
+  handleOpenChatId: (value:any) => void;
   collectionType?: "Ads_Organized" | "My_Tickets" | "All_Ads";
 };
 interface Property {
@@ -92,12 +108,13 @@ interface Property {
   location: { lat: number; lng: number };
 }
 
-export default function PropertyMapSearch({queryObject, lat, lng, userName, 
-  userImage, onClose, handleOpenPlan, handleOpenSell, handleAdEdit, handleAdView}:CollectionProps) {
+export default function PropertyMapSearchComponent({queryObject, lat, lng, userName, 
+  userImage, onClose,handleOpenChatId, handleOpenPlan, handleOpenSell, handleAdEdit, handleAdView}:CollectionProps) {
   const router = useRouter();
-  const [openShowInfo, setOpenShowInfo] = useState(true);
+  const [openShowInfo, setOpenShowInfo] = useState(false);
   const [showSidebar, setShowSidebar] = useState(true);
    const [newpage, setnewpage] = useState(false);
+    const [filter, setfilter] = useState(false);
    const [data, setAds] = useState<IdynamicAd[]>([]); // Initialize with an empty array
    const [page, setPage] = useState(1);
    const [totalPages, setTotalPages] = useState(1);
@@ -107,7 +124,10 @@ export default function PropertyMapSearch({queryObject, lat, lng, userName,
     const [loading, setLoading] = useState(true);
     const [zoom, setZoom] = useState<number>(12);
    const [NewqueryObject, setNewqueryObject] = useState<any>(queryObject);
-   // Function to calculate distance between two points (Haversine formula)
+   const handleOpenPopupMapSearch = () => {
+       setOpenShowInfo(true);
+     };
+     
   useEffect(() => {
     const handleResize = () => {
       if(window.innerWidth <= 768){
@@ -123,37 +143,53 @@ export default function PropertyMapSearch({queryObject, lat, lng, userName,
     window.addEventListener("resize", handleResize);
     return () => window.removeEventListener("resize", handleResize);
   }, []);
- const fetchAds = async () => {
-    setLoading(true);
-    try {
-    
-      const Ads:any = await getListingsNearLocation({
-        queryObject: NewqueryObject,
+
+
+
+  const [allAds, setAllAds] = useState<any[]>([]); // All ads fetched from backend
+
+const fetchAds = async () => {
+  setLoading(true);
+  const newq ={
+    ...queryObject,
+    location: "-1.286389/36.817223"
+  };
+  try {
+ 
+  const Ads:any = await getListingsNearLocation({
+        queryObject: newq,
         page,
         limit: 100,
       });
-    //  console.log(Ads);
-// Ensure Ads?.data exists before filtering
-   const Adsfiltered = Ads?.data?.filter((ad: any) => ad.calcDistance <= radius) || [];
-   setAds(Adsfiltered);
-      setTotalPages(Ads?.totalPages || 1);
-    } catch (error) {
-      console.error("Error fetching ads", error);
-    } finally {
-      setLoading(false);
-    }
-  };
+    const fetchedAds = Ads?.data || [];
+    setAllAds(fetchedAds); // store raw data
+    setAds(fetchedAds); // store raw data
+    setTotalPages(Ads?.totalPages || 1);
+  } catch (error) {
+    console.error("Error fetching ads", error);
+  } finally {
+    setLoading(false);
+   
+  }
+};
 
-  
-
-  // Debounce Effect for fetching ads
+// Fetch ads on component mount or when NewqueryObject changes
 useEffect(() => {
-  const delayFetch = setTimeout(() => {
+ // const delayFetch = setTimeout(() => {
     fetchAds();
-  }, 500); // Delay by 500ms
+ /// }, 500);
 
-  return () => clearTimeout(delayFetch); // Cleanup if dependencies change quickly
-}, [NewqueryObject, radius]);
+ // return () => clearTimeout(delayFetch);
+}, [queryObject]); // 🚫 remove radius from dependencies
+
+// Filter ads locally when radius changes or new ads are fetched
+useEffect(() => {
+    
+const filteredAds = allAds.filter((ad) => ad.calcDistance <= radius);
+  setAds(filteredAds);
+   setfilter(true)
+}, [radius]);
+
 
    const { isLoaded } = useLoadScript({
      googleMapsApiKey: GOOGLE_MAPS_API_KEY,
@@ -197,25 +233,64 @@ useEffect(() => {
             setMapCenter({ lat, lng })
           });
       };
+      const handleFullscreen = () => {
+  const container = document.getElementById("map-container");
+  if (!container) return;
+
+  if (!document.fullscreenElement) {
+    container.requestFullscreen?.();
+  } else {
+    document.exitFullscreen?.();
+  }
+};
+ const mapRef = useRef<google.maps.Map | null>(null);
+const onLoad = (map: google.maps.Map) => {
+  mapRef.current = map;
+
+  const bounds = new google.maps.LatLngBounds();
+
+  data.forEach((property) => {
+    const lng = property.data.propertyarea.location.coordinates[0];
+    const lat = property.data.propertyarea.location.coordinates[1];
+
+    if (lat && lng) {
+      bounds.extend(new google.maps.LatLng(lat, lng));
+    }
+  });
+
+  if (!bounds.isEmpty()) {
+    map.fitBounds(bounds);
+  }
+};
    return isLoaded ? (  <>
-    <div className="flex w-full h-screen bg-[#e4ebeb] p-0">
+    <div id="map-container" className="flex w-full h-screen bg-white rounded-sm p-1">
     
       {/* Sidebar with Toggle Button */}
       <div
-        className={`bg-white h-[100vh] shadow-lg transition-transform duration-300 ease-in-out fixed md:relative ${
+        className={`bg-white rounded-sm h-[100vh] shadow-lg transition-transform duration-300 ease-in-out fixed md:relative ${
           showSidebar ? "w-full md:w-1/3 p-1" : "-translate-x-full md:w-0 md:translate-x-0"
         }`}
       >
         
-
+{/* Toggle Button */}
+      <button
+        onClick={() => setShowSidebar(!showSidebar)}
+         className="absolute top-1/2 -translate-y-1/2 left-0 z-50 bg-white border-r rounded-r-full shadow px-2 py-2 hover:bg-gray-100 transition"
+        style={{
+          transform: 'translateY(-50%) translateX(-50%)',
+          left: showSidebar ? '16rem' : '0rem', // adjust based on sidebar width
+        }}
+      >
+        {showSidebar ? <ChevronLeft size={20} /> : <ChevronRight size={20} />}
+      </button>
        
         {showSidebar && (
           <div className="flex flex-col space-y-1">
              <div className="flex gap-2 items-center w-full">
 
-             <div className="flex p-2 text-gray-600 dark:text-[#e4ebeb] dark:hover:bg-gray-700 hover:text-green-600 justify-start items-center"  onClick={() => setShowSidebar(!showSidebar)}>
+             <div className="flex border-b p-2 text-gray-400 dark:text-[#e4ebeb] dark:hover:bg-gray-700 hover:text-green-600 justify-start items-center" onClick={() => setShowSidebar(!showSidebar)}>
             <ArrowBackOutlinedIcon/></div>
-          <h2 className="p-1 text-lg border-b w-full">Nearby {NewqueryObject.category==='Property services' ? (<>Service Providers</>):(<>Properties</>)}</h2>
+          <p className="w-full">{queryObject.subcategory ? queryObject.subcategory:queryObject.category} {"("}{data?.length}{")"}</p>
           </div>
 
       {data?.length > 0 ? (<>
@@ -224,16 +299,16 @@ useEffect(() => {
             <ul className="w-full h-full">
             {data.map((ad: any) => (
   <div key={ad._id} className="flex justify-center">
-    <HorizontalCardPublic
-      ad={ad}
-      userId={userId}
-      isAdCreator={isAdCreator}
-      handleAdView={handleAdView}
-      handleAdEdit={handleAdEdit}
-      handleOpenPlan={handleOpenPlan}
-       userName={userName}
-       userImage={userImage}
-    />
+    <VerticalCard
+                  ad={ad}
+                  userId={userId}
+                  isAdCreator={isAdCreator}
+                  handleAdView={handleAdView}
+                  handleAdEdit={handleAdEdit}
+                  handleOpenPlan={handleOpenPlan}
+                  userName={userName}
+                  userImage={userImage} 
+                  handleOpenChatId={handleOpenChatId}    />
   </div>
 ))}
 
@@ -302,32 +377,15 @@ useEffect(() => {
       }`}>
       
       
-        <Button
-          onClick={() => setShowSidebar(!showSidebar)}
-          className="absolute text-xs lg:text-base bottom-[180px] lg:bottom-[90px] left-3 z-10 md:block bg-green-600 text-white shadow-lg hover:bg-green-700"
-        >
-         {showSidebar ? (<><KeyboardArrowLeftOutlinedIcon/> Hide Nearby {NewqueryObject.category==='Property services' ? (<>Service Providers</>):(<>Properties</>)}</>) : (<><KeyboardArrowRightOutlinedIcon/> Show Nearby {NewqueryObject.category==='Property services' ? (<>Service Providers</>):(<>Properties</>)}</>)} 
-        </Button>
+       
         
-      
-
-     <div className="flex flex-col items-center w-full p-2 h-screen">
-     <div className="h-[50px] flex bg-white justify-between items-center p-1 w-full">
-           <p className="text-sm text-gray-600">Click on the map to set a location.</p>
-           <div className="">
-                             <Button variant="outline" title="Close" onClick={()=> onClose()} 
-                              >
-                            <CloseOutlinedIcon sx={{ fontSize: 14 }}/>
-                         </Button>
-                         </div>
-                         </div>
-     
-          
+     <div className="flex flex-col items-center w-full p-0 h-screen">
              <div className="w-full relative flex-1 overflow-hidden border border-gray-300">
                <GoogleMap
                  mapContainerStyle={{ width: "100%", height: "100%" }}
                  center={mapCenter}
                  zoom={zoom}
+                 onLoad={onLoad}
                  options={{
                   zoomControl: true, // Enable zoom controls
                   mapTypeControl: true, // Enable map type switch
@@ -345,7 +403,7 @@ useEffect(() => {
                  }
                >
                  <Marker position={mapCenter} />
-                 <Circle center={mapCenter} radius={radius} options={{ fillColor: "#4285F4", fillOpacity: 0.2, strokeColor: "#4285F4" }} />
+                {filter && (<Circle center={mapCenter} radius={radius} options={{ fillColor: "#4285F4", fillOpacity: 0.2, strokeColor: "#4285F4" }} />)}
                  {data.map((property: any) => (
                   <Marker
                   key={property.id}
@@ -400,6 +458,60 @@ useEffect(() => {
                   
                          
                </GoogleMap>
+               <div className="absolute top-2 right-2 z-5 flex flex-col space-y-2">
+                   {/* Default Button */}
+                  <TooltipProvider>
+                                  <Tooltip>
+                                    <TooltipTrigger asChild>
+                                    <Button onClick={handleFullscreen} 
+                                    className="w-14 bg-white text-gray-600" 
+                                    variant={"outline"}><FullscreenOutlinedIcon/></Button>
+                                    </TooltipTrigger>
+                                    <TooltipContent>
+                                      <p>Toggle Fullscreen</p>
+                                    </TooltipContent>
+                                  </Tooltip>
+                                </TooltipProvider></div>
+  <div className="absolute top-20 left-2 z-5 h-70px] p-2 bg-white w-full">
+             <label className="block text-gray-700 font-medium mb-0">
+               Select Distance: {radius / 1000} km
+             </label>
+             <input
+               type="range"
+               min="1000"
+               max="20000"
+               step="1000"
+               value={radius}
+               onChange={(e) => setRadius(Number(e.target.value))}
+               className="w-full"
+             />
+           </div>
+   <div className="absolute top-2 left-[200px] z-5">
+          <TooltipProvider>
+            <Tooltip>
+              <TooltipTrigger asChild>
+                <button
+                  onClick={handleOpenPopupMapSearch}
+                  className="flex text-sm gap-2 shadow-sm bg-white text-gray-700 items-center justify-center w-full p-2 rounded hover:bg-gray-100"
+                >
+                  <div className="flex gap-2 items-center">
+                
+                    <TravelExploreOutlinedIcon/>
+                    Search by Distance
+                  </div>
+                 
+                </button>
+              </TooltipTrigger>
+              <TooltipContent>
+                <p>Search by Distance</p>
+              </TooltipContent>
+            </Tooltip>
+          </TooltipProvider>
+        </div>
+     
+
+
+
                 {openShowInfo && (<>
                  <div className="fixed inset-0 bg-black bg-opacity-40 z-50 flex items-center justify-center">
     <div className="bg-[#e4ebeb] p-3 rounded-md shadow-lg w-[320px] relative">
@@ -480,35 +592,9 @@ useEffect(() => {
 
              </div>
            
-             <div className="h-70px] p-2 bg-white w-full">
-             <label className="block text-gray-700 font-medium mb-0">
-               Select Distance: {radius / 1000} km
-             </label>
-             <input
-               type="range"
-               min="1000"
-               max="20000"
-               step="1000"
-               value={radius}
-               onChange={(e) => setRadius(Number(e.target.value))}
-               className="w-full"
-             />
-           </div>
+           
      
-        {/*    {mapCenter && (
-             <div className="mt-4 w-full">
-               <h3 className="text-lg font-semibold mb-2">Properties within {radius / 1000} km</h3>
-               {filteredProperties.length > 0 ? (
-                 <ul className="list-disc pl-5">
-                   {filteredProperties.map((property) => (
-                     <li key={property.id} className="text-gray-700">{property.name}</li>
-                   ))}
-                 </ul>
-               ) : (
-                 <p className="text-gray-500">No properties found in this range.</p>
-               )}
-             </div>
-           )}*/}
+       
          </div>  
 
        

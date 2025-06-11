@@ -3,7 +3,7 @@ import { formatKsh } from "@/lib/help";
 import LocationOnIcon from "@mui/icons-material/LocationOn";
 import YouTubeIcon from "@mui/icons-material/YouTube";
 import LocalSeeOutlinedIcon from "@mui/icons-material/LocalSeeOutlined";
-import { useEffect, useState } from "react";
+import { useEffect, useRef, useState } from "react";
 //import { Carousel } from "react-responsive-carousel";
 import AccessTimeIcon from "@mui/icons-material/AccessTime";
 import CallIcon from "@mui/icons-material/Call";
@@ -103,6 +103,7 @@ import { DisputeBadge } from "./DisputeBadge";
 import MapaVerifiedBadge from "./MapaVerifiedBadge";
 import LandDisputeReportForm from "./LandDisputeReportForm";
 import MapaVerificationForm from "./MapaVerificationForm";
+import Masonry from "react-masonry-css";
  // Correct import
 type CardProps = {
   ad: any;
@@ -110,6 +111,7 @@ type CardProps = {
   userId: string;
   userImage: string;
   userName: string;
+  isMapVisible :boolean;
   onClose: () => void;
   handleSubCategory:(category: string, subcategory: string) => void;
   handleOpenReview: (value:any) => void;
@@ -132,7 +134,7 @@ function checkPlatform(url: string) {
     return "Unknown Platform";
   }
 }
-export default function Ads({ ad, user, userId, userImage, userName, onClose,handlePay, handleOpenSafety, handleOpenSell, handleSubCategory, handleOpenReview, handleOpenPlan, handleOpenShop,}: CardProps) {
+export default function AdsDetials({ ad, user, userId, userImage, userName, isMapVisible, onClose,handlePay, handleOpenSafety, handleOpenSell, handleSubCategory, handleOpenReview, handleOpenPlan, handleOpenShop,}: CardProps) {
   const [videoAdId, setvideoAdId] = React.useState<string | null>(null);
   const [tiktokvideoAdId, setTiktokvideoAdId] = React.useState<string | null>(null);
   const [selectedIndex, setSelectedIndex] = React.useState<number | null>(null);
@@ -351,71 +353,16 @@ const handleOpenPopupDispute = () => {
   };
   
   const [inputMode, setInputMode] = useState<'Images' | 'Video' | 'Virtual'>('Images');
+ // Safely get shapes array or fallback to empty array
+  const shapes = ad.data?.propertyarea?.shapes ?? [];
+  // Calculate total area size
+  const areaSize = Array.isArray(shapes)
+    ? shapes.reduce((sum: number, shape: any) => sum + parseFloat(shape.area || 0), 0)
+    : 0;
   return (
-    <>
-      <div className="text-sm p-0 hidden lg:inline">
-        <div className="flex">
-          <div className="mt-2 border text-gray-600 hover:text-green-600 dark:hover:bg-[#3E454A] dark:bg-[#2D3236] dark:hover:text-gray-300 dark:text-gray-500 bg-white py-1 px-2 rounded-sm mr-1">
-            <div
-              onClick={() => {
-                //setIsOpenP(true);
-                //router.push("/");
-                onClose();
-              }}
-            >
-              <div className="flex items-center gap-2 cursor-pointer ">
-                <p className="text-xs lg:text-sm"> All Ads</p><ArrowForwardIosOutlinedIcon sx={{ fontSize: 14 }}/>
-              </div>
-            </div>
-          </div>
-          <div className="mt-2 border text-gray-600 hover:text-green-600 dark:hover:bg-[#3E454A] dark:bg-[#2D3236] dark:hover:text-gray-300 dark:text-gray-500 bg-white py-1 px-2 rounded-sm mr-1">
-            <div className="flex items-center">
-              {ad && (
-                <div
-                  onClick={() => {
-                    handleSubCategory(ad.data.category,'');
-                  
-                  }}
-                  className="flex items-center gap-2 cursor-pointer"
-                >
-                 
-                  <p className="text-xs lg:text-sm">{ad.data.category}</p><ArrowForwardIosOutlinedIcon sx={{ fontSize: 14 }}/>
-                </div>
-              )}
-            </div>
-          </div>
-          <div className="mt-2 border text-gray-600 hover:text-green-600 dark:hover:bg-[#3E454A] dark:bg-[#2D3236] dark:hover:text-gray-300 bg-white dark:text-gray-500 py-1 px-2 rounded-sm mr-1">
-            <div className="flex items-center">
-              {ad && (
-                <div
-                  onClick={() => {
-                    handleSubCategory(ad.data.category,ad.data.subcategory);
-                  
-                  }}
-                  className="flex items-center gap-2 cursor-pointer"
-                >
-                 
-                  <p className="text-xs lg:text-sm">{ad.data.subcategory}</p><ArrowForwardIosOutlinedIcon sx={{ fontSize: 14 }}/>
-                </div>
-              )}
-            </div>
-          </div>
-          <div className="mt-2 border text-gray-800 dark:bg-[#2D3236] dark:text-gray-300 bg-white py-1 px-2 rounded-sm">
-            <div className="flex items-center">
-           
-              {ad && <p className="text-xs lg:text-sm">{ad.data.title}</p>}
-            </div>
-          </div>
-        </div>
-
-      </div>
-      <div className="space-y-0 lg:flex lg:space-x-0 gap-2">
-
-
-
-
-  <div
-          className="mt-1 lg:mt-2 relative lg:flex-1 dark:bg-[#2D3236] dark:text-gray-300"
+      <><div className="space-y-0 lg:flex lg:space-x-0 gap-2">
+        <div
+          className="mt-1 relative lg:flex-1 dark:bg-[#2D3236] dark:text-gray-300"
           style={
             ad.plan.name !== "Free"
               ? {
@@ -733,7 +680,13 @@ const handleOpenPopupDispute = () => {
 
           {/* Ad details */}
           <div className="p-3 lg:rounded-b-xl bg-white">
-            <div className="lg:hidden flex justify-end mb-2 items-center w-full">
+            <div 
+            
+          className={`flex justify-end mb-2 items-center w-full ${
+          isMapVisible ?
+          "inline":"hidden"
+        }`}
+           >
               <div className="flex flex-col justify-center">
                 <div className="flex gap-1 items-center justify-center">
         
@@ -784,8 +737,9 @@ const handleOpenPopupDispute = () => {
                     ) : (
                       <>
                       
-                          <span className="text-lg lg:text-xl font-bold w-full rounded-full p-1 dark:text-green-500 text-green-600">
-              {ad.data.budget ? (<> Budget : Ksh {ad.data.budget.toLocaleString()}</>):(<> {ad.data.price > 0 && (
+                          <nav>
+                            </nav><span className="text-lg lg:text-xl font-bold w-full rounded-full p-1 dark:text-green-500 text-green-600">
+                           {ad.data.budget ? (<> Budget : Ksh {ad.data.budget.toLocaleString()}</>):(<> {ad.data.price > 0 && (
                                    <span>
                                   Ksh {ad.data.price.toLocaleString()}
                                   </span>)} 
@@ -794,17 +748,17 @@ const handleOpenPopupDispute = () => {
                       </>
                     )}{" "}
                     {ad.data.unit && ad.data.contact === "specify" && (
-                      <div className="text-xs dark:text-white">
+                      <div className="w-[100px] text-xs dark:text-white">
                         {ad.data.unit}
                       </div>
                     )}{" "}
                     {ad.data.per && (
-                      <div className="text-xs dark:text-white">
+                      <div className="w-[100px] text-xs dark:text-white">
                         {ad.data.per}
                       </div>
                     )}
                     {ad.data.period && (
-                      <div className="text-xs dark:text-white">
+                      <div className="w-[100px] text-xs dark:text-white">
                         {ad.data.period}
                       </div>
                     )}
@@ -895,6 +849,23 @@ const handleOpenPopupDispute = () => {
   
 {!ad.mapaVerificationStatus && isSale && isAdCreator && (
   <MapaVerificationForm userId={userId} ad={ad} userName={userName} userImage={userImage} />
+)}
+{areaSize > 0 && (
+  <div className="flex mt-1 gap-2 text-[8px] lg:text-[10px] dark:bg-[#131B1E] dark:text-gray-300 bg-[#ebf2f7] rounded-lg p-1 justify-center border">
+    <label className="text-xs mb-1">
+      Approx. Land Size
+      <br />
+      ≈ {areaSize.toFixed(2)} m²
+      <br />
+      ≈ {(areaSize / 4046.86).toFixed(2)} acres
+      <br />
+      ≈ {(areaSize / 10000).toFixed(2)} hectares
+      <br />
+       <span className="italic text-[10px] text-gray-500 dark:text-gray-400">
+        *Based on drawn boundaries. Actual survey may vary.
+      </span>
+    </label>
+  </div>
 )}
                   
             <div className="border-t dark:border-gray-600 border-gray-300 mt-4 mb-4"></div>
@@ -1126,15 +1097,15 @@ const handleOpenPopupDispute = () => {
                        
                           <div className="flex flex-col">
                             <SellerProfileCard
-                              userId={userId}
-                              ad={ad}
-                              titleId={"Ad"}
-                              fee={user?.fee ?? 500}
-                              userImage={userImage}
-                              userName={userName} 
-                              handleOpenReview={handleOpenReview}
-                              handleOpenShop={handleOpenShop}
-                              handlePay={handlePay}                            />
+                            userId={userId}
+                            ad={ad}
+                            fee={user?.fee ?? 500}
+                            userImage={userImage}
+                            userName={userName}
+                            handleOpenReview={handleOpenReview}
+                            handleOpenShop={handleOpenShop}
+                            handlePay={handlePay} 
+                            titleId={"Ad"}                            />
                           </div>
                           <div className="m-3 p-1">
                             {ad.organizer?.businessname && (
@@ -1424,6 +1395,175 @@ const handleOpenPopupDispute = () => {
               </>
             )}
  
+
+
+<div 
+          className={`w-full ${
+          isMapVisible ?
+          "inline":"hidden"
+        }`}>
+    
+          
+
+          <div className="p-1">
+              <div className="mt-3 flex text-green-900 dark:text-gray-400 gap-1 items-center font-bold no-underline">
+                        <div className="font-bold">Seller</div>
+                        </div>
+            <div className="mt-3">
+              <div className="flex flex-col">
+                <SellerProfileCard
+                  userId={userId}
+                  ad={ad}
+                  titleId={"Ad"}
+                  fee={user?.fee ?? 500}
+                  userImage={userImage}
+                  userName={userName} 
+                  handleOpenReview={handleOpenReview}
+                  handleOpenShop={handleOpenShop} 
+                  handlePay={handlePay}                />
+              </div>
+            </div>
+         
+          </div>
+          
+  <div className="mt-3 border dark:bg-[#2D3236] dark:text-gray-300 bg-white p-2 text-sm rounded-lg overflow-hidden">
+  <div className="font-bold text-lg text-center">Safety Tips for Buyers</div>
+  <div className="border-t dark:border-gray-600 border-gray-300 mt-4 mb-4"></div>
+  <ol>
+    <li>
+      <div className="text-sm">
+        <p className="font-bold flex gap-2 text-sm">
+          <CheckCircleIcon sx={{ fontSize: 14 }} />
+          Verify the Seller
+        </p>
+        <p>
+          Always check the seller&apos;s profile, ID, and contact details. Be cautious of listings from unverified users or those without proper documentation.
+        </p>
+      </div>
+    </li>
+
+    <li>
+      <div className="mt-2 gap-2 text-sm">
+        <p className="font-bold flex gap-2 text-sm">
+          <CheckCircleIcon sx={{ fontSize: 14 }} />
+          Inspect the Property
+        </p>
+        <p>
+          Schedule a physical visit with the seller. Cross-check property beacons and boundaries, preferably with a licensed surveyor.
+        </p>
+      </div>
+    </li>
+
+    <li>
+      <div className="mt-2 gap-2 text-sm">
+        <p className="font-bold flex gap-2 text-sm">
+          <CheckCircleIcon sx={{ fontSize: 14 }} />
+          Confirm Land Ownership and Title
+        </p>
+        <p>
+          Perform a land search at the Ministry of Lands to confirm the true owner, title status, and any disputes or encumbrances.
+        </p>
+      </div>
+    </li>
+
+    <li>
+      <div className="mt-2 gap-2 text-sm">
+        <p className="font-bold flex gap-2 text-sm">
+          <CheckCircleIcon sx={{ fontSize: 14 }} />
+          Use a Licensed Lawyer or Advocate
+        </p>
+        <p>
+          Always involve a qualified legal professional when drafting or signing any property sale agreements or transfer documents.
+        </p>
+      </div>
+    </li>
+
+    <li>
+      <div className="mt-2 gap-2 text-sm">
+        <p className="font-bold flex gap-2 text-sm">
+          <CheckCircleIcon sx={{ fontSize: 14 }} />
+          Avoid Advance Payments
+        </p>
+        <p>
+          Never send money before verifying documents and visiting the property. Use escrow services or formal channels when possible.
+        </p>
+      </div>
+    </li>
+
+    <li>
+      <div className="mt-2 gap-2 text-sm">
+        <p className="font-bold flex gap-2 text-sm">
+          <CheckCircleIcon sx={{ fontSize: 14 }} />
+          Beware of &apos;Too Good to Be True&apos; Deals
+        </p>
+        <p>
+          Extremely low prices may be a sign of fraud. Compare with market prices and avoid pressure tactics to make fast decisions.
+        </p>
+      </div>
+    </li>
+
+    <li>
+      <div className="mt-2 gap-2 text-sm">
+        <p className="font-bold flex gap-2 text-sm">
+          <CheckCircleIcon sx={{ fontSize: 14 }} />
+          Don&apos;t Share Personal Info Prematurely
+        </p>
+        <p>
+          Do not share your ID, KRA PIN, or financial information until you&apos;ve verified the seller and begun formal legal procedures.
+        </p>
+      </div>
+    </li>
+
+    <li>
+      <div className="mt-2 font-bold text-green-600 hover:text-green-500 hover:cursor-pointer">
+        <div
+          onClick={() => {
+            handleOpenSafety();
+            // router.push("/safety");
+          }}
+        >
+          Read more...
+        </div>
+      </div>
+    </li>
+  </ol>
+</div>
+
+
+          <div className="mt-3 border dark:bg-[#2D3236] dark:text-gray-300  bg-white p-2 text-sm rounded-lg overflow-hidden">
+              <div className="flex justify-between">
+
+            <SignedIn>
+            <Button onClick={() => {
+            
+            handleOpenSell(ad.data.category.toString(), ad.data.subcategory.toString());
+           // router.push("/ads/create");
+          
+        }} variant="default" className="flex bg-green-600 hover:bg-green-700 w-full items-center gap-2">
+        <SellOutlinedIcon sx={{ fontSize: 16 }}  />
+        Post Ad like this?
+      </Button>
+              
+            </SignedIn>
+
+            <SignedOut>
+            <Button onClick={() => {
+                  setIsOpenP(true);
+                  router.push("/sign-in");
+                }} variant="default" className="flex bg-green-600 hover:bg-green-700 w-full items-center gap-2">
+        <SellOutlinedIcon sx={{ fontSize: 16 }}  />
+        Post Ad like this?
+      </Button>
+              
+            </SignedOut>
+              
+       
+              </div>
+            </div>
+ </div>
+
+
+
  {(ad.data.category !== 'Property Services' || ad.data.category !== 'Wanted Ads') && (<>
  <div className="flex mt-4 w-full items-center">
               <SignedIn>
@@ -1432,21 +1572,49 @@ const handleOpenPopupDispute = () => {
  
     {isAdCreator ? (
       
-      <>{!ad.hasSiteVisit && (<button onClick={handleOpenPopupSchedule} className="flex rounded-sm w-full py-3 px-2 text-lg text-green-600 border border-green-600 bg-green-100 hover:bg-green-200 justify-center items-center gap-1">
-              <CalendarMonthOutlinedIcon/>
+      <>{!ad.hasSiteVisit && (
+
+
+        <div className="mt-3 flex justify-center">
+  <div className="border dark:bg-[#2D3236] dark:text-gray-300 bg-white p-2 text-sm rounded-lg overflow-hidden w-full">
+    <Button
+      onClick={handleOpenPopupSchedule}
+      variant="default"
+      className="flex bg-green-600 hover:bg-green-700 w-full items-center gap-2"
+    >
+       <CalendarMonthOutlinedIcon/>
              Schedule Site Visit
-      </button>)}</>
+    </Button>
+  </div>
+</div>
+
+      )}</>
       ):(<> 
       
-      {ad.hasSiteVisit && ( <button onClick={handleOpenPopupBooking} className="flex rounded-sm w-full py-3 px-2 text-lg text-white bg-black hover:bg-gray-900 justify-center items-center gap-1">
-              <CalendarMonthOutlinedIcon/>
+      {ad.hasSiteVisit && ( 
+        <div className="border dark:bg-[#2D3236] dark:text-gray-300 bg-white p-2 text-sm rounded-lg overflow-hidden w-full">
+    <Button
+      onClick={handleOpenPopupBooking}
+      variant="default"
+      className="flex bg-black hover:bg-gray-900 w-full items-center gap-2"
+    >
+       <CalendarMonthOutlinedIcon/>
               Booking Site Visit
-      </button>)}
-     
-     <button onClick={handleOpenPopupLoan} className="flex rounded-sm w-full py-3 px-2 text-lg text-white bg-green-600 hover:bg-green-700 justify-center items-center gap-1">
-              <CreditScoreOutlinedIcon/>
+    </Button>
+  </div>
+       
+    )}
+      <div className="border dark:bg-[#2D3236] dark:text-gray-300 bg-white p-2 text-sm rounded-lg overflow-hidden w-full">
+    <Button
+      onClick={handleOpenPopupLoan}
+      variant="default"
+      className="flex bg-green-600 hover:bg-green-700 w-full items-center gap-2"
+    >
+        <CreditScoreOutlinedIcon/>
               Request this property Financing
-      </button>
+    </Button>
+  </div>
+     
     </>)}    
        
 </div>
@@ -1460,35 +1628,61 @@ const handleOpenPopupDispute = () => {
 
 
  {isAdCreator ? (
-    <>{!ad.hasSiteVisit && (<button onClick={() => {
+    <>{!ad.hasSiteVisit && (
+      <div className="border dark:bg-[#2D3236] dark:text-gray-300 bg-white p-2 text-sm rounded-lg overflow-hidden w-full">
+    <Button
+       onClick={() => {
               setIsOpenP(true);
               router.push("/sign-in");
-            }} className="flex rounded-sm w-full py-3 px-2 text-lg text-white bg-blue-600 hover:bg-blue-700 justify-center items-center gap-1">
-              <CalendarMonthOutlinedIcon/>
+            }} 
+      variant="default"
+      className="flex bg-blue-600 hover:bg-blue-700 w-full items-center gap-2"
+    >
+         <CalendarMonthOutlinedIcon/>
              Schedule Site Visit
-      </button>)}</>
+    </Button>
+  </div>
+    
+    
+      
+    )}</>
   
   
   ):(<> 
       
       
          
-      {ad.hasSiteVisit && ( <button onClick={() => {
+      {ad.hasSiteVisit && ( 
+        
+         <div className="border dark:bg-[#2D3236] dark:text-gray-300 bg-white p-2 text-sm rounded-lg overflow-hidden w-full">
+    <Button
+       onClick={() => {
               setIsOpenP(true);
               router.push("/sign-in");
-            }} className="flex rounded-sm w-full py-3 px-2 text-lg text-white bg-black hover:bg-gray-900 justify-center items-center gap-1">
-              <CalendarMonthOutlinedIcon/>
+            }} 
+      variant="default"
+      className="flex bg-black hover:bg-gray-900 w-full items-center gap-2"
+    >
+         <CalendarMonthOutlinedIcon/>
               Booking Site Visit
-      </button>)}
+    </Button>
+  </div>
+       )}
       
-      
-     <button onClick={() => {
+      <div className="border dark:bg-[#2D3236] dark:text-gray-300 bg-white p-2 text-sm rounded-lg overflow-hidden w-full">
+    <Button
+       onClick={() => {
               setIsOpenP(true);
               router.push("/sign-in");
-            }} className="flex rounded-sm w-full py-3 px-2 text-lg text-white bg-green-600 hover:bg-green-700 justify-center items-center gap-1">
-              <CreditScoreOutlinedIcon/>
+            }} 
+      variant="default"
+      className="flex bg-blue-600 hover:bg-blue-700 w-full items-center gap-2"
+    >
+         <CreditScoreOutlinedIcon/>
               Request this property Financing
-      </button>
+    </Button>
+  </div>
+   
     </>)}   
 
       </div>
@@ -1580,31 +1774,13 @@ const handleOpenPopupDispute = () => {
    </div>
         </div>
 
-        {/* Right panel */}
-        <div 
-         className={`p-1 ${
-          ad.data.propertyarea ?
-          "lg:w-[40%]":"lg:w-[32%]"
+        {/* Right panel breakpointColumns */}
+      <div 
+          className={`lg:w-[32%] ${
+          isMapVisible ?
+          "hidden":"inline"
         }`}>
-        {ad.data.category !== 'Wanted Ads' && ad.data.propertyarea?.location && ad.data.propertyarea?.location.length !== 0 && (
-          <>
-            <div className="text-l mb-2 rounded-lg">
-              <div className="w-full">
-              <div className="w-full mt-1 rounded-t-lg p-2 bg-white">
-              <p className="text-gray-600 font-bold">Property Location</p>
-              </div>
-                <MappingAds
-                  data={ad.data.propertyarea}
-                />
-               {/*    <PropertyShapesGrid _id={ad._id} userId={userId} organizerId={ad.organizer._id} shapes={ad.data.propertyarea.shapes}/>*/}
-              </div>
-            </div>
-            </>
-          )}
-
-          <div className="hidden lg:inline">
-            
-            
+       <div className="p-1 lg:p-0">
             <div className="dark:bg-[#2D3236] dark:text-gray-300 bg-white p-2 border rounded-lg overflow-hidden flex flex-col items-center">
               <div className="flex gap-1 items-center no-underline">
                 {ad.data.contact && ad.data.contact === "contact" ? (
@@ -1624,13 +1800,13 @@ const handleOpenPopupDispute = () => {
                   </>
                 )}
                 {ad.data.unit && ad.data.contact === "specify" && (
-                  <div className="text-xs dark:text-white">{ad.data.unit}</div>
+                  <div className="flex w-[100px] text-xs dark:text-white">{ad.data.unit}</div>
                 )}
                 {ad.data.per && (
-                  <div className="text-xs dark:text-white">{ad.data.per}</div>
+                  <div className="flex w-[100px] text-xs dark:text-white">{ad.data.per}</div>
                 )}
                 {ad.data.period && (
-                  <div className="text-xs dark:text-white">
+                  <div className="flex w-[100px] text-xs dark:text-white">
                     {ad.data.period}
                   </div>
                 )}
@@ -1812,13 +1988,13 @@ const handleOpenPopupDispute = () => {
 
     
 
-          <div className="hidden lg:inline">
+          <div className="p-1 lg:p-0">
             <div className="mt-3">
               <div className="flex flex-col">
                 <SellerProfileCard
                   userId={userId}
                   ad={ad}
-                  titleId={"Ad"}
+                  titleId={"Ad"}   
                   fee={user?.fee ?? 500}
                   userImage={userImage}
                   userName={userName} 
@@ -1829,63 +2005,12 @@ const handleOpenPopupDispute = () => {
             </div>
          
           </div>
-          <div className="mt-3 border dark:bg-[#2D3236] dark:text-gray-300 bg-white p-2 text-sm rounded-lg overflow-hidden">
+          <div className="p-1 lg:p-0">
           
-              <div className="flex justify-between">
 
-
-              <SignedIn>
-          
-              <Button   onClick={() => {
-                      
-                     // setIsOpenP(true);
-                     handleOpenReview(ad.organizer)
-                      //  router.push(`/reviews/${ad.organizer._id}`);
-                      
-                    }} variant="default" className="flex w-full bg-green-600 hover:bg-green-700 items-center gap-2">
-         😃
-         Leave Feedback?
-      </Button>
-
-        </SignedIn>
-
-        <SignedOut>
-
-        <Button onClick={() => {
-              setIsOpenP(true);
-              router.push("/sign-in");
-            }} variant="default" className="flex w-full bg-green-600 hover:bg-green-700 items-center gap-2">
-         😃
-         Leave Feedback?
-      </Button>
-
-         
-        </SignedOut>
-
-
-            
-                  
-              </div>
-            </div>
-
-
-            <div className="mt-3 border dark:bg-[#2D3236] dark:text-gray-300 bg-white p-2 text-sm rounded-lg overflow-hidden">
-              <div className="font-bold text-lg text-center">Share Ad</div>
-              <div className="border-t dark:border-gray-600 border-gray-300 mt-4 mb-4"></div>
-              <div className="flex justify-between">
-
-           < CopyShareAdLink _id={ad._id} titleId={"Ad"}/>
-              
-           
-              </div>
-            </div>
-
-
-         
-        
             <div className="mt-3 border dark:bg-[#2D3236] dark:text-gray-300 bg-white p-2 text-sm rounded-lg overflow-hidden">
   <div className="font-bold text-lg text-center">Safety Tips for Buyers</div>
-<div className="border-t dark:border-gray-600 border-gray-300 mt-4 mb-4"></div>
+  <div className="border-t dark:border-gray-600 border-gray-300 mt-4 mb-4"></div>
   <ol>
     <li>
       <div className="text-sm">
@@ -1894,7 +2019,7 @@ const handleOpenPopupDispute = () => {
           Verify the Seller
         </p>
         <p>
-          Always check the seller&apos;s profile, history, and contact details. Be cautious of listings from users without verified details or reviews.
+          Always check the seller&apos;s profile, ID, and contact details. Be cautious of listings from unverified users or those without proper documentation.
         </p>
       </div>
     </li>
@@ -1906,31 +2031,67 @@ const handleOpenPopupDispute = () => {
           Inspect the Property
         </p>
         <p>
-          Schedule a physical visit to the property before making any payments. Ensure all details match the listing description and ask questions about ownership.
+          Schedule a physical visit with the seller. Cross-check property beacons and boundaries, preferably with a licensed surveyor.
         </p>
       </div>
     </li>
 
     <li>
-      <div className="gap-2 mt-2 text-sm">
+      <div className="mt-2 gap-2 text-sm">
         <p className="font-bold flex gap-2 text-sm">
           <CheckCircleIcon sx={{ fontSize: 14 }} />
-          Meet in Safe Locations
+          Confirm Land Ownership and Title
         </p>
         <p>
-          When meeting with the seller or their agent, choose public or secure places. Consider bringing someone along for added safety.
+          Perform a land search at the Ministry of Lands to confirm the true owner, title status, and any disputes or encumbrances.
         </p>
       </div>
     </li>
 
     <li>
-      <div className="gap-2 mt-2 text-sm">
+      <div className="mt-2 gap-2 text-sm">
+        <p className="font-bold flex gap-2 text-sm">
+          <CheckCircleIcon sx={{ fontSize: 14 }} />
+          Use a Licensed Lawyer or Advocate
+        </p>
+        <p>
+          Always involve a qualified legal professional when drafting or signing any property sale agreements or transfer documents.
+        </p>
+      </div>
+    </li>
+
+    <li>
+      <div className="mt-2 gap-2 text-sm">
         <p className="font-bold flex gap-2 text-sm">
           <CheckCircleIcon sx={{ fontSize: 14 }} />
           Avoid Advance Payments
         </p>
         <p>
-          Never send money before seeing the property or signing official documents. Use secure payment channels and demand proof of ownership.
+          Never send money before verifying documents and visiting the property. Use escrow services or formal channels when possible.
+        </p>
+      </div>
+    </li>
+
+    <li>
+      <div className="mt-2 gap-2 text-sm">
+        <p className="font-bold flex gap-2 text-sm">
+          <CheckCircleIcon sx={{ fontSize: 14 }} />
+          Beware of &apos;Too Good to Be True&apos; Deals
+        </p>
+        <p>
+          Extremely low prices may be a sign of fraud. Compare with market prices and avoid pressure tactics to make fast decisions.
+        </p>
+      </div>
+    </li>
+
+    <li>
+      <div className="mt-2 gap-2 text-sm">
+        <p className="font-bold flex gap-2 text-sm">
+          <CheckCircleIcon sx={{ fontSize: 14 }} />
+          Don&apos;t Share Personal Info Prematurely
+        </p>
+        <p>
+          Do not share your ID, KRA PIN, or financial information until you&apos;ve verified the seller and begun formal legal procedures.
         </p>
       </div>
     </li>
@@ -1982,8 +2143,10 @@ const handleOpenPopupDispute = () => {
        
               </div>
             </div>
+            </div>
+ </div>
 
-        </div>
+       {/**end */}
       </div>
      
     </>

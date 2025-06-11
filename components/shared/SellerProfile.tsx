@@ -10,6 +10,7 @@ import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import ForwardToInboxOutlinedIcon from "@mui/icons-material/ForwardToInboxOutlined";
 import LocationOnIcon from "@mui/icons-material/LocationOn";
 import AssistantDirectionIcon from "@mui/icons-material/AssistantDirection";
+import { Phone, MessageCircle, MessageSquare, Mail } from 'lucide-react';
 import {
   Accordion,
   AccordionContent,
@@ -60,7 +61,8 @@ import CopyShareAdLink from "./CopyShareAdLink";
 import { Email } from "@mui/icons-material";
 import { Button } from "../ui/button";
 import { updatewhatsapp } from "@/lib/actions/dynamicAd.actions";
-
+import QRCode from 'qrcode';
+import Ratingsmobile from "./ratingsmobile";
 type CollectionProps = {
   userId: string;
   loggedId: string;
@@ -124,187 +126,191 @@ const SellerProfile = ({ userId, loggedId, user, handlePay, handleOpenReview, ha
   }
   const [isLoading, setIsLoading] = useState(true);
  
-  return (
-    <div className="flex flex-col m-0 dark:text-gray-100 items-center w-full lg:w-[350px]">
-     
-     <div className="flex flex-col dark:bg-[#2D3236] dark:text-gray-100 border bg-white justify-between items-center p-1 w-full rounded-lg">
-      <div className="flex gap-4 dark:bg-[#2D3236] dark:text-gray-100 border-b bg-white  items-center p-1 w-full rounded-lg">
-        <div className="flex flex-col w-full items-center w-full">
-          <div className="w-16 h-16 rounded-full bg-white relative">
-            <Zoom>
-              <Image
-                className="w-full h-full rounded-full object-cover"
-                src={user.photo ?? "/avator.png"}
-                alt="Avator"
-                width={100}
-                height={100}
-              />
-            </Zoom>
-            {/* Verified Icon */}
-            {user.verified && user?.verified[0]?.accountverified === true ? (
-              <>
-                <TooltipProvider>
-                  <Tooltip>
-                    <TooltipTrigger asChild>
-                      <div className="shadow-[0px_4px_20px_rgba(0,0,0,0.3)] absolute text-white bottom-0 right-0 bg-gradient-to-b from-green-500 to-green-600 rounded-full p-1">
-                        <VerifiedUserOutlinedIcon sx={{ fontSize: 16 }}/>
-                      </div>
-                    </TooltipTrigger>
-                    <TooltipContent>
-                      <p className="text-green-500">Verified Seller</p>
-                    </TooltipContent>
-                  </Tooltip>
-                </TooltipProvider>
-              </>
-            ) : (
-              <>
-                <TooltipProvider>
-                  <Tooltip>
-                    <TooltipTrigger asChild>
-                      <div className="shadow-[0px_4px_20px_rgba(0,0,0,0.3)] absolute text-gray-100 bottom-0 right-0 bg-gradient-to-b from-gray-500 to-gray-600 rounded-full p-1">
-                        <ShieldOutlinedIcon sx={{ fontSize: 16 }}/>
-                      </div>
-                    </TooltipTrigger>
-                    <TooltipContent>
-                      <p className="text-red-500">Unverified Seller</p>
-                    </TooltipContent>
-                  </Tooltip>
-                </TooltipProvider>
-              </>
-            )}
-          </div>
-
-          <div className="ml-2 font-bold">
-            {user.firstName} {user.lastName}
-          </div>
-          <div className="m-1">
-            <Verification
-              user={user}
-              fee={user.fee}
-              userId={userId}
-              isAdCreator={isAdCreator}
-              handlePayNow={handlePay}
-            />
-          </div>
-          {userId === loggedId && (
-          <div className="flex justify-center items-center">
-            <div>
-              <div
-                onClick={() => {
-                 // handleOpenP();
-                 handleOpenSettings();
-                  //router.push(`/settings/`);
-                }}
-                className="cursor-pointer"
-              >
-                <Button variant="outline">
-                  <EditOutlinedIcon sx={{ fontSize: 14 }} />
-                  Edit Profile
-                </Button>
-              </div>
-            </div>
-
-           
-          </div>
-        )}
-        </div>
-        <div className="flex mb-2 flex-col mt-4 items-center dark:bg-[#2D3236] dark:text-gray-100 bg-white rounded-lg w-full p-1">
-        <RatingsCard recipientUid={user._id} user={user} handleOpenReview={handleOpenReview} />
-      </div>
-      </div>
-     
- 
-      <div className="flex flex-col gap-4 mt-2 mb-2 dark:bg-[#2D3236] dark:text-gray-100 border-b bg-white justify-between items-center p-1 w-full rounded-lg">
+  const [isOpenP, setIsOpenP] = useState(false);
+    const handleOpenP = () => {
+      setIsOpenP(true);
+    };
+  
+    const handleCloseP = () => {
+      setIsOpenP(false);
+    };
+  
+    const [copied, setCopied] = useState(false);
     
-       <div className="flex flex-col gap-1 items-center w-full">
-                  <SignedIn>
-                  <Button onClick={handleShowPhoneClick} variant="default" className="w-full bg-green-600 hover:bg-green-700">
-                  <CallIcon sx={{ fontSize: 18 }} /><div>Call</div>
-                 </Button>
-                    
-                  </SignedIn>
-                 
-                  <SignedOut>
-                  <Button onClick={() => {
-                       // handleOpenP();
-                        router.push(`/sign-in`);
-                      }} variant="default" className="w-full bg-green-600 hover:bg-green-700">
-                  <CallIcon sx={{ fontSize: 18 }} /><div>Call</div>
-                 </Button>
-                   
-                  </SignedOut>
-                  {userId !== loggedId && (<>
-                  <SignedIn>
-                  <Button onClick={() => {
-                           
-                             handleOpenChatId(userId);
-                             
-                            }}
-                       variant="default" className="w-full bg-green-600 hover:bg-green-700">
-                  <ChatBubbleOutlineOutlinedIcon sx={{ fontSize: 18 }} />
-                  <div>Message</div>
-                 </Button>
-                  </SignedIn>
-                  <SignedOut>
-                  <Button onClick={() => {
-                       // handleOpenP();
-                        router.push(`/sign-in`);
-                      }}
-                       variant="default" className="w-full bg-green-600 hover:bg-green-700">
-                  <ChatBubbleOutlineOutlinedIcon sx={{ fontSize: 18 }} />
-                  <div>Message</div>
-                 </Button>
+    const adUrl =process.env.NEXT_PUBLIC_DOMAIN_URL+"?Profile="+user._id;
+      const handleCopy = () => {
+        navigator.clipboard.writeText(adUrl).then(() => {
+          setCopied(true);
+          setTimeout(() => setCopied(false), 2000);
+        });
+      };
+    
+      const handleShare = async () => {
+        if (navigator.share) {
+          try {
+            await navigator.share({
+              title: "Check out this Profile!",
+              url: adUrl,
+            });
+          } catch (error) {
+            console.error("Error sharing:", error);
+          }
+        } else {
+          alert("Sharing is not supported on this device.");
+        }
+      };
+    const saveQRcode = async () => {
       
-                   
-                  </SignedOut>
-                  </>)}
-                  {user.whatsapp && (
-                    <div className="w-full">
-                      <SignedIn>
-                    
-                      <Button 
-                      onClick={handlewhatsappClick}
-                       variant="default" className="w-full bg-green-600 hover:bg-green-700">
-                  <WhatsAppIcon sx={{ fontSize: 18 }} />
+        try {
+          const qrDataURL = await QRCode.toDataURL(adUrl);
       
-      <div>WhatsApp</div>
-                 </Button>
-                         
-                     
-      
-                        
-                      </SignedIn>
-                      <SignedOut>
-                      <Button  onClick={() => {
-                           // handleOpenP();
-                            router.push(`/sign-in`);
-                          }}
-                       variant="default" className="w-full bg-green-600 hover:bg-green-700">
-                 <WhatsAppIcon sx={{ fontSize: 18 }} />
-      
-      <div >WhatsApp</div>
-                 </Button>
-      
-                       
-                      </SignedOut>
-                    </div>
-                  )}
-                </div>
-      
-              
-                
-              </div>
-
-
-                < CopyShareAdLink _id={userId} titleId={"Profile"}/>
-              
-
-
-                </div>
+          // Create download link
+          const link = document.createElement('a');
+          link.href = qrDataURL;
+          link.download = 'mapa-qr-code.png';
+          document.body.appendChild(link);
+          link.click();
+          document.body.removeChild(link);
+        
+        } catch (err) {
+          console.error('Failed to generate QR code', err);
+        }
+    
+      }
+      const getInitials = (firstName?: string, lastName?: string) => {
+    const first = firstName?.[0]?.toUpperCase() || '';
+    const last = lastName?.[0]?.toUpperCase() || '';
+    return `${first}${last}`;
+  };
+  const isDefaultClerkPhoto = (url?: string) => {
+    if (!url) return true;
+    return url.includes("default-avatar") || url.includes("img.clerk.com");
+  };
+  return (<>
+  <div className="flex p-0 items-center flex-col">
+  <div className="bg-white dark:bg-[#2D3236] rounded-xl shadow-sm p-4 w-full lg:w-[350px]">
+    {/* Seller Info */}
+    <div className="flex items-center gap-4">
+     <div className="relative">
      
-              
-
-      <div className="flex flex-col mt-2 items-center dark:bg-[#2D3236] border dark:text-gray-100 bg-white rounded-lg w-full p-1">
+    {user?.photo && !isDefaultClerkPhoto(user.photo) ? (
+    <img
+      src={user.photo}
+      alt="Organizer avatar"
+      className="w-16 h-16 rounded-full object-cover"
+    />
+  ) : (
+    <div className="w-16 h-16 bg-green-500 text-white flex items-center justify-center text-2xl font-bold rounded-full">
+      {getInitials(user?.firstName, user?.lastName)}
+    </div>
+  )}
+  </div>
+  <div>
+        <div className="text-lg font-semibold text-gray-800 dark:text-white"> {user.firstName} {user.lastName}</div>
+         <Verification
+                fee={user.fee}
+                user={user}
+                userId={userId}
+                isAdCreator={isAdCreator}
+                handlePayNow={handlePay}
+              />
+  
+       <Ratingsmobile  
+       user={user}
+      recipientUid={user._id}
+      handleOpenReview={handleOpenReview}/>
+      </div>
+    </div>
+  
+    {/* Contact Buttons */}
+   {userId !== loggedId && ( <div className="flex items-center justify-center w-full gap-2 mt-4">
+   <SignedIn>
+       <button onClick={handleShowPhoneClick} className="flex text-sm gap-1 items-center justify-center border border-green-500 text-green-700 hover:bg-green-50 py-1 px-2 rounded-md text-sm font-medium">
+         <Phone className="w-5 h-5" /> Call
+      </button>
+     
+      <button onClick={() => {
+        handleOpenChatId(userId);
+      }} className="flex text-sm gap-1 items-center justify-center border border-green-500 text-green-700 hover:bg-green-50 py-1 px-2 rounded-md text-sm font-medium">
+       <Mail className="w-5 h-5" /> Message
+      </button>
+   
+      <button onClick={handlewhatsappClick} className="flex text-sm gap-1 items-center justify-center border border-green-500 text-green-700 hover:bg-green-50 py-1 px-2 rounded-md text-sm font-medium">
+         <MessageCircle className="w-5 h-5" /> WhatsApp
+      </button>
+    </SignedIn>
+      <SignedOut>
+       <button onClick={() => {
+         setIsOpenP(true);
+                    router.push(`/sign-in`);
+                  }} className="flex text-sm gap-1 items-center justify-center items-center justify-center border border-green-500 text-green-700 hover:bg-green-50 py-1 px-2 rounded-md text-sm font-medium">
+        <Phone className="w-5 h-5" /> Call
+      </button>
+      <button onClick={() => {
+         setIsOpenP(true);
+                    router.push(`/sign-in`);
+                  }} className="flex text-sm gap-1 items-center justify-center border border-green-500 text-green-700 hover:bg-green-50 py-1 px-2 rounded-md text-sm font-medium">
+       <Mail className="w-5 h-5" /> Message
+      </button>
+      <button onClick={() => {
+         setIsOpenP(true);
+                    router.push(`/sign-in`);
+                  }}
+                  className="flex text-sm gap-1 items-center justify-center border border-green-500 text-green-700 hover:bg-green-50 py-1 px-2 rounded-md text-sm font-medium">
+         <MessageCircle className="w-5 h-5" /> WhatsApp
+      </button>
+    </SignedOut>
+  
+     
+    </div> )} 
+  
+    {/* Leave Feedback */}
+    <div className="mt-4 justify-center items-center w-full">
+       {userId === loggedId ? (
+        <>
+        <button onClick={() => handleOpenSettings()}
+          className="flex items-center gap-2 px-4 py-2 text-sm font-medium text-green-600 bg-white border border-green-600 rounded-full shadow-sm hover:bg-green-50 active:bg-green-100 transition lg:text-base">
+          <EditOutlinedIcon sx={{ fontSize: 14 }} />
+           Edit Profile
+        </button>
+                </>):(
+                  <>
+                 <button onClick={() => {
+                  handleOpenReview(user)
+                      }}
+                      className="bg-green-600 hover:bg-green-700 text-white w-full py-2 rounded-md text-sm font-semibold">
+        😃 Leave Your Feedback
+      </button>
+      </>)}
+               
+             
+     
+    </div>
+  
+    {/* Share Section */}
+    <div className="mt-6 border-t pt-4">
+      <h3 className="text-sm font-medium text-gray-700 dark:text-white mb-2">Share Seller Profile</h3>
+      <div className="flex justify-between items-center text-sm text-gray-600 dark:text-gray-300">
+      
+       
+        <button onClick={handleCopy} className="flex items-center gap-1 hover:text-green-600">
+          📋 {copied ? "Copied!" : "Copy Link"}
+        </button>
+        <button onClick={saveQRcode} className="flex items-center gap-1 hover:text-green-600">
+          🔳 QR Code
+        </button>
+        <button onClick={handleShare} className="flex items-center gap-1 hover:text-green-600">
+          📤 Share
+        </button>
+  
+      </div>
+    </div>
+  </div>
+        <ProgressPopup isOpen={isOpenP} onClose={handleCloseP} /> 
+      </div>
+ 
+ 
+      <div className="flex w-full lg:w-[350px] flex-col mt-2 items-center dark:bg-[#2D3236] border dark:text-gray-100 bg-white rounded-lg p-1">
         <div className="divider"></div>
       
         {isActiveReviews === false && (
@@ -698,9 +704,8 @@ const SellerProfile = ({ userId, loggedId, user, handlePay, handleOpenReview, ha
           </>
         )}
       </div>
-
-    
-    </div>
+   
+     </>
   );
 };
 

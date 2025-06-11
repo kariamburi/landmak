@@ -13,6 +13,7 @@ import {
   getAllPackagesCached,
   getAdsCountAllRegionCached
 } from "@/lib/actions/cached.actions";
+import EnhancedPropertySearch from "@/components/shared/EnhancedPropertySearch";
 
 // ✅ ISR: Revalidate every 60 seconds
 export const revalidate = 60;
@@ -44,7 +45,7 @@ export default async function Home({ searchParams }: SearchParamProps) {
     subcategoryList,
     packagesList,
     AdsCountPerRegion,
-    loans
+   loans
   ] = await Promise.all([
     getAllCategoriesCached(),
     getAllSubCategoriesCached(),
@@ -72,6 +73,7 @@ export default async function Home({ searchParams }: SearchParamProps) {
         loans={loans}
         myloans={myloans}
       />
+    
       <Toaster />
     </main>
   );

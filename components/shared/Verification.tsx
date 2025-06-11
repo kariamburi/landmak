@@ -75,10 +75,14 @@ const Verification: React.FC<SettingsProp> = ({
 
   const verifiedContent = (
     <div className="flex justify-between dark:bg-[#233338] dark:text-gray-300 bg-white">
-      <VerifiedUserOutlinedIcon
-        sx={{ fontSize: 24 }}
-        className="text-emerald-600"
-      />
+      <svg
+  xmlns="http://www.w3.org/2000/svg"
+  className="w-4 h-4 text-blue-500 inline-block"
+  viewBox="0 0 24 24"
+  fill="currentColor"
+>
+  <path d="M12 0L15.09 8H24L17.455 13.09L20.545 21.09L12 16L3.455 21.09L6.545 13.09L0 8H8.91L12 0Z" />
+</svg>
       <div className="space-y-1">
         <h4 className="text-sm font-semibold text-emerald-600">
         Verified Seller
@@ -97,7 +101,11 @@ const Verification: React.FC<SettingsProp> = ({
 
   const unverifiedContentAdCreator = (
     <div className="flex dark:bg-[#233338] rounded-sm dark:text-gray-300 bg-white justify-between">
-      <ShieldOutlinedIcon sx={{ fontSize: 24 }} className="text-[#ff0000]" />
+      <svg className="w-4 h-4 text-gray-400" fill="none" stroke="currentColor" strokeWidth="2"
+          viewBox="0 0 24 24">
+          <path strokeLinecap="round" strokeLinejoin="round"
+            d="M16.88 3.549a9 9 0 11-9.76 0M12 7v5l3 3" />
+        </svg>
       <div className="space-y-1">
         <h4 className="text-sm font-semibold text-[#ff0000]">
         Unverified Seller
@@ -120,10 +128,14 @@ const Verification: React.FC<SettingsProp> = ({
   );
 
   const unverifiedContent = (
-    <div className="flex dark:bg-[#233338]  rounded-sm dark:text-gray-300 bg-white justify-between">
-      <ShieldOutlinedIcon sx={{ fontSize: 24 }} className="text-[#ff0000]" />
+    <div className="flex gap-1 items-center dark:bg-[#233338] rounded-sm dark:text-gray-300 bg-white justify-between">
+      <svg className="w-4 h-4 text-gray-400" fill="none" stroke="currentColor" strokeWidth="2"
+          viewBox="0 0 24 24">
+          <path strokeLinecap="round" strokeLinejoin="round"
+            d="M16.88 3.549a9 9 0 11-9.76 0M12 7v5l3 3" />
+        </svg>
       <div className="space-y-1">
-        <h4 className="text-sm font-semibold text-[#ff0000]">
+        <h4 className="text-sm font-semibold text-gray-600">
           Unverified Seller
         </h4>
         <p className="text-sm">
@@ -138,8 +150,16 @@ const Verification: React.FC<SettingsProp> = ({
       {user.verified && user?.verified[0]?.accountverified === true ? (
         <ShowPopup
           trigger={
-            <p className="text-white p-1 bg-[#30AF5B] rounded-sm text-sm cursor-pointer hover:underline">
-              <VerifiedUserOutlinedIcon sx={{ fontSize: 16 }} />
+            <p className="flex items-center gap-1 text-white p-1 bg-[#30AF5B] rounded-sm text-sm cursor-pointer hover:underline">
+             <svg
+  xmlns="http://www.w3.org/2000/svg"
+  className="w-4 h-4 text-blue-500 inline-block"
+  viewBox="0 0 24 24"
+  fill="currentColor"
+ 
+>
+  <path d="M12 0L15.09 8H24L17.455 13.09L20.545 21.09L12 16L3.455 21.09L6.545 13.09L0 8H8.91L12 0Z" />
+</svg>
               Verified Seller
             </p>
           }
@@ -150,8 +170,12 @@ const Verification: React.FC<SettingsProp> = ({
           {isAdCreator ? (
             <ShowPopup
               trigger={
-                <p className="text-gray-600 p-1 dark:text-gray-400 dark:bg-[#131B1E] bg-white rounded-sm text-sm cursor-pointer hover:underline">
-                  <ShieldOutlinedIcon sx={{ fontSize: 16 }} />
+                <p className="flex gap-1 items-center text-gray-600 p-1 dark:text-gray-400 dark:bg-[#131B1E] bg-white rounded-sm text-sm cursor-pointer hover:underline">
+                  <svg className="w-4 h-4 text-gray-400" fill="none" stroke="currentColor" strokeWidth="2"
+          viewBox="0 0 24 24">
+          <path strokeLinecap="round" strokeLinejoin="round"
+            d="M16.88 3.549a9 9 0 11-9.76 0M12 7v5l3 3" />
+        </svg>
                   Unverified Seller
                 </p>
               }
@@ -160,8 +184,12 @@ const Verification: React.FC<SettingsProp> = ({
           ) : (
             <ShowPopup
               trigger={
-                <p className="text-gray-600 p-1 dark:text-gray-400 dark:bg-[#131B1E] bg-white rounded-sm text-sm cursor-pointer hover:underline">
-                  <ShieldOutlinedIcon sx={{ fontSize: 16 }} />
+                <p className="flex gap-1 items-center text-gray-600 p-1 dark:text-gray-400 dark:bg-[#131B1E] bg-white rounded-sm text-sm cursor-pointer hover:underline">
+                  <svg className="w-4 h-4 text-gray-400" fill="none" stroke="currentColor" strokeWidth="2"
+          viewBox="0 0 24 24">
+          <path strokeLinecap="round" strokeLinejoin="round"
+            d="M16.88 3.549a9 9 0 11-9.76 0M12 7v5l3 3" />
+        </svg>
                   Unverified Seller
                 </p>
               }

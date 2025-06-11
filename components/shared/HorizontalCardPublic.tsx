@@ -211,7 +211,7 @@ const onStatusUpdate = (newStatus:string) => {
           onClick={() => {
             handleAdView(ad);
           }}
-          className="relative rounded-l-lg w-[160px] h-[200px]"
+          className="relative rounded-l-lg w-[150px] h-[200px]"
 
            style={
           ad.plan.name !== "Free"
@@ -321,7 +321,7 @@ const onStatusUpdate = (newStatus:string) => {
             {ad.data.imageUrls.length}
           </div>
                {ad.data["propertyarea"] && (
-                        <div className="gap-1 cursor-pointer bg-[#000000] bg-opacity-70 text-[10px] text-white flex rounded-sm p-1 shadow-sm transition-all">
+                        <div className="mb-1 bottom-0 right-0 mr-1 cursor-pointer absolute bg-[#000000] bg-opacity-70 text-[10px] text-white right-0 top-100 flex rounded-lg p-1 shadow-sm transition-all">
                           <LocationOnIcon
                             sx={{ fontSize: 16, cursor: "pointer" }}
                           

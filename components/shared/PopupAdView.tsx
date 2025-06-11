@@ -23,6 +23,7 @@ import AdsComponent from "./AdsComponent";
 import Navbar from "./navbar";
 import CircularProgress from "@mui/material/CircularProgress";
 import BottomNavigation from "./BottomNavigation";
+import EnhancedaAdView from "./EnhancedaAdView";
 
 //import { getAllPackages, getData } from "@/lib/api";
 
@@ -58,27 +59,6 @@ interface WindowProps {
 const PopupAdView = ({ isOpen, type,user, userId, userName, userImage, ad, handlePay, handleOpenPerfomance, handleOpenSettings,
   handleOpenShop, handleCategory, handleSubCategory,handleOpenReview, handleOpenChatId,
   onClose, handleOpenSell,handleOpenBook ,handleOpenChat,handleOpenPlan, handleAdView, handleAdEdit, handleOpenAbout,handleOpenTerms,handleOpenPrivacy,handleOpenSafety }: WindowProps) => {
-  //const [ad, setAd] = useState<any>([]);
-//const [loading, setLoading] = useState<boolean>(true);
- // useEffect(() => {
- //   if (isOpen) {
-   //   const fetchData = async () => {
-   //     try {
-     //     setLoading(true);
-      //      const ad = await getAdById(id);
-     //       setAd(ad);
-        //  const subscriptionData = await getData(userId);
-         
-      //  } catch (error) {
-      //    console.error("Failed to fetch data", error);
-      //  } finally {
-        //  setLoading(false); // Mark loading as complete
-       // }
-     // };
-
-     // fetchData();
-    //}
-  //}, [isOpen, id]);
 
   if (!isOpen) return null;
      
@@ -87,8 +67,8 @@ const PopupAdView = ({ isOpen, type,user, userId, userName, userImage, ad, handl
   return (
     <div className="fixed inset-0 flex items-center justify-center bg-[#e4ebeb] z-50">
          <div className="dark:bg-[#131B1E] dark:text-gray-300 bg-white w-full h-[100vh] flex flex-col">
-        
-          <AdsComponent 
+        {/**AdsComponent */}
+          <EnhancedaAdView
             ad={ad}
             user={user}
             userId={userId}
@@ -113,6 +93,7 @@ const PopupAdView = ({ isOpen, type,user, userId, userName, userImage, ad, handl
             handleOpenSettings={handleOpenSettings} 
             handleOpenPerfomance={handleOpenPerfomance}
             handlePay={handlePay}/>
+            
         <Toaster />
       </div>
       </div>

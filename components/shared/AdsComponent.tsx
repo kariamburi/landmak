@@ -165,7 +165,7 @@ const SCROLL_THRESHOLD = 100; // pixels
                     handleOpenSafety={handleOpenSafety} 
                     handleOpenShop={handleOpenShop}/>
                    </div>
-      <div className="dark:bg-[#131B1E] text-black dark:text-[#F1F3F3] max-w-6xl mx-auto mt-[60px]">
+      <div className="dark:bg-[#131B1E] text-black dark:text-[#F1F3F3] max-w-9xl mx-auto mt-[60px]">
         <Ads
           ad={ad}
           user={user}

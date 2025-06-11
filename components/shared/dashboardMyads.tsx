@@ -297,67 +297,7 @@ CollectionProps) => {
               </div>
             </div>
             <div className="lg:flex-row lg:m-1 justify-center">
-             
-
-              <section className="p-1">
-               {/*   <div className="flex mb-2 w-full justify-between">
-                  <div className="flex gap-3 flex-wrap justify-center md:justify-start items-center mb-4 md:mb-0">
-                  <div
-                    className={`flex gap-1 items-center text-xs dark:bg-[#2D3236] bg-white rounded-sm p-1 cursor-pointer ${
-                      activeButton === 0 ? "text-[#30AF5B]" : "text-gray-400"
-                    }`}
-                    onClick={() => handleButtonClick(0)}
-                  >
-                    
-                          <ViewModuleIcon /> 
-                          <div className="hidden lg:inline">   <p>Grid layout</p></div>
-                 
-                         
-                  </div>
-                  <div
-                    className={`flex gap-1 items-center text-xs dark:bg-[#2D3236] bg-white rounded-sm p-1 cursor-pointer ${
-                      activeButton === 1 ? "text-[#30AF5B]" : "text-gray-400"
-                    }`}
-                    onClick={() => handleButtonClick(1)}
-                  >
-                    
-                          <ViewListIcon />    <div className="hidden lg:inline">   <p>List layout</p></div>
-                 
-                        
-                  </div>
-                  
-                  </div>
-                  <div className="rounded-lg dark:bg-[#2D3236] dark:text-gray-100 bg-white border p-1 flex items-center">
-                    <div className="text-[#30AF5B]">
-                      <SwapVertIcon />
-                    </div>
-                    <Select onValueChange={handleSortChange}>
-                      <SelectTrigger className="w-[180px] dark:bg-[#2D3236] dark:text-gray-100 border-0 rounded-lg">
-                        <SelectValue placeholder="Sort By" />
-                      </SelectTrigger>
-                      <SelectContent className="dark:bg-[#222528]">
-                        <SelectGroup>
-                          <SelectItem value="recommeded">
-                            Recommended first
-                          </SelectItem>
-                          <SelectItem value="new">Newest first</SelectItem>
-                          <SelectItem value="lowest">
-                            Lowest price first
-                          </SelectItem>
-                          <SelectItem value="highest">
-                            Highest price first
-                          </SelectItem>
-                        </SelectGroup>
-                      </SelectContent>
-                    </Select>
-                  </div>
-                </div>
- */}
-
- 
-     {/* Content Sections */}
- 
-
+             <section className="p-1">
   <CollectionMyads
                   emptyTitle="No ads have been created yet"
                   emptyStateSubtext="Go create some now"

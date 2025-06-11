@@ -247,6 +247,14 @@ const isSale = saleCategories.includes(ad.data.category);
     adstatus: newStatus,
   }));
 }
+
+
+// Safely get shapes array or fallback to empty array
+  const shapes = ad.data?.propertyarea?.shapes ?? [];
+  // Calculate total area size
+  const areaSize = Array.isArray(shapes)
+    ? shapes.reduce((sum: number, shape: any) => sum + parseFloat(shape.area || 0), 0)
+    : 0;
   return (
     <>
     {ad.loanterm ? (<>
@@ -667,52 +675,62 @@ const isSale = saleCategories.includes(ad.data.category);
   </div>
 )}
           </div>
-
+{areaSize > 0 && (
+  <div className="flex mt-1 gap-2  text-[10px] dark:bg-[#131B1E] dark:text-gray-300 bg-[#ebf2f7] rounded-lg p-1 justify-center border">
+    <label className="text-xs mb-1">
+       Approx. Land Size
+       <br />
+      ≈ {areaSize.toFixed(2)} m²
+      <br />
+      ≈ {(areaSize / 4046.86).toFixed(2)} acres
+      <br />
+      ≈ {(areaSize / 10000).toFixed(2)} hectares
+     
+    </label>
+  </div>
+)}
           <div className="flex gap-2 text-gray-500 text-sm mt-2">
           {ad.data.category?.toLowerCase().includes("rent") && ( 
-  <div className="flex gap-2 text-[8px] lg:text-[10px] dark:bg-[#131B1E] dark:text-gray-300 bg-[#ebf2f7] rounded-lg p-1 justify-center border">
+  <div className="flex gap-2   text-[10px] dark:bg-[#131B1E] dark:text-gray-300 bg-[#ebf2f7] rounded-lg p-1 justify-center border">
     Rent
   </div>
 )}
 {ad.data.category?.toLowerCase().includes("sale") && ( 
-  <div className="flex gap-2 text-[8px] lg:text-[10px] dark:bg-[#131B1E] dark:text-gray-300 bg-[#ebf2f7] rounded-lg p-1 justify-center border">
+  <div className="flex gap-2   text-[10px] dark:bg-[#131B1E] dark:text-gray-300 bg-[#ebf2f7] rounded-lg p-1 justify-center border">
     Sale
   </div>
 )}
             {ad.data.condition && (
-              <div className="flex gap-2 text-[8px] lg:text-[10px] dark:bg-[#131B1E] dark:text-gray-300 bg-[#ebf2f7] rounded-lg p-1 justify-center border">
+              <div className="flex gap-2   text-[10px] dark:bg-[#131B1E] dark:text-gray-300 bg-[#ebf2f7] rounded-lg p-1 justify-center border">
                 {ad.data.condition}
               </div>
             )}
             {ad.data.transimmison && (
-              <div className="flex gap-2 text-[8px] lg:text-[10px] dark:bg-[#131B1E] dark:text-gray-300 bg-[#ebf2f7] rounded-lg p-1 justify-center border">
+              <div className="flex gap-2   text-[10px] dark:bg-[#131B1E] dark:text-gray-300 bg-[#ebf2f7] rounded-lg p-1 justify-center border">
                 {ad.data.transimmison}
               </div>
             )}
             {ad.data["engine-CC"] && (
-              <div className="flex gap-2 text-[8px] lg:text-[10px] dark:bg-[#131B1E] dark:text-gray-300 bg-[#ebf2f7] rounded-lg p-1 justify-center border">
+              <div className="flex gap-2   text-[10px] dark:bg-[#131B1E] dark:text-gray-300 bg-[#ebf2f7] rounded-lg p-1 justify-center border">
                 {ad.data["engine-CC"]}
               </div>
             )}
             {ad.data["land-Type"] && (
-              <div className="flex gap-2 text-[8px] lg:text-[10px] dark:bg-[#131B1E] dark:text-gray-300 bg-[#ebf2f7] rounded-lg p-1 justify-center border">
+              <div className="flex gap-2   text-[10px] dark:bg-[#131B1E] dark:text-gray-300 bg-[#ebf2f7] rounded-lg p-1 justify-center border">
                 {ad.data["land-Type"]}
               </div>
             )}
 
 
-            {ad.data["land-Area(acres)"] && (
-              <div className="flex gap-2 text-[8px] lg:text-[10px] dark:bg-[#131B1E] dark:text-gray-300 bg-[#ebf2f7] rounded-lg p-1 justify-center border">
-                {ad.data["land-Area(acres)"]}
-              </div>
-            )}
+          
+
             {ad.data["bulkprice"] && (
-              <div className="flex gap-2 text-[8px] lg:text-[10px] dark:bg-[#131B1E] dark:text-gray-300 bg-[#ebf2f7] rounded-lg p-1 justify-center border">
+              <div className="flex gap-2   text-[10px] dark:bg-[#131B1E] dark:text-gray-300 bg-[#ebf2f7] rounded-lg p-1 justify-center border">
                 Bulk Price
               </div>
             )}
             {ad.data["delivery"] && (
-              <div className="flex gap-2 text-[8px] lg:text-[10px] dark:bg-[#131B1E] dark:text-gray-300 bg-[#ebf2f7] rounded-lg p-1 justify-center border">
+              <div className="flex gap-2   text-[10px] dark:bg-[#131B1E] dark:text-gray-300 bg-[#ebf2f7] rounded-lg p-1 justify-center border">
                 Delivery
               </div>
             )}

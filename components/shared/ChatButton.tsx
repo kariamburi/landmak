@@ -16,6 +16,8 @@ import { io, Socket } from "socket.io-client";
 import SendChat from "./SendChat";
 import { updateinquiries } from "@/lib/actions/dynamicAd.actions";
 import { Button } from "../ui/button";
+import { Phone, MessageCircle, MessageSquare, Mail } from 'lucide-react';
+import sanitizeHtml from "sanitize-html";
 let socket: Socket;
 type chatProps = {
   userId: string;
@@ -135,14 +137,20 @@ const ChatButton = ({ ad, userId, userName, userImage }: chatProps) => {
   const handleQuickMessageClick = (text: string) => {
     setMessage(text);
   };
+  const truncateDescription = (description: string, charLimit: number) => {
+      const safeMessage = sanitizeHtml(description); 
+      const truncatedMessage =
+      safeMessage.length > charLimit
+        ? `${safeMessage.slice(0, charLimit)}...`
+        : safeMessage;
+      return truncatedMessage;
+    };
   return (
     <>
-      <Button  onClick={() => setIsOpen(true)}
-                 variant="outline" className="flex w-full items-center gap-2">
-            <ChatBubbleOutlineOutlinedIcon sx={{ fontSize: 24 }} />
-            <div className="hidden lg:inline"> Enquire</div>
-           </Button>
-
+    
+ <button onClick={() => setIsOpen(true)} className="flex gap-1 items-center justify-center border border-green-500 text-green-700 hover:bg-green-50 py-1 rounded-md text-sm font-medium">
+      <Mail className="w-5 h-5" /> Enquire
+    </button>
     
       {isOpen && (
         <div className="fixed inset-0 flex items-center justify-center bg-gray-800 bg-opacity-50 z-50">
@@ -159,13 +167,9 @@ const ChatButton = ({ ad, userId, userName, userImage }: chatProps) => {
     <CloseOutlinedIcon/>
   </button>
 </div>
-           
-
-            <p className="text-sm text-gray-700 dark:text-gray-300 mb-1">
-              {ad.data.description.length > 80
-                ? `${ad.data.description.substring(0, 80)}...`
-                : ad.data.description}
-            </p>
+<p className="text-sm text-gray-700 dark:text-gray-300 mb-1">
+  <span dangerouslySetInnerHTML={{ __html:  truncateDescription(ad.data.description, 80) }} />
+</p>
             <span className="font-bold w-min rounded-full mt-1 dark:text-green-600 text-green-600">
               {formatKsh(ad.data.price)}
             </span>

@@ -70,7 +70,14 @@ const Ratingsmobile = ({ recipientUid, user, handleOpenReview }: Ratingsprop) =>
   }, [recipientUid]);
   const router = useRouter();
   return (
-    <div className="text-[12px] flex gap-1 items-center justify-center h-full">
+<>
+    <div className="flex gap-2 mt-1 text-sm text-gray-600 dark:text-gray-300">
+        ⭐ {averangestar.toFixed(1)} · <div onClick={() => {
+         handleOpenReview(user);
+        
+        }} className="underline cursor-pointer">{messagesCount} Reviews</div>
+      </div>
+   {/* <div className="text-[12px] flex gap-1 items-center justify-center h-full">
       <div className="text-sm font-bold"> {averangestar.toFixed(1)}</div>
       {averangestar < 1 && (
         <div className="w-[70px] items-center justify-center">
@@ -173,8 +180,8 @@ const Ratingsmobile = ({ recipientUid, user, handleOpenReview }: Ratingsprop) =>
       >
         <p className="items-center">{messagesCount} reviews</p>
       </div>
-    </div>
-  );
+    </div> */}
+  </>);
 };
 
 export default Ratingsmobile;

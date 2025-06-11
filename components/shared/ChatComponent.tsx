@@ -102,7 +102,7 @@ const ChatComponent =  ({senderId,senderName,senderImage,user,onClose, handlePay
       <div className="w-full lg:max-w-6xl lg:mx-auto h-full flex mt-[60px] mb-0 p-1">
         <div className="hidden lg:inline mr-5">
           <div className="w-full rounded-lg p-1">
-            <SellerProfileChat
+            <SellerProfile
               user={user}
               loggedId={senderId}
               userId={recipientUid}

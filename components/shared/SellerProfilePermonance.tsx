@@ -85,6 +85,15 @@ const SellerProfilePermonance = ({
   const handleCloseP = () => {
     setIsOpenP(false);
   };
+     const getInitials = (firstName?: string, lastName?: string) => {
+    const first = firstName?.[0]?.toUpperCase() || '';
+    const last = lastName?.[0]?.toUpperCase() || '';
+    return `${first}${last}`;
+  };
+  const isDefaultClerkPhoto = (url?: string) => {
+    if (!url) return true;
+    return url.includes("default-avatar") || url.includes("img.clerk.com");
+  };
   return (
     <div className="flex gap-1 items-center">
       <div className="flex flex-col lg:flex-row gap-1 items-center p-1 w-full">
@@ -96,17 +105,18 @@ const SellerProfilePermonance = ({
           }}
           className="cursor-pointer no-underline font-bold m-1"
         >
-          <div className="w-12 h-12 rounded-full bg-white">
-            <Zoom>
-              <Image
-                className="w-full h-full rounded-full object-cover"
-                src={userImage ?? "/avator.png"}
-                alt="Avator"
-                width={200}
-                height={200}
-              />
-            </Zoom>
-          </div>
+    {user?.photo && !isDefaultClerkPhoto(user.photo) ? (
+    <img
+      src={user.photo}
+      alt="Organizer avatar"
+      className="w-16 h-16 rounded-full object-cover"
+    />
+  ) : (
+    <div className="w-16 h-16 bg-green-500 text-white flex items-center justify-center text-2xl font-bold rounded-full">
+      {getInitials(user?.firstName, user?.lastName)}
+    </div>
+  )}
+        
         </div>
         <div className="flex flex-col">
           <div

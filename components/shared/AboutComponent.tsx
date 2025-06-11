@@ -13,6 +13,7 @@ import Head from "next/head";
 import { useEffect, useState } from "react";
 import { mode } from "@/constants";
 import { ScrollArea } from "../ui/scroll-area";
+import YouTubePlayer from "./YouTubePlayer";
 interface Props {
   userId: string;
   user:any;
@@ -146,6 +147,15 @@ const AboutComponent =  ({userId, user,onClose,
                   <li><span className="font-semibold">Direct Communication</span>: Contact buyers and sellers via chat, email, or phone.</li>
                 </ul>
               </div>
+ {/* 👇 Explainer Video Here */}
+    <div className="mb-10">
+      <h2 className="text-2xl font-semibold mb-4 dark:text-gray-400 text-gray-800">
+        Watch How It Works
+      </h2>
+     <div className="w-full max-w-4xl mx-auto mb-10">
+  <YouTubePlayer videoUrl={"https://www.youtube.com/watch?v=gV4VKG24ysU"} />
+</div>
+    </div>
 
               <div>
                 <h2 className="text-2xl font-semibold dark:text-gray-400 text-gray-800 mb-4">
@@ -170,6 +180,7 @@ const AboutComponent =  ({userId, user,onClose,
                   We look forward to serving you.
                 </p>
               </div>
+              
             </div>
           </div>
         </div>

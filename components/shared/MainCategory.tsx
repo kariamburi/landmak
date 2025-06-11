@@ -99,6 +99,7 @@ import LocationListSkeleton from "./LocationListSkeleton";
 import ProgressPopup from "./ProgressPopup";
 import CircularProgress from "@mui/material/CircularProgress";
 import TravelExploreOutlinedIcon from '@mui/icons-material/TravelExploreOutlined';
+import PropertyMapSearchComponent from "./PropertyMapSearchComponent";
 type CollectionProps = {
   loading: boolean;
   userId: string;
@@ -175,7 +176,8 @@ CollectionProps) => {
    const [AdsCountPerVerifiedFalse, setAdsCountPerVerifiedFalse] = useState<any>([]);
    const [loadingCount, setLoadingCount] = useState<boolean>(true);
  const isMobile = useMediaQuery({ maxWidth: 768 }); // Detect mobile screens
- 
+   const [view, setView] = useState<"map" | "list">("map");
+   
  useEffect(() => {
     const fetchData = async () => {
       try {
@@ -263,7 +265,7 @@ CollectionProps) => {
 
     return () => window.removeEventListener("resize", handleResize);
   }, []);
-  const [showBottomNav, setShowBottomNav] = useState(true);
+  const [showBottomNav, setShowBottomNav] = useState(false);
 
   const scrollRefB = useRef<HTMLDivElement>(null);
 const lastScrollTop = useRef(0);
@@ -286,7 +288,9 @@ const SCROLL_THRESHOLD = 150; // pixels
         setShowBottomNav(false);
       } else {
         // Scrolling up
+        if(view === "list"){
         setShowBottomNav(true);
+        }
       }
   
       lastScrollTop.current = currentScrollTop;
@@ -571,7 +575,6 @@ const SCROLL_THRESHOLD = 150; // pixels
       
       };
 
-   
 
   const [isDarkMode, setIsDarkMode] = useState<boolean | null>(null);
    
@@ -599,7 +602,7 @@ const SCROLL_THRESHOLD = 150; // pixels
       onClick={(e) => e.stopPropagation()} // Prevent sidebar from closing on itself click
       className={`bg-white shadow-lg transition-transform rounded-0 duration-300 ease-in-out fixed md:relative z-10 ${
         showSidebar
-          ? "w-full md:w-1/4 p-1 transform translate-x-0"
+          ? "w-full md:w-[280px] p-1 transform translate-x-0"
           : "-translate-x-full md:w-0 md:translate-x-0"
       }`}
     >
@@ -930,7 +933,7 @@ const SCROLL_THRESHOLD = 150; // pixels
                </TooltipContent>
              </Tooltip>
            </TooltipProvider>
-         </div>*/}
+         </div>
 
           <div className="flex-1">
             <TooltipProvider>
@@ -976,7 +979,7 @@ const SCROLL_THRESHOLD = 150; // pixels
                   <div className="hidden lg:inline">
            <SortOutlinedIcon/>
            </div>
-           <div className="lg:hidden">
+           <div className="hidden">
            <SortOutlinedIcon sx={{ fontSize: 20 }}/>
            </div> 
                   <div className="flex gap-1 items-center">Filter</div>
@@ -987,29 +990,39 @@ const SCROLL_THRESHOLD = 150; // pixels
               </TooltipContent>
             </Tooltip>
           </TooltipProvider>
-        </div>
+        </div>*/}
       </div>
     </div>
 
     <div className="flex w-full p-1 gap-1  justify-center items-center mb-0">
-    {/*   <button
-        onClick={handleOpenPopupLocation}
-        className="flex text-xs lg:text-base gap-1 items-center justify-center py-4 px-2 border border-gray-300 dark:border-gray-600 bg-white dark:bg-[#2D3236] dark:text-gray-100 rounded-sm hover:bg-gray-100"
-      >
-        <div className="hidden lg:inline">
-           <LocationOnIcon/>
-           </div>
-           <div className="lg:hidden">
-           <LocationOnIcon sx={{ fontSize: 24 }}/>
-           </div> {region}
-      </button>*/}
+   
+ <div
+          className={`flex py-4 px-2 cursor-pointer border-gray-300 border rounded-sm text-gray-700 hover:bg-[#e4ebeb] p-1 gap-1 items-center dark:bg-[#2D3236] bg-white rounded-sm p-1 cursor-pointer ${
+            view === 'map' ? "text-[#30AF5B]" : "text-gray-500"
+          }`}
+          onClick={() => {setView('map'); setShowBottomNav(false);}}
+        >
+          <div className="text-sm lg:text-base">
+            <p>🗺 View on Map</p>
+          </div>
+        </div>
 
+        <div
+          className={`flex py-4 px-2 cursor-pointer border-gray-300 border rounded-sm text-gray-700 hover:bg-[#e4ebeb] gap-1 items-center dark:bg-[#2D3236] bg-white rounded-sm p-1 cursor-pointer ${
+            view === 'list' ? "text-[#30AF5B]" : "text-gray-500"
+          }`}
+          onClick={() => {setView('list'); setShowBottomNav(true);}}
+        >
+          <div className="text-sm lg:text-base">
+            <p>📋 View as List</p>
+          </div>
+        </div>
       <div className="flex-1">
         <SearchNow handleFilter={handleFilter} handleOpenSearchByTitle={handleOpenSearchByTitle}/>
       </div>
 
   
-        <div className="flex hidden lg:inline">
+       {/*  <div className="flex hidden lg:inline">
           <TooltipProvider>
             <Tooltip>
               <TooltipTrigger asChild>
@@ -1031,15 +1044,15 @@ const SCROLL_THRESHOLD = 150; // pixels
             </Tooltip>
           </TooltipProvider>
         </div>
-      
+      */}
 
-      <div className="flex gap-1 items-center hidden lg:inline">
+      <div className="flex gap-1 items-center">
         <TooltipProvider>
           <Tooltip>
             <TooltipTrigger asChild>
               <div
                 onClick={togglePopup}
-                className="flex py-4 px-2 cursor-pointer border-gray-300 border rounded-sm text-gray-700 text-sm hover:bg-[#e4ebeb] p-1 justify-between items-center"
+                className="flex py-4 px-2 bg-white cursor-pointer border-gray-300 border rounded-sm text-gray-700 text-sm hover:bg-[#e4ebeb] justify-between items-center"
               >
                 <SortOutlinedIcon />
                 <div className="flex gap-1 items-center">Filter</div>
@@ -1160,7 +1173,10 @@ const SCROLL_THRESHOLD = 150; // pixels
   <section className="p-1 mb-20">
     <div className="flex items-center p-1 w-full justify-between">
       <div className="flex items-center gap-1 flex-wrap justify-start items-center mb-0">
-        <div
+     
+     {view === "list" &&
+        (<div className="flex items-center gap-1">
+          <div
           className={`flex gap-1 items-center text-xs dark:bg-[#2D3236] bg-white rounded-sm p-1 cursor-pointer ${
             activeButton === 0 ? "text-[#30AF5B]" : "text-gray-500"
           }`}
@@ -1182,9 +1198,16 @@ const SCROLL_THRESHOLD = 150; // pixels
             <p>List layout</p>
           </div>
         </div>
+        </div>)
+      }
+       
+      
       </div>
-      <div className="flex gap-1 items-center">
-        <div className="rounded-sm dark:bg-[#2D3236] bg-white border py-1 px-2 z-5 flex items-center">
+    
+        {view === "list" &&
+        (  <div className="flex gap-1 items-center">
+         <div className="rounded-sm dark:bg-[#2D3236] bg-white border py-1 px-2 z-5 flex items-center">
+          
           <div className="text-[#30AF5B]">
           {isPicking && (<>
                       <CircularProgress sx={{ color: "gray" }} size={30} />
@@ -1212,90 +1235,15 @@ const SCROLL_THRESHOLD = 150; // pixels
         >
           <SearchOffOutlinedIcon sx={{ fontSize: 16 }} />Clear
         </button>
-      </div>
-    </div>
-
+    
+   
+        </div>)}
+       
+ 
     <div>
-  {/*   {newqueryObject.subcategory === "Cars, Vans & Pickups" && (
-        <div className="mb-1 w-full dark:bg-[#2D3236] dark:text-gray-300 flex flex-col rounded-lg p-0">
-          <div className="grid grid-cols-4 lg:grid-cols-7 justify-between gap-1 m-0">
-            <div
-              onClick={() => handlePrice(1, "0", "500000")}
-              className={`text-sm rounded-sm p-2 justify-center cursor-pointer ${
-                activerange === 1
-                  ? "bg-green-600 text-white"
-                  : "dark:bg-[#131B1E] bg-white hover:bg-green-100"
-              }`}
-            >
-              0-500K
-            </div>
+  </div>
 
-            <div
-              onClick={() => handlePrice(2, "500000", "1000000")}
-              className={`text-sm rounded-sm p-2 justify-center cursor-pointer ${
-                activerange === 2
-                  ? "bg-green-600 text-white"
-                  : "dark:bg-[#131B1E] bg-white hover:bg-green-100"
-              }`}
-            >
-              {"500K-1M"}
-            </div>
-
-            <div
-              onClick={() => handlePrice(3, "1000000", "2000000")}
-              className={`text-sm rounded-sm p-2 justify-center cursor-pointer ${
-                activerange === 3
-                  ? "bg-green-600 text-white"
-                  : "dark:bg-[#131B1E] bg-white hover:bg-green-100"
-              }`}
-            >
-              {"1M-2M"}
-            </div>
-            <div
-              onClick={() => handlePrice(4, "2000000", "3000000")}
-              className={`text-sm rounded-sm p-2 justify-center cursor-pointer ${
-                activerange === 4
-                  ? "bg-green-600 text-white"
-                  : "dark:bg-[#131B1E] bg-white hover:bg-green-100"
-              }`}
-            >
-              {"2M-3M"}
-            </div>
-            <div
-              onClick={() => handlePrice(5, "3000000", "5000000")}
-              className={`text-sm rounded-sm p-2 justify-center cursor-pointer ${
-                activerange === 5
-                  ? "bg-green-600 text-white"
-                  : "dark:bg-[#131B1E] bg-white hover:bg-green-100"
-              }`}
-            >
-              {"3M-5M"}
-            </div>
-            <div
-              onClick={() => handlePrice(6, "5000000", "10000000")}
-              className={`text-sm rounded-sm p-2 justify-center cursor-pointer ${
-                activerange === 6
-                  ? "bg-green-600 text-white"
-                  : "dark:bg-[#131B1E] bg-white hover:bg-green-100"
-              }`}
-            >
-              {"5M-10M"}
-            </div>
-            <div
-              onClick={() => handlePrice(7, "10000000", "9999999999")}
-              className={`text-sm rounded-sm p-2 justify-center cursor-pointer ${
-                activerange === 7
-                  ? "bg-green-600 text-white"
-                  : "dark:bg-[#131B1E] bg-white hover:bg-green-100"
-              }`}
-            >
-              {"Above 10M"}
-            </div>
-          </div>
-        </div>
-      )} */} 
-
-      {newqueryObject.subcategory && (
+      {view === "list" && newqueryObject.subcategory && (
         <div className="w-full dark:bg-[#2D3236] dark:text-gray-300 flex flex-col rounded-lg mb-1">
           <MenuType
             categoryList={subcategoryList}
@@ -1307,8 +1255,8 @@ const SCROLL_THRESHOLD = 150; // pixels
         </div>
       )} 
     </div>
-
-    <CollectionSearch
+{view === "list" ? (<>
+ <CollectionSearch
                   emptyTitle="No ads have been created yet"
                   emptyStateSubtext="Go create some now"
                   limit={20}
@@ -1322,7 +1270,19 @@ const SCROLL_THRESHOLD = 150; // pixels
                   handleOpenPlan={handleOpenPlan}
                   handleOpenChatId={handleOpenChatId} 
                   userName={userName} 
-                  userImage={userImage}/>
+                  userImage={userImage}/></>):(<>
+                  <PropertyMapSearchComponent
+                queryObject={newqueryObject}
+                onClose={handleClosePopupMapSearch}
+                handleOpenPlan={handleOpenPlan}
+                handleAdEdit={handleAdEdit}
+                handleAdView={handleAdView}
+                handleOpenSell={handleOpenSell}
+                 handleOpenChatId={handleOpenChatId} 
+                 userName={userName}
+                 userImage={userImage}
+              /></>)}
+   
   </section>
 
   {userId && (

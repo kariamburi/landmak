@@ -79,8 +79,8 @@ export default function Navbar({ userstatus, userId, user, onClose, popup, handl
     setIsOpenP(false);
   };
   return (
-    <div className="h-[60px] items-center flex p-2 lg:p-3 gap-1 w-full border-b bg-gradient-to-b from-green-600 to-green-600 lg:from-white lg:to-white">
-      <div className="flex-1 mt-1">
+    <div className="h-[50px] items-center flex pl-2 pr-2 gap-0 w-full border-b bg-gradient-to-b from-green-600 to-green-600 lg:from-white lg:to-white">
+      <div className="flex-1 mt-0">
         <div className="flex items-center">
        
             <div

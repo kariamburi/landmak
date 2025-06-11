@@ -324,6 +324,7 @@ export async function getListingsNearLocation({ limit = 20, queryObject
     const dynamicConditions: any = {};
 
     let [lat, lng] = ["0", "0"];
+
     Object.entries(queryObject || {}).forEach(([key, value]) => {
       if (value) {
         switch (key) {
@@ -383,35 +384,37 @@ export async function getListingsNearLocation({ limit = 20, queryObject
       };
     }
     //console.log(conditions)
-    if (lat !== "0" && lng !== "0") {
-
-      const ads = await DynamicAd.aggregate([
-        {
-          $geoNear: {
-            near: { type: "Point", coordinates: [parseFloat(lat), parseFloat(lng)] },
-            spherical: true,
-            distanceField: "calcDistance",
-            query: conditions, // Filter by subcategory
-            key: "data.propertyarea.location" // Specify the name of the index to use
-          }
-        }
-      ]);
-      //console.log(ads)
-      // Step 2: Populate the aggregated results
-      const populatedAds = await DynamicAd.populate(ads, [
-        { path: 'organizer', model: User, select: '_id clerkId email firstName lastName photo businessname aboutbusiness businessaddress latitude longitude businesshours businessworkingdays phone whatsapp website facebook twitter instagram tiktok imageUrl verified' },
-        { path: 'subcategory', model: Subcategory, select: 'fields' },
-        { path: 'plan', model: Packages, select: '_id name color imageUrl' }
-      ]);
-
-      const AdCount = await DynamicAd.countDocuments(conditions);
-      //const AdCount = await Ad.countDocuments(conditions)
-
-      return {
-        data: JSON.parse(JSON.stringify(populatedAds)),
-        totalPages: Math.ceil(AdCount / limit),
-      }
+    if (!lat || !lng || lat === "0" || lng === "0") {
+      return { data: [], totalPages: 0 };
     }
+
+    const ads = await DynamicAd.aggregate([
+      {
+        $geoNear: {
+          near: { type: "Point", coordinates: [parseFloat(lat), parseFloat(lng)] },
+          spherical: true,
+          distanceField: "calcDistance",
+          query: conditions, // Filter by subcategory
+          key: "data.propertyarea.location" // Specify the name of the index to use
+        }
+      }
+    ]);
+    //console.log(ads)
+    // Step 2: Populate the aggregated results
+    const populatedAds = await DynamicAd.populate(ads, [
+      { path: 'organizer', model: User, select: '_id clerkId email firstName lastName photo businessname aboutbusiness businessaddress latitude longitude businesshours businessworkingdays phone whatsapp website facebook twitter instagram tiktok imageUrl verified' },
+      { path: 'subcategory', model: Subcategory, select: 'fields' },
+      { path: 'plan', model: Packages, select: '_id name color imageUrl' }
+    ]);
+
+    const AdCount = await DynamicAd.countDocuments(conditions);
+    //const AdCount = await Ad.countDocuments(conditions)
+
+    return {
+      data: JSON.parse(JSON.stringify(populatedAds)),
+      totalPages: Math.ceil(AdCount / limit),
+    }
+
   } catch (error) {
     console.error("Error:", error);
     throw error;

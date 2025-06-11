@@ -13,6 +13,7 @@ import Image from "next/image";
 import Navbar from "./navbar";
 import BottomNavigation from "./BottomNavigation";
 import { getAllCategories } from "@/lib/actions/category.actions";
+import EnhancedPropertySearch from "./EnhancedPropertySearch";
 
 interface WindowProps {
   isOpen: boolean;
@@ -76,7 +77,7 @@ const PopupCategory = ({
     <div className="fixed inset-0 flex items-center justify-center bg-white z-20">
       <div className="dark:bg-[#131B1E] dark:text-gray-300 bg-white rounded-0 p-0 w-full h-[100vh] flex flex-col">
        
-          <MainCategory
+       {/*    <MainCategory
             userId={userId}
             userName={userName}
             userImage={userImage}
@@ -107,8 +108,39 @@ const PopupCategory = ({
             handleOpenSearchByTitle={handleOpenSearchByTitle}
             handleOpenChatId={handleOpenChatId}
             loans={loans}
-          />
-        
+          />*/}
+        <EnhancedPropertySearch
+          userId={userId}
+            userName={userName}
+            userImage={userImage}
+            emptyTitle="No ads have been created yet"
+            emptyStateSubtext="Go create some now"
+            limit={20}
+            user={user}
+            categoryList={categoryList}
+            subcategoryList={subcategoryList}
+            queryObject={queryObject}
+            onClose={onClose}
+            loading={false}
+            handleOpenSell={handleOpenSell}
+            handleAdView={handleAdView}
+            handleOpenAbout={handleOpenAbout} 
+      handleOpenTerms={handleOpenTerms}
+      handleOpenPrivacy={handleOpenPrivacy}
+      handleOpenSafety={handleOpenSafety}
+      handleOpenBook={handleOpenBook}
+      handleOpenPlan={handleOpenPlan}
+      handleOpenChat={handleOpenChat}
+      handleOpenShop={handleOpenShop} 
+            handleOpenPerfomance={handleOpenPerfomance}
+            handleOpenSettings={handleOpenSettings}
+            handleCategory={handleCategory}
+            handleAdEdit={handleAdEdit}
+            handleOpenSearchTab={handleOpenSearchTab}
+            handleOpenSearchByTitle={handleOpenSearchByTitle}
+            handleOpenChatId={handleOpenChatId}
+            loans={loans}
+            />
         <Toaster />
       </div>
     </div>

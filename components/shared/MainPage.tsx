@@ -1137,7 +1137,7 @@ const handleCloseAdView = () => {
        
        {hoveredCategory && (
         <div
-          className={`flex flex-col absolute w-64 top-20 z-20 dark:bg-[#2D3236] bg-white p-2 shadow-lg transition-all duration-300`}
+          className={`flex flex-col absolute w-[290px] top-20 z-20 dark:bg-[#2D3236] bg-white p-2 shadow-lg transition-all duration-300`}
           onMouseEnter={() => setHoveredCategory(hoveredCategory)}
           onMouseLeave={() => setHoveredCategory(null)}
         >

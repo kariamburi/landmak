@@ -65,17 +65,20 @@ import SafetyCheckOutlinedIcon from "@mui/icons-material/SafetyCheckOutlined";
 import LocalOfferOutlinedIcon from "@mui/icons-material/LocalOfferOutlined";
 import ProgressPopup from "./ProgressPopup";
 import { Button } from "../ui/button";
+import { Phone, MessageCircle, MessageSquare, Mail } from 'lucide-react';
+import QRCode from 'qrcode';
 type chatProps = {
   userId: string;
   ad: any;
   fee:string;
+  titleId:string;
   userImage: string;
   userName: string;
   handleOpenReview: (value:any) => void;
   handleOpenShop: (value:any) => void;
   handlePay: (id:string) => void;
 };
-const SellerProfileCard = ({ ad, fee, userId, userImage, userName, handlePay, handleOpenReview,handleOpenShop, }: chatProps) => {
+const SellerProfileCard = ({ ad, fee, userId, userImage, userName, titleId, handlePay, handleOpenReview,handleOpenShop, }: chatProps) => {
   const pathname = usePathname();
 
   const isAdCreator = userId === ad.organizer._id;
@@ -135,160 +138,171 @@ const SellerProfileCard = ({ ad, fee, userId, userImage, userName, handlePay, ha
   const handleCloseP = () => {
     setIsOpenP(false);
   };
+
+  const [copied, setCopied] = useState(false);
+  
+  const adUrl =process.env.NEXT_PUBLIC_DOMAIN_URL+"?"+titleId+"="+ad._id;
+    const handleCopy = () => {
+      navigator.clipboard.writeText(adUrl).then(() => {
+        setCopied(true);
+        setTimeout(() => setCopied(false), 2000);
+      });
+    };
+  
+    const handleShare = async () => {
+      if (navigator.share) {
+        try {
+          await navigator.share({
+            title: "Check out this "+titleId+"!",
+            url: adUrl,
+          });
+        } catch (error) {
+          console.error("Error sharing:", error);
+        }
+      } else {
+        alert("Sharing is not supported on this device.");
+      }
+    };
+  const saveQRcode = async () => {
+    
+      try {
+        const qrDataURL = await QRCode.toDataURL(adUrl);
+    
+        // Create download link
+        const link = document.createElement('a');
+        link.href = qrDataURL;
+        link.download = 'mapa-qr-code.png';
+        document.body.appendChild(link);
+        link.click();
+        document.body.removeChild(link);
+      
+      } catch (err) {
+        console.error('Failed to generate QR code', err);
+      }
+  
+    }
+    const getInitials = (firstName?: string, lastName?: string) => {
+  const first = firstName?.[0]?.toUpperCase() || '';
+  const last = lastName?.[0]?.toUpperCase() || '';
+  return `${first}${last}`;
+};
+const isDefaultClerkPhoto = (url?: string) => {
+  if (!url) return true;
+  return url.includes("default-avatar") || url.includes("img.clerk.com");
+};
   return (
     <div className="flex p-0 items-center flex-col">
-      <div className="flex flex-col border dark:bg-[#2D3236] dark:text-gray-100 bg-white items-center p-1 w-full rounded-lg">
-      <div className="flex gap-4 justify-center items-center p-1">
-        <div className="flex flex-col items-center">
-          <div className="w-20 h-20 rounded-full bg-white relative">
-            <Image
-              onClick={() => {
-                //handleOpenP();
-                handleOpenShop(ad.organizer);
-                //router.push(`/shop/${ad.organizer._id}`);
-              }}
-              className="w-full h-full cursor-pointer rounded-full object-cover"
-              src={ad.organizer.photo ?? "/avator.png"}
-              alt="Avator"
-              width={200}
-              height={200}
-            />
 
-            {/* Verified Icon */}
-            {ad.organizer.verified &&
-            ad.organizer?.verified[0]?.accountverified === true ? (
-              <>
-                <TooltipProvider>
-                  <Tooltip>
-                    <TooltipTrigger asChild>
-                      <div className="shadow-[0px_4px_20px_rgba(0,0,0,0.3)] absolute text-white bottom-0 right-0 bg-gradient-to-b from-emerald-500 to-emerald-600 rounded-full p-1">
-                        <VerifiedUserOutlinedIcon />
-                      </div>
-                    </TooltipTrigger>
-                    <TooltipContent>
-                      <p className="text-emerald-500">Verified Seller</p>
-                    </TooltipContent>
-                  </Tooltip>
-                </TooltipProvider>
-              </>
-            ) : (
-              <>
-                <TooltipProvider>
-                  <Tooltip>
-                    <TooltipTrigger asChild>
-                      <div className="shadow-[0px_4px_20px_rgba(0,0,0,0.3)] absolute text-gray-100 bottom-0 right-0 bg-gradient-to-b from-gray-500 to-gray-600 rounded-full p-1">
-                        <ShieldOutlinedIcon />
-                      </div>
-                    </TooltipTrigger>
-                    <TooltipContent>
-                      <p className="text-red-500">Unverified Seller</p>
-                    </TooltipContent>
-                  </Tooltip>
-                </TooltipProvider>
-              </>
-            )}
-          </div>
+<div className="bg-white dark:bg-[#2D3236] rounded-xl shadow-sm p-4 w-full">
+  {/* Seller Info */}
+  <div className="flex items-center gap-4">
+   <div className="relative">
+   
+  {ad.organizer?.photo && !isDefaultClerkPhoto(ad.organizer.photo) ? (
+  <img
+    src={ad.organizer.photo}
+    alt="Organizer avatar"
+    className="w-16 h-16 rounded-full object-cover"
+  />
+) : (
+  <div className="w-16 h-16 bg-green-500 text-white flex items-center justify-center text-2xl font-bold rounded-full">
+    {getInitials(ad.organizer?.firstName, ad.organizer?.lastName)}
+  </div>
+)}
+</div>
 
-          <div
-            onClick={() => {
-             // handleOpenP();
-             // router.push(`/shop/${ad.organizer._id}`);
+
+    <div>
+      <div  onClick={() => {
              handleOpenShop(ad.organizer);
-            }}
-            className="ml-2 cursor-pointer font-bold hover:underline hover:text-emerald-600"
-          >
-            {ad.organizer.firstName} {ad.organizer.lastName}
-          </div>
-          <div className="m-1">
-            <Verification
+            }} className="text-lg font-semibold text-gray-800 dark:text-white"> {ad.organizer.firstName} {ad.organizer.lastName}</div>
+       <Verification
               fee={fee}
               user={ad.organizer}
               userId={userId}
               isAdCreator={isAdCreator}
               handlePayNow={handlePay}
             />
-          </div>
-        </div>
 
-        <div className="flex flex-col">
-          <RatingsCard
-            user={ad.organizer}
-            recipientUid={ad.organizer._id}
-            handleOpenReview={handleOpenReview}
-          />
-        </div>
-    
-        </div>
-          <div className="flex gap-1 items-center p-1 w-full">
-            <SignedIn>
-            <Button onClick={handleShowPhoneClick} variant="outline" className="flex w-full items-center gap-2">
-            <CallIcon sx={{ fontSize: 18 }} /><div className="hidden lg:inline">Call</div>
-           </Button>
-              
-            </SignedIn>
-            <SignedOut>
-            <Button onClick={() => {
-                 // handleOpenP();
-                  router.push(`/sign-in`);
-                }} variant="outline" className="flex w-full items-center gap-2">
-            <CallIcon sx={{ fontSize: 18 }} /><div className="hidden lg:inline">Call</div>
-           </Button>
-             
-            </SignedOut>
+     <Ratingsmobile  
+     user={ad.organizer}
+    recipientUid={ad.organizer._id}
+    handleOpenReview={handleOpenReview}/>
+    </div>
+  </div>
 
-            <SignedIn>
-              <ChatButton
+  {/* Contact Buttons */}
+  <div className="grid grid-cols-3 gap-2 mt-4">
+
+ <SignedIn>
+     <button onClick={handleShowPhoneClick} className="flex gap-1 items-center justify-center border border-green-500 text-green-700 hover:bg-green-50 py-1 rounded-md text-sm font-medium">
+       <Phone className="w-5 h-5" /> Call
+    </button>
+    <ChatButton
                 ad={ad}
                 userId={userId}
                 userImage={userImage}
                 userName={userName}
               />
-            </SignedIn>
-            <SignedOut>
-            <Button onClick={() => {
-                 // handleOpenP();
+    <button onClick={handlewhatsappClick} className="flex gap-1 items-center justify-center border border-green-500 text-green-700 hover:bg-green-50 py-1 rounded-md text-sm font-medium">
+       <MessageCircle className="w-5 h-5" /> WhatsApp
+    </button>
+  </SignedIn>
+    <SignedOut>
+     <button onClick={() => {
+       setIsOpenP(true);
+                  router.push(`/sign-in`);
+                }} className="flex gap-1 items-center justify-center items-center justify-center border border-green-500 text-green-700 hover:bg-green-50 py-1 rounded-md text-sm font-medium">
+      <Phone className="w-5 h-5" /> Call
+    </button>
+    <button onClick={() => {
+       setIsOpenP(true);
+                  router.push(`/sign-in`);
+                }} className="flex gap-1 items-center justify-center border border-green-500 text-green-700 hover:bg-green-50 py-1 rounded-md text-sm font-medium">
+     <Mail className="w-5 h-5" /> Enquire
+    </button>
+    <button onClick={() => {
+       setIsOpenP(true);
                   router.push(`/sign-in`);
                 }}
-                 variant="outline" className="flex w-full items-center gap-2">
-            <ChatBubbleOutlineOutlinedIcon sx={{ fontSize: 18 }} />
-            <div className="hidden lg:inline">Message</div>
-           </Button>
+                className="flex gap-1 items-center justify-center border border-green-500 text-green-700 hover:bg-green-50 py-1 rounded-md text-sm font-medium">
+       <MessageCircle className="w-5 h-5" /> WhatsApp
+    </button>
+  </SignedOut>
 
-             
-            </SignedOut>
+   
+  </div>
 
-            {ad.organizer.whatsapp && (
-              <>
-                <SignedIn>
-                <Button  onClick={handlewhatsappClick}
-                 variant="outline" className="flex w-full items-center gap-2">
-            <WhatsAppIcon sx={{ fontSize: 18 }} />
-
-<div className="hidden lg:inline">WhatsApp</div>
-           </Button>
-
-                  
-                </SignedIn>
-                <SignedOut>
-                <Button  onClick={() => {
-                     // handleOpenP();
-                      router.push(`/sign-in`);
+  {/* Leave Feedback */}
+  <div className="mt-4">
+    <button onClick={() => {
+    handleOpenReview(ad.organizer)
                     }}
-                 variant="outline" className="flex w-full items-center gap-2">
-           <WhatsAppIcon sx={{ fontSize: 18 }} />
+                    className="bg-green-600 hover:bg-green-700 text-white w-full py-2 rounded-md text-sm font-semibold">
+      😃 Leave Your Feedback
+    </button>
+  </div>
 
-<div className="hidden lg:inline">WhatsApp</div>
-           </Button>
-
-                 
-                </SignedOut>
-              </>
-            )}
-          </div>
-         
-
-          </div>
+  {/* Share Section */}
+  <div className="mt-6 border-t pt-4">
+    <h3 className="text-sm font-medium text-gray-700 dark:text-white mb-2">Share Ad</h3>
+    <div className="flex justify-between items-center text-sm text-gray-600 dark:text-gray-300">
+    
      
+      <button onClick={handleCopy} className="flex items-center gap-1 hover:text-green-600">
+        📋 {copied ? "Copied!" : "Copy Link"}
+      </button>
+      <button onClick={saveQRcode} className="flex items-center gap-1 hover:text-green-600">
+        🔳 QR Code
+      </button>
+      <button onClick={handleShare} className="flex items-center gap-1 hover:text-green-600">
+        📤 Share
+      </button>
+
+    </div>
+  </div>
+</div>
+      <ProgressPopup isOpen={isOpenP} onClose={handleCloseP} /> 
     </div>
   );
 };

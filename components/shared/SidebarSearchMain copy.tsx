@@ -146,19 +146,73 @@ const SidebarSearchMain = ({
 
   return (
     <>
-     <div className="h-full text-sm lg:text-base w-full">
+      <div className="flex flex-col items-center w-full">
+        
+        <div className="w-full dark:bg-[#2D3236] bg-white rounded-lg">
+       
+          <div className="flex flex-col text-sm rounded-t-lg w-full">
+            <div className="flex p-2 w-full flex-col gap-1 mt-1 mb-1 border-gray-300 dark:border-gray-600">
+         
+            {selectedCategory && (
+                <>
+                  <div className="flex gap-1">
+                    <div className="rounded-full dark:bg-[#131B1E] bg-white p-1">
+                      <Image
+                        className="h-7 w-8 object-cover"
+                        src={categoryImageUrl}
+                        alt={
+                          selectedCategory ? selectedCategory.category.name : ""
+                        }
+                        width={100}
+                        height={100}
+                      />
+                    </div>
+                  
+                    <div className="flex flex-col">
+                  <div className="font-bold">  {selectedCategory ? selectedCategory.category.name : ""}</div>
+                <div className="text-sm dark:text-gray-500 text-gray-500">
+                {"("}{selectedCategory.category.name === "Wanted Ads" ?  (totalAdCount + loans.adCount): totalAdCount } ads{")"}
+                </div>
+              </div>
+                  </div>
+                </>
+              )}
+
+              
+            </div>
+          </div>
+          <div>
+            
+               <div className="relative flex-1 overflow-hidden">
+                    {/*<div className="absolute top-1 left-1/2 z-50 flex flex-col gap-2">
+            
+                 {showScrollUp && (
+                      <button
+                        onClick={() => scrollBy(-300)}
+                        className="bg-[#e4ebeb] text-black h-10 w-10 p-0 rounded-full shadow"
+                      >
+                         <KeyboardArrowUpOutlinedIcon/>
+                      </button>
+                    )} 
+                   
+                   
+                  </div>*/}
+                  
+                        <ScrollArea
+                           ref={viewportRef_}
+                           className="h-[70vh] overflow-y-auto text-sm lg:text-base w-full dark:bg-[#2D3236] bg-white rounded-md border p-4">
                         
-            {filteredList.map((sub: any, index: number) => (
+                        {filteredList.map((sub: any, index: number) => (
               <div
                 key={index}
                 onClick={() => handleQuery(index, sub.subcategory)}
-                className={`border-b dark:border-gray-600 flex items-center w-full justify-between p-1 mb-0 text-sm cursor-pointer dark:hover:bg-[#131B1E] dark:hover:text-white hover:bg-green-100 ${
+                className={`border-b rounded-sm dark:border-gray-600 flex items-center w-full justify-between p-1 mb-0 text-sm cursor-pointer dark:hover:bg-[#131B1E] dark:hover:text-white hover:bg-green-100 ${
                   query === sub.subcategory
-                    ? "bg-green-600 text-white hover:bg-green-600"
+                    ? "bg-green-200 hover:bg-green-200"
                     : "dark:bg-[#2D3236] bg-white"
                 }`}
               >
-                <div className="flex w-full gap-1 items-center p-1">
+                <div className="flex w-full gap-1 items-center p-2">
                   <Image
                     className="h-6 w-7 object-cover"
                     src={sub.imageUrl[0] || ""}
@@ -171,7 +225,7 @@ const SidebarSearchMain = ({
                     <div
                       className={`flex text-xs gap-1 ${
                         query === sub.subcategory
-                          ? "dark:text-white text-white"
+                          ? "dark:text-gray-300 text-gray-500"
                           : "dark:text-gray-500 text-gray-500"
                       }`}
                     >
@@ -183,9 +237,32 @@ const SidebarSearchMain = ({
             
               </div>
             ))}
- </div>
+ </ScrollArea>
   
+ {/*
+  <div className="absolute bottom-1 left-1/2 z-50 flex flex-col gap-2">
+    {!showScrollUp && (
+          <button
+            onClick={() => scrollBy(300)}
+            className="bg-[#e4ebeb] text-black p-0 h-10 w-10 rounded-full shadow"
+          >
+           <KeyboardArrowDownOutlinedIcon/>
+          </button>
+        )}
+       
+      </div> */}
+      </div>
+       
+         
+
+
+
+         
+          </div>
+        </div>
+      
  
+      </div>
     </>
   );
 };
