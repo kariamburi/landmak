@@ -208,7 +208,7 @@ const handleResetFilter = (value:any) => {
       setnewqueryObject({
         ...value, location:newqueryObject.location
       });
-  
+   setFilteredProperties([]);
       };
 
 const [allAds, setAllAds] = useState<any[]>([]); // All ads fetched from backend
@@ -223,6 +223,7 @@ const [totalPages, setTotalPages] = useState(1);
      googleMapsApiKey: GOOGLE_MAPS_API_KEY,
      libraries: ["places", "geometry", "drawing"],
    });
+   const [hasFetched, setHasFetched] = useState(false);
 // Before mount
 useEffect(() => {
   if (!newqueryObject.location) {
@@ -231,6 +232,11 @@ useEffect(() => {
       location: "-1.286389/36.817223"
     });
   }
+    const timeout = setTimeout(() => {
+      setHasFetched(true);
+    }, 1000);
+
+    return () => clearTimeout(timeout);
 }, []);
 
 const fetchAds = async () => {
@@ -247,14 +253,16 @@ const fetchAds = async () => {
     setAllAds(fetchedAds); // store raw data
     setAds(fetchedAds); // store raw data
     setTotalPages(Ads?.totalPages || 1);
-    
+    if(hasFetched && fetchedAds.length === 0 ){
+      setLoading(false);
+    }
   } catch (error) {
     console.error("Error fetching ads", error);
    
   } finally {
- //setLoading(false);
+ 
   }
-};
+};   
 
 // Fetch ads on component mount or when newqueryObject changes
 useEffect(() => {
@@ -550,7 +558,7 @@ useEffect(() => {
   let filtered = [];
 
   if (data.length > 0) {
-     setLoading(true);
+    
     filtered = data.filter((property: any) => {
       const price = property.data.price;
       const shapes = property.data?.propertyarea?.shapes ?? [];
@@ -617,7 +625,7 @@ useEffect(() => {
    } else {
     // ✅ stop loading if there's no data to filter
     setFilteredProperties([]);
-    //setLoading(false);
+   
   }
 }, [data, distance, priceRange, landSize, onlyVerified, postedWithin, newqueryObject.category]);
 
@@ -989,7 +997,7 @@ setFilteredProperties(filtered);
  
  
  <div className="flex gap-1 items-center">
-  <label className="text-sm">Radius ({distance} km):</label>
+  <label className="text-xs">Radius ({distance} km):</label>
    <input
       type="range"
       min="10"
