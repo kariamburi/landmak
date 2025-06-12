@@ -208,8 +208,7 @@ const handleResetFilter = (value:any) => {
       setnewqueryObject({
         ...value, location:newqueryObject.location
       });
-   
-      
+  
       };
 
 const [allAds, setAllAds] = useState<any[]>([]); // All ads fetched from backend
@@ -220,6 +219,10 @@ const [zoom, setZoom] = useState<number>(12);
 const [data, setAds] = useState<IdynamicAd[]>([]); // Initialize with an empty array
 const [page, setPage] = useState(1);
 const [totalPages, setTotalPages] = useState(1);
+  const { isLoaded } = useLoadScript({
+     googleMapsApiKey: GOOGLE_MAPS_API_KEY,
+     libraries: ["places", "geometry", "drawing"],
+   });
 // Before mount
 useEffect(() => {
   if (!newqueryObject.location) {
@@ -229,6 +232,7 @@ useEffect(() => {
     });
   }
 }, []);
+
 const fetchAds = async () => {
   setLoading(true);
  
@@ -243,11 +247,12 @@ const fetchAds = async () => {
     setAllAds(fetchedAds); // store raw data
     setAds(fetchedAds); // store raw data
     setTotalPages(Ads?.totalPages || 1);
-   
+    
   } catch (error) {
     console.error("Error fetching ads", error);
+   
   } finally {
-
+ //setLoading(false);
   }
 };
 
@@ -256,18 +261,9 @@ useEffect(() => {
     fetchAds();
 }, [newqueryObject]); // 🚫 remove radius from dependencies
 
-// Filter ads locally when radius changes or new ads are fetched
-useEffect(() => {
-    
-const filteredAds = allAds.filter((ad) => ad.calcDistance <= distance*1000);
-  setAds(filteredAds);
-}, [distance, allAds]);
 
 
-   const { isLoaded } = useLoadScript({
-     googleMapsApiKey: GOOGLE_MAPS_API_KEY,
-     libraries: ["places", "geometry", "drawing"],
-   });
+ 
  
 const [breakpointColumns, setBreakpointColumns] = useState(1); // Default to 1
 const listRef = useRef<HTMLDivElement>(null);
@@ -399,6 +395,7 @@ useEffect(() => {
                        location: lat+"/"+lng,
                      });
             setAds([]);
+            
           });
       };
 
@@ -548,75 +545,82 @@ const [averagePricePerAcre, setAveragePricePerAcre] = useState(0);
 
 
 useEffect(() => {
+ 
   const now = new Date();
-if (data.length > 0) {
-  const filtered = data.filter((property: any) => {
-    const price = property.data.price;
+  let filtered = [];
 
-    // Calculate total area from shapes array
-    const shapes = property.data?.propertyarea?.shapes ?? [];
-    const totalArea = Array.isArray(shapes)
-      ? shapes.reduce((sum: number, shape: any) => sum + parseFloat(shape.area || 0), 0)
-      : 0;
+  if (data.length > 0) {
+     setLoading(true);
+    filtered = data.filter((property: any) => {
+      const price = property.data.price;
+      const shapes = property.data?.propertyarea?.shapes ?? [];
+      const totalArea = Array.isArray(shapes)
+        ? shapes.reduce((sum: number, shape: any) => sum + parseFloat(shape.area || 0), 0)
+        : 0;
+      const isVerified = property.organizer?.verified?.status === true;
+      const createdAt = new Date(property.data.createdAt);
+      const distanceMatch = !distance || (property.calcDistance <= distance * 1000);
 
-    const isVerified = property.organizer?.verified?.status === true;
-    const createdAt = new Date(property.data.createdAt);
+      // Time filtering
+      let isWithinDateRange = true;
+      if (postedWithin === 'today') {
+        isWithinDateRange = createdAt.toDateString() === now.toDateString();
+      } else if (postedWithin === 'this_week') {
+        const startOfWeek = new Date(now);
+        startOfWeek.setDate(now.getDate() - now.getDay());
+        startOfWeek.setHours(0, 0, 0, 0);
+        isWithinDateRange = createdAt >= startOfWeek;
+      } else if (postedWithin === 'this_month') {
+        const startOfMonth = new Date(now.getFullYear(), now.getMonth(), 1);
+        isWithinDateRange = createdAt >= startOfMonth;
+      }
 
-    let isWithinDateRange = true;
+      return (
+        distanceMatch &&
+        price >= priceRange[0] &&
+        price <= priceRange[1] &&
+        (!landSize || (totalArea >= landSize[0] && totalArea <= landSize[1])) &&
+        (!onlyVerified || isVerified) &&
+        isWithinDateRange
+      );
+    });
 
-    if (postedWithin === 'today') {
-      isWithinDateRange = createdAt.toDateString() === now.toDateString();
-    } else if (postedWithin === 'this_week') {
-      const startOfWeek = new Date(now);
-      startOfWeek.setDate(now.getDate() - now.getDay());
-      startOfWeek.setHours(0, 0, 0, 0);
-      isWithinDateRange = createdAt >= startOfWeek;
-    } else if (postedWithin === 'this_month') {
-      const startOfMonth = new Date(now.getFullYear(), now.getMonth(), 1);
-      isWithinDateRange = createdAt >= startOfMonth;
+    setFilteredProperties(filtered);
+
+    if (newqueryObject.category === 'Land & Plots for Sale') {
+      const totalPricePerAcre = filtered.reduce((sum, property) => {
+        const shapes = property.data?.propertyarea?.shapes ?? [];
+        const area = Array.isArray(shapes)
+          ? shapes.reduce((sum: number, shape: any) => sum + parseFloat(shape.area || 0), 0)
+          : 0;
+        const price = property?.data?.price || 0;
+        if (area > 0) {
+          const acres = area / 4046.86;
+          return sum + price / acres;
+        }
+        return sum;
+      }, 0);
+
+      const validCount = filtered.filter(property => {
+        const shapes = property.data?.propertyarea?.shapes ?? [];
+        const area = Array.isArray(shapes)
+          ? shapes.reduce((sum: number, shape: any) => sum + parseFloat(shape.area || 0), 0)
+          : 0;
+        return area > 0;
+      }).length;
+
+      const avgPricePerAcre = validCount > 0 ? totalPricePerAcre / validCount : 0;
+      setAveragePricePerAcre(avgPricePerAcre);
     }
 
-    return (
-      price >= priceRange[0] &&
-      price <= priceRange[1] &&
-      (!landSize || (totalArea >= landSize[0] && totalArea <= landSize[1])) &&
-      (!onlyVerified || isVerified) &&
-      isWithinDateRange
-    );
-  });
-
-  setFilteredProperties(filtered);
-if( newqueryObject.category === 'Land & Plots for Sale'){
-  // 👇 Calculate average price per acre
-  const totalPricePerAcre = filtered.reduce((sum, property) => {
-    const shapes = property.data?.propertyarea?.shapes ?? [];
-    const area = Array.isArray(shapes)
-      ? shapes.reduce((sum: number, shape: any) => sum + parseFloat(shape.area || 0), 0)
-      : 0;
-    const price = property?.data?.price || 0;
-    if (area > 0) {
-      const acres = area / 4046.86;
-      return sum + price / acres;
-    }
-    return sum;
-  }, 0);
-
-  const validCount = filtered.filter(property => {
-    const shapes = property.data?.propertyarea?.shapes ?? [];
-    const area = Array.isArray(shapes)
-      ? shapes.reduce((sum: number, shape: any) => sum + parseFloat(shape.area || 0), 0)
-      : 0;
-    return area > 0;
-  }).length;
-
-  const avgPricePerAcre = validCount > 0 ? totalPricePerAcre / validCount : 0;
-
-  setAveragePricePerAcre(avgPricePerAcre); // 👈 Store in state
-}
- // ✅ Mark loading as false after filtering
     setLoading(false);
-}
-}, [data, priceRange, landSize, onlyVerified, postedWithin]);
+   } else {
+    // ✅ stop loading if there's no data to filter
+    setFilteredProperties([]);
+    //setLoading(false);
+  }
+}, [data, distance, priceRange, landSize, onlyVerified, postedWithin, newqueryObject.category]);
+
 
  
 const [formData, setFormData] = useState<Record<string, any>>([]);
