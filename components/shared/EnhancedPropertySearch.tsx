@@ -696,6 +696,10 @@ setFilteredProperties(filtered);
          setOnlyVerified(false);
          setFormData([]);
          setFilteredProperties(allAds);
+          const isMobile = window.innerWidth < 640; // Tailwind's sm breakpoint
+    if (isMobile) {
+      setShowCategories(false);
+    } 
     
        };
      
@@ -722,25 +726,21 @@ setFilteredProperties(filtered);
       {showCategories && (
    <aside className="fixed lg:static top-14 left-0 z-50 bg-white w-[300px] lg:w-[280px] h-[calc(100vh-4rem)] lg:h-[calc(100vh-1rem)] overflow-y-auto p-0 border-r shadow-md lg:shadow-none transform transition-transform duration-300 lg:translate-x-0 translate-x-0 lg:flex flex-col">
 
-    {/* Always visible on desktop */}
-   <div className="flex flex-col items-center mb-4">
- 
-   <div className="w-full flex justify-end items-center">
-  <button
-    onClick={() => setShowCategories(false)}
-    className="flex items-center gap-1 px-3 py-1.5 text-sm rounded-l-full bg-green-600 text-white hover:bg-green-700 transition"
-  >
-    <ChevronLeft size={20} />
-    Hide Filters
-  </button>
+    {/* ✅ Sticky Header */}
+  <div className="flex flex-col items-center mb-4 sticky top-0 z-10 bg-white p-2 border-b">
+    <div className="w-full flex justify-end items-center">
+      <button
+        onClick={() => setShowCategories(false)}
+        className="flex items-center gap-1 px-3 py-1.5 text-sm rounded-l-full bg-green-600 text-white hover:bg-green-700 transition"
+      >
+        <ChevronLeft size={20} />
+        Hide Filters
+      </button>
+    </div>
+    <h2 className="font-semibold">
+      {newqueryObject.category}
+    </h2>
   </div>
- <h2 className="text-lg font-semibold">
-    {newqueryObject.category}
-  </h2>
- 
-
-</div>
-
 
     {/* Category list */}
     <div className="flex-1 p-1 overflow-y-auto">
@@ -968,8 +968,8 @@ setFilteredProperties(filtered);
   Filters
 </button>)}
    <div className="flex flex-col">
-    <div className="flex flex-col lg:flex-row gap-2 items-center">
-   <div className="text-lg font-semibold">{newqueryObject.subcategory}</div> <div className="text-sm">({data.length} ads within {distance} km)</div>
+    <div className="flex flex-col lg:flex-row lg:gap-2 items-center">
+   <h2 className="text-lg font-semibold">{newqueryObject.subcategory}</h2> <p className="lg:text-base text-sm">({data.length} ads within {distance} km)</p>
    </div>  
   {averagePricePerAcre > 0 && (
   <div className="text-[10px] text-gray-600 dark:text-gray-300 mt-0">
@@ -997,7 +997,7 @@ setFilteredProperties(filtered);
  
  
  <div className="flex gap-1 items-center">
-  <label className="text-xs">Radius ({distance} km):</label>
+  <label className="text-[10px] lg:text-xs">Radius ({distance} km):</label>
    <input
       type="range"
       min="10"
@@ -1007,7 +1007,7 @@ setFilteredProperties(filtered);
       onChange={(e) => setDistance(Number(e.target.value))}
        className="w-40 cursor-pointer appearance-none h-2 accent-green-600 rounded-lg outline-none"
   style={{
-    background: `linear-gradient(to right, #16a34a 0%, #16a34a ${(distance - 10) / 1.9}%, #ffffff ${(distance - 10) / 1.9}%, #ffffff 100%)`,
+    background: `linear-gradient(to right, #16a34a 0%, #16a34a ${(distance - 10) / 1.9}%, #E5E7EB ${(distance - 10) / 1.9}%, #E5E7EB 100%)`,
   }}
   />
 </div>
