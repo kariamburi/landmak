@@ -297,7 +297,24 @@ useEffect(() => {
 }, []);
 
 
+ function isDefaultClerkAvatar(imageUrl: string): boolean {
+  try {
+    const base64 = imageUrl.split("/").pop();
+    if (!base64) return false;
 
+    const json = atob(base64); // decode Base64
+    const data = JSON.parse(json);
+
+    return data.type === "default";
+  } catch (e) {
+    return false;
+  }
+}
+    const getInitials = (firstName?: string, lastName?: string) => {
+    const first = firstName?.[0]?.toUpperCase() || '';
+    const last = lastName?.[0]?.toUpperCase() || '';
+    return `${first}${last}`;
+  };
 
      useEffect(() => {
         const savedTheme = localStorage.getItem("theme") || mode; // Default to "dark"
@@ -344,18 +361,18 @@ useEffect(() => {
           <div className="w-full lg:max-w-6xl lg:mx-auto lg:mb-3  rounded-xl p-1 lg:p-3 mb-20 justify-center">
           <div className="flex items-center justify-between p-4">
         <div className="flex items-center space-x-3">
-          <div className="bg-gray-700 rounded-full h-10 w-10 flex items-center justify-center">
-            {/* Placeholder avatar */}
-           
-              <Image
-                className="w-full h-full rounded-full object-cover"
-                src={user.photo ?? "/avator.png"}
-                alt="Avator"
-                width={100}
-                height={100}
-              />
-          
-          </div>
+        
+    {!isDefaultClerkAvatar(userImage) ? (
+    <img
+      src={userImage}
+      alt="Organizer avatar"
+      className="w-16 h-16 rounded-full object-cover"
+    />
+  ) : (
+    <div className="w-16 h-16 bg-green-500 text-white flex items-center justify-center text-2xl font-bold rounded-full">
+      {getInitials(user?.firstName, user?.lastName)}
+    </div>
+  )}
           <div className="flex flex-col">
           <span className="ml-2 font-semibold text-lg">{user.firstName} {user.lastName}</span>
       <div className="flex">

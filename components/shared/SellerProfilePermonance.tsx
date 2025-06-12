@@ -90,10 +90,21 @@ const SellerProfilePermonance = ({
     const last = lastName?.[0]?.toUpperCase() || '';
     return `${first}${last}`;
   };
-  const isDefaultClerkPhoto = (url?: string) => {
-    if (!url) return true;
-    return url.includes("default-avatar") || url.includes("img.clerk.com");
-  };
+  
+   function isDefaultClerkAvatar(imageUrl: string): boolean {
+  try {
+    const base64 = imageUrl.split("/").pop();
+    if (!base64) return false;
+
+    const json = atob(base64); // decode Base64
+    const data = JSON.parse(json);
+
+    return data.type === "default";
+  } catch (e) {
+    return false;
+  }
+}
+
   return (
     <div className="flex gap-1 items-center">
       <div className="flex flex-col lg:flex-row gap-1 items-center p-1 w-full">
@@ -105,9 +116,10 @@ const SellerProfilePermonance = ({
           }}
           className="cursor-pointer no-underline font-bold m-1"
         >
-    {user?.photo && !isDefaultClerkPhoto(user.photo) ? (
+      
+    {!isDefaultClerkAvatar(userImage) ? (
     <img
-      src={user.photo}
+      src={userImage}
       alt="Organizer avatar"
       className="w-16 h-16 rounded-full object-cover"
     />

@@ -186,10 +186,21 @@ const SellerProfileCard = ({ ad, fee, userId, userImage, userName, titleId, hand
   const last = lastName?.[0]?.toUpperCase() || '';
   return `${first}${last}`;
 };
-const isDefaultClerkPhoto = (url?: string) => {
-  if (!url) return true;
-  return url.includes("default-avatar") || url.includes("img.clerk.com");
-};
+
+function isDefaultClerkAvatar(imageUrl: string): boolean {
+  try {
+    const base64 = imageUrl.split("/").pop();
+    if (!base64) return false;
+
+    const json = atob(base64); // decode Base64
+    const data = JSON.parse(json);
+
+    return data.type === "default";
+  } catch (e) {
+    return false;
+  }
+}
+
   return (
     <div className="flex p-0 items-center flex-col">
 
@@ -197,8 +208,7 @@ const isDefaultClerkPhoto = (url?: string) => {
   {/* Seller Info */}
   <div className="flex items-center gap-4">
    <div className="relative">
-   
-  {ad.organizer?.photo && !isDefaultClerkPhoto(ad.organizer.photo) ? (
+  {ad.organizer?.photo && !isDefaultClerkAvatar(ad.organizer.photo) ? (
   <img
     src={ad.organizer.photo}
     alt="Organizer avatar"

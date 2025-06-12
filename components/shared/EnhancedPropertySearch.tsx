@@ -247,17 +247,12 @@ const fetchAds = async () => {
   } catch (error) {
     console.error("Error fetching ads", error);
   } finally {
- 
-  // setTimeout(() => {
-  setLoading(false);
-//}, 8000);
-   
+
   }
 };
 
 // Fetch ads on component mount or when newqueryObject changes
 useEffect(() => {
-  console.log(newqueryObject);
     fetchAds();
 }, [newqueryObject]); // 🚫 remove radius from dependencies
 
@@ -554,7 +549,7 @@ const [averagePricePerAcre, setAveragePricePerAcre] = useState(0);
 
 useEffect(() => {
   const now = new Date();
-
+if (data.length > 0) {
   const filtered = data.filter((property: any) => {
     const price = property.data.price;
 
@@ -617,6 +612,9 @@ if( newqueryObject.category === 'Land & Plots for Sale'){
   const avgPricePerAcre = validCount > 0 ? totalPricePerAcre / validCount : 0;
 
   setAveragePricePerAcre(avgPricePerAcre); // 👈 Store in state
+}
+ // ✅ Mark loading as false after filtering
+    setLoading(false);
 }
 }, [data, priceRange, landSize, onlyVerified, postedWithin]);
 
@@ -958,7 +956,7 @@ setFilteredProperties(filtered);
   Filters
 </button>)}
    <div className="flex flex-col">
-    <div className="flex flex-col lg:flex-row items-center">
+    <div className="flex flex-col lg:flex-row gap-2 items-center">
    <div className="text-lg font-semibold">{newqueryObject.subcategory}</div> <div className="text-sm">({data.length} ads within {distance} km)</div>
    </div>  
   {averagePricePerAcre > 0 && (
