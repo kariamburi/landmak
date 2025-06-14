@@ -16,6 +16,7 @@ import { getAlldynamicAd } from "@/lib/actions/dynamicAd.actions";
 import { title } from "process";
 import Fuse from "fuse.js";
 import nlp from 'compromise';
+import { aiParseFilters } from "@/lib/actions/openai";
 type SidebarProps = {
   displayName: string;
   uid: string;
@@ -208,20 +209,61 @@ if (priceMatch) {
 
 
 const handleListingIntegration = async (userInput: string): Promise<string | null> => {
-  const filters = parseFilters(userInput);
-  if (!filters.query || !filters.address) return null;
-  //console.log(filters)
+  //const filters = parseFilters(userInput);
+ // If humanInput provided instead of structured queryObject
+   const systemPrompt = `
+You are a parser that converts user search queries into a JSON object of filters.
+Fields available:
+- query: property type or subcategory (e.g. "maisonette", "studio apartment")
+- transaction: "rent" or "sale"
+- price: string in format min-max (numbers only)
+- bedrooms: integer number of bedrooms
+- features: array of keywords (e.g. ["tarmac"])
+- amenities: array of keywords (e.g. ["wifi", "pool"])
+- facilities: array of keywords (e.g. ["gym", "parking"])
+- address: area or region name
+Return only valid JSON.`;
+  const userPrompt = userInput;
+ const res = await fetch("/api/chat", {
+      method: "POST",
+      headers: { "Content-Type": "application/json" },
+      body: JSON.stringify({ messages: [
+      { role: "system", content: systemPrompt.trim() },
+      { role: "user", content: userPrompt }
+    ] }),
+    });
+
+    const data = await res.json();
+  let aiFilters: Record<string, any>;
+  try {
+    aiFilters = JSON.parse(data.reply);
+  } catch {
+    return null;
+  }
+
+  // Must have these two at a minimum
+  if (!aiFilters.query || !aiFilters.address) return null;
+
+  // 👉 Remove all null/undefined/empty-array fields
+  const queryObject = Object.fromEntries(
+    Object.entries(aiFilters).filter(([_, v]) => {
+      if (v == null) return false;                    // removes null or undefined
+      if (Array.isArray(v) && v.length === 0) return false;  // removes empty arrays
+      return true;
+    })
+  );
+ 
   try {
     const ads = await getAlldynamicAd({
       page: 1,
       limit: 5,
-      queryObject: filters,
+      queryObject,
     });
 
     const results = ads?.data || [];
 
     if (results.length === 0) {
-      return `No ${filters.query}s found in that area with the filters provided. Try modifying your request.`;
+      return `No ${aiFilters.query}s found in that area with the filters provided. Try modifying your request.`;
     }
 
     const formatted = results
@@ -230,7 +272,7 @@ const handleListingIntegration = async (userInput: string): Promise<string | nul
       )
       .join("\n");
 
-    return `Here are some ${filters.query}s:\n\n${formatted}`;
+    return `Here are some ${aiFilters.query}s:\n\n${formatted}`;
   } catch (error) {
     console.error("Error fetching ads:", error);
     return "Something went wrong while fetching listings.";
