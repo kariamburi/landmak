@@ -14,7 +14,6 @@ import {
 import { AdminId } from "@/constants";
 import { getAlldynamicAd } from "@/lib/actions/dynamicAd.actions";
 import { title } from "process";
-import { searchCategory } from "@/lib/fuzzySearch";
 
 type SidebarProps = {
   displayName: string;
