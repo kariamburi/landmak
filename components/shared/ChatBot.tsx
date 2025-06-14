@@ -209,8 +209,8 @@ if (priceMatch) {
 
 const handleListingIntegration = async (userInput: string): Promise<string | null> => {
   const filters = parseFilters(userInput);
-  if (!filters.query || !filters.address) return "Sorry, I couldn't understand your request.";;
-  console.log(filters)
+  if (!filters.query || !filters.address) return null;
+  //console.log(filters)
   try {
     const ads = await getAlldynamicAd({
       page: 1,
