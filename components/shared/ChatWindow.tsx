@@ -68,7 +68,7 @@ const ChatWindow: React.FC<ChatWindowProps> = ({
 
   if (!isOpen) return null;
 
-  return (<><ChatBot displayName={senderName} uid={senderId} recipientUid={recipientUid} photoURL={senderImage} handleAdEdit={handleAdEdit} handleAdView={handleAdView} handleCategory={handleCategory} handleOpenSell={handleOpenSell} handleOpenPlan={handleOpenPlan}/>
+  return (<><ChatBot onClose={onClose} displayName={senderName} uid={senderId} recipientUid={recipientUid} photoURL={senderImage} handleAdEdit={handleAdEdit} handleAdView={handleAdView} handleCategory={handleCategory} handleOpenSell={handleOpenSell} handleOpenPlan={handleOpenPlan}/>
       {/*{isMobile  ? (
               // Fullscreen Popover for Mobile
       <div className="fixed h-screen inset-0 z-50 bg-white dark:bg-[#222528] dark:text-gray-100 p-0 flex flex-col">
