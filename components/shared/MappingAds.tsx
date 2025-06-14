@@ -732,13 +732,8 @@ polyline.addListener("mouseout", () => {
   }, [data.shapes]);
   
   
- 
-  
 
   type AmenityType = "school" | "hospital" | "shopping_mall" | "restaurant" | "bank" | "transit_station"; // Add more as needed
- 
- 
- 
   const [amenityMarkers, setAmenityMarkers] = useState<google.maps.Marker[]>([]);
   const [loadingAmenity, setLoadingAmenity] = useState<AmenityType | null>(null);
   const [activeAmenity, setActiveAmenity] = useState<AmenityType | null>(null);

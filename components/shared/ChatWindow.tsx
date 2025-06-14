@@ -13,6 +13,7 @@ import HelpBox from "./HelpBox";
 import { useMediaQuery } from "react-responsive"; // Detect mobile screens
 import { Button } from "../ui/button";
 import CallOutlinedIcon from '@mui/icons-material/CallOutlined';
+import ChatBot from "./ChatBot";
 interface ChatWindowProps {
   isOpen: boolean;
   onClose: () => void;
@@ -67,11 +68,12 @@ const ChatWindow: React.FC<ChatWindowProps> = ({
 
   if (!isOpen) return null;
 
-  return (<>
-      {isMobile  ? (
+  return (<><ChatBot displayName={senderName} uid={senderId} recipientUid={recipientUid} photoURL={senderImage} handleAdEdit={handleAdEdit} handleAdView={handleAdView} handleCategory={handleCategory} handleOpenSell={handleOpenSell} handleOpenPlan={handleOpenPlan}/>
+      {/*{isMobile  ? (
               // Fullscreen Popover for Mobile
       <div className="fixed h-screen inset-0 z-50 bg-white dark:bg-[#222528] dark:text-gray-100 p-0 flex flex-col">
         <div className="h-screen flex flex-col">
+        
         <div className="h-[50px] bg-gradient-to-r from-green-700 to-green-700 text-white p-2">
         <div className="flex justify-between w-full">
           <h3 className="font-semibold text-white">{title !=="Home" && (<>{title}</>)}</h3>
@@ -204,7 +206,7 @@ const ChatWindow: React.FC<ChatWindowProps> = ({
           </>
         )}
         </div>
-        {/* Tabs */}
+      
    <div className="h-[50px] flex bg-white w-full rounded-b-lg p-1">
      {tab.map((tab, index) => (
        <button
@@ -228,7 +230,8 @@ const ChatWindow: React.FC<ChatWindowProps> = ({
    </div>
     ):(
    <div className="fixed h-[500px] bottom-20 right-5 bg-green-700 rounded-lg shadow-xl w-[460px] z-30">
-   {/* Header */}
+ 
+ 
    <div className="h-[50px] bg-green-700 text-white p-2 rounded-t-lg flex justify-between items-center">
      <h3 className="font-semibold text-white">{title}</h3>
      <div onClick={onClose} className="cursor-pointer text-white">
@@ -236,7 +239,6 @@ const ChatWindow: React.FC<ChatWindowProps> = ({
      </div>
    </div>
  
-   {/* Content */}
    <div className="flex-1 w-full overflow-y-auto">
      {activeTab === 0 && (
        <div className="bg-gradient-to-b from-green-700 to-green-700 h-[400px] flex flex-col items-center justify-center p-0">
@@ -340,7 +342,7 @@ const ChatWindow: React.FC<ChatWindowProps> = ({
         )}
    </div>
  
-   {/* Tabs */}
+  
    <div className="h-[50px] flex bg-white w-full rounded-b-lg p-1">
      {tab.map((tab, index) => (
        <button
@@ -362,7 +364,7 @@ const ChatWindow: React.FC<ChatWindowProps> = ({
    </div>
  </div>
  
-  )}
+  )}*/}
     </>
   );
 };

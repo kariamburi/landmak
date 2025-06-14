@@ -157,6 +157,9 @@ export async function getAlldynamicAd({ limit = 20, page = 1, queryObject }: Get
               { "data.description": { $regex: value, $options: "i" } },
             ];
             break;
+          case "address":
+            dynamicConditions[`data.propertyarea.mapaddress`] = { $regex: value, $options: "i" };
+            break;
           case "membership":
           case "action":
           case "parcel1":

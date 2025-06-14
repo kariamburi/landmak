@@ -248,7 +248,7 @@ const [wantedcategory, setWantedcategory] = useState('');
 
  
   useEffect(() => {
-//console.log(subcategoryList)
+console.log(categoryList);
     const fetchData = async () => {
       const params = new URLSearchParams(window.location.search);
       const id = params.get("Ad");
