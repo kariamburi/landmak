@@ -79,6 +79,7 @@ interface Props {
       markers: Marker[];
       shapes: Shape[];
       mapaddress: string;
+      totalArea: number;
     }
   ) => void;
 }
@@ -156,12 +157,15 @@ export default function MapDrawingTool({ name, selectedCategory, data, onChange,
       const mapaddress = await getAddressFromLatLng(center.lat, center.lng);
       const safeAddress = mapaddress ?? "";
       setAddress(safeAddress);
+      const totalArea = shapes.reduce((sum, shape) => sum + parseFloat(shape.area || 0), 0);
+
       onChange(name, {
         location: { type: "Point", coordinates: [center.lat, center.lng] },
         polylines,
         markers,
         shapes,
         mapaddress:safeAddress,
+        totalArea,
       });
     };
     fetchAddress();
@@ -205,12 +209,15 @@ export default function MapDrawingTool({ name, selectedCategory, data, onChange,
       marker.addListener("dragend", () => {
         const pos = marker.getPosition();
         if (!pos) return;
+         const totalArea = shapes.reduce((sum, shape) => sum + parseFloat(shape.area || 0), 0);
+
         onChange(name, {
           location: { type: "Point", coordinates: [pos.lat(), pos.lng()] },
           polylines,
           markers,
           shapes,
           mapaddress,
+          totalArea,
         });
       });
       markerRef.current = marker;
@@ -301,12 +308,15 @@ export default function MapDrawingTool({ name, selectedCategory, data, onChange,
           : m
       );
       // propagate change
+        const totalArea = shapes.reduce((sum, shape) => sum + parseFloat(shape.area || 0), 0);
+
          onChange(name, {
           location: { type: "Point", coordinates: [center.lat, center.lng] },
           polylines,
            markers: newMarkers,
           shapes,
           mapaddress,
+          totalArea,
         });
         
       return newMarkers;
@@ -577,12 +587,15 @@ polyline.addListener("mouseout", () => {
     setMarkers([]);
     const pos = mapInstance.current?.getCenter();
     if (pos) {
+       const totalArea = shapes.reduce((sum, shape) => sum + parseFloat(shape.area || 0), 0);
+
       onChange(name, {
         location: { type: "Point", coordinates: [pos.lat(), pos.lng()] },
         polylines,
         markers: [],
         shapes,
         mapaddress,
+        totalArea,
       });
     }
   };
@@ -659,12 +672,15 @@ polyline.addListener("mouseout", () => {
   useEffect(() => {
     const pos = mapInstance.current?.getCenter();
     if (!pos) return;
+     const totalArea = shapes.reduce((sum, shape) => sum + parseFloat(shape.area || 0), 0);
+
     onChange(name, {
       location: { type: "Point", coordinates: [pos.lat(), pos.lng()] },
       polylines,
       markers,
       shapes,
       mapaddress,
+      totalArea,
     });
   }, [polylines, markers, shapes]);
   const [selected, setSelected] = useState(markerOptions[0]);
@@ -939,12 +955,15 @@ polyline.addListener("click", () => {
     setCenter({ lat: latitude, lng: longitude });
     setLatitude(latitude);
     setLongitude(longitude);
+      const totalArea = shapes.reduce((sum, shape) => sum + parseFloat(shape.area || 0), 0);
+
     onChange(name, {
       location: { type: "Point", coordinates: [latitude, longitude] },
       polylines,
       markers,
       shapes,
       mapaddress,
+      totalArea,
     });
   
    
@@ -1311,12 +1330,15 @@ polyline.addListener("click", () => {
                 setCenter({ lat: coord.lat, lng: coord.lng });
                 setLatitude(coord.lat);
                 setLongitude(coord.lng);
+                const totalArea = shapes.reduce((sum, shape) => sum + parseFloat(shape.area || 0), 0);
+
                 onChange(name, {
                   location: { type: "Point", coordinates: [coord.lat, coord.lng] },
                   polylines,
                   markers,
                   shapes,
                   mapaddress,
+                  totalArea,
                 });
                 centerSet = true;
               }

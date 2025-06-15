@@ -13,7 +13,9 @@ import HelpBox from "./HelpBox";
 import { useMediaQuery } from "react-responsive"; // Detect mobile screens
 import { Button } from "../ui/button";
 import CallOutlinedIcon from '@mui/icons-material/CallOutlined';
-import ChatBot from "./ChatBot";
+import ChatBot from "./ChatBotIA";
+import ChatBotIA from "./ChatBotIA";
+import ChatBotComp from "./ChatBotComp";
 interface ChatWindowProps {
   isOpen: boolean;
   onClose: () => void;
@@ -68,7 +70,7 @@ const ChatWindow: React.FC<ChatWindowProps> = ({
 
   if (!isOpen) return null;
 
-  return (<><ChatBot onClose={onClose} displayName={senderName} uid={senderId} recipientUid={recipientUid} photoURL={senderImage} handleAdEdit={handleAdEdit} handleAdView={handleAdView} handleCategory={handleCategory} handleOpenSell={handleOpenSell} handleOpenPlan={handleOpenPlan}/>
+  return (<><ChatBotComp onClose={onClose} displayName={senderName} uid={senderId} recipientUid={recipientUid} photoURL={senderImage} handleAdEdit={handleAdEdit} handleAdView={handleAdView} handleCategory={handleCategory} handleOpenSell={handleOpenSell} handleOpenPlan={handleOpenPlan}/>
       {/*{isMobile  ? (
               // Fullscreen Popover for Mobile
       <div className="fixed h-screen inset-0 z-50 bg-white dark:bg-[#222528] dark:text-gray-100 p-0 flex flex-col">

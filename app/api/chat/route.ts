@@ -14,14 +14,12 @@ export async function POST(req: NextRequest) {
     if (!messages || !Array.isArray(messages)) {
       return NextResponse.json({ error: "Invalid messages format" }, { status: 400 });
     }
-    console.log("send");
     const response = await openai.chat.completions.create({
       model: "gpt-4o-mini",
       messages, // format: [{ role: "user", content: "..." }]
     });
 
     const reply = response.choices[0].message.content;
-    console.log(reply);
     return NextResponse.json({ reply });
   } catch (error) {
     console.error("OpenAI Error:", error);

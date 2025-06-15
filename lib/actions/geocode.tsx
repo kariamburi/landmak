@@ -1,5 +1,5 @@
 // lib/geocode.ts
-export const getAddressFromLatLng_ = async (lat: number, lng: number): Promise<string | null> => {
+export const getAddressFromLatLng = async (lat: number, lng: number): Promise<string | null> => {
     try {
       const response = await fetch(
         `https://maps.googleapis.com/maps/api/geocode/json?latlng=${lat},${lng}&key=${process.env.NEXT_PUBLIC_GOOGLEAPIKEY}`
@@ -16,7 +16,7 @@ export const getAddressFromLatLng_ = async (lat: number, lng: number): Promise<s
       return null;
     }
   };
-  export const getAddressFromLatLng = async (lat: number, lng: number): Promise<string | null> => {
+  export const getAddressFromLatLng_ = async (lat: number, lng: number): Promise<string | null> => {
     try {
       const response = await fetch(
         `https://maps.googleapis.com/maps/api/geocode/json?latlng=${lat},${lng}&key=${process.env.NEXT_PUBLIC_GOOGLEAPIKEY}`

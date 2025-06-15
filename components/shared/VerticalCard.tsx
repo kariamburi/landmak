@@ -250,11 +250,7 @@ const isSale = saleCategories.includes(ad.data.category);
 
 
 // Safely get shapes array or fallback to empty array
-  const shapes = ad.data?.propertyarea?.shapes ?? [];
-  // Calculate total area size
-  const areaSize = Array.isArray(shapes)
-    ? shapes.reduce((sum: number, shape: any) => sum + parseFloat(shape.area || 0), 0)
-    : 0;
+   const areaSize=ad.data?.propertyarea?.totalArea || 0;
   return (
     <>
     {ad.loanterm ? (<>

@@ -13,10 +13,7 @@ import {
 } from "firebase/firestore";
 import { AdminId, REGIONS_WITH_AREA } from "@/constants";
 import { getAlldynamicAd } from "@/lib/actions/dynamicAd.actions";
-import { title } from "process";
-import Fuse from "fuse.js";
-import nlp from 'compromise';
-import { aiParseFilters } from "@/lib/actions/openai";
+import { useMediaQuery } from "react-responsive"; // Detect mobile screens
 type SidebarProps = {
   displayName: string;
   uid: string;
@@ -58,8 +55,8 @@ const humanHelpPhrases = [
   "i want to reach out",
   "i want to talk to someone",
 ];
-
-export default function ChatBot({
+const DOMAIN_URL = process.env.NEXT_PUBLIC_DOMAIN_URL || "https://mapa.co.ke";
+export default function ChatBotIA({
   uid,
   photoURL,
   displayName,
@@ -82,134 +79,16 @@ export default function ChatBot({
   const [loading, setLoading] = useState(false);
   const messagesEndRef = useRef<HTMLDivElement>(null);
   const [lastSent, setLastSent] = useState(0);
-
+  const isMobile = useMediaQuery({ maxWidth: 768 }); // Detect mobile screens
+  
   useEffect(() => {
     messagesEndRef.current?.scrollIntoView({ behavior: "smooth" });
   }, [messages]);
 
 
-const [data, setAds] = useState<any[]>([]);
-const [errorMsg, setErrorMsg] = useState<string | null>(null);
-
-
-const types = [
-  'house',
-  'plot',
-  'apartment',
-  'maisonette',
-  'bungalow',
-  'studio',
-  'commercial',
-  'office',
-  'warehouse',
-  'land',
-  'farm land',
-  'ranch',
-  'vacation rental',
-  'short let',
-  'shop',
-  'building',
-  'hostel',
-  'guesthouse',
-];
-
-// Initialize Fuse with your array of keywords
-const fuse = new Fuse(types, {
-  includeScore: true,
-  threshold: 0.4, // control fuzziness; 0 = exact match, 1 = very fuzzy
-});
-
-// Example usage:
-function fuzzySearchType(input: string) {
-  const result = fuse.search(input);
-  return result.length ? result[0].item : null;
-}
-function parseCurrencyToNumber(input: string): number {
-  const match = input.trim().toLowerCase().match(/^([\d,.]+)\s*(m|million|k)?$/);
-
-  if (!match) return NaN;
-
-  const value = parseFloat(match[1].replace(/,/g, ""));
-  const unit = match[2];
-
-  if (unit === 'm' || unit === 'million') return value * 1_000_000;
-  if (unit === 'k') return value * 1_000;
-  return value;
-}
-const parseFilters = (input: string) => {
-  const doc = nlp(input);
-  const filters: any = {};
-
- // Flatten all regions and areas, then tag them as 'Place'
-  const allPlaces = REGIONS_WITH_AREA.flatMap(({ region, area }) => [region, ...area]);
-  allPlaces.forEach(place => {
-    doc.match(place).tag('Place');
-  });
-
-  // 📍 Location: Match either region or area
-  const locMatch =
-    doc.match('in [#Place+]')?.terms(1).text() ||
-    input.match(/in\s+([a-zA-Z\s]+)/i)?.[1];
-
-  if (locMatch) {
-    filters.address = locMatch.trim();
-  }
-  
-
-  const words = input.toLowerCase().split(/\s+/);
-  
-  // Fuzzy match against your list of types
-  let matchedType = '';
-let maxScore = 1;
-
-for (const word of words) {
-  const result:any = fuse.search(word);
-  if (result.length > 0 && result[0].score < maxScore) {
-    maxScore = result[0].score;
-    matchedType = result[0].item;
-    maxScore = result[0].score;
-
-    if (matchedType) filters.query = matchedType;
-  }
-}
-
-  //const types = ['house', 'plot','apartment', 'maisonette', 'bungalow', 'studio'];
- // const typeMatch = types.find(t => input.toLowerCase().includes(t));
- // if (typeMatch) filters.query = typeMatch;
- 
-  const priceMatch = input.match(/(?:under|below|less than|upto|between|from)?\s*([\d,.]+\s*(million|m|k)?)(?:\s*(and|to|-)\s*([\d,.]+\s*(million|m|k)?))?/i);
-
-if (priceMatch) {
-  const minStr = priceMatch[1];
-  const maxStr = priceMatch[4];
-
-  if (minStr && maxStr) {
-    // Range (e.g. "between 2M and 5M")
-    filters.price = `\${parseCurrencyToNumber(minStr)}-\${parseCurrencyToNumber(maxStr)}`;
-  } else {
-    // Single upper limit (e.g. "below 5M")
-    filters.price = `0-${parseCurrencyToNumber(minStr)}`;
-  }
-}
- const lower = input.toLowerCase();
-  if (/\b(for\s+rent|rent)\b/.test(lower)) {
-    filters.transaction = "rent";
-  } else if (/\b(for\s+sale|sale|sell|buy)\b/.test(lower)) {
-    filters.transaction = "sale";
-  }
-  //const bedMatch = input.match(/(\d+)\s*(bed|bedroom)/i);
-  //if (bedMatch) filters.bedrooms = parseInt(bedMatch[1]);
-
-  //const possibleFeatures = ['parking', 'tarmac', 'balcony', 'furnished', 'internet'];
-  //const features = possibleFeatures.filter(f => input.toLowerCase().includes(f));
-  //if (features.length) filters.features = { $in: features };
-
-  return filters;
-};
 
 
 const handleListingIntegration = async (userInput: string): Promise<string | null> => {
-  //const filters = parseFilters(userInput);
  // If humanInput provided instead of structured queryObject
    const systemPrompt = `
 You are a parser that converts user search queries into a JSON object of filters.
@@ -267,10 +146,15 @@ Return only valid JSON.`;
     }
 
     const formatted = results
-      .map((ad: any, index: number) =>
-        `${index + 1}- [${ad.data.title}](${process.env.NEXT_PUBLIC_DOMAIN_URL + "?Ad=" + ad._id})`
-      )
-      .join("\n");
+  .map((ad: any, index: number) => {
+    const title = ad.data?.title || "Untitled";
+    const id = ad._id;
+    const price = ad.data?.price ? ` - Price: KES ${ad.data.price}` : "";
+    const size = ad.data?.size ? ` - Size: ${ad.data.size}` : "";
+
+    return `${index + 1}- [${title}](${DOMAIN_URL + "?Ad=" + id})${price}${size}`;
+  })
+  .join("\n");
 
     return `Here are some ${aiFilters.query}s:\n\n${formatted}`;
   } catch (error) {
@@ -342,10 +226,17 @@ if (integrationResponse) {
 
   // 🤖 Fall back to normal AI response
   try {
+    const systemMessage = messages.find((m) => m.role === "system");
+const recentMessages = [
+  systemMessage!,
+  ...newMessages
+    .filter((m) => m.role !== "system")
+    .slice(-6), // Keep only the last 6 (you can tune this number)
+];
     const res = await fetch("/api/chat", {
       method: "POST",
       headers: { "Content-Type": "application/json" },
-      body: JSON.stringify({ messages: newMessages }),
+      body: JSON.stringify({ messages: recentMessages }),
     });
 
     const data = await res.json();
@@ -373,59 +264,132 @@ if (integrationResponse) {
 };
 
 
-  const getAvatar = (role: string) => (role === "user" ? "🧑" : "🤖");
-
+ // const getAvatar = (role: string) => (role === "user" ? "🧑" : "🤖");
+ const getAvatar = (role: string) => (role === "user" ? "🧑" : "🤖");
+const combineMessages = (a: Message[], b: Message[]) => {
+  const combined = [...a, ...b];
+  const unique = new Map<string, Message>();
+  for (const msg of combined) {
+    if (msg.id) unique.set(msg.id, msg);
+  }
+  return Array.from(unique.values()).sort((a, b) =>
+  (a.createdAt?.seconds || 0) - (b.createdAt?.seconds || 0)
+);
+ // return [...unique.values()].sort((a, b) => (a.createdAt?.seconds || 0) - (b.createdAt?.seconds || 0));
+};
   useEffect(() => {
-    const senderMessagesQuery = query(
-      collection(db, "messages"),
-      where("uid", "==", uid),
-      where("recipientUid", "==", recipientUid),
-      orderBy("createdAt", "asc"),
-      limit(50)
-    );
+  const senderMessagesQuery = query(
+    collection(db, "messages"),
+    where("uid", "==", uid),
+    where("recipientUid", "==", recipientUid),
+    orderBy("createdAt", "asc"),
+    limit(50)
+  );
 
-    const recipientMessagesQuery = query(
-      collection(db, "messages"),
-      where("uid", "==", recipientUid),
-      where("recipientUid", "==", uid),
-      orderBy("createdAt", "asc"),
-      limit(50)
-    );
+  const recipientMessagesQuery = query(
+    collection(db, "messages"),
+    where("uid", "==", recipientUid),
+    where("recipientUid", "==", uid),
+    orderBy("createdAt", "asc"),
+    limit(50)
+  );
 
-    const unsubscribeSender = onSnapshot(senderMessagesQuery, (snapshot) => {
-      const senderMessages = snapshot.docs.map((doc) => ({
-        id: doc.id,
-        ...(doc.data() as Message),
-      }));
-      setMessages((prev) =>
-        [
-          ...prev.filter((msg) => msg.uid !== uid),
-          ...senderMessages,
-        ].sort((a, b) => (a.createdAt?.seconds || 0) - (b.createdAt?.seconds || 0))
-      );
-    });
+  const unsubscribeSender = onSnapshot(senderMessagesQuery, (snapshot) => {
+    const senderMessages = snapshot.docs.map((doc) => ({
+      id: doc.id,
+      ...(doc.data() as Message),
+    }));
+    setMessages((prev) => combineMessages(prev, senderMessages));
+  });
 
-    const unsubscribeRecipient = onSnapshot(recipientMessagesQuery, (snapshot) => {
-      const recipientMessages = snapshot.docs.map((doc) => ({
-        id: doc.id,
-        ...(doc.data() as Message),
-      }));
-      setMessages((prev) =>
-        [
-          ...prev.filter((msg) => msg.uid !== recipientUid),
-          ...recipientMessages,
-        ].sort((a, b) => (a.createdAt?.seconds || 0) - (b.createdAt?.seconds || 0))
-      );
-    });
+  const unsubscribeRecipient = onSnapshot(recipientMessagesQuery, (snapshot) => {
+    const recipientMessages = snapshot.docs.map((doc) => ({
+      id: doc.id,
+      ...(doc.data() as Message),
+    }));
+    setMessages((prev) => combineMessages(prev, recipientMessages));
+  });
 
-    return () => {
-      unsubscribeSender();
-      unsubscribeRecipient();
-    };
-  }, [uid, recipientUid]);
+  return () => {
+    unsubscribeSender();
+    unsubscribeRecipient();
+  };
+}, [uid, recipientUid]);
 
-  return (
-    <div className="fixed bottom-4 right-4 max-w-sm w-full z-50">
+  return (<> {isMobile  ? (
+              // Fullscreen Popover for Mobile
+      <div className="fixed h-screen inset-0 z-50 bg-white dark:bg-[#222528] dark:text-gray-100 p-0 flex flex-col">
+        <div className="h-screen flex flex-col">
+           <div className="bg-green-700 text-white text-sm px-4 py-2 font-medium flex justify-between items-center">
+        <span>Mapa Chat Assistant</span>
+        <button
+          onClick={() => onClose()}
+          className="text-white hover:text-gray-300 text-lg"
+        >
+          &times;
+        </button>
+      </div>
+
+
+        <div className="flex-1 overflow-y-auto px-4 py-3 space-y-3">
+          {messages
+            .filter((m) => m.role !== "system")
+            .map((msg, i) => (
+              <div
+                key={i}
+                className={`flex items-start gap-2 ${
+                  msg.role === "user" ? "justify-end" : "justify-start"
+                }`}
+              >
+                {msg.role === "assistant" && (
+                  <div className="text-xl">{getAvatar(msg.role)}</div>
+                )}
+                <div
+                  className={`max-w-[80%] text-sm px-4 py-2 rounded-2xl whitespace-pre-wrap prose prose-sm ${
+                    msg.role === "user"
+                      ? "bg-green-600 text-white rounded-br-none"
+                      : "bg-gray-100 text-gray-800 rounded-bl-none"
+                  }`}
+                >
+                  <ReactMarkdown>{msg.content}</ReactMarkdown>
+                </div>
+                {msg.role === "user" && (
+                  <div className="text-xl">{getAvatar(msg.role)}</div>
+                )}
+              </div>
+            ))}
+
+          {loading && (
+            <div className="text-gray-500 text-xs italic">Assistant is typing...</div>
+          )}
+
+          <div ref={messagesEndRef} />
+        </div>
+
+        <div className="flex items-center gap-2 border-t px-3 py-2">
+          <input
+            className="flex-1 border border-gray-300 rounded-full px-4 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-green-300"
+            placeholder="Ask about listings..."
+            value={input}
+            onChange={(e) => setInput(e.target.value)}
+          onKeyDown={(e) => {
+  if (e.key === "Enter" && !e.shiftKey) {
+    e.preventDefault();
+    sendMessage();
+  }
+}}
+          />
+          <button
+            onClick={sendMessage}
+            disabled={loading}
+            className="bg-green-600 hover:bg-green-700 text-white text-sm px-4 py-2 rounded-full disabled:opacity-50"
+          >
+            Send
+          </button>
+        </div>
+        </div>
+          </div>
+  ):(<div className="fixed bottom-4 right-4 max-w-sm w-full z-50">
       <div className="bg-white rounded-xl shadow-lg flex flex-col h-[500px] border border-gray-200">
          <div className="bg-green-700 text-white text-sm px-4 py-2 rounded-t-xl font-medium flex justify-between items-center">
         <span>Mapa Chat Assistant</span>
@@ -479,7 +443,12 @@ if (integrationResponse) {
             placeholder="Ask about listings..."
             value={input}
             onChange={(e) => setInput(e.target.value)}
-            onKeyDown={(e) => e.key === "Enter" && sendMessage()}
+          onKeyDown={(e) => {
+  if (e.key === "Enter" && !e.shiftKey) {
+    e.preventDefault();
+    sendMessage();
+  }
+}}
           />
           <button
             onClick={sendMessage}
@@ -491,5 +460,6 @@ if (integrationResponse) {
         </div>
       </div>
     </div>
-  );
+  )}
+  </>);
 }
