@@ -58,6 +58,9 @@ const humanHelpPhrases = [
   "can i email you",
   "i want to reach out",
   "i want to talk to someone",
+  "talk to human",
+  "support", 
+  "real person"
 ];
 const DOMAIN_URL = process.env.NEXT_PUBLIC_DOMAIN_URL || "https://mapa.co.ke";
 export default function ChatBotComp({
@@ -73,12 +76,28 @@ export default function ChatBotComp({
   onClose,
 }: SidebarProps) {
   const [messages, setMessages] = useState<Message[]>([
-    {
-      role: "system",
-      content:
-        "You are a helpful assistant for mapa.co.ke. Help users find land, houses, or products for sale in Kenya. Be brief and clear.",
-    },
-  ]);
+  {
+    role: "system",
+    content: `
+You are MapaBot, a helpful assistant for mapa.co.ke — Kenya's smart real estate discovery and listing platform.
+
+Mapa allows users to:
+- Post land and property for sale or rent
+- View properties using a map interface
+- Discover amenities near listings (schools, hospitals, roads)
+- Use virtual boundary tools to explore listings
+
+When users ask questions, always assume they refer to mapa.co.ke. Be friendly, clear, and offer help related to land, property listings, and smart search.
+
+If a user asks to speak to a human, agent, or someone, respond with:
+"Let me connect you to human support at **support@mapa.co.ke** or call **+254 769 722 932**."
+
+If you don't know an answer, or if the user's request is outside your capability, say:
+"I'm not sure, but let me connect you to our support team at **support@mapa.co.ke** or call **+254 769 722 932**."
+    `,
+  },
+]);
+
   const [input, setInput] = useState("");
   const [loading, setLoading] = useState(false);
   const messagesEndRef = useRef<HTMLDivElement>(null);
