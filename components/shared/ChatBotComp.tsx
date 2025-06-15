@@ -333,7 +333,7 @@ const handleListingIntegration = async (userInput: string): Promise<string | nul
     const price = ad.data?.price ? ` - Price: KES ${ad.data.price.toLocaleString()}` : "";
     const size = ad.data["land-Area(acres)"] ? ` - Size: ${ad.data["land-Area(acres)"]}` : "";
 
-    return `${index + 1}- [<u>${title}</u>](${DOMAIN_URL + "?Ad=" + id})${price}${size}`;
+  return `${index + 1}- 🔗 [${title}](${DOMAIN_URL + "?Ad=" + id})${price}${size}`;
   })
   .join("\n");
 
@@ -515,7 +515,7 @@ const getAvatar = (role: string) => (role === "user" ? "🧑" : "🤖");
          <div className="fixed h-screen inset-0 z-50 bg-white dark:bg-[#222528] dark:text-gray-100 p-0 flex flex-col">
            <div className="h-screen flex flex-col">
               <div className="bg-green-700 text-white text-sm px-4 py-2 font-medium flex justify-between items-center">
-           <span>Mapa Chat Assistant</span>
+           <span>mapa Chat Assistant</span>
            <button
              onClick={() => onClose()}
              className="text-white hover:text-gray-300 text-lg"
@@ -563,7 +563,7 @@ const getAvatar = (role: string) => (role === "user" ? "🧑" : "🤖");
            <div className="flex items-center gap-2 border-t px-3 py-2">
              <input
                className="flex-1 border border-gray-300 rounded-full px-4 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-green-300"
-               placeholder="Ask about listings..."
+                placeholder='Ask about buying, selling, listings, or real estate procedures'
                value={input}
                onChange={(e) => setInput(e.target.value)}
              onKeyDown={(e) => {
@@ -586,7 +586,7 @@ const getAvatar = (role: string) => (role === "user" ? "🧑" : "🤖");
      ):(<div className="fixed bottom-4 right-4 max-w-lg w-full z-50">
          <div className="bg-white rounded-xl shadow-lg flex flex-col h-[90vh] border border-gray-200">
             <div className="bg-green-700 text-white text-sm px-4 py-2 rounded-t-xl font-medium flex justify-between items-center">
-           <span>Mapa Chat Assistant</span>
+           <span>mapa Chat Assistant</span>
            <button
              onClick={() => onClose()}
              className="text-white hover:text-gray-300 text-lg"
