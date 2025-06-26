@@ -1008,7 +1008,7 @@ export default function MainView({
 
 
   const [breakpointColumns, setBreakpointColumns] = useState(1); // Default to 1
-  const listRef = useRef<HTMLDivElement>(null);
+  //const listRef = useRef<HTMLDivElement>(null);
 
   useEffect(() => {
     const observer = new ResizeObserver((entries) => {
@@ -1029,13 +1029,13 @@ export default function MainView({
       }
     });
 
-    if (listRef.current) {
-      observer.observe(listRef.current);
+    if (viewportRef.current) {
+      observer.observe(viewportRef.current);
     }
 
     return () => {
-      if (listRef.current) {
-        observer.unobserve(listRef.current);
+      if (viewportRef.current) {
+        observer.unobserve(viewportRef.current);
       }
     };
   }, []);
@@ -1206,8 +1206,9 @@ export default function MainView({
           </div>)}
 
         <div
-          className={`bg-gradient-to-b from-green-600 to-green-600 lg:from-[#e4ebeb] justify-center pl-2 pr-2 h-[60px] lg:to-[#e4ebeb] transition-all duration-300 overflow-hidden w-full flex flex-col items-center ${showBottomNav ? "max-h-[60px] opacity-100" : "max-h-0 opacity-0"
-            }`}
+          //className={`bg-gradient-to-b from-green-600 to-green-600 lg:from-[#e4ebeb] justify-center pl-2 pr-2 h-[60px] lg:to-[#e4ebeb] transition-all duration-300 overflow-hidden w-full flex flex-col items-center ${showBottomNav ? "max-h-[60px] opacity-100" : "max-h-0 opacity-0"
+          //  }`}
+          className={`bg-gradient-to-b from-green-600 to-green-600 lg:from-[#e4ebeb] justify-center pl-2 pr-2 h-[60px] lg:to-[#e4ebeb] transition-all duration-300 overflow-hidden w-full flex flex-col items-center`}
         >
           <div className="w-full h-full justify-between flex items-center">
             <div className="flex items-center gap-1">
@@ -1877,7 +1878,7 @@ export default function MainView({
 
             {/* Map View */}
             <div
-              className={`relative mb-10 lg:mb-0 transition-all lg:rounded-xl shadow-md border duration-300 overflow-hidden ${showMap ? 'block' : 'hidden'
+              className={`relative ${showBottomNav ? "mb-10 lg:mb-0" : "mb-0"} transition-all lg:rounded-xl shadow-md border duration-300 overflow-hidden ${showMap ? 'block' : 'hidden'
                 }`}
             >
               {isLoaded ? (<><GoogleMap
