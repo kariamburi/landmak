@@ -1657,7 +1657,7 @@ export default function MainView({
           >
             {/* Property List */}
             <div
-              ref={listRef}
+              ref={viewportRef}
               className={`relative transition-all b-white rounded-sm lg:p-1 duration-300 overflow-y-auto ${showList ? 'block' : 'hidden'
                 }`}
             >
@@ -1833,9 +1833,9 @@ export default function MainView({
               {loading && (
                 <div>
                   {isInitialLoading ? (
-                    <div className="grid grid-cols-2 lg:grid-cols-4 gap-2">
+                    <div className={`grid grid-cols-${breakpointColumns} gap-2`}>
                       {Array.from({ length: 12 }).map((_, index) => (
-                        <div key={index} className="bg-[#e4ebeb] dark:bg-[#2D3236] p-4 rounded-lg shadow-md w-full">
+                        <div key={index} className="bg-white dark:bg-[#2D3236] p-4 rounded-md shadow-md w-full">
                           <Skeleton variant="rectangular" width="100%" height={140} />
                           <Skeleton variant="text" width="80%" height={30} className="mt-2" />
                           <Skeleton variant="text" width="60%" height={25} />
@@ -1890,15 +1890,15 @@ export default function MainView({
                 options={{
                   zoomControl: true, // Enable zoom controls
                   mapTypeControl: true, // Enable map type switch
-                  streetViewControl: true, // Enable Street View control
+                  streetViewControl: false, // Enable Street View control
                   fullscreenControl: true, // Enable Fullscreen button
                   mapTypeId: "hybrid", // Hybrid = Satellite + Labels
                   zoomControlOptions: {
-                    position: google.maps.ControlPosition.LEFT_BOTTOM, // Places zoom control at the bottom-right
+                    position: google.maps.ControlPosition.LEFT_CENTER, // Places zoom control at the bottom-right
                   },
-                  streetViewControlOptions: {
-                    position: google.maps.ControlPosition.LEFT_CENTER,
-                  },
+                  // streetViewControlOptions: {
+                  //  position: google.maps.ControlPosition.LEFT_CENTER,
+                  // },
                 }}
                 onClick={(e) => {
                   setMapCenter({ lat: e.latLng?.lat() || 0, lng: e.latLng?.lng() || 0 });
@@ -1969,7 +1969,7 @@ export default function MainView({
               {/* Back to List Button */}
               {showMap && !showList && (
                 <button
-                  className="flex items-center gap-1 absolute bottom-[60px] left-4 bg-white text-black px-3 py-1 rounded shadow"
+                  className="flex items-center gap-1 absolute bottom-5 left-4 bg-white text-black px-3 py-1 rounded shadow"
                   onClick={() => toggleListCommit()}
                 >
                   ← Back to List <ListBulletIcon className="w-5 h-5" />

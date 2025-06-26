@@ -173,16 +173,15 @@ export default function MapDrawingTool({ data }: Props) {
       center,
       zoom: 16,
       zoomControl: true,
-      streetViewControl: true,
+      streetViewControl: false,
       fullscreenControl: false,
       zoomControlOptions: {
-        position: google.maps.ControlPosition.LEFT_BOTTOM, // Places zoom control at the bottom-right
+        position: google.maps.ControlPosition.LEFT_CENTER, // Places zoom control at the bottom-right
       },
       // Move zoom and street view to LEFT_CENTER
-
-      streetViewControlOptions: {
-        position: google.maps.ControlPosition.LEFT_CENTER,
-      },
+      // streetViewControlOptions: {
+      //   position: google.maps.ControlPosition.LEFT_CENTER,
+      // },
       mapTypeId: "hybrid",
     });
     mapInstance.current = map;
