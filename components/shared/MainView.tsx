@@ -1896,6 +1896,9 @@ export default function MainView({
                   zoomControlOptions: {
                     position: google.maps.ControlPosition.LEFT_BOTTOM, // Places zoom control at the bottom-right
                   },
+                  streetViewControlOptions: {
+                    position: google.maps.ControlPosition.LEFT_CENTER,
+                  },
                 }}
                 onClick={(e) => {
                   setMapCenter({ lat: e.latLng?.lat() || 0, lng: e.latLng?.lng() || 0 });
