@@ -560,8 +560,8 @@ You are always helpful, clear, and aligned with mapa.co.ke's mission: to simplif
       // Fullscreen Popover for Mobile
       <div className="fixed h-screen inset-0 z-50 bg-white dark:bg-[#222528] dark:text-gray-100 p-0 flex flex-col">
         <div className="h-screen flex flex-col">
-          <div className="bg-green-700 text-white text-sm px-4 py-2 font-medium flex justify-between items-center">
-            <span>mapa Chat Assistant</span>
+          <div className="bg-green-600 text-white text-sm px-4 py-2 font-medium flex justify-between items-center">
+            <span>Chat Assistant</span>
             <button
               onClick={() => onClose()}
               className="text-white hover:text-gray-300 text-lg"
@@ -629,8 +629,8 @@ You are always helpful, clear, and aligned with mapa.co.ke's mission: to simplif
       </div>
     ) : (<div className="fixed bottom-4 right-4 max-w-lg w-full z-50">
       <div className="bg-white rounded-xl shadow-lg flex flex-col h-[90vh] border border-gray-200">
-        <div className="bg-green-700 text-white text-sm px-4 py-2 rounded-t-xl font-medium flex justify-between items-center">
-          <span>mapa Chat Assistant</span>
+        <div className="bg-green-600 text-white text-sm px-4 py-2 rounded-t-xl font-medium flex justify-between items-center">
+          <span>Chat Assistant</span>
           <button
             onClick={() => onClose()}
             className="text-white hover:text-gray-300 text-lg"

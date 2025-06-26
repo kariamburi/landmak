@@ -182,6 +182,7 @@ export async function updateUserPhone(_id: string, phone: string) {
     await connectToDatabase();
 
     // Find the category by its ID and update the name field only
+    console.log(_id + '--' + phone);
     const updatephone = await User.findByIdAndUpdate(
       _id,
       { phone }, // Update only the name field

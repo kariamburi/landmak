@@ -2,8 +2,8 @@ import { initializeApp } from "firebase/app";
 import { getFirestore } from "firebase/firestore";
 import { getStorage } from "firebase/storage";
 import { getMessaging, getToken } from "firebase/messaging";
-// TODO: Replace the following with your app's Firebase project configuration
-// See: https://firebase.google.com/docs/web/learn-more#config-object
+import { getAuth } from "firebase/auth";
+
 // Firebase config
 const firebaseConfig = {
   apiKey: process.env.NEXT_PUBLIC_FIREBASE_API_KEY,
@@ -13,13 +13,14 @@ const firebaseConfig = {
   messagingSenderId: process.env.NEXT_PUBLIC_FIREBASE_MESSAGE_SENDER_ID,
   appId: process.env.NEXT_PUBLIC_FIREBASE_APP_ID,
 };
-// Initialize Firebase
+
+// Initialize Firebase app
 const app = initializeApp(firebaseConfig);
 
-
-// Initialize Firebase Cloud Messaging and get a reference to the service
+// Firebase services (all using app instance)
+const auth = getAuth(app);
+const db = getFirestore(app);
+const storage = getStorage(app);
 const messaging = getMessaging(app);
-const db = getFirestore();
-const storage = getStorage();
 
-export { app, db, storage, messaging, getMessaging, getToken };
+export { auth, app, db, storage, messaging, getMessaging, getToken };

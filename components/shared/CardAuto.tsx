@@ -59,7 +59,7 @@ type CardProps = {
   handleOpenChatId: (value: any) => void;
 };
 
-const CardAutoHeight = ({
+const CardAuto = ({
   ad: initialAd,
   userName,
   userImage,
@@ -173,12 +173,7 @@ const CardAutoHeight = ({
       adstatus: newStatus,
     }));
   };
-  // Safely get shapes array or fallback to empty array
-  // const shapes = ad.data?.propertyarea?.shapes ?? [];
-  // Calculate total area size
-  //const areaSize = Array.isArray(shapes)
-  //  ? shapes.reduce((sum: number, shape: any) => sum + parseFloat(shape.area || 0), 0)
-  // : 0;
+
   const areaSize = ad.data?.propertyarea?.totalArea || 0;
   return (
     <>{ad.loanterm ? (<><div className="bg-white hover:bg-gray-100 dark:hover:bg-gray-600 rounded-lg text-xs border border-gray-300 dark:border-gray-600">
@@ -317,50 +312,307 @@ const CardAutoHeight = ({
     </div>
     </>) : (<>{!isDeleted && (<>
       <div
-        onClick={() => {
-          handleAdView(ad);
-        }}
-        className="rounded-xl bg-white shadow-md overflow-hidden hover:shadow-lg cursor-pointer transition duration-300 w-full max-w-xs sm:max-w-sm md:max-w-md"
+        className={`mb-2 w-full lg:min-w-[200px] rounded-lg border shadow-sm bg-white dark:bg-[#2D3236]`}
+
       >
-        {/* Image */}
-        <div className="relative h-48 w-full">
+        {/* Image section with dynamic height */}
+
+
+        <div className="relative rounded-t-lg w-full"
+          style={
+            ad.plan.name !== "Free"
+              ? {
+                border: "2px solid",
+                borderColor: ad.plan.color, // Border color for non-free plans
+              }
+              : undefined
+          }
+        >
+
+
+          {isLoadingsmall && ad.data.imageUrls.length > 0 && (
+            <div
+              onClick={() => {
+                handleAdView(ad);
+              }}
+              className="absolute inset-0 flex justify-center items-center bg-gray-100">
+              <Icon icon={threeDotsScale} className="w-6 h-6 text-gray-500" />
+            </div>
+          )}
+
           <Image
+            onClick={() => handleAdView(ad)}
             src={ad.data.imageUrls.length > 0 ? ad.data.imageUrls[0] : "/fallback.jpg"}
-            alt={ad.data.title}
-            fill
-            className="object-cover"
+            alt={ad.data.title || "Ad image"}
+            width={400}
+            height={400}
+            // style={{ minHeight: "200px" }}
+            className={`w-full rounded-t-lg h-[200px] object-cover cursor-pointer ${isLoadingsmall ? "opacity-0" : "opacity-100"
+              } transition-opacity duration-300`}
+            onLoadingComplete={() => setIsLoadingsmall(false)}
+            placeholder="empty"
           />
-          {/* Image count badge */}
-          <div className="absolute top-2 left-2 bg-black/60 text-white text-xs px-2 py-1 rounded-full">
-            📷 {ad.data.imageUrls.length}
+
+          {ad.plan.name !== "Free" && (
+            <div
+              style={{
+                backgroundColor: ad.plan.color,
+              }}
+              className="absolute top-0 shadow-lg left-0 text-white text-[10px] py-1 px-1 lg:text-xs lg:py-1 lg:px-3 rounded-br-lg rounded-tl-sm"
+            >
+              <div
+                onClick={() => {
+                  handleOpenPlan();
+                  // router.push(`/plan`);
+                }}
+              >
+                <div className="flex gap-1 cursor-pointer">{ad.plan.name}</div>
+              </div>
+            </div>
+          )}
+          {ad.organizer.verified &&
+            ad.organizer?.verified[0]?.accountverified === true && (
+              <div className="absolute bg-emerald-100 top-0 right-0 dark:text-emerald-900 text-[10px] py-1 px-1 lg:text-xs lg:py-1 lg:px-3 rounded-bl-lg rounded-tr-lg">
+                <div className="flex gap-1 cursor-pointer">
+                  <VerifiedUserOutlinedIcon sx={{ fontSize: 16 }} />
+                  Verified
+                </div>
+              </div>
+            )}
+          {isAdCreator && !hidePrice && (
+            <div className="absolute right-2 top-10 flex flex-col gap-4 rounded-xl bg-white p-3 shadow-sm transition-all">
+              <div
+                onClick={() => {
+                  handleAdEdit(ad);
+                }}
+                className="cursor-pointer"
+              >
+                <Image
+                  src="/assets/icons/edit.svg"
+                  alt="edit"
+                  width={20}
+                  height={20}
+                />
+              </div>
+              <DeleteConfirmation adId={ad._id} imageUrls={ad.data.imageUrls} onDeleteSuccess={() => setIsDeleted(true)} />
+            </div>
+          )}
+
+          <div className="w-full flex justify-between absolute bottom-[15px] left-1/2 transform -translate-x-1/2 p-1 rounded-full">
+            {/* <div className="gap-1 cursor-pointer bg-[#000000] bg-opacity-70 text-[10px] text-white flex rounded-sm p-1 shadow-sm transition-all">
+              <FilterOutlinedIcon
+                sx={{ fontSize: 16, cursor: "pointer" }}
+              />
+              {ad.data.imageUrls.length}
+            </div>
+
+              Image count badge */}
+            <div className="bg-black/60 text-white items-center text-xs px-2 py-1 rounded-full">
+              📷 {ad.data.imageUrls.length}
+            </div>
+            {ad.data["propertyarea"] && (
+              <div className="bg-black/60 text-white text-xs px-2 py-1 rounded-full">
+                <LocationOnIcon
+                  sx={{ fontSize: 16, cursor: "pointer" }}
+
+                />
+
+              </div>
+            )}
+
+            {ad.data["youtube-link"] && (
+              <div className="bg-black/60 text-white text-xs px-2 py-1 rounded-full">
+                <YouTubeIcon
+                  sx={{ fontSize: 16, cursor: "pointer" }}
+
+                />
+              </div>
+            )}
+            {ad.data["virtualTourLink"] && (
+              <div className="bg-black/60 text-white text-xs px-2 py-1 rounded-full">
+                <ThreeDRotationOutlinedIcon
+                  sx={{ fontSize: 16, cursor: "pointer" }}
+
+                />
+
+              </div>
+            )}
+
           </div>
-          {/* Action Icon (e.g., share or save) */}
-          <div className="absolute top-2 right-2 bg-white text-green-600 rounded-full w-7 h-7 flex items-center justify-center shadow">
-            <svg xmlns="http://www.w3.org/2000/svg" className="h-4 w-4" fill="none" stroke="currentColor" strokeWidth="2" viewBox="0 0 24 24">
-              <path strokeLinecap="round" strokeLinejoin="round" d="M3 10h2l1 2h13m1 0a9 9 0 11-3-6.708" />
-            </svg>
+          <div className="w-full flex justify-end absolute bottom-[-19px] left-1/2 transform -translate-x-1/2 p-1 rounded-full">
+            <SignedIn>
+              <div
+                className="w-8 h-8 p-1 shadow flex items-center justify-center rounded-full bg-white hover:text-emerald-800 tooltip tooltip-bottom text-[#2BBF4E] hover:cursor-pointer"
+                data-tip="Bookmark"
+                onClick={() => handle(ad._id)}
+              >
+                <TooltipProvider>
+                  <Tooltip>
+                    <TooltipTrigger asChild>
+                      <BookmarkAddedOutlinedIcon sx={{ fontSize: 20 }} />
+                    </TooltipTrigger>
+                    <TooltipContent side="left">
+                      <p className="text-sm"> Save Ad</p>
+                    </TooltipContent>
+                  </Tooltip>
+                </TooltipProvider>
+              </div>
+            </SignedIn>
+
+            <SignedOut>
+              <div
+                onClick={() => {
+                  //handleOpenP();
+                  router.push(`/sign-in`);
+                }}
+                className="cursor-pointer"
+              >
+                <div
+                  className="w-8 h-8 p-1 shadow flex items-center justify-center rounded-full bg-white hover:text-emerald-800 tooltip tooltip-bottom text-[#2BBF4E] hover:cursor-pointer"
+                  data-tip="Bookmark"
+                >
+                  <TooltipProvider>
+                    <Tooltip>
+                      <TooltipTrigger asChild>
+                        <BookmarkAddedOutlinedIcon sx={{ fontSize: 20 }} />
+                      </TooltipTrigger>
+                      <TooltipContent side="left">
+                        <p className="text-sm"> Save Ad</p>
+                      </TooltipContent>
+                    </Tooltip>
+                  </TooltipProvider>
+                </div>
+              </div>
+            </SignedOut>
           </div>
         </div>
 
-        {/* Text content */}
-        <div className="p-3 space-y-1">
-          <h3 className="text-sm font-semibold text-gray-800 truncate">{ad.data.title.length > 50
-            ? `${ad.data.title.substring(0, 50)}...`
-            : ad.data.title}</h3>
-          <p className="text-xs text-gray-500">📍 {truncateaddress(ad.data.propertyarea?.mapaddress, 25)}</p>
-          <p className="text-green-600 font-bold text-sm">
-            {ad.data.price.toLocaleString()}
-            {ad.data.unit && <span className="text-xs text-gray-600 font-normal"> {ad.data.unit}</span>}
-          </p>
-          <div className="inline-block text-xs text-white bg-green-600 rounded px-2 py-[2px]">
-            Sale
+        {/* Text section */}
+        <div className="p-2 lg:p-4">
+          <div
+            onClick={() => {
+              handleAdView(ad);
+            }}
+            className="font-semibold text-sm cursor-pointer lg:text-base"
+          >
+            <h2>{ad.data.title}</h2>
+
           </div>
+          {ad.data.propertyarea?.mapaddress && (
+            <div className="text-gray-500 flex gap-1 items-center dark:text-gray-500 text-xs">
+              <LocationOnIcon sx={{ fontSize: 14 }} />
+              {truncateaddress(ad.data.propertyarea?.mapaddress, 25)}
+            </div>
+          )}
+          <div
+            onClick={() => {
+              handleAdView(ad);
+            }}
+            className="flex gap-1 cursor-pointer items-center dark:text-green-500 text-emerald-700 no-underline"
+          >
+            {ad.data.contact && ad.data.contact === "contact" ? (
+              <div className="font-bold">Contact for price</div>
+            ) : (
+              <>
+                <span className="font-bold">
+                  {ad.data.budget ? (<> Budget : Ksh {ad.data.budget.toLocaleString()}</>) : (<> {ad.data.price > 0 && (
+                    <span>
+                      Ksh {ad.data.price.toLocaleString()}
+                    </span>)}
+                  </>)}
+                </span>
+              </>
+            )}{" "}
+            {ad.data.unit && ad.data.contact === "specify" && (
+              <div className="text-xs dark:text-green-500">{'(' + ad.data.unit + ')'}</div>
+            )}{" "}
+            {ad.data.per && (
+              <div className="text-xs dark:text-green-500">{'(' + ad.data.per + ')'}</div>
+            )}
+            {ad.data.period && (
+              <div className="text-xs dark:text-green-500">
+                {'(' + ad.data.period + ')'}
+              </div>
+            )}
+            {ad.data["Maximum Amount"] && ad.data["Minimum Amount"] && (
+              <div className="flex flex-col font-bold">
+                <p>Min: Ksh {Number(ad.data["Minimum Amount"]).toLocaleString()} </p>
+                <p>Max: Ksh {Number(ad.data["Maximum Amount"]).toLocaleString()}</p>
+              </div>
+            )}
+          </div>
+          {areaSize > 0 && (
+            <div className="flex mt-1 gap-2   text-[10px] dark:bg-[#131B1E] dark:text-gray-300 bg-[#ebf2f7] rounded-lg p-1 justify-center border">
+              <label className="text-xs mb-1">
+                Approx. Land Size
+                <br />
+                ≈ {areaSize.toFixed(2)} m²
+                <br />
+                ≈ {(areaSize / 4046.86).toFixed(2)} acres
+                <br />
+                ≈ {(areaSize / 10000).toFixed(2)} hectares
+                <br />
+
+              </label>
+            </div>
+          )}
+          <div className="flex gap-2 text-gray-500 text-sm mt-2">
+            {ad.data.category?.toLowerCase().includes("rent") && (<>
+              {/* <div className="flex gap-2 text-[10px] dark:bg-[#131B1E] dark:text-gray-300 bg-[#ebf2f7] rounded-lg p-1 justify-center border">
+                Rent
+              </div>*/}
+              <div className="inline-block text-xs text-white bg-green-600 rounded px-2 py-[2px]">
+                Rent
+              </div>
+            </>)}
+            {ad.data.category?.toLowerCase().includes("sale") && (
+              <div className="inline-block text-xs text-white bg-green-600 rounded px-2 py-[2px]">
+                Sale
+              </div>
+            )}
+            {ad.data.condition && (
+              <div className="inline-block text-xs text-white bg-green-600 rounded px-2 py-[2px]">
+                {ad.data.condition}
+              </div>
+
+            )}
+
+            {ad.data["land-Type"] && (
+              <div className="inline-block text-xs text-white bg-green-600 rounded px-2 py-[2px]">
+                {ad.data["land-Type"]}
+              </div>
+
+            )}
+
+          </div>
+          {ad.disputeStatus && (<DisputeBadge status={ad.disputeStatus} />)}
+          {ad.mapaVerificationStatus && ad.mapaVerificationStatus === 'verified' && <MapaVerifiedBadge size="sm" />}
+
+
+          {isAdCreator && shouldShowRenewButton(ad.updatedAt, ad.priority) && (<div className="flex mt-2 w-full text-xs justify-between items-center">
+            <button
+              className="bg-green-600 hover:bg-green-700 text-white p-2 rounded"
+              onClick={() => handleRenew(ad._id)}
+            >
+              Renew Ad
+            </button>
+            <button
+              className="bg-yellow-500 hover:bg-yellow-600 text-white p-2 rounded"
+              onClick={() => handleOpenPlan()}
+            >
+              Top Ad
+            </button>
+          </div>
+
+          )}
         </div>
+
       </div>
       <ScheduleVisitForm userId={userId} ad={selectedAd} isOpen={isPopupOpenSchedule} onClose={handleClosePopupSchedule} userName={userName} userImage={userImage} />
     </>)}
-    </>)}</>
+    </>)
+    }</>
   );
 };
 
-export default CardAutoHeight;
+export default CardAuto;

@@ -28,7 +28,7 @@ import RouteOutlinedIcon from '@mui/icons-material/RouteOutlined';
 import GpsFixedOutlinedIcon from '@mui/icons-material/GpsFixedOutlined';
 import DirectionsOutlinedIcon from '@mui/icons-material/DirectionsOutlined';
 import { Icon } from "@iconify/react";
-import Barsscale from "@iconify-icons/svg-spinners/bars-scale"; 
+import Barsscale from "@iconify-icons/svg-spinners/bars-scale";
 import StreetviewOutlinedIcon from '@mui/icons-material/StreetviewOutlined';
 
 import {
@@ -85,10 +85,10 @@ type Shape = {
   path: google.maps.LatLng[]; // or any path type you are using
   type: string;  // The type of the shape (polygon, polyline, etc.)
   color: string;
-  area:any;
-  status:string;
- // overlay: google.maps.Polygon | google.maps.Polyline;
- // labelMarker: google.maps.Marker;
+  area: any;
+  status: string;
+  // overlay: google.maps.Polygon | google.maps.Polyline;
+  // labelMarker: google.maps.Marker;
 };
 interface Props {
   data: {
@@ -117,15 +117,15 @@ const markerOptions = [
 ];
 
 export default function MapDrawingTool({ data }: Props) {
-   const [center, setCenter] = useState<any>(data.location?.coordinates ? {lat:data.location.coordinates[0], lng:data.location.coordinates[1]}:defaultcenter);
-   const mapRef = useRef<HTMLDivElement>(null);
+  const [center, setCenter] = useState<any>(data.location?.coordinates ? { lat: data.location.coordinates[0], lng: data.location.coordinates[1] } : defaultcenter);
+  const mapRef = useRef<HTMLDivElement>(null);
   const mapInstance = useRef<google.maps.Map | null>(null);
   const drawingManager = useRef<google.maps.drawing.DrawingManager | null>(null);
   const shapeOriginalColors = useRef<Map<any, string>>(new Map());
   const [selectedShapePosition, setSelectedShapePosition] = useState<google.maps.LatLng | null>(null);
-  const [shapes, setShapes] = useState<Shape[]>(data.shapes ? data.shapes: []);
+  const [shapes, setShapes] = useState<Shape[]>(data.shapes ? data.shapes : []);
   const [shapeRefs, setShapeRefs] = useState<google.maps.Polygon[]>([]);
-  const [polylines, setPolylines] = useState<Polyline[]>(data.polylines ? data.polylines: []);
+  const [polylines, setPolylines] = useState<Polyline[]>(data.polylines ? data.polylines : []);
   const [polylineRefs, setPolylineRefs] = useState<google.maps.Polyline[]>([]);
   const [markers, setMarkers] = useState<Marker[]>([]);
   const [markerRefs, setMarkerRefs] = useState<google.maps.Marker[]>([]);
@@ -136,7 +136,7 @@ export default function MapDrawingTool({ data }: Props) {
   const [selectedColor, setSelectedColor] = useState<string | null>(null);
   const [selectedLabel, setSelectedLabel] = useState<string>("");
   const [dropdownOpen, setDropdownOpen] = useState(false);
-   const [showGuide, setShowGuide] = useState(false);
+  const [showGuide, setShowGuide] = useState(false);
   //const drawingManagerRef = useRef<google.maps.drawing.DrawingManager | null>(null);
   const shapesRef = useRef(shapes);
   const polylinesRef = useRef(polylines);
@@ -148,20 +148,20 @@ export default function MapDrawingTool({ data }: Props) {
   const [showDistanceDialog, setShowDistanceDialog] = useState(false);
   const [openDirectionsDialog, setOpenDirectionsDialog] = useState(false);
   const [openDistanceDialog, setOpenDistanceDialog] = useState(false);
-   const [destination, setDestination] = useState('');
+  const [destination, setDestination] = useState('');
   // Sync refs when state updates
   useEffect(() => {
     shapesRef.current = shapes;
   }, [shapes]);
-  
+
   useEffect(() => {
     polylinesRef.current = polylines;
   }, [polylines]);
-  
+
 
   const { isLoaded } = useLoadScript({
     googleMapsApiKey: process.env.NEXT_PUBLIC_GOOGLEAPIKEY!,
-    libraries: ["drawing", "geometry","places"],
+    libraries: ["drawing", "geometry", "places"],
   });
 
 
@@ -169,286 +169,286 @@ export default function MapDrawingTool({ data }: Props) {
   useEffect(() => {
     if (!isLoaded || !mapRef.current) return;
 
-      const map = new google.maps.Map(mapRef.current, {
-        center,
-        zoom: 16,
-        zoomControl: true,
-        streetViewControl: true,
-        fullscreenControl: false,
-        zoomControlOptions: {
-          position: google.maps.ControlPosition.LEFT_BOTTOM, // Places zoom control at the bottom-right
-        },
-        // Move zoom and street view to LEFT_CENTER
-  
-        streetViewControlOptions: {
-          position: google.maps.ControlPosition.LEFT_CENTER,
-        },
-        mapTypeId: "satellite",
-      });
-      mapInstance.current = map;
-    
-  // 🔥 Call your map load handler here
-  onMapLoad(map);
-  if (data.shapes.length === 0) {
-  // remove any old marker
+    const map = new google.maps.Map(mapRef.current, {
+      center,
+      zoom: 16,
+      zoomControl: true,
+      streetViewControl: true,
+      fullscreenControl: false,
+      zoomControlOptions: {
+        position: google.maps.ControlPosition.LEFT_BOTTOM, // Places zoom control at the bottom-right
+      },
+      // Move zoom and street view to LEFT_CENTER
 
-  const marker = new google.maps.Marker({
-    position: center,
-    map,
-    draggable: true,
-    title: "Location",
-  });
-  markerRef.current = marker;
-}
-      const manager = new google.maps.drawing.DrawingManager({
+      streetViewControlOptions: {
+        position: google.maps.ControlPosition.LEFT_CENTER,
+      },
+      mapTypeId: "hybrid",
+    });
+    mapInstance.current = map;
+
+    // 🔥 Call your map load handler here
+    onMapLoad(map);
+    if (data.shapes.length === 0) {
+      // remove any old marker
+
+      const marker = new google.maps.Marker({
+        position: center,
+        map,
+        draggable: true,
+        title: "Location",
+      });
+      markerRef.current = marker;
+    }
+    const manager = new google.maps.drawing.DrawingManager({
       //  drawingControl: true,
-        drawingMode: null,
-        drawingControl: false,    // No default mode
-        drawingControlOptions: {
-          position: google.maps.ControlPosition.TOP_CENTER,
-          drawingModes: [
-            google.maps.drawing.OverlayType.MARKER,
-            google.maps.drawing.OverlayType.POLYLINE,
-            google.maps.drawing.OverlayType.POLYGON,
-          ],
-        },
-        markerOptions: {
-          draggable: true,
-        },
-        polylineOptions: {
-          strokeColor: "#FF0000",
-          strokeWeight: 2,
-          editable: true,
-        },
-        polygonOptions: {
-          fillColor: "#00FF00",
-          strokeColor: "#00FF00",
-          fillOpacity: 0.1,
-          strokeWeight: 2,
-          editable: true,
-        },
+      drawingMode: null,
+      drawingControl: false,    // No default mode
+      drawingControlOptions: {
+        position: google.maps.ControlPosition.TOP_CENTER,
+        drawingModes: [
+          google.maps.drawing.OverlayType.MARKER,
+          google.maps.drawing.OverlayType.POLYLINE,
+          google.maps.drawing.OverlayType.POLYGON,
+        ],
+      },
+      markerOptions: {
+        draggable: true,
+      },
+      polylineOptions: {
+        strokeColor: "#FF0000",
+        strokeWeight: 2,
+        editable: true,
+      },
+      polygonOptions: {
+        fillColor: "#00FF00",
+        strokeColor: "#00FF00",
+        fillOpacity: 0.1,
+        strokeWeight: 2,
+        editable: true,
+      },
+    });
+
+    manager.setMap(map);
+    drawingManager.current = manager;
+
+    // Enlarge drawing control buttons
+    const interval = setInterval(() => {
+      const controls = document.querySelectorAll(
+        '.gmnoprint[style*="margin"] button, .gm-control-active button'
+      );
+      if (controls.length > 0) {
+        controls.forEach((btn) => {
+          (btn as HTMLElement).style.fontSize = "16px";
+          (btn as HTMLElement).style.padding = "8px 12px";
+        });
+        clearInterval(interval);
+      }
+    }, 500);
+
+    google.maps.event.addListener(manager, "markercomplete", (marker: google.maps.Marker) => {
+      const iconType = selectedMarkerTypeRef.current;
+      const position = marker.getPosition();
+      if (!position) return;
+
+      const label = prompt("Enter label for this marker:", iconType.label) || iconType.label;
+      if (!label) {
+        marker.setMap(null); // Remove the shape from map if user cancels
+        return;
+      }
+      marker.setOptions({
+        icon: iconType.icon,
+        optimized: true,
+        zIndex: google.maps.Marker.MAX_ZINDEX + 1,
       });
 
-      manager.setMap(map);
-      drawingManager.current = manager;
 
-      // Enlarge drawing control buttons
-      const interval = setInterval(() => {
-        const controls = document.querySelectorAll(
-          '.gmnoprint[style*="margin"] button, .gm-control-active button'
+      const infoWindow = new google.maps.InfoWindow({ content: label });
+      marker.addListener("click", () => infoWindow.open({ anchor: marker, map }));
+
+      const newMarker: Marker = {
+        position: { lat: position.lat(), lng: position.lng() },
+        label,
+        icon: iconType.icon,
+      };
+
+      setMarkers((prev) => [...prev, newMarker]);
+      setMarkerRefs((prev) => [...prev, marker]);
+    });
+
+    google.maps.event.addListener(manager, "polylinecomplete", (polyline: google.maps.Polyline) => {
+      const label = prompt("Enter label for this polyline:") || "";
+      if (!label) {
+        polyline.setMap(null); // Remove the shape from map if user cancels
+        return;
+      }
+      const path = polyline.getPath().getArray().map((latlng) => ({ lat: latlng.lat(), lng: latlng.lng() }));
+      const defaultColor = "#FF0000";
+      const hoverColor = "#00AAFF";
+
+      // Set initial styles
+      polyline.setOptions({
+        strokeColor: defaultColor,
+        strokeWeight: 2,
+      });
+      shapeOriginalColors.current.set(polyline, "#FF0000");
+
+      // Create an InfoWindow for showing the label
+      let infoWindowTimeout: NodeJS.Timeout;
+      const sharedInfoWindow = new google.maps.InfoWindow();
+      polyline.addListener("mouseover", (e: any) => {
+        // Get latest label from ref
+        const currentPolyline = polylinesRef.current.find((p) =>
+          p.path.length === polyline.getPath().getLength() &&
+          p.path.every((pt, i) => {
+            const shapePt = polyline.getPath().getAt(i);
+            return pt.lat === shapePt.lat() && pt.lng === shapePt.lng();
+          })
         );
-        if (controls.length > 0) {
-          controls.forEach((btn) => {
-            (btn as HTMLElement).style.fontSize = "16px";
-            (btn as HTMLElement).style.padding = "8px 12px";
-          });
-          clearInterval(interval);
-        }
-      }, 500);
 
-      google.maps.event.addListener(manager, "markercomplete", (marker: google.maps.Marker) => {
-        const iconType = selectedMarkerTypeRef.current;
-        const position = marker.getPosition();
-        if (!position) return;
+        const currentLabel = currentPolyline?.label || label;
+        const lengthInMeters = google.maps.geometry.spherical.computeLength(polyline.getPath());
+        const distanceLabel = lengthInMeters > 1000
+          ? `${(lengthInMeters / 1000).toFixed(2)} km`
+          : `${lengthInMeters.toFixed(0)} m`;
 
-        const label = prompt("Enter label for this marker:", iconType.label) || iconType.label;
-        if (!label) {
-          marker.setMap(null); // Remove the shape from map if user cancels
-          return;
-        }
-        marker.setOptions({
-          icon: iconType.icon,
-          optimized: true,
-          zIndex: google.maps.Marker.MAX_ZINDEX + 1,
-        });
-      
-
-        const infoWindow = new google.maps.InfoWindow({ content: label });
-        marker.addListener("click", () => infoWindow.open({ anchor: marker, map }));
-
-        const newMarker: Marker = {
-          position: { lat: position.lat(), lng: position.lng() },
-          label,
-          icon: iconType.icon,
-        };
-
-        setMarkers((prev) => [...prev, newMarker]);
-        setMarkerRefs((prev) => [...prev, marker]);
-      });
-
-      google.maps.event.addListener(manager, "polylinecomplete", (polyline: google.maps.Polyline) => {
-        const label = prompt("Enter label for this polyline:") || "";
-        if (!label) {
-          polyline.setMap(null); // Remove the shape from map if user cancels
-          return;
-        }
-        const path = polyline.getPath().getArray().map((latlng) => ({ lat: latlng.lat(), lng: latlng.lng() }));
-        const defaultColor = "#FF0000";
-        const hoverColor = "#00AAFF";
-      
-        // Set initial styles
-        polyline.setOptions({
-          strokeColor: defaultColor,
-          strokeWeight: 2,
-        });
-        shapeOriginalColors.current.set(polyline, "#FF0000");
- 
-  // Create an InfoWindow for showing the label
-  let infoWindowTimeout: NodeJS.Timeout;
-  const sharedInfoWindow = new google.maps.InfoWindow();
-polyline.addListener("mouseover", (e:any) => {
-   // Get latest label from ref
-   const currentPolyline = polylinesRef.current.find((p) =>
-    p.path.length === polyline.getPath().getLength() &&
-    p.path.every((pt, i) => {
-      const shapePt = polyline.getPath().getAt(i);
-      return pt.lat === shapePt.lat() && pt.lng === shapePt.lng();
-    })
-  );
-
-  const currentLabel = currentPolyline?.label || label;
-  const lengthInMeters = google.maps.geometry.spherical.computeLength(polyline.getPath());
-  const distanceLabel = lengthInMeters > 1000
-    ? `${(lengthInMeters / 1000).toFixed(2)} km`
-    : `${lengthInMeters.toFixed(0)} m`;
-
-  sharedInfoWindow.setContent(`
+        sharedInfoWindow.setContent(`
     <div style="font-size: 13px;">
       <div><strong>Label:</strong> ${currentLabel}</div>
       <div><strong>Distance:</strong> ${distanceLabel}</div>
     </div>
   `);
 
-  sharedInfoWindow.setPosition(e.latLng);
-  sharedInfoWindow.open(map);
+        sharedInfoWindow.setPosition(e.latLng);
+        sharedInfoWindow.open(map);
 
-  if (infoWindowTimeout) clearTimeout(infoWindowTimeout);
-});
-
-polyline.addListener("mouseout", () => {
-  // Delay closing to avoid flickering if user hovers quickly back
-  infoWindowTimeout = setTimeout(() => {
-    sharedInfoWindow.close();
-  }, 300);
-});
- 
-        // 🔁 Updated to get the latest label from stored polyline data
-  polyline.addListener("click", () => {
-    const shapePath = polyline.getPath();
-    const matchedPolyline = polylinesRef.current.find((p) =>
-      p.path.length === shapePath.getLength() &&
-      p.path.every((pt, idx) => {
-        const shapePt = shapePath.getAt(idx);
-        return pt.lat === shapePt.lat() && pt.lng === shapePt.lng();
-      })
-    );
-
-    const currentLabel = matchedPolyline?.label || label;
-    handleShapeClick(polyline, currentLabel);
-  });
-       // polyline.addListener("click", () => handleShapeClick(polyline, label));
-
-        setPolylines((prev) => [...prev, { path, label, color: "#FF0000", width: 2 }]);
-        setPolylineRefs((prev) => [...prev, polyline]);
+        if (infoWindowTimeout) clearTimeout(infoWindowTimeout);
       });
 
-      google.maps.event.addListener(manager, "overlaycomplete", (event: any) => {
-        if (event.type === "polygon") {
-          const label = prompt("Enter label for this shape:") || "";
-          if (!label) {
-            event.overlay.setMap(null); // Remove the shape from map if user cancels
-            return;
-          }
-          const path = event.overlay.getPath().getArray().map((latlng: any) => ({ lat: latlng.lat(), lng: latlng.lng() }));
-          const area = google.maps.geometry.spherical.computeArea(path);
-          const status = "available";
-          // Set both fill and stroke colors
-          event.overlay.setOptions({
-           fillColor: "#00FF00",
-           strokeColor: "#00FF00",
-          });
-    // --- Add this block to calculate the polygon center and add a label badge ---
-    const bounds = new google.maps.LatLngBounds();
-    path.forEach((coord: any) => bounds.extend(coord));
-    const center = bounds.getCenter();
-  
-    const labelMarker = new google.maps.Marker({
-      position: center,
-      map: mapInstance.current!,
-      label: {
-        text: label,
-        color: "#fff",
-        fontSize: "14px",
-        fontWeight: "bold",
-      },
-      icon: {
-        path: google.maps.SymbolPath.CIRCLE,
-        scale: 0, // invisible icon to just show label
-      },
-      clickable: false,
-      zIndex: google.maps.Marker.MAX_ZINDEX + 1,
-    });
-      //✅ Save to ref
-          labelMarkersRef.current.push(labelMarker);
-          shapeOriginalColors.current.set(event.overlay, "#00FF00");
+      polyline.addListener("mouseout", () => {
+        // Delay closing to avoid flickering if user hovers quickly back
+        infoWindowTimeout = setTimeout(() => {
+          sharedInfoWindow.close();
+        }, 300);
+      });
 
-          const sharedInfoWindow = new google.maps.InfoWindow();
-          let infoWindowTimeout: NodeJS.Timeout;
-          
-          event.overlay.addListener("mouseover", (e: google.maps.MapMouseEvent) => {
-            const path = event.overlay.getPath();
-            const matchedShape = shapesRef.current.find((s) =>
-              s.path.length === path.getLength() &&
-              s.path.every((pt: any, idx: number) => {
-                const shapePt = path.getAt(idx);
-                return pt.lat === shapePt.lat() && pt.lng === shapePt.lng();
-              })
-            );
-          
-            const currentLabel = matchedShape?.label || label;
-            const perimeter = google.maps.geometry.spherical.computeLength(path);
-            const readablePerimeter = perimeter > 1000
-              ? `${(perimeter / 1000).toFixed(2)} km`
-              : `${perimeter.toFixed(0)} m`;
-          
-              const areaSqM = google.maps.geometry.spherical.computeArea(path);
-              const areaHa = areaSqM / 10000; // hectares
-              const areaAcres = areaSqM / 4046.85642; // acres
-              
-              const readableArea = `
+      // 🔁 Updated to get the latest label from stored polyline data
+      polyline.addListener("click", () => {
+        const shapePath = polyline.getPath();
+        const matchedPolyline = polylinesRef.current.find((p) =>
+          p.path.length === shapePath.getLength() &&
+          p.path.every((pt, idx) => {
+            const shapePt = shapePath.getAt(idx);
+            return pt.lat === shapePt.lat() && pt.lng === shapePt.lng();
+          })
+        );
+
+        const currentLabel = matchedPolyline?.label || label;
+        handleShapeClick(polyline, currentLabel);
+      });
+      // polyline.addListener("click", () => handleShapeClick(polyline, label));
+
+      setPolylines((prev) => [...prev, { path, label, color: "#FF0000", width: 2 }]);
+      setPolylineRefs((prev) => [...prev, polyline]);
+    });
+
+    google.maps.event.addListener(manager, "overlaycomplete", (event: any) => {
+      if (event.type === "polygon") {
+        const label = prompt("Enter label for this shape:") || "";
+        if (!label) {
+          event.overlay.setMap(null); // Remove the shape from map if user cancels
+          return;
+        }
+        const path = event.overlay.getPath().getArray().map((latlng: any) => ({ lat: latlng.lat(), lng: latlng.lng() }));
+        const area = google.maps.geometry.spherical.computeArea(path);
+        const status = "available";
+        // Set both fill and stroke colors
+        event.overlay.setOptions({
+          fillColor: "#00FF00",
+          strokeColor: "#00FF00",
+        });
+        // --- Add this block to calculate the polygon center and add a label badge ---
+        const bounds = new google.maps.LatLngBounds();
+        path.forEach((coord: any) => bounds.extend(coord));
+        const center = bounds.getCenter();
+
+        const labelMarker = new google.maps.Marker({
+          position: center,
+          map: mapInstance.current!,
+          label: {
+            text: label,
+            color: "#fff",
+            fontSize: "14px",
+            fontWeight: "bold",
+          },
+          icon: {
+            path: google.maps.SymbolPath.CIRCLE,
+            scale: 0, // invisible icon to just show label
+          },
+          clickable: false,
+          zIndex: google.maps.Marker.MAX_ZINDEX + 1,
+        });
+        //✅ Save to ref
+        labelMarkersRef.current.push(labelMarker);
+        shapeOriginalColors.current.set(event.overlay, "#00FF00");
+
+        const sharedInfoWindow = new google.maps.InfoWindow();
+        let infoWindowTimeout: NodeJS.Timeout;
+
+        event.overlay.addListener("mouseover", (e: google.maps.MapMouseEvent) => {
+          const path = event.overlay.getPath();
+          const matchedShape = shapesRef.current.find((s) =>
+            s.path.length === path.getLength() &&
+            s.path.every((pt: any, idx: number) => {
+              const shapePt = path.getAt(idx);
+              return pt.lat === shapePt.lat() && pt.lng === shapePt.lng();
+            })
+          );
+
+          const currentLabel = matchedShape?.label || label;
+          const perimeter = google.maps.geometry.spherical.computeLength(path);
+          const readablePerimeter = perimeter > 1000
+            ? `${(perimeter / 1000).toFixed(2)} km`
+            : `${perimeter.toFixed(0)} m`;
+
+          const areaSqM = google.maps.geometry.spherical.computeArea(path);
+          const areaHa = areaSqM / 10000; // hectares
+          const areaAcres = areaSqM / 4046.85642; // acres
+
+          const readableArea = `
                 <div>${areaSqM.toFixed(0)} m²</div>
                 <div>${areaHa.toFixed(2)} ha</div>
                 <div>${areaAcres.toFixed(2)} acres</div>
               `;
-          
-            sharedInfoWindow.setContent(`
+
+          sharedInfoWindow.setContent(`
               <div style="font-size: 13px;">
                 <div><strong>Label:</strong> ${currentLabel}</div>
                 <div><strong>Perimeter:</strong> ${readablePerimeter}</div>
                 <div><strong>Area:</strong> ${readableArea}</div>
               </div>
             `);
-            sharedInfoWindow.setPosition(e.latLng!);
-            sharedInfoWindow.open(mapInstance.current!);
-          
-            if (infoWindowTimeout) clearTimeout(infoWindowTimeout);
-          });
-          
-          event.overlay.addListener("mouseout", () => {
-            infoWindowTimeout = setTimeout(() => {
-              sharedInfoWindow.close();
-            }, 300);
-          });
-          
+          sharedInfoWindow.setPosition(e.latLng!);
+          sharedInfoWindow.open(mapInstance.current!);
 
-         event.overlay.addListener("click", () => {
+          if (infoWindowTimeout) clearTimeout(infoWindowTimeout);
+        });
+
+        event.overlay.addListener("mouseout", () => {
+          infoWindowTimeout = setTimeout(() => {
+            sharedInfoWindow.close();
+          }, 300);
+        });
+
+
+        event.overlay.addListener("click", () => {
           const path = event.overlay.getPath();
           let currentLabel = "";
-        
+
           if (event.type === "polygon") {
             const matchedShape = shapesRef.current.find((s) =>
               s.path.length === path.getLength() &&
-              s.path.every((pt:any, idx:any) => {
+              s.path.every((pt: any, idx: any) => {
                 const shapePt = path.getAt(idx);
                 return pt.lat === shapePt.lat() && pt.lng === shapePt.lng();
               })
@@ -464,17 +464,17 @@ polyline.addListener("mouseout", () => {
             );
             currentLabel = matchedPolyline?.label || label;
           }
-       
+
           handleShapeClick(event.overlay, currentLabel);
-        });        
-        
-         // setShapes((prev) => [...prev, { label, path, type: event.type, color: "#00FF00", area, status, overlay: event.overlay, labelMarker }]);
-          setShapes((prev) => [...prev, { label, path, type: event.type, color: "#00FF00", area, status }]);
-          setShapeRefs((prev) => [...prev, event.overlay]);
-        }
-      });
-   // });
-  
+        });
+
+        // setShapes((prev) => [...prev, { label, path, type: event.type, color: "#00FF00", area, status, overlay: event.overlay, labelMarker }]);
+        setShapes((prev) => [...prev, { label, path, type: event.type, color: "#00FF00", area, status }]);
+        setShapeRefs((prev) => [...prev, event.overlay]);
+      }
+    });
+    // });
+
   }, [isLoaded]);
 
   const handleShapeClick = (shape: google.maps.Polygon | google.maps.Polyline, label: string = "") => {
@@ -508,65 +508,65 @@ polyline.addListener("mouseout", () => {
         path.forEach((p) => bounds.extend(p));
         latLng = bounds.getCenter();
       }
- 
-    if (latLng) {
-      setSelectedShapePosition(latLng);
-    } else {
-      setSelectedShapePosition(null);
+
+      if (latLng) {
+        setSelectedShapePosition(latLng);
+      } else {
+        setSelectedShapePosition(null);
+      }
     }
-    }
- 
+
   };
 
-  
- //const [selected, setSelected] = useState(markerOptions[0]);
+
+  //const [selected, setSelected] = useState(markerOptions[0]);
 
   useEffect(() => {
     if (!data.markers || data.markers.length === 0) return;
-  
+
     const interval = setInterval(() => {
       if (mapInstance.current) {
-       
+
         clearInterval(interval);
         setMarkers(data.markers);
         data.markers.forEach((markerData) => {
-   
-      const marker = new google.maps.Marker({
-        position: markerData.position,
-        map: mapInstance.current!,
-        icon: markerData.icon,
-       // label: markerData.label,
-        optimized: true,
-      });
-  
-      const infoWindow = new google.maps.InfoWindow({
-        content: markerData.label,
-      });
-  
-      marker.addListener("click", () =>
-        infoWindow.open({ anchor: marker, map: mapInstance.current! })
-      );
-   
-      setMarkerRefs((prev) => [...prev, marker]);
-    });
+
+          const marker = new google.maps.Marker({
+            position: markerData.position,
+            map: mapInstance.current!,
+            icon: markerData.icon,
+            // label: markerData.label,
+            optimized: true,
+          });
+
+          const infoWindow = new google.maps.InfoWindow({
+            content: markerData.label,
+          });
+
+          marker.addListener("click", () =>
+            infoWindow.open({ anchor: marker, map: mapInstance.current! })
+          );
+
+          setMarkerRefs((prev) => [...prev, marker]);
+        });
       }
     }, 200); // check every 200ms
-  
+
     return () => clearInterval(interval);
   }, [data.markers]);
-  
+
 
   useEffect(() => {
     if (!data.polylines || data.polylines.length === 0) return;
-  
+
     const interval = setInterval(() => {
       if (mapInstance.current) {
-      
+
         clearInterval(interval);
         setPolylines(data.polylines);
-  
+
         const sharedInfoWindow = new google.maps.InfoWindow();
-  
+
         data.polylines.forEach((poly) => {
           const polyline = new google.maps.Polyline({
             path: poly.path,
@@ -575,15 +575,15 @@ polyline.addListener("mouseout", () => {
             strokeWeight: poly.width || 2,
             editable: false,
           });
-  
+
           shapeOriginalColors.current.set(polyline, poly.color);
-  
+
           // Store reference to the polyline
           setPolylineRefs((prev) => [...prev, polyline]);
-  
+
           polyline.addListener("click", (e: any) => {
             const shapePath = polyline.getPath();
-  
+
             const matchedPolyline = polylinesRef.current.find((p) =>
               p.path.length === shapePath.getLength() &&
               p.path.every((pt, idx) => {
@@ -591,49 +591,49 @@ polyline.addListener("mouseout", () => {
                 return pt.lat === shapePt.lat() && pt.lng === shapePt.lng();
               })
             );
-  
+
             const currentLabel = matchedPolyline?.label || poly.label;
-  
+
             const lengthInMeters = google.maps.geometry.spherical.computeLength(shapePath);
             const distanceLabel = lengthInMeters > 1000
               ? `${(lengthInMeters / 1000).toFixed(2)} km`
               : `${lengthInMeters.toFixed(0)} m`;
-  
+
             sharedInfoWindow.setContent(`
               <div style="font-size: 13px;">
                 <div><strong>Label:</strong> ${currentLabel}</div>
                 <div><strong>Distance:</strong> ${distanceLabel}</div>
               </div>
             `);
-  
+
             sharedInfoWindow.setPosition(e.latLng);
             sharedInfoWindow.open(mapInstance.current);
-  
+
             handleShapeClick(polyline, currentLabel);
           });
         });
       }
     }, 200);
-  
+
     return () => clearInterval(interval);
   }, [data.polylines]);
-  
+
 
   useEffect(() => {
     if (!data.shapes || data.shapes.length === 0) return;
-  
+
     const interval = setInterval(() => {
       if (mapInstance.current) {
-     
+
         clearInterval(interval);
         setShapes(data.shapes);
-  
+
         const sharedInfoWindow = new google.maps.InfoWindow();
         allBoundsRef.current = new google.maps.LatLngBounds();
-  
+
         data.shapes.forEach((shape) => {
           if (shape.type !== "polygon") return;
-  
+
           const polygon = new google.maps.Polygon({
             paths: shape.path,
             map: mapInstance.current!,
@@ -643,9 +643,9 @@ polyline.addListener("mouseout", () => {
             strokeWeight: 2,
             editable: false,
           });
-  
+
           shapeOriginalColors.current.set(polygon, shape.color);
-  
+
           // Compute and extend bounds
           const shapeBounds = new google.maps.LatLngBounds();
           shape.path.forEach((coord) => {
@@ -654,9 +654,9 @@ polyline.addListener("mouseout", () => {
               allBoundsRef.current.extend(coord);
             }
           });
-  
+
           const center = shapeBounds.getCenter();
-  
+
           const labelMarker = new google.maps.Marker({
             position: center,
             map: mapInstance.current!,
@@ -673,9 +673,9 @@ polyline.addListener("mouseout", () => {
             clickable: false,
             zIndex: google.maps.Marker.MAX_ZINDEX + 1,
           });
-  
+
           labelMarkersRef.current.push(labelMarker);
-  
+
           polygon.addListener("click", (e: google.maps.MapMouseEvent) => {
             const path = polygon.getPath();
             const matchedShape = shapesRef.current.find((s) =>
@@ -685,23 +685,23 @@ polyline.addListener("mouseout", () => {
                 return pt.lat === shapePt.lat() && pt.lng === shapePt.lng();
               })
             );
-  
+
             const currentLabel = matchedShape?.label || shape.label;
             const perimeter = google.maps.geometry.spherical.computeLength(path);
             const readablePerimeter = perimeter > 1000
               ? `${(perimeter / 1000).toFixed(2)} km`
               : `${perimeter.toFixed(0)} m`;
-  
+
             const areaSqM = google.maps.geometry.spherical.computeArea(path);
             const areaHa = areaSqM / 10000;
             const areaAcres = areaSqM / 4046.85642;
-  
+
             const readableArea = `
               <div>${areaSqM.toFixed(0)} m²</div>
               <div>${areaHa.toFixed(2)} ha</div>
               <div>${areaAcres.toFixed(2)} acres</div>
             `;
-  
+
             sharedInfoWindow.setContent(`
               <div style="font-size: 13px;">
                 <div><strong>Label:</strong> ${currentLabel}</div>
@@ -711,168 +711,168 @@ polyline.addListener("mouseout", () => {
             `);
             sharedInfoWindow.setPosition(e.latLng!);
             sharedInfoWindow.open(mapInstance.current!);
-  
+
             handleShapeClick(polygon, currentLabel);
           });
-  
+
           setShapeRefs((prev) => [...prev, polygon]);
         });
-  
+
         // ✅ Fit map to all shape bounds
-       // if (!allBounds.isEmpty()) {
-       //   mapInstance.current.fitBounds(allBounds);
-      //  }
+        // if (!allBounds.isEmpty()) {
+        //   mapInstance.current.fitBounds(allBounds);
+        //  }
         if (mapInstance.current && allBoundsRef.current && !allBoundsRef.current.isEmpty()) {
           mapInstance.current.fitBounds(allBoundsRef.current);
         }
       }
     }, 200);
-  
+
     return () => clearInterval(interval);
   }, [data.shapes]);
-  
-  
+
+
 
   type AmenityType = "school" | "hospital" | "shopping_mall" | "restaurant" | "bank" | "transit_station"; // Add more as needed
   const [amenityMarkers, setAmenityMarkers] = useState<google.maps.Marker[]>([]);
   const [loadingAmenity, setLoadingAmenity] = useState<AmenityType | null>(null);
   const [activeAmenity, setActiveAmenity] = useState<AmenityType | null>(null);
 
-const [selectedControl, setSelectedControl] = useState<"amenity" | "route" | "userRoute" | null>(null);
-const [directionsRenderer, setDirectionsRenderer] = useState<google.maps.DirectionsRenderer | null>(null);
-const [amenityCount, setAmenityCount] = useState<number | null>(null);
-const radiusCircleRef = useRef<google.maps.Circle | null>(null);
-const [radius, setRadius] = useState(2000); // default 2km
-const amenityMarkersRef = useRef<google.maps.Marker[]>([]);
-const amenityCirclesRef = useRef<google.maps.Circle[]>([]);
-const directionsRendererRef = useRef<google.maps.DirectionsRenderer | null>(null);
-const radiusRef = useRef<NodeJS.Timeout | null>(null);
-const handleShowAmenity = (amenityType: AmenityType) => {
-  if (!mapInstance.current) return;
+  const [selectedControl, setSelectedControl] = useState<"amenity" | "route" | "userRoute" | null>(null);
+  const [directionsRenderer, setDirectionsRenderer] = useState<google.maps.DirectionsRenderer | null>(null);
+  const [amenityCount, setAmenityCount] = useState<number | null>(null);
+  const radiusCircleRef = useRef<google.maps.Circle | null>(null);
+  const [radius, setRadius] = useState(2000); // default 2km
+  const amenityMarkersRef = useRef<google.maps.Marker[]>([]);
+  const amenityCirclesRef = useRef<google.maps.Circle[]>([]);
+  const directionsRendererRef = useRef<google.maps.DirectionsRenderer | null>(null);
+  const radiusRef = useRef<NodeJS.Timeout | null>(null);
+  const handleShowAmenity = (amenityType: AmenityType) => {
+    if (!mapInstance.current) return;
 
-  setLoadingAmenity(amenityType);
-  setActiveAmenity(amenityType);
-  setShowDistanceDialog(false);
-  setOpenDistanceDialog(false);
-  setOpenDirectionsDialog(false);
-  // Clear previous markers and circle
-  amenityMarkers.forEach(marker => marker.setMap(null));
-  setAmenityMarkers([]);
-  if (radiusCircleRef.current) {
-    radiusCircleRef.current.setMap(null);
-  }
-  // Clear previous direction if any
-  if (directionsRendererRef.current) {
-    directionsRendererRef.current.setMap(null);
-  }
-  const lat = data.location.coordinates[0];
-  const lng = data.location.coordinates[1];
-  const center = { lat, lng };
-
-  // Draw radius circle
-  const circle = new google.maps.Circle({
-    map: mapInstance.current,
-    center,
-    radius,
-    fillColor: "#00AAFF",
-    fillOpacity: 0.2,
-    strokeColor: "#007BFF",
-    strokeOpacity: 0.7,
-    strokeWeight: 1,
-  });
-
-  radiusCircleRef.current = circle;
-  amenityCirclesRef.current.push(circle);
-  // Fit map to bounds of the circle
-  const bounds = circle.getBounds();
-  if (bounds) {
-    mapInstance.current.fitBounds(bounds);
-  }
-  const service = new google.maps.places.PlacesService(mapInstance.current);
-
-  const request: google.maps.places.PlaceSearchRequest = {
-    location: center,
-    radius,
-    type: amenityType,
-  };
-
-  const getAmenityIcon = (type: AmenityType): string => {
-    switch (type) {
-      case "school": return "/assets/map/school.png";
-      case "hospital": return "/assets/map/hospital-building.png";
-      case "shopping_mall": return "/assets/map/mall.png";
-      case "restaurant": return "/assets/map/restaurant.png";
-      case "bank": return "/assets/map/bank_euro.png";
-      case "transit_station": return "/assets/map/busstop.png";
-      default: return "/assets/map/default.png";
+    setLoadingAmenity(amenityType);
+    setActiveAmenity(amenityType);
+    setShowDistanceDialog(false);
+    setOpenDistanceDialog(false);
+    setOpenDirectionsDialog(false);
+    // Clear previous markers and circle
+    amenityMarkers.forEach(marker => marker.setMap(null));
+    setAmenityMarkers([]);
+    if (radiusCircleRef.current) {
+      radiusCircleRef.current.setMap(null);
     }
-  };
+    // Clear previous direction if any
+    if (directionsRendererRef.current) {
+      directionsRendererRef.current.setMap(null);
+    }
+    const lat = data.location.coordinates[0];
+    const lng = data.location.coordinates[1];
+    const center = { lat, lng };
 
-  service.nearbySearch(request, (results, status) => {
-    setLoadingAmenity(null);
+    // Draw radius circle
+    const circle = new google.maps.Circle({
+      map: mapInstance.current,
+      center,
+      radius,
+      fillColor: "#00AAFF",
+      fillOpacity: 0.2,
+      strokeColor: "#007BFF",
+      strokeOpacity: 0.7,
+      strokeWeight: 1,
+    });
 
-    if (status === google.maps.places.PlacesServiceStatus.OK && results) {
-      const newMarkers = results.map(place => {
-        if (!place.geometry?.location) return null;
+    radiusCircleRef.current = circle;
+    amenityCirclesRef.current.push(circle);
+    // Fit map to bounds of the circle
+    const bounds = circle.getBounds();
+    if (bounds) {
+      mapInstance.current.fitBounds(bounds);
+    }
+    const service = new google.maps.places.PlacesService(mapInstance.current);
 
-        const marker = new google.maps.Marker({
-          map: mapInstance.current!,
-          position: place.geometry.location,
-          title: place.name,
-          icon: {
-            url: getAmenityIcon(amenityType),
-            scaledSize: new google.maps.Size(30, 30),
-          },
-        });
+    const request: google.maps.places.PlaceSearchRequest = {
+      location: center,
+      radius,
+      type: amenityType,
+    };
 
-        const infoWindow = new google.maps.InfoWindow({
-          content: `<strong>${place.name}</strong><br>${place.vicinity || ""}`,
-        });
+    const getAmenityIcon = (type: AmenityType): string => {
+      switch (type) {
+        case "school": return "/assets/map/school.png";
+        case "hospital": return "/assets/map/hospital-building.png";
+        case "shopping_mall": return "/assets/map/mall.png";
+        case "restaurant": return "/assets/map/restaurant.png";
+        case "bank": return "/assets/map/bank_euro.png";
+        case "transit_station": return "/assets/map/busstop.png";
+        default: return "/assets/map/default.png";
+      }
+    };
 
-        marker.addListener("click", () => {
-          infoWindow.open({
-            anchor: marker,
+    service.nearbySearch(request, (results, status) => {
+      setLoadingAmenity(null);
+
+      if (status === google.maps.places.PlacesServiceStatus.OK && results) {
+        const newMarkers = results.map(place => {
+          if (!place.geometry?.location) return null;
+
+          const marker = new google.maps.Marker({
             map: mapInstance.current!,
+            position: place.geometry.location,
+            title: place.name,
+            icon: {
+              url: getAmenityIcon(amenityType),
+              scaledSize: new google.maps.Size(30, 30),
+            },
           });
-        });
-        amenityMarkersRef.current.push(marker);
-        return marker;
-      }).filter(Boolean) as google.maps.Marker[];
 
-      setAmenityMarkers(newMarkers);
+          const infoWindow = new google.maps.InfoWindow({
+            content: `<strong>${place.name}</strong><br>${place.vicinity || ""}`,
+          });
 
-      // Show number of amenities found
-      setAmenityCount(results.length);
-    } else {
-      console.warn("Places request failed:", status);
-      setAmenityCount(0);
+          marker.addListener("click", () => {
+            infoWindow.open({
+              anchor: marker,
+              map: mapInstance.current!,
+            });
+          });
+          amenityMarkersRef.current.push(marker);
+          return marker;
+        }).filter(Boolean) as google.maps.Marker[];
+
+        setAmenityMarkers(newMarkers);
+
+        // Show number of amenities found
+        setAmenityCount(results.length);
+      } else {
+        console.warn("Places request failed:", status);
+        setAmenityCount(0);
+      }
+    });
+  };
+
+
+  useEffect(() => {
+    if (!activeAmenity) return;
+
+    // Clear any ongoing timeout
+    if (radiusRef.current) {
+      clearTimeout(radiusRef.current);
     }
-  });
-};
 
+    // Debounce radius change
+    radiusRef.current = setTimeout(() => {
+      handleShowAmenity(activeAmenity);
 
-useEffect(() => {
-  if (!activeAmenity) return;
+    }, 500); // Adjust delay as needed
+  }, [radius]);
 
-  // Clear any ongoing timeout
-  if (radiusRef.current) {
-    clearTimeout(radiusRef.current);
-  }
+  const handleRoute = () => {
+    if (!mapInstance.current) return;
+    const map = mapInstance.current;
+    const lat = data.location.coordinates[0];
+    const lng = data.location.coordinates[1];
+    const position = { lat, lng };
 
-  // Debounce radius change
-  radiusRef.current = setTimeout(() => {
-    handleShowAmenity(activeAmenity);
-
-  }, 500); // Adjust delay as needed
-}, [radius]);
-
-const handleRoute = () => {
-  if (!mapInstance.current) return;
-  const map = mapInstance.current;
-  const lat = data.location.coordinates[0];
-  const lng = data.location.coordinates[1];
-  const position = { lat, lng };
-  
     if (map) {
       // Move the center and zoom
       map.setCenter(position);
@@ -880,25 +880,25 @@ const handleRoute = () => {
       // Move the existing marker if it exists
       if (markerRef.current) {
         markerRef.current.setPosition(position);
-      } 
+      }
     }
     if (mapInstance.current && allBoundsRef.current && !allBoundsRef.current.isEmpty()) {
       mapInstance.current.fitBounds(allBoundsRef.current);
     }
-  // Clear any existing route before creating a new one
-  if (directionsRendererRef.current) {
-    directionsRendererRef.current.setMap(null);
+    // Clear any existing route before creating a new one
+    if (directionsRendererRef.current) {
+      directionsRendererRef.current.setMap(null);
+    }
+    // ✅ Clear previous amenity markers and circles
+    amenityMarkersRef.current.forEach(marker => marker.setMap(null));
+    amenityMarkersRef.current = [];
+
+    amenityCirclesRef.current.forEach(circle => circle.setMap(null));
+    amenityCirclesRef.current = [];
   }
-// ✅ Clear previous amenity markers and circles
-amenityMarkersRef.current.forEach(marker => marker.setMap(null));
-amenityMarkersRef.current = [];
 
-amenityCirclesRef.current.forEach(circle => circle.setMap(null));
-amenityCirclesRef.current = [];
-}
-
-const handleDistance = (lat:number, lng:number) => {
- if (selectedControl !== "route" || !lat || !lng) return;
+  const handleDistance = (lat: number, lng: number) => {
+    if (selectedControl !== "route" || !lat || !lng) return;
 
     const directionsService = new google.maps.DirectionsService();
     if (directionsRendererRef.current) {
@@ -914,7 +914,7 @@ const handleDistance = (lat:number, lng:number) => {
 
     directionsService.route(
       {
-        origin: {lat, lng},
+        origin: { lat, lng },
         destination: center,
         travelMode: google.maps.TravelMode.DRIVING,
       },
@@ -933,80 +933,21 @@ const handleDistance = (lat:number, lng:number) => {
         }
       }
     );
-  
+
   }
 
 
-useEffect(() => {
-  if (!mapInstance.current) return;
+  useEffect(() => {
+    if (!mapInstance.current) return;
 
-  const listener = mapInstance.current.addListener("click", (e: google.maps.MapMouseEvent) => {
-    if (selectedControl !== "route" || !e.latLng) return;
+    const listener = mapInstance.current.addListener("click", (e: google.maps.MapMouseEvent) => {
+      if (selectedControl !== "route" || !e.latLng) return;
 
-    const directionsService = new google.maps.DirectionsService();
-    if (directionsRendererRef.current) {
-      directionsRendererRef.current.setMap(null);
-    }
-    // Clear any existing route before creating a new one
-    const newRenderer = new google.maps.DirectionsRenderer({
-      suppressMarkers: false,
-      map: mapInstance.current,
-    });
-
-    directionsRendererRef.current = newRenderer;
-
-    directionsService.route(
-      {
-        origin: e.latLng,
-        destination: center,
-        travelMode: google.maps.TravelMode.DRIVING,
-      },
-      (result, status) => {
-        if (status === google.maps.DirectionsStatus.OK && result) {
-          newRenderer.setDirections(result);
-
-          const route = result.routes[0];
-          const distanceInMeters = route.legs[0].distance?.value || 0;
-          const distanceInKm = (distanceInMeters / 1000).toFixed(2);
-
-          setDistance(distanceInKm);
-          console.log(`Distance: ${distanceInKm} km`);
-        } else {
-          console.error("Directions request failed:", status);
-        }
-      }
-    );
-  });
-
-  return () => {
-    google.maps.event.removeListener(listener);
-  };
-}, [selectedControl, center]);
-
-const handleRouteFromUser = () => {
-  if (!navigator.geolocation || !mapInstance.current) {
-    alert("Geolocation is not supported by this browser.");
-    return;
-  }
-
-  navigator.geolocation.getCurrentPosition(
-    (position) => {
-      const userLocation = {
-        lat: position.coords.latitude,
-        lng: position.coords.longitude,
-      };
-
-      // Clear previous direction if any
+      const directionsService = new google.maps.DirectionsService();
       if (directionsRendererRef.current) {
         directionsRendererRef.current.setMap(null);
       }
- // ✅ Clear previous amenity markers and circles
- amenityMarkersRef.current.forEach(marker => marker.setMap(null));
- amenityMarkersRef.current = [];
-
- amenityCirclesRef.current.forEach(circle => circle.setMap(null));
- amenityCirclesRef.current = [];
-      const directionsService = new google.maps.DirectionsService();
+      // Clear any existing route before creating a new one
       const newRenderer = new google.maps.DirectionsRenderer({
         suppressMarkers: false,
         map: mapInstance.current,
@@ -1016,7 +957,7 @@ const handleRouteFromUser = () => {
 
       directionsService.route(
         {
-          origin: userLocation,
+          origin: e.latLng,
           destination: center,
           travelMode: google.maps.TravelMode.DRIVING,
         },
@@ -1027,37 +968,96 @@ const handleRouteFromUser = () => {
             const route = result.routes[0];
             const distanceInMeters = route.legs[0].distance?.value || 0;
             const distanceInKm = (distanceInMeters / 1000).toFixed(2);
+
             setDistance(distanceInKm);
-            console.log(`Distance from user: ${distanceInKm} km`);
+            console.log(`Distance: ${distanceInKm} km`);
           } else {
             console.error("Directions request failed:", status);
           }
         }
       );
-    },
-    (error) => {
-      console.error("Geolocation error:", error);
-      alert("Failed to get current location.");
-    },
-    { enableHighAccuracy: true }
-  );
-};
-const handleFullscreen = () => {
-  const container = document.getElementById("map-container");
-  if (!container) return;
+    });
 
-  if (!document.fullscreenElement) {
-    container.requestFullscreen?.();
-  } else {
-    document.exitFullscreen?.();
-  }
-};
-  
+    return () => {
+      google.maps.event.removeListener(listener);
+    };
+  }, [selectedControl, center]);
 
- const [step, setStep] = useState<"options" | "addressInput">("options");
+  const handleRouteFromUser = () => {
+    if (!navigator.geolocation || !mapInstance.current) {
+      alert("Geolocation is not supported by this browser.");
+      return;
+    }
+
+    navigator.geolocation.getCurrentPosition(
+      (position) => {
+        const userLocation = {
+          lat: position.coords.latitude,
+          lng: position.coords.longitude,
+        };
+
+        // Clear previous direction if any
+        if (directionsRendererRef.current) {
+          directionsRendererRef.current.setMap(null);
+        }
+        // ✅ Clear previous amenity markers and circles
+        amenityMarkersRef.current.forEach(marker => marker.setMap(null));
+        amenityMarkersRef.current = [];
+
+        amenityCirclesRef.current.forEach(circle => circle.setMap(null));
+        amenityCirclesRef.current = [];
+        const directionsService = new google.maps.DirectionsService();
+        const newRenderer = new google.maps.DirectionsRenderer({
+          suppressMarkers: false,
+          map: mapInstance.current,
+        });
+
+        directionsRendererRef.current = newRenderer;
+
+        directionsService.route(
+          {
+            origin: userLocation,
+            destination: center,
+            travelMode: google.maps.TravelMode.DRIVING,
+          },
+          (result, status) => {
+            if (status === google.maps.DirectionsStatus.OK && result) {
+              newRenderer.setDirections(result);
+
+              const route = result.routes[0];
+              const distanceInMeters = route.legs[0].distance?.value || 0;
+              const distanceInKm = (distanceInMeters / 1000).toFixed(2);
+              setDistance(distanceInKm);
+              console.log(`Distance from user: ${distanceInKm} km`);
+            } else {
+              console.error("Directions request failed:", status);
+            }
+          }
+        );
+      },
+      (error) => {
+        console.error("Geolocation error:", error);
+        alert("Failed to get current location.");
+      },
+      { enableHighAccuracy: true }
+    );
+  };
+  const handleFullscreen = () => {
+    const container = document.getElementById("map-container");
+    if (!container) return;
+
+    if (!document.fullscreenElement) {
+      container.requestFullscreen?.();
+    } else {
+      document.exitFullscreen?.();
+    }
+  };
+
+
+  const [step, setStep] = useState<"options" | "addressInput">("options");
   const [searchQuery, setSearchQuery] = useState("");
-   const [error, setError] = useState("");
-  const [centerSource, setCenterSource] = useState<{lat:number, lng:number}>({lat:0, lng:0});
+  const [error, setError] = useState("");
+  const [centerSource, setCenterSource] = useState<{ lat: number, lng: number }>({ lat: 0, lng: 0 });
   const handleSelectOption = (option: "map" | "address") => {
     if (option === "map") {
       setShowDistanceDialog(false);
@@ -1069,228 +1069,228 @@ const handleFullscreen = () => {
 
   const handleSearch = () => {
     // Trigger search logic here with `searchQuery`
-     setError("")
-    if(centerSource.lat && centerSource.lng){
-    handleDistance(centerSource.lat, centerSource.lng);
-    setStep("options");
-    setShowDistanceDialog(false);
-    }else{
-     setError("Select location")
+    setError("")
+    if (centerSource.lat && centerSource.lng) {
+      handleDistance(centerSource.lat, centerSource.lng);
+      setStep("options");
+      setShowDistanceDialog(false);
+    } else {
+      setError("Select location")
     }
   };
-const handleSelect = (e: any) => {
+  const handleSelect = (e: any) => {
     geocodeByAddress(e.value.description)
       .then((results) => getLatLng(results[0]))
       .then(({ lat, lng }) => {
         setCenterSource({ lat, lng })
       });
   };
-   const handleRedirect = () => {
+  const handleRedirect = () => {
     const googleMapsUrl = destination;
     window.open(googleMapsUrl, "_blank");
-   setOpenDirectionsDialog(false);
+    setOpenDirectionsDialog(false);
   };
 
 
-  
- const [streetViewPanorama, setStreetViewPanorama] = useState<google.maps.StreetViewPanorama | null>(null);
-const [showStreetView, setShowStreetView] = useState(false);
-const [streetViewAvailable, setStreetViewAvailable] = useState(false);
-const onMapLoad = (map: google.maps.Map) => {
-  mapInstance.current = map;
 
-  const svService = new google.maps.StreetViewService();
-  svService.getPanorama({ location: map.getCenter()!, radius: 50 }, (data, status) => {
-    if (status === "OK") {
-      setStreetViewAvailable(true);
-    } else {
-      setStreetViewAvailable(false);
-    }
-  });
-};
+  const [streetViewPanorama, setStreetViewPanorama] = useState<google.maps.StreetViewPanorama | null>(null);
+  const [showStreetView, setShowStreetView] = useState(false);
+  const [streetViewAvailable, setStreetViewAvailable] = useState(false);
+  const onMapLoad = (map: google.maps.Map) => {
+    mapInstance.current = map;
 
-const toggleStreetView = () => {
-  setShowStreetView(prev => !prev);
-};
-
-// 🧠 Mount StreetView when `showStreetView` becomes true
-useEffect(() => {
-  const container = document.getElementById("street-view");
-
-  if (showStreetView && mapInstance.current && container) {
-    // Always create a new Street View instance
-    const panorama = new google.maps.StreetViewPanorama(container, {
-      position: mapInstance.current.getCenter(),
-      pov: {
-        heading: 34,
-        pitch: 10,
-      },
-      visible: true,
+    const svService = new google.maps.StreetViewService();
+    svService.getPanorama({ location: map.getCenter()!, radius: 50 }, (data, status) => {
+      if (status === "OK") {
+        setStreetViewAvailable(true);
+      } else {
+        setStreetViewAvailable(false);
+      }
     });
-    setStreetViewPanorama(panorama);
-  }
+  };
 
-  // Optional: Clean up when hiding
-  if (!showStreetView && streetViewPanorama) {
-    streetViewPanorama.setVisible(false);
-    setStreetViewPanorama(null); // <- ensures re-initialization next time
-  }
-}, [showStreetView]);
+  const toggleStreetView = () => {
+    setShowStreetView(prev => !prev);
+  };
 
-  
-  return ( 
-  <div id="map-container" className="h-full relative">
-     {!isLoaded && (
-    <div className="absolute inset-0 z-5 flex items-center justify-center bg-white/70">
-      <div className="animate-spin rounded-full h-8 w-8 border-t-2 border-b-2 border-gray-800" />
-      <span className="ml-2 text-gray-700 font-medium">Loading map...</span>
-    </div>
-  )}
+  // 🧠 Mount StreetView when `showStreetView` becomes true
+  useEffect(() => {
+    const container = document.getElementById("street-view");
 
-    {showGuide && (
+    if (showStreetView && mapInstance.current && container) {
+      // Always create a new Street View instance
+      const panorama = new google.maps.StreetViewPanorama(container, {
+        position: mapInstance.current.getCenter(),
+        pov: {
+          heading: 34,
+          pitch: 10,
+        },
+        visible: true,
+      });
+      setStreetViewPanorama(panorama);
+    }
+
+    // Optional: Clean up when hiding
+    if (!showStreetView && streetViewPanorama) {
+      streetViewPanorama.setVisible(false);
+      setStreetViewPanorama(null); // <- ensures re-initialization next time
+    }
+  }, [showStreetView]);
+
+
+  return (
+    <div id="map-container" className="h-full relative">
+      {!isLoaded && (
+        <div className="absolute inset-0 z-5 flex items-center justify-center bg-white/70">
+          <div className="animate-spin rounded-full h-8 w-8 border-t-2 border-b-2 border-gray-800" />
+          <span className="ml-2 text-gray-700 font-medium">Loading map...</span>
+        </div>
+      )}
+
+      {showGuide && (
         <div className="absolute z-50 top-10 left-2  mt-2 w-80 bg-gray-100 rounded-lg shadow-md text-gray-700 p-3">
-         <div className="flex justify-end p-1 items-center w-full">
-          <Button
-            onClick={() => setShowGuide(false)}
-             variant="outline"
-            className="p-2 text-gray-600 hover:text-green-600"
-          >
-            <CloseOutlinedIcon />
-          </Button>
+          <div className="flex justify-end p-1 items-center w-full">
+            <Button
+              onClick={() => setShowGuide(false)}
+              variant="outline"
+              className="p-2 text-gray-600 hover:text-green-600"
+            >
+              <CloseOutlinedIcon />
+            </Button>
           </div>
           <ul className="list-disc text-xs list-inside space-y-1">
-          
-           <li>📏 <span className="font-medium">Property Land Size</span> - Click the drawn area to view estimate area in square meters (m²), acres, or hectares.</li>
-                 <li>📍 <span className="font-medium">Calculate Distance</span> - Find distance from key places like your workplace or shopping centers.</li>
-                 <li>🛣️ <span className="font-medium">Find the Nearest Route</span> - Get directions from your location to the property.</li>
-                 <li>👥 <span className="font-medium">Analyze Population</span> - View demographic insights of the property&apos;s surroundings.</li>
-                 <li>🚗 <span className="font-medium">Check Road Accessibility</span> - See the distance to the nearest tarmac road.</li>
-                 <li>🚏 <span className="font-medium">Locate Public Transport</span> -  Find the closest bus station and distance.</li>
-                 <li>🏫 <span className="font-medium">Nearby Schools</span> - View the number of schools around.</li>
-                 <li>🏥 <span className="font-medium">Healthcare Facilities</span> -  Check hospitals and clinics in the area.</li>
-                 <li>🛍️ <span className="font-medium">Shopping Options</span> - See available shopping malls nearby.</li>
-                 <li>⏳ <span className="font-medium">Saves Time for Both Buyers & Sellers</span> - Only visit the site after you&apos;re satisfied with the property&apos;s location.</li>
-           
-           
+
+            <li>📏 <span className="font-medium">Property Land Size</span> - Click the drawn area to view estimate area in square meters (m²), acres, or hectares.</li>
+            <li>📍 <span className="font-medium">Calculate Distance</span> - Find distance from key places like your workplace or shopping centers.</li>
+            <li>🛣️ <span className="font-medium">Find the Nearest Route</span> - Get directions from your location to the property.</li>
+            <li>👥 <span className="font-medium">Analyze Population</span> - View demographic insights of the property&apos;s surroundings.</li>
+            <li>🚗 <span className="font-medium">Check Road Accessibility</span> - See the distance to the nearest tarmac road.</li>
+            <li>🚏 <span className="font-medium">Locate Public Transport</span> -  Find the closest bus station and distance.</li>
+            <li>🏫 <span className="font-medium">Nearby Schools</span> - View the number of schools around.</li>
+            <li>🏥 <span className="font-medium">Healthcare Facilities</span> -  Check hospitals and clinics in the area.</li>
+            <li>🛍️ <span className="font-medium">Shopping Options</span> - See available shopping malls nearby.</li>
+            <li>⏳ <span className="font-medium">Saves Time for Both Buyers & Sellers</span> - Only visit the site after you&apos;re satisfied with the property&apos;s location.</li>
+
+
           </ul>
-         
-      
+
+
         </div>
       )}
 
 
 
 
-  <div ref={mapRef} className="w-full h-full lg:rounded-xl shadow-md border" />
-{showStreetView && (
-  <div
-    style={{
-      position: "fixed",
-      top: 0,
-      left: 0,
-      width: "100vw",
-      height: "100vh",
-      zIndex: 9999,
-      backgroundColor: "#000",
-    }}
-  >
-    <button
-      onClick={toggleStreetView}
-      style={{
-        position: "absolute",
-        top: 10,
-        right: 10,
-        zIndex: 10000,
-        padding: "10px 15px",
-        backgroundColor: "#fff",
-        border: "none",
-        borderRadius: "5px",
-        cursor: "pointer",
-      }}
-    >
-      Exit
-    </button>
-
-    <div
-      id="street-view"
-      style={{
-        width: "100%",
-        height: "100%",
-      }}
-    ></div>
-  </div>
-)}
-  {isLoaded && (<>
-  
-    <TooltipProvider>
-                   <Tooltip>
-                     <TooltipTrigger asChild>
-                     <Button
-          onClick={() => setShowGuide(!showGuide)}
-          variant="outline"
-          className="w-10 text-gray-600 absolute top-20 left-2 rounded-full shadow-lg"
+      <div ref={mapRef} className="w-full h-full lg:rounded-xl shadow-md border" />
+      {showStreetView && (
+        <div
+          style={{
+            position: "fixed",
+            top: 0,
+            left: 0,
+            width: "100vw",
+            height: "100vh",
+            zIndex: 9999,
+            backgroundColor: "#000",
+          }}
         >
-         <QuestionMarkOutlinedIcon/>
-        </Button>
-                     </TooltipTrigger>
-                     <TooltipContent>
-                       <p> Hint?</p>
-                     </TooltipContent>
-                   </Tooltip>
-                 </TooltipProvider>
-                 {streetViewAvailable && (
-  <button
-  onClick={toggleStreetView}
-  className="absolute bottom-5 left-1/2 transform -translate-x-1/2 z-30 flex items-center gap-2 px-5 py-2 bg-white text-gray-800 text-sm font-medium rounded-full shadow-lg hover:bg-gray-100 transition-all duration-200"
->
-  {showStreetView ? <EyeOff className="w-4 h-4" /> : <Eye className="w-4 h-4" />}
-  {showStreetView ? "Hide Street View" : "Show Street View"}
-</button>
-)}
- 
+          <button
+            onClick={toggleStreetView}
+            style={{
+              position: "absolute",
+              top: 10,
+              right: 10,
+              zIndex: 10000,
+              padding: "10px 15px",
+              backgroundColor: "#fff",
+              border: "none",
+              borderRadius: "5px",
+              cursor: "pointer",
+            }}
+          >
+            Exit
+          </button>
 
-        </>)}
-  {distance && (
-  <div className="absolute top-20 left-2 p-2 text-white bg-green-600 z-5 rounded-md shadow-lg">
-    <div className="text-sm">
-      <strong>Distance:</strong>
-      <div>{distance} km</div>
-    </div>
-  </div>
-)}
-{activeAmenity && amenityCount !== null && (<>
-  <div className="absolute top-20 left-2 p-2 text-white bg-green-600 z-5 rounded-md shadow-lg">
- <div className="mt-2 text-sm text-white dark:text-gray-300">
-    Found <strong>{amenityCount}</strong> {activeAmenity.replace("_", " ").toLowerCase()}(s) within {radius/1000} km
-  </div>
-</div>
-  
+          <div
+            id="street-view"
+            style={{
+              width: "100%",
+              height: "100%",
+            }}
+          ></div>
+        </div>
+      )}
+      {isLoaded && (<>
 
-<div className="absolute rounded-lg p-2 bg-gray-100 bottom-10 left-1/2 mt-4 flex flex-col gap-2 text-sm">
-<label className="block text-gray-700 font-medium mb-0">
-Radius: {radius / 1000} km
-             </label>
-             <input
-               type="range"
-               min="1000"
-               max="5000"
-               step="1000"
-               value={radius}
-               onChange={(e) => setRadius(Number(e.target.value))}
-               className="w-full"
-             />
-             
- 
-</div>
-</>)}
-
-
+        <TooltipProvider>
+          <Tooltip>
+            <TooltipTrigger asChild>
+              <Button
+                onClick={() => setShowGuide(!showGuide)}
+                variant="outline"
+                className="w-10 text-gray-600 absolute top-20 left-2 rounded-full shadow-lg"
+              >
+                <QuestionMarkOutlinedIcon />
+              </Button>
+            </TooltipTrigger>
+            <TooltipContent>
+              <p> Hint?</p>
+            </TooltipContent>
+          </Tooltip>
+        </TooltipProvider>
+        {streetViewAvailable && (
+          <button
+            onClick={toggleStreetView}
+            className="absolute bottom-5 left-1/2 transform -translate-x-1/2 z-30 flex items-center gap-2 px-5 py-2 bg-white text-gray-800 text-sm font-medium rounded-full shadow-lg hover:bg-gray-100 transition-all duration-200"
+          >
+            {showStreetView ? <EyeOff className="w-4 h-4" /> : <Eye className="w-4 h-4" />}
+            {showStreetView ? "Hide Street View" : "Show Street View"}
+          </button>
+        )}
 
 
+      </>)}
+      {distance && (
+        <div className="absolute top-20 left-2 p-2 text-white bg-green-600 z-5 rounded-md shadow-lg">
+          <div className="text-sm">
+            <strong>Distance:</strong>
+            <div>{distance} km</div>
+          </div>
+        </div>
+      )}
+      {activeAmenity && amenityCount !== null && (<>
+        <div className="absolute top-20 left-2 p-2 text-white bg-green-600 z-5 rounded-md shadow-lg">
+          <div className="mt-2 text-sm text-white dark:text-gray-300">
+            Found <strong>{amenityCount}</strong> {activeAmenity.replace("_", " ").toLowerCase()}(s) within {radius / 1000} km
+          </div>
+        </div>
 
- 
-{isLoaded && (<>  <div className="absolute top-2 right-2 z-5 flex flex-col space-y-2">
-    {/* Default Button 
+
+        <div className="absolute rounded-lg p-2 bg-gray-100 bottom-10 left-1/2 mt-4 flex flex-col gap-2 text-sm">
+          <label className="block text-gray-700 font-medium mb-0">
+            Radius: {radius / 1000} km
+          </label>
+          <input
+            type="range"
+            min="1000"
+            max="5000"
+            step="1000"
+            value={radius}
+            onChange={(e) => setRadius(Number(e.target.value))}
+            className="w-full"
+          />
+
+
+        </div>
+      </>)}
+
+
+
+
+
+
+      {isLoaded && (<>  <div className="absolute top-2 right-2 z-5 flex flex-col space-y-2">
+        {/* Default Button 
    <TooltipProvider>
                    <Tooltip>
                      <TooltipTrigger asChild>
@@ -1303,195 +1303,192 @@ Radius: {radius / 1000} km
                      </TooltipContent>
                    </Tooltip>
                  </TooltipProvider>*/}
-   
-  {[
-    { label: "Schools Nearby", type: "school" },
-    { label: "Hospitals Nearby", type: "hospital" },
-    { label: "Malls Nearby", type: "shopping_mall" },
-    { label: "Restaurants Nearby", type: "restaurant" },
-    { label: "Banks Nearby", type: "bank" },
-    { label: "Bus Stations Nearby", type: "transit_station" },
-  ].map(({ label, type }) => (<div key={type}>
-   
-    <TooltipProvider>
-    <Tooltip>
-      <TooltipTrigger asChild>
 
-      <Button
-      onClick={() => {handleShowAmenity(type as AmenityType); setDistance(''); setSelectedControl("amenity");}}
-      variant={activeAmenity === type ? "default" : "outline"}
-      className={`w-14 ${
-        activeAmenity === type ? "bg-green-600 hover:bg-green-700 text-white" : "text-gray-600"
-      }`}
-      disabled={loadingAmenity !== null}
-    >
-      {loadingAmenity === type ? (<><CircularProgress
-                                sx={{ color: "white" }}
-                                size={30}
-                              /></>) : 
-      (<>
-      {type ==='school' &&(<div><SchoolOutlinedIcon/> </div>)}
-      {type ==='hospital' &&(<div><LocalHospitalOutlinedIcon/> </div>)}
-      {type ==='shopping_mall' &&(<div><LocalMallOutlinedIcon/> </div>)}
-      {type ==='restaurant' &&(<div><RestaurantOutlinedIcon/> </div>)}
-      {type ==='bank' &&(<div><AccountBalanceOutlinedIcon/> </div>)}
-      {type ==='transit_station' &&(<div><AirportShuttleOutlinedIcon/> </div>)}
+        {[
+          { label: "Schools Nearby", type: "school" },
+          { label: "Hospitals Nearby", type: "hospital" },
+          { label: "Malls Nearby", type: "shopping_mall" },
+          { label: "Restaurants Nearby", type: "restaurant" },
+          { label: "Banks Nearby", type: "bank" },
+          { label: "Bus Stations Nearby", type: "transit_station" },
+        ].map(({ label, type }) => (<div key={type}>
+
+          <TooltipProvider>
+            <Tooltip>
+              <TooltipTrigger asChild>
+
+                <Button
+                  onClick={() => { handleShowAmenity(type as AmenityType); setDistance(''); setSelectedControl("amenity"); }}
+                  variant={activeAmenity === type ? "default" : "outline"}
+                  className={`w-14 ${activeAmenity === type ? "bg-green-600 hover:bg-green-700 text-white" : "text-gray-600"
+                    }`}
+                  disabled={loadingAmenity !== null}
+                >
+                  {loadingAmenity === type ? (<><CircularProgress
+                    sx={{ color: "white" }}
+                    size={30}
+                  /></>) :
+                    (<>
+                      {type === 'school' && (<div><SchoolOutlinedIcon /> </div>)}
+                      {type === 'hospital' && (<div><LocalHospitalOutlinedIcon /> </div>)}
+                      {type === 'shopping_mall' && (<div><LocalMallOutlinedIcon /> </div>)}
+                      {type === 'restaurant' && (<div><RestaurantOutlinedIcon /> </div>)}
+                      {type === 'bank' && (<div><AccountBalanceOutlinedIcon /> </div>)}
+                      {type === 'transit_station' && (<div><AirportShuttleOutlinedIcon /> </div>)}
+                    </>)}
+                </Button>
+              </TooltipTrigger>
+              <TooltipContent>
+                <p>{label}</p>
+              </TooltipContent>
+            </Tooltip>
+          </TooltipProvider>
+
+        </div>))}
+
+        <TooltipProvider>
+          <Tooltip>
+            <TooltipTrigger asChild>
+              <Button
+                onClick={() => {
+                  setSelectedControl("route");
+                  handleRoute();
+                  setActiveAmenity(null); // unselect other controls
+                  setShowDistanceDialog(true);
+                  setOpenDistanceDialog(false);
+                  setOpenDirectionsDialog(false);
+                }}
+                variant={selectedControl === "route" ? "default" : "outline"}
+                className={`w-14 text-gray-600 ${selectedControl === "route" ? "bg-green-600 hover:bg-green-700 text-white" : ""
+                  }`}
+              >
+                <RouteOutlinedIcon />
+              </Button>
+            </TooltipTrigger>
+            <TooltipContent>
+              <p>Distance</p>
+            </TooltipContent>
+          </Tooltip>
+        </TooltipProvider>
+
+
+        <TooltipProvider>
+          <Tooltip>
+            <TooltipTrigger asChild>
+              <Button
+                onClick={() => {
+                  setSelectedControl("userRoute");
+                  setActiveAmenity(null); // unselect other controls
+                  setOpenDistanceDialog(true)
+                  setShowDistanceDialog(false);
+                  setOpenDirectionsDialog(false);
+
+
+                }}
+                className={`w-14 text-gray-600 ${selectedControl === "userRoute" ? "bg-green-600 text-white hover:bg-green-700 text-white" : ""
+                  }`}
+                variant={selectedControl === "userRoute" ? "default" : "outline"}
+              >
+                <GpsFixedOutlinedIcon />
+              </Button>
+            </TooltipTrigger>
+            <TooltipContent>
+              <p>Distance to Property</p>
+            </TooltipContent>
+          </Tooltip>
+        </TooltipProvider>
+
+        <TooltipProvider>
+          <Tooltip>
+            <TooltipTrigger asChild>
+
+              <Button variant="outline" onClick={() => {
+                setDestination(`https://www.google.com/maps/dir/?api=1&destination=${center.lat},${center.lng}`);
+                setOpenDirectionsDialog(true);
+                setOpenDistanceDialog(false)
+                setShowDistanceDialog(false);
+              }} className="w-14 text-gray-600">
+                <DirectionsOutlinedIcon />
+              </Button>
+
+            </TooltipTrigger>
+            <TooltipContent>
+              <p> 📍 Get Directions (Google Maps)</p>
+            </TooltipContent>
+          </Tooltip>
+        </TooltipProvider>
+      </div>
       </>)}
-    </Button>
-      </TooltipTrigger>
-      <TooltipContent>
-        <p>{label}</p>
-      </TooltipContent>
-    </Tooltip>
-  </TooltipProvider>
-    
-  </div> ))}
-
-   <TooltipProvider>
-                   <Tooltip>
-                     <TooltipTrigger asChild>
-                     <Button
-  onClick={() => {
-    setSelectedControl("route");
-    handleRoute();
-    setActiveAmenity(null); // unselect other controls
-    setShowDistanceDialog(true);
-    setOpenDistanceDialog(false);
-    setOpenDirectionsDialog(false);
-  }}
-  variant={selectedControl === "route" ? "default" : "outline"}
-  className={`w-14 text-gray-600 ${
-    selectedControl === "route" ? "bg-green-600 hover:bg-green-700 text-white" : ""
-  }`}
->
-<RouteOutlinedIcon/> 
-</Button>
-                     </TooltipTrigger>
-                     <TooltipContent>
-                       <p>Distance</p>
-                     </TooltipContent>
-                   </Tooltip>
-                 </TooltipProvider>
-   
-
-                 <TooltipProvider>
-                   <Tooltip>
-                     <TooltipTrigger asChild>
-                     <Button
-  onClick={() => {
-    setSelectedControl("userRoute");
-    setActiveAmenity(null); // unselect other controls
-    setOpenDistanceDialog(true)
-    setShowDistanceDialog(false);
-    setOpenDirectionsDialog(false);
-  
-   
-  }}
-  className={`w-14 text-gray-600 ${
-    selectedControl === "userRoute" ? "bg-green-600 text-white hover:bg-green-700 text-white" : ""
-  }`}
-  variant={selectedControl === "userRoute" ? "default" : "outline"}
->
-  <GpsFixedOutlinedIcon/>
-</Button>
-                     </TooltipTrigger>
-                     <TooltipContent>
-                       <p>Distance to Property</p>
-                     </TooltipContent>
-                   </Tooltip>
-                 </TooltipProvider>
-
-                 <TooltipProvider>
-                   <Tooltip>
-                     <TooltipTrigger asChild>
-                    
-  <Button variant="outline"  onClick={() => {
-    setDestination(`https://www.google.com/maps/dir/?api=1&destination=${center.lat},${center.lng}`);
-    setOpenDirectionsDialog(true);
-     setOpenDistanceDialog(false)
-    setShowDistanceDialog(false);
-  }} className="w-14 text-gray-600">
-    <DirectionsOutlinedIcon/>
-  </Button>
-
-                     </TooltipTrigger>
-                     <TooltipContent>
-                       <p> 📍 Get Directions (Google Maps)</p>
-                     </TooltipContent>
-                   </Tooltip>
-                 </TooltipProvider>
-</div>
-</>)}
-                 {openDirectionsDialog && (<>
-<div className="fixed inset-0 bg-black bg-opacity-40 z-50 flex items-center justify-center">
-    <div className="bg-[#e4ebeb] p-3 rounded-md shadow-lg w-[320px] relative">
-      <button
-        onClick={() => {
-          setOpenDirectionsDialog(false);
-        }}
-        className="absolute top-2 right-2 text-gray-500 hover:text-black text-sm"
-        title="Close"
-      >
-        ✕
-      </button>
-   <p className="font-bold">📍 Redirect to Google Maps</p>
-    <p>
-      This will open Google Maps to navigate to the property location. Do you want to proceed?
-    </p>
-    <div className="p-2 w-full">
-    <Button variant="default" className="w-full" onClick={()=>{handleRedirect();}}> Got it</Button>
-    </div>
-<div>
+      {openDirectionsDialog && (<>
+        <div className="fixed inset-0 bg-black bg-opacity-40 z-50 flex items-center justify-center">
+          <div className="bg-[#e4ebeb] p-3 rounded-md shadow-lg w-[320px] relative">
+            <button
+              onClick={() => {
+                setOpenDirectionsDialog(false);
+              }}
+              className="absolute top-2 right-2 text-gray-500 hover:text-black text-sm"
+              title="Close"
+            >
+              ✕
+            </button>
+            <p className="font-bold">📍 Redirect to Google Maps</p>
+            <p>
+              This will open Google Maps to navigate to the property location. Do you want to proceed?
+            </p>
+            <div className="p-2 w-full">
+              <Button variant="default" className="w-full" onClick={() => { handleRedirect(); }}> Got it</Button>
+            </div>
+            <div>
 
 
-</div>
-</div>
-</div>
-</>)}
+            </div>
+          </div>
+        </div>
+      </>)}
 
 
 
-{openDistanceDialog && (<>
-<div className="fixed inset-0 bg-black bg-opacity-40 z-50 flex items-center justify-center">
-    <div className="bg-[#e4ebeb] p-3 rounded-md shadow-lg w-[320px] relative">
-      <button
-        onClick={() => {
-           setStep("options"); setOpenDistanceDialog(false);
-        }}
-        className="absolute top-2 right-2 text-gray-500 hover:text-black text-sm"
-        title="Close"
-      >
-        ✕
-      </button>
-   <p className="font-bold">Distance to Property</p>
-    <p>
-      Show approximately distance from your current location to the property.
-    </p>
-    <div className="p-2 w-full">
-    <Button variant="default" className="w-full" onClick={()=>{setOpenDistanceDialog(false); handleRouteFromUser();}}> Got it</Button>
-    </div>
-<div>
-</div>
+      {openDistanceDialog && (<>
+        <div className="fixed inset-0 bg-black bg-opacity-40 z-50 flex items-center justify-center">
+          <div className="bg-[#e4ebeb] p-3 rounded-md shadow-lg w-[320px] relative">
+            <button
+              onClick={() => {
+                setStep("options"); setOpenDistanceDialog(false);
+              }}
+              className="absolute top-2 right-2 text-gray-500 hover:text-black text-sm"
+              title="Close"
+            >
+              ✕
+            </button>
+            <p className="font-bold">Distance to Property</p>
+            <p>
+              Show approximately distance from your current location to the property.
+            </p>
+            <div className="p-2 w-full">
+              <Button variant="default" className="w-full" onClick={() => { setOpenDistanceDialog(false); handleRouteFromUser(); }}> Got it</Button>
+            </div>
+            <div>
+            </div>
 
-</div>
-</div>
-</>)}
+          </div>
+        </div>
+      </>)}
 
- {showDistanceDialog && (<>
- <div className="fixed inset-0 bg-black bg-opacity-40 z-50 flex items-center justify-center">
-    <div className="bg-[#e4ebeb] p-3 rounded-md shadow-lg w-[320px] relative">
-      <button
-        onClick={() => {
-           setStep("options"); setShowDistanceDialog(false);
-        }}
-        className="absolute top-2 right-2 text-gray-500 hover:text-black text-sm"
-        title="Close"
-      >
-        ✕
-      </button>
-   <p className="font-bold">Distance Options</p>
-<div>
-     {step === "options" ? (
+      {showDistanceDialog && (<>
+        <div className="fixed inset-0 bg-black bg-opacity-40 z-50 flex items-center justify-center">
+          <div className="bg-[#e4ebeb] p-3 rounded-md shadow-lg w-[320px] relative">
+            <button
+              onClick={() => {
+                setStep("options"); setShowDistanceDialog(false);
+              }}
+              className="absolute top-2 right-2 text-gray-500 hover:text-black text-sm"
+              title="Close"
+            >
+              ✕
+            </button>
+            <p className="font-bold">Distance Options</p>
+            <div>
+              {step === "options" ? (
                 <>
                   <div
                     onClick={() => handleSelectOption("map")}
@@ -1509,56 +1506,56 @@ Radius: {radius / 1000} km
               ) : (
                 <>
                   <label className="block mb-2">Enter address to calculate distance:</label>
-                    <GooglePlacesAutocomplete
-                                        apiKey={process.env.NEXT_PUBLIC_GOOGLEAPIKEY!}
-                                        selectProps={{
-                    placeholder: "Search location",
-                    onChange: handleSelect,
-                    styles: {
-                      control: (provided) => ({
-                        ...provided,
-                        padding: '6px',
-                        borderRadius: '4px',
-                        borderColor: '#ccc',
-                        boxShadow: 'none',
-                        minHeight: '55px',
-                      }),
-                      placeholder: (provided) => ({
-                        ...provided,
-                        color: '#888',
-                      }),
-                      menu: (provided) => ({
-                        ...provided,
-                        zIndex: 9999, // ensure it appears on top
-                      }),
-                    },
-                  }}
-                                        autocompletionRequest={{
-                                          componentRestrictions: {
-                                            country: ["KE"], // Limits results to Kenya
-                                          },
-                                        }}
-                                      />
-                                      {error && (<><p className="text-red-400 p-1">{error} </p></>)}
-                                   
-                                   <div className="p-2 w-full flex justify-between">
-                                                {step === "addressInput" ? (
-                                                  <Button variant="default" className="w-full" onClick={handleSearch}>Search</Button>
-                                                ) : null}
-                                                </div>
+                  <GooglePlacesAutocomplete
+                    apiKey={process.env.NEXT_PUBLIC_GOOGLEAPIKEY!}
+                    selectProps={{
+                      placeholder: "Search location",
+                      onChange: handleSelect,
+                      styles: {
+                        control: (provided) => ({
+                          ...provided,
+                          padding: '6px',
+                          borderRadius: '4px',
+                          borderColor: '#ccc',
+                          boxShadow: 'none',
+                          minHeight: '55px',
+                        }),
+                        placeholder: (provided) => ({
+                          ...provided,
+                          color: '#888',
+                        }),
+                        menu: (provided) => ({
+                          ...provided,
+                          zIndex: 9999, // ensure it appears on top
+                        }),
+                      },
+                    }}
+                    autocompletionRequest={{
+                      componentRestrictions: {
+                        country: ["KE"], // Limits results to Kenya
+                      },
+                    }}
+                  />
+                  {error && (<><p className="text-red-400 p-1">{error} </p></>)}
+
+                  <div className="p-2 w-full flex justify-between">
+                    {step === "addressInput" ? (
+                      <Button variant="default" className="w-full" onClick={handleSearch}>Search</Button>
+                    ) : null}
+                  </div>
                 </>
               )}
-</div>
+            </div>
 
 
-</div>
-</div>
-</>)}
+          </div>
+        </div>
+      </>)}
 
 
 
 
 
-</div>
-);
+    </div>
+  );
 }

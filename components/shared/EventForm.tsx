@@ -73,42 +73,43 @@ import CircularProgress from "@mui/material/CircularProgress";
 import MapDrawingTool from "./MapDrawingTool";
 import { createLoan } from "@/lib/actions/loan.actions";
 import { MapaPricingModal } from "./MapaPricingModal";
+import PhoneVerification from "./PhoneVerification";
 const ReactQuill = dynamic(() => import("react-quill"), {
   ssr: false,
   loading: () => (
     <div className="w-full min-h-[300px] h-full flex flex-col items-center justify-center">
-                            <Icon icon={Barsscale} className="w-10 h-10 text-gray-500" />
-                          </div>
+      <Icon icon={Barsscale} className="w-10 h-10 text-gray-500" />
+    </div>
   ),
 });
 interface Field {
   name: string;
   type:
-    | "text"
-    | "number"
-    | "select"
-    | "radio"
-    | "checkbox"
-    | "textarea"
-    | "multi-select"
-    | "autocomplete"
-    | "phone"
-    | "year"
-    | "parcelNumber"
-    | "youtube-link"
-    | "price"
-    | "budget"
-    | "rentprice"
-    | "priceper"
-    | "bulkprice"
-    | "serviceprice"
-    | "delivery"
-    | "location"
-    | "propertyarea"
-    | "notify"
-    | "money"
-    | "virtualTourLink"
-    | "related-autocompletes";
+  | "text"
+  | "number"
+  | "select"
+  | "radio"
+  | "checkbox"
+  | "textarea"
+  | "multi-select"
+  | "autocomplete"
+  | "phone"
+  | "year"
+  | "parcelNumber"
+  | "youtube-link"
+  | "price"
+  | "budget"
+  | "rentprice"
+  | "priceper"
+  | "bulkprice"
+  | "serviceprice"
+  | "delivery"
+  | "location"
+  | "propertyarea"
+  | "notify"
+  | "money"
+  | "virtualTourLink"
+  | "related-autocompletes";
   required?: boolean;
   options?: string[];
 }
@@ -134,7 +135,7 @@ const generateDefaultValues = (fields: Field[]) => {
       defaults[field.name] = "";
     } else if (field.type === "parcelNumber") {
       defaults[field.name] = "";
-    } 
+    }
     else if (field.type === "money") {
       defaults[field.name] = 0;
     } else if (field.type === "price") {
@@ -154,12 +155,12 @@ const generateDefaultValues = (fields: Field[]) => {
     } else if (field.type === "location") {
       defaults["location"] = [];
     }
-   else if (field.type === "propertyarea") {
-    defaults["propertyarea"] = [];
-  }else if (field.type === "virtualTourLink") {
-    defaults["virtualTourLink"] = "";
-  }
-  
+    else if (field.type === "propertyarea") {
+      defaults["propertyarea"] = [];
+    } else if (field.type === "virtualTourLink") {
+      defaults["virtualTourLink"] = "";
+    }
+
     else if (field.type === "delivery") {
       defaults["delivery"] = [];
     } else if (field.type === "year") {
@@ -184,7 +185,7 @@ type Package = {
   features: string[];
   color: string;
   priority: number;
- 
+
 };
 type AdFormProps = {
   userId: string;
@@ -193,15 +194,15 @@ type AdFormProps = {
   type: string;
   ad?: any;
   adId?: string;
-  categories:any;
+  categories: any;
   userName: string;
-  category?:string
-  subcategory?:string
-  packagesList:any;
-  handleOpenShop: (shopId:any) => void;
-  handleAdView?:(ad:any) => void;
-  handlePay?:(id:string) => void;
-  handleOpenTerms:() => void;
+  category?: string
+  subcategory?: string
+  packagesList: any;
+  handleOpenShop: (shopId: any) => void;
+  handleAdView?: (ad: any) => void;
+  handlePay?: (id: string) => void;
+  handleOpenTerms: () => void;
 };
 
 const AdForm = ({
@@ -240,7 +241,7 @@ const AdForm = ({
   const [showGuide, setShowGuide] = useState(false);
   const [mapData, setMapData] = useState<any>([]);
   // const [selectedCategory, setSelectedCategory] = useState("");
-   const [showload, setShowLoad] = useState(true);
+  const [showload, setShowLoad] = useState(true);
 
   const [fields, setFields] = useState<Field[]>([]);
   //const [selectedAutoComplete, setSelectedAutoComplete] = useState("");
@@ -264,12 +265,12 @@ const AdForm = ({
   const [locationError, setlocationError] = useState('');
   const modules = {
     toolbar: [
-     // [{ header: "1" }, { header: "2" }, { font: [] }],
+      // [{ header: "1" }, { header: "2" }, { font: [] }],
       [{ list: "ordered" }, { list: "bullet" }],
       ["bold", "italic", "underline", "strike", "blockquote"],
-     // [{ color: [] }, { background: [] }], // Color options
+      // [{ color: [] }, { background: [] }], // Color options
       [{ align: [] }],
-     // ["link", "image"],
+      // ["link", "image"],
       ["clean"],
     ],
   };
@@ -314,19 +315,21 @@ const AdForm = ({
     setShowPopupArea(false);
   };
 
- const handleSelect = (e: any) => {
+  const handleSelect = (e: any) => {
     geocodeByAddress(e.value.description)
       .then((results) => getLatLng(results[0]))
       .then(({ lat, lng }) => {
-         setFormData((prevData) => ({ ...prevData, propertyarea: {
-        location: { type: "Point", coordinates: [lat, lng] },
-        mapaddress:e.value.description,
-      } }));
+        setFormData((prevData) => ({
+          ...prevData, propertyarea: {
+            location: { type: "Point", coordinates: [lat, lng] },
+            mapaddress: e.value.description,
+          }
+        }));
       });
   };
 
   const handleSaveMap = () => {
-  
+
     setFormData((prevData) => ({ ...prevData, ["propertyarea"]: mapData }));
     setShowPopupArea(false);
   };
@@ -336,74 +339,74 @@ const AdForm = ({
   const [selectedCategoryCommand, setSelectedCategoryCommand] = useState<
     string[]
   >([]);
- 
-    
-    const [countryCode, setCountryCode] = useState("+254"); // Default country code
-    const [phoneNumber, setPhoneNumber] = useState("");
 
-    useEffect(() => {
-      const getCategory = async () => {
-        try {
-       
-          const uniqueCategories = categories.reduce((acc: any[], current: any) => {
-            if (
-              !acc.find((item) => item.category.name === current.category.name)
-            ) {
-              acc.push(current);
-            }
-            return acc;
-          }, []);
-  
-     // ✅ Filter only "Property" and "Land" categories (example)
-const allowedCategories = [
-  "New builds",
-   "Houses & Apartments for Rent",
-   "Houses & Apartments for Sale",
-    "Land & Plots for Rent",
-  "Land & Plots for Sale",
-   "Commercial Property for Rent",
-   "Commercial Property for Sale",
-    "Event Centres, Venues & Workstations",
-  "Short Let Property",
-   "Special Listings",
-    "Property Services", 
-    "Wanted Ads"];
 
-const filteredCategories = uniqueCategories.filter(
-  (cat: any) => allowedCategories.includes(cat.category.name)
-);
+  const [countryCode, setCountryCode] = useState("+254"); // Default country code
+  const [phoneNumber, setPhoneNumber] = useState("");
 
-setSelectedCategoryCommand(filteredCategories);
-  
-          if (type === "Update") {
-           
+  useEffect(() => {
+    const getCategory = async () => {
+      try {
+
+        const uniqueCategories = categories.reduce((acc: any[], current: any) => {
+          if (
+            !acc.find((item) => item.category.name === current.category.name)
+          ) {
+            acc.push(current);
+          }
+          return acc;
+        }, []);
+
+        // ✅ Filter only "Property" and "Land" categories (example)
+        const allowedCategories = [
+          "New builds",
+          "Houses & Apartments for Rent",
+          "Houses & Apartments for Sale",
+          "Land & Plots for Rent",
+          "Land & Plots for Sale",
+          "Commercial Property for Rent",
+          "Commercial Property for Sale",
+          "Event Centres, Venues & Workstations",
+          "Short Let Property",
+          "Special Listings",
+          "Property Services",
+          "Wanted Ads"];
+
+        const filteredCategories = uniqueCategories.filter(
+          (cat: any) => allowedCategories.includes(cat.category.name)
+        );
+
+        setSelectedCategoryCommand(filteredCategories);
+
+        if (type === "Update") {
+
+          const selectedData: any = categories.find(
+            (category: any) =>
+              category.category.name === selectedCategory &&
+              category.subcategory === selectedSubCategory
+          );
+          // Update fields if a match is found
+
+          setSelectedCategoryId(selectedData.category._id)
+          setFields(selectedData ? selectedData.fields : []);
+          setFormData(ad.data);
+
+          const cleanNumber = ad.data.phone.startsWith('+') ? ad.data.phone.slice(1) : ad.data.phone;
+          const countryCode = cleanNumber.slice(0, 3);
+          const localNumber = cleanNumber.slice(3);
+          setCountryCode('+' + countryCode)
+          setPhoneNumber(localNumber)
+          setFormData({
+            ...formData,
+            phone: ad.data.phone,
+          });
+
+
+        } else {
+          if (subcategory && category) {
+            setSelectedCategory(category);
+            setSelectedSubCategory(subcategory);
             const selectedData: any = categories.find(
-              (category: any) =>
-                category.category.name === selectedCategory &&
-                category.subcategory === selectedSubCategory
-            );
-            // Update fields if a match is found
-           
-            setSelectedCategoryId(selectedData.category._id)
-            setFields(selectedData ? selectedData.fields : []);
-            setFormData(ad.data);
-           
-              const cleanNumber = ad.data.phone.startsWith('+') ? ad.data.phone.slice(1) : ad.data.phone;
-              const countryCode = cleanNumber.slice(0, 3);
-              const localNumber = cleanNumber.slice(3);
-              setCountryCode('+'+countryCode)
-              setPhoneNumber(localNumber)
-              setFormData({
-                ...formData,
-                phone: ad.data.phone,
-              });
-            
-          
-          }else{
-if(subcategory && category){
-  setSelectedCategory(category);
-  setSelectedSubCategory(subcategory);
-  const selectedData: any = categories.find(
               (ca: any) =>
                 ca.category.name === category &&
                 ca.subcategory === subcategory
@@ -412,73 +415,73 @@ if(subcategory && category){
             setSelectedCategoryId(selectedData.category._id)
             setSelectedSubCategoryId(selectedData._id);
             setFields(selectedData ? selectedData.fields : []);
-            if(category==='Wanted Ads'){
-    
-     setFormData({
+            if (category === 'Wanted Ads') {
+
+              setFormData({
                 ...formData,
                 category: category,
                 subcategory: subcategory,
                 imageUrls: [userImage],
               });
-            
-          }else{
-             setFormData({
+
+            } else {
+              setFormData({
                 ...formData,
                 category: category,
                 subcategory: subcategory,
               });
+            }
+
+
           }
-
-
         }
-          }
-          setShowLoad(false)
-        } catch (error) {
-          setShowLoad(false)
-          console.error("Failed to fetch categories", error);
-        }
-      };
-      getCategory();
-    }, []);
+        setShowLoad(false)
+      } catch (error) {
+        setShowLoad(false)
+        console.error("Failed to fetch categories", error);
+      }
+    };
+    getCategory();
+  }, []);
 
 
-    const [activePackage, setActivePackage] = useState<Package | null>(null);
-    const [activeButton, setActiveButton] = useState(0);
-    const [activeButtonTitle, setActiveButtonTitle] = useState("1 week");
-    const [priceInput, setPriceInput] = useState("");
-    const [periodInput, setPeriodInput] = useState("");
-    const [subscription, setSubscription] = useState<any>(null);
-    const [daysRemaining, setDaysRemaining] = useState(0);
-    const [remainingAds, setRemainingAds] = useState(0);
-    const [listed, setListed] = useState(0);
-    const [Plan, setplan] = useState("Free");
-    const [PlanId, setplanId] = useState(FreePackId);
-    const [Priority_, setpriority] = useState(0);
-    const [Adstatus_, setadstatus] = useState("Pending");
-    const [color, setColor] = useState("#000000");
-    const [loadingSub, setLoadingSub] = useState<boolean>(true);
-    const [ExpirationDate_, setexpirationDate] = useState(new Date());
-   
-useEffect(() => {
-    if(type === "Create"){
-        const fetchData =() => {
-          try {
-           
-           
-            const subscriptionData = user;
-            const packages = packagesList;
-          
-            if (subscriptionData) {
-             // setSubscription(subscriptionData);
-              const listedAds = subscriptionData.ads || 0;
-              setListed(listedAds);
-              if (subscriptionData.currentpack && !Array.isArray(subscriptionData.currentpack)) { 
+  const [activePackage, setActivePackage] = useState<Package | null>(null);
+  const [activeButton, setActiveButton] = useState(0);
+  const [activeButtonTitle, setActiveButtonTitle] = useState("1 week");
+  const [priceInput, setPriceInput] = useState("");
+  const [periodInput, setPeriodInput] = useState("");
+  const [subscription, setSubscription] = useState<any>(null);
+  const [daysRemaining, setDaysRemaining] = useState(0);
+  const [remainingAds, setRemainingAds] = useState(0);
+  const [listed, setListed] = useState(0);
+  const [Plan, setplan] = useState("Free");
+  const [PlanId, setplanId] = useState(FreePackId);
+  const [Priority_, setpriority] = useState(0);
+  const [Adstatus_, setadstatus] = useState("Pending");
+  const [color, setColor] = useState("#000000");
+  const [loadingSub, setLoadingSub] = useState<boolean>(true);
+  const [ExpirationDate_, setexpirationDate] = useState(new Date());
+
+  useEffect(() => {
+    if (type === "Create") {
+      const fetchData = () => {
+        try {
+
+
+          const subscriptionData = user;
+          const packages = packagesList;
+
+          if (subscriptionData) {
+            // setSubscription(subscriptionData);
+            const listedAds = subscriptionData.ads || 0;
+            setListed(listedAds);
+            if (subscriptionData.currentpack && !Array.isArray(subscriptionData.currentpack)) {
               setRemainingAds(subscriptionData.currentpack.list - listedAds);
               setpriority(subscriptionData.currentpack.priority);
               setColor(subscriptionData.currentpack.color);
               setplan(subscriptionData.currentpack.name);
               setplanId(subscriptionData.transaction?.planId || FreePackId);
-             // console.log(subscriptionData);
+              // console.log(subscriptionData);
               const createdAtDate = new Date(subscriptionData.transaction?.createdAt || new Date());
               const periodDays = parseInt(subscriptionData.transaction?.period) || 0;
               const expiryDate = new Date(createdAtDate.getTime() + periodDays * 24 * 60 * 60 * 1000);
@@ -488,45 +491,45 @@ useEffect(() => {
               setDaysRemaining(remainingDays);
               setadstatus((remainingDays > 0 && (subscriptionData.currentpack.list - listedAds) > 0) || ((subscriptionData.currentpack.list - listedAds) > 0 && subscriptionData.currentpack.name === "Free") ? "Active" : "Pending");
               setActivePackage(
-              packages.length > 0
-                ? subscriptionData.currentpack.list - listedAds > 0 && subscriptionData.currentpack.name === "Free"
-                  ? packages[0]
-                  : packages[1]
-                : null
-            );
-   
+                packages.length > 0
+                  ? subscriptionData.currentpack.list - listedAds > 0 && subscriptionData.currentpack.name === "Free"
+                    ? packages[0]
+                    : packages[1]
+                  : null
+              );
+
 
             } else {
               console.warn("No current package found for the user.");
             }
-            }
-          } catch (error) {
-            console.error("Failed to fetch data", error);
-          } finally {
-         
-       
           }
-        };
-        fetchData();
+        } catch (error) {
+          console.error("Failed to fetch data", error);
+        } finally {
+
+
+        }
+      };
+      fetchData();
     }
-    }, []);
+  }, []);
 
 
 
   const validateForm = async () => {
     //console.log("start: ");
-     const validationSchema = createValidationSchema(fields, selectedCategory);
-     console.log(formData);
+    const validationSchema = createValidationSchema(fields, selectedCategory);
+    console.log(formData);
 
     const result = validationSchema.safeParse(formData);
-     console.log(result);
+    console.log(result);
     if (!result.success) {
       const errors = result.error.errors.reduce((acc: any, err: any) => {
         acc[err.path[0]] = err.message;
-          console.log(acc);
+        console.log(acc);
         return acc;
       }, {});
-       console.log(errors);
+      console.log(errors);
       setFormErrors(errors);
       return false;
     }
@@ -535,7 +538,7 @@ useEffect(() => {
     return true;
   };
 
-   const uploadFiles = async () => {
+  const uploadFiles = async () => {
     const uploadedUrls: string[] = [];
     let i = 0;
     for (const file of files) {
@@ -552,31 +555,31 @@ useEffect(() => {
     }
     return uploadedUrls.filter((url) => !url.includes("blob:"));
   };
- 
+
   const handleInputChange = (field: string, value: any) => {
     setFormData({ ...formData, [field]: value });
- 
+
   };
 
-  const handleInputCategoryChange = (field: string, value: any, _id:string) => {
+  const handleInputCategoryChange = (field: string, value: any, _id: string) => {
     setSelectedCategory(value);
     setSelectedCategoryId(_id);
     setSelectedSubCategory("");
     setSelectedSubCategoryId("");
     setFields([]);
-    
-     if(value ==='Wanted Ads'){
-    
-     setFormData({
-                ...formData,
-                  [field]: value,
-                imageUrls: [userImage],
-              });
-    }else{
-       setFormData({
-      ...formData,
-      [field]: value,
-    });
+
+    if (value === 'Wanted Ads') {
+
+      setFormData({
+        ...formData,
+        [field]: value,
+        imageUrls: [userImage],
+      });
+    } else {
+      setFormData({
+        ...formData,
+        [field]: value,
+      });
     }
   };
   const handleInputSubCategoryChange = (
@@ -584,7 +587,7 @@ useEffect(() => {
     value: any,
     _id: string
   ) => {
-   
+
     setSelectedSubCategory(value);
     setSelectedSubCategoryId(_id);
     const selectedData: any = categories.find(
@@ -600,25 +603,25 @@ useEffect(() => {
     setFormData(defaults);
     setFormErrors({});
     setFiles([]);
-   
-    if(user.user.phone && type === "Create"){
+
+    if (user.user.phone && type === "Create") {
 
       const cleanNumber = user.user.phone.startsWith('+') ? user.user.phone.slice(1) : user.user.phone;
       const countryCode = cleanNumber.slice(0, 3);
       const localNumber = cleanNumber.slice(3);
-      setCountryCode('+'+countryCode)
+      setCountryCode('+' + countryCode)
       setPhoneNumber(localNumber)
       setFormData({
         ...formData, [field]: value,
         phone: user.user.phone,
       });
-    }else{
+    } else {
       setFormData({
         ...formData,
         [field]: value,
       });
     }
-    
+
   };
 
   const handleInputAutoCompleteChange = (field: string, value: any) => {
@@ -653,7 +656,7 @@ useEffect(() => {
   };
 
   const handleInputOnChange = (field: string, value: any) => {
-   // console.log(value);
+    // console.log(value);
     setFormData((prevData) => ({ ...prevData, [field]: value }));
   };
   const handlePackageOnChange = (
@@ -672,213 +675,213 @@ useEffect(() => {
     setplan(Plan);
     setPriceInput(priceInput);
     setPeriodInput(periodInput);
-    
+
   };
   function isValidKenyanPhoneNumber(phone: string): boolean {
     const kenyanPhoneRegex = /^(?:\+254|254|0)?(7\d{8})$/;
     return kenyanPhoneRegex.test(phone.trim());
   }
- const handleSubmit = async () => {
-  setLoading(true);
-  setUploadProgress(0);
+  const handleSubmit = async () => {
+    setLoading(true);
+    setUploadProgress(0);
 
-  try {
-    const isValid = await validateForm();
-    if (!isValid) {
-      toast({
-        variant: "destructive",
-        title: "Missing fields",
-        description: "Please fill in all required fields",
-        duration: 5000,
-      });
-      return;
-    }
-
-    const phone = countryCode + removeLeadingZero(phoneNumber);
-
-    if (!isValidKenyanPhoneNumber(phone)) {
-      toast({
-        variant: "destructive",
-        title: "Invalid Phone",
-        description: "Invalid Phone Number.",
-        duration: 5000,
-      });
-      setphoneError("Invalid Phone Number!");
-      return;
-    }
-
-    if (!formData["propertyarea"]) {
-      toast({
-        variant: "destructive",
-        title: "No location",
-        description: "Please set location!",
-        duration: 5000,
-      });
-      setlocationError("Set Location!");
-      return;
-    }
-
-    let finalData: any;
-    if (type === "Create") {
-
-
- if (selectedCategory === 'Wanted Ads' && selectedSubCategory.trim().toLowerCase() === "Property Financing Requests".toLowerCase()) {
-
-    const newAd = await createLoan({
-      loan: {
-        userId: userId,
-        adId: null,
-        loanType: formData["Loan Type"]?.toString() || "",
-        LoanAmount: parseCurrencyToNumber(formData["Loan Amount"]?.toString() || 0),
-        monthlyIncome: parseCurrencyToNumber(formData["Monthly Income"]?.toString() || 0),
-        deposit: parseCurrencyToNumber(formData["Deposit Amount"]?.toString() || 0),
-        loanterm: formData["Preferred Loan Term"]?.toString() || "",
-        employmentStatus: formData["Employment Status"]?.toString() || "",
-        messageComments: formData["Comment"]?.toString() || "",
-        status: "Pending",
-      },
-      path: "/create",
-    });
-      setFormData(defaults);
-      setFiles([]);
-        if (handleOpenShop) {
-      handleOpenShop(user.user);
-    }
+    try {
+      const isValid = await validateForm();
+      if (!isValid) {
         toast({
-        title: "Submitted",
-        description: "Loan request submitted successfully.",
-        duration: 5000,
-        className: "bg-[#30AF5B] text-white",
-      });
-  return;
- }
-
-
-      if (selectedCategory === 'Wanted Ads') {
-           finalData = {
-          ...formData,
-          budget: parseCurrencyToNumber(formData["budget"].toString()),
-          phone,
-        };
-
-      } else {
-        const uploadedUrls = await uploadFiles();
-        if (!uploadedUrls) return;
-
-        finalData = {
-          ...formData,
-          imageUrls: uploadedUrls,
-          price: parseCurrencyToNumber(formData["price"].toString()),
-          phone,
-        };
+          variant: "destructive",
+          title: "Missing fields",
+          description: "Please fill in all required fields",
+          duration: 5000,
+        });
+        return;
       }
-    
-      const pricePack = Number(priceInput);
-      
-      const newAd = await createData({
-        userId,
-        subcategory: selectedSubCategoryId,
-        category: selectedCategoryId,
-        formData: finalData,
-        expirely: ExpirationDate_,
-        priority: selectedCategory ==='Wanted Ads' ? 1:Priority_,
-        adstatus: selectedCategory ==='Wanted Ads' ? 'Active':Adstatus_,
-        planId: selectedCategory ==='Wanted Ads' ? FreePackId:PlanId,
-        plan: selectedCategory ==='Wanted Ads' ? 'Free':Plan,
-        pricePack,
-        periodPack: periodInput,
-        path: "/create",
-      });
-    
-      try {
-        if (!user.user.phone) {
-          await updateUserPhone(userId, phone);
+
+      const phone = countryCode + removeLeadingZero(phoneNumber);
+
+      if (!isValidKenyanPhoneNumber(phone)) {
+        toast({
+          variant: "destructive",
+          title: "Invalid Phone",
+          description: "Invalid Phone Number.",
+          duration: 5000,
+        });
+        setphoneError("Invalid Phone Number!");
+        return;
+      }
+
+      if (!formData["propertyarea"]) {
+        toast({
+          variant: "destructive",
+          title: "No location",
+          description: "Please set location!",
+          duration: 5000,
+        });
+        setlocationError("Set Location!");
+        return;
+      }
+
+      let finalData: any;
+      if (type === "Create") {
+
+
+        if (selectedCategory === 'Wanted Ads' && selectedSubCategory.trim().toLowerCase() === "Property Financing Requests".toLowerCase()) {
+
+          const newAd = await createLoan({
+            loan: {
+              userId: userId,
+              adId: null,
+              loanType: formData["Loan Type"]?.toString() || "",
+              LoanAmount: parseCurrencyToNumber(formData["Loan Amount"]?.toString() || 0),
+              monthlyIncome: parseCurrencyToNumber(formData["Monthly Income"]?.toString() || 0),
+              deposit: parseCurrencyToNumber(formData["Deposit Amount"]?.toString() || 0),
+              loanterm: formData["Preferred Loan Term"]?.toString() || "",
+              employmentStatus: formData["Employment Status"]?.toString() || "",
+              messageComments: formData["Comment"]?.toString() || "",
+              status: "Pending",
+            },
+            path: "/create",
+          });
+          setFormData(defaults);
+          setFiles([]);
+          if (handleOpenShop) {
+            handleOpenShop(user.user);
+          }
+          toast({
+            title: "Submitted",
+            description: "Loan request submitted successfully.",
+            duration: 5000,
+            className: "bg-[#30AF5B] text-white",
+          });
+          return;
         }
-      } catch (err) {
-        console.error("Failed to update user phone:", err);
-      }
 
-      setFormData(defaults);
-      setFiles([]);
-      setSelectedYear("");
-      setPhoneNumber("");
-      setselectedFeatures([]);
 
-      toast({
-        title: "Submitted",
-        description: "Ad submitted successfully.",
-        duration: 5000,
-        className: "bg-black text-white",
-      });
+        if (selectedCategory === 'Wanted Ads') {
+          finalData = {
+            ...formData,
+            budget: parseCurrencyToNumber(formData["budget"].toString()),
+            phone,
+          };
 
-      if (newAd) {
-        if (newAd.adstatus === "Pending" && handlePay) {
-          handlePay(newAd._id);
         } else {
-          handleAdView?.(newAd);
-        }
-      }
-    
-    }
+          const uploadedUrls = await uploadFiles();
+          if (!uploadedUrls) return;
 
-    if (type === "Update") {
-   
+          finalData = {
+            ...formData,
+            imageUrls: uploadedUrls,
+            price: parseCurrencyToNumber(formData["price"].toString()),
+            phone,
+          };
+        }
+
+        const pricePack = Number(priceInput);
+
+        const newAd = await createData({
+          userId,
+          subcategory: selectedSubCategoryId,
+          category: selectedCategoryId,
+          formData: finalData,
+          expirely: ExpirationDate_,
+          priority: selectedCategory === 'Wanted Ads' ? 1 : Priority_,
+          adstatus: selectedCategory === 'Wanted Ads' ? 'Active' : Adstatus_,
+          planId: selectedCategory === 'Wanted Ads' ? FreePackId : PlanId,
+          plan: selectedCategory === 'Wanted Ads' ? 'Free' : Plan,
+          pricePack,
+          periodPack: periodInput,
+          path: "/create",
+        });
+
+        //  try {
+        //   if (!user.user.phone) {
+        //     await updateUserPhone(userId, phone);
+        //  }
+        //} catch (err) {
+        //  console.error("Failed to update user phone:", err);
+        //}
+
+        setFormData(defaults);
+        setFiles([]);
+        setSelectedYear("");
+        setPhoneNumber("");
+        setselectedFeatures([]);
+
+        toast({
+          title: "Submitted",
+          description: "Ad submitted successfully.",
+          duration: 5000,
+          className: "bg-black text-white",
+        });
+
+        if (newAd) {
+          if (newAd.adstatus === "Pending" && handlePay) {
+            handlePay(newAd._id);
+          } else {
+            handleAdView?.(newAd);
+          }
+        }
+
+      }
+
+      if (type === "Update") {
+
         const uploadedUrls = await uploadFiles();
         // Preserve existing imageUrls if no new files are uploaded
         const finalImageUrls =
           uploadedUrls.length > 0 ? uploadedUrls : formData.imageUrls;
 
-      const finalData = {
-        ...formData,
-        imageUrls: finalImageUrls,
-        price: parseCurrencyToNumber(formData["price"].toString()),
-        phone,
-      };
+        const finalData = {
+          ...formData,
+          imageUrls: finalImageUrls,
+          price: parseCurrencyToNumber(formData["price"].toString()),
+          phone,
+        };
 
-      const updatedAd = await updateAd(userId, ad._id, selectedCategoryId, selectedSubCategoryId, finalData);
+        const updatedAd = await updateAd(userId, ad._id, selectedCategoryId, selectedSubCategoryId, finalData);
 
-      setFormData(defaults);
-      setFiles([]);
-      setSelectedYear("");
-      setPhoneNumber("");
-      setselectedFeatures([]);
+        setFormData(defaults);
+        setFiles([]);
+        setSelectedYear("");
+        setPhoneNumber("");
+        setselectedFeatures([]);
 
-      toast({
-        title: "Updated",
-        description: "Ad updated successfully.",
-        duration: 5000,
-        className: "bg-black text-white",
-      });
+        toast({
+          title: "Updated",
+          description: "Ad updated successfully.",
+          duration: 5000,
+          className: "bg-black text-white",
+        });
 
-      handleAdView?.(updatedAd);
+        handleAdView?.(updatedAd);
+      }
+    } catch (error) {
+      console.error("Validation or submission failed", error);
+    } finally {
+      setLoading(false);
     }
-  } catch (error) {
-    console.error("Validation or submission failed", error);
-  } finally {
-    setLoading(false);
-  }
-};
+  };
 
   // Filter the subcategories for the selected category and include both subcategory and _id
   const filteredSubcategories = categories
-    .filter((category: any) => category.category.name === selectedCategory && category.subcategory !=="Property Financing Requests")
+    .filter((category: any) => category.category.name === selectedCategory && category.subcategory !== "Property Financing Requests")
     .map((category: any) => ({
       subcategory: category.subcategory,
       imageUrl: category.imageUrl[0],
       _id: category._id,
     }))
     .filter(
-      (value:any, index:any, self:any) =>
+      (value: any, index: any, self: any) =>
         index ===
         self.findIndex(
-          (c:any) => c.subcategory === value.subcategory && c._id === value._id
+          (c: any) => c.subcategory === value.subcategory && c._id === value._id
         )
     ); // Get unique subcategory and _id pairs
-const handleInputChangeMoney = (field: string, value: string) => {
-  const numericValue = value.replace(/,/g, "");
-  setFormData((prev) => ({ ...prev, [field]: numericValue }));
-};
- const formatToCurrency = (value: string | number) => {
+  const handleInputChangeMoney = (field: string, value: string) => {
+    const numericValue = value.replace(/,/g, "");
+    setFormData((prev) => ({ ...prev, [field]: numericValue }));
+  };
+  const formatToCurrency = (value: string | number) => {
     if (!value) return "0";
     const numberValue =
       typeof value === "string" ? parseFloat(value.replace(/,/g, "")) : value;
@@ -912,7 +915,7 @@ const handleInputChangeMoney = (field: string, value: string) => {
   for (let year = currentYear; year >= 1960; year--) {
     years.push(year.toString());
   }
- 
+
   const formatPhoneNumber = (input: any) => {
     // Remove all non-digit characters
     const cleaned = input.replace(/\D/g, "");
@@ -959,12 +962,12 @@ const handleInputChangeMoney = (field: string, value: string) => {
     string | null
   >(null);
   const constituencies =
-  REGIONS_WITH_AREA.find(
+    REGIONS_WITH_AREA.find(
       (county) => county.region === selectedCounty
     )?.area || [];
 
   const handleCounty = (field: string, value: any) => {
-    
+
     setSelectedCounty(value);
     setFormData({ ...formData, [field]: value, area: "" });
     setSelectedConstituency(null);
@@ -1009,6 +1012,20 @@ const handleInputChangeMoney = (field: string, value: string) => {
       }
     });
   };
+  const handleVerified = async (phone: string) => {
+
+    await updateUserPhone(userId, phone);
+    const cleanNumber = phone.startsWith('+') ? phone.slice(1) : phone;
+    const countryCode = cleanNumber.slice(0, 3);
+    const localNumber = cleanNumber.slice(3);
+    setCountryCode('+' + countryCode)
+    setPhoneNumber(localNumber)
+    setFormData({
+      ...formData,
+      phone: phone,
+    });
+    // You can now save the verified phone to your database
+  };
   if (!selectedCategoryCommand) {
     return (
       <div className="w-full mt-10 h-full flex flex-col items-center justify-center">
@@ -1024,56 +1041,56 @@ const handleInputChangeMoney = (field: string, value: string) => {
   }
   return (
     <>
-     {showload ? (<><div className="w-full p-5 h-full flex flex-col items-center justify-center">
-                        <Image
-                          src="/assets/icons/loading2.gif"
-                          alt="loading"
-                          width={40}
-                          height={40}
-                          unoptimized
-                        />
-                      </div></>):(<>
-      <div className="p-0 lg:p-2">
-        <section className="bg-grey-50 bg-dotted-pattern bg-cover bg-center mb-2 mt-2 rounded-sm">
-          <div className="wrapper flex items-center justify-center sm:justify-between">
-            <div className="lg:flex-1 p-1 ml-2 mr-5 mb-0 lg:mb-0">
-              <div className="text-lg font-bold breadcrumbs">
-                <h3 className="font-bold text-[25px] text-center sm:text-left">
-                  {type} Ad
-                </h3>
+      {showload ? (<><div className="w-full p-5 h-full flex flex-col items-center justify-center">
+        <Image
+          src="/assets/icons/loading2.gif"
+          alt="loading"
+          width={40}
+          height={40}
+          unoptimized
+        />
+      </div></>) : (<>
+        <div className="p-0 lg:p-2">
+          <section className="bg-grey-50 bg-dotted-pattern bg-cover bg-center mb-2 mt-2 rounded-sm">
+            <div className="wrapper flex items-center justify-center sm:justify-between">
+              <div className="lg:flex-1 p-1 ml-2 mr-5 mb-0 lg:mb-0">
+                <div className="text-lg font-bold breadcrumbs">
+                  <h3 className="font-bold text-[25px] text-center sm:text-left">
+                    {type} Ad
+                  </h3>
+                </div>
               </div>
             </div>
-          </div>
-          
-        </section>
-        <div className="flex flex-col w-full mt-2">
-          <div className="grid grid-cols-1 lg:grid-cols-2 flex gap-3 flex-col">
-            <div className="flex flex-col">
-              <CategorySelect
-                selected={selectedCategory}
-                data={selectedCategoryCommand}
-                onChange={handleInputCategoryChange}
-              />
-              {formErrors["category"] && (
-                <p className="text-red-500 text-sm">{formErrors["category"]}</p>
-              )}
-             
-              
+
+          </section>
+          <div className="flex flex-col w-full mt-2">
+            <div className="grid grid-cols-1 lg:grid-cols-2 flex gap-3 flex-col">
+              <div className="flex flex-col">
+                <CategorySelect
+                  selected={selectedCategory}
+                  data={selectedCategoryCommand}
+                  onChange={handleInputCategoryChange}
+                />
+                {formErrors["category"] && (
+                  <p className="text-red-500 text-sm">{formErrors["category"]}</p>
+                )}
+
+
+              </div>
+              <div className="flex flex-col">
+                <SubCategorySelect
+                  selected={selectedSubCategory}
+                  data={selectedCategory ? filteredSubcategories : []}
+                  onChange={handleInputSubCategoryChange}
+                />
+                {formErrors["subcategory"] && (
+                  <p className="text-red-500 text-sm">
+                    {formErrors["subcategory"]}
+                  </p>
+                )}
+              </div>
             </div>
-            <div className="flex flex-col">
-              <SubCategorySelect
-                selected={selectedSubCategory}
-                data={selectedCategory ? filteredSubcategories : []}
-                onChange={handleInputSubCategoryChange}
-              />
-              {formErrors["subcategory"] && (
-                <p className="text-red-500 text-sm">
-                  {formErrors["subcategory"]}
-                </p>
-              )}
-            </div>
-          </div>
-    {/*     {selectedSubCategory && (
+            {/*     {selectedSubCategory && (
             <>
               <div className="grid grid-cols-1 lg:grid-cols-2 flex gap-3 mt-3 flex-col">
                 <div>
@@ -1105,817 +1122,846 @@ const handleInputChangeMoney = (field: string, value: string) => {
                 </div>
               </div>
             </>
-          )} */} 
-          {selectedSubCategory && selectedCategory !=='Wanted Ads' && (
-            <>
-              <div className="flex flex-col bg-white w-full mt-3 gap-0 border dark:bg-[#2D3236] py-2 px-1 rounded-sm border border-gray-300 dark:border-gray-600 items-center">
-                <FileUploader
-                  onFieldChange={(urls) => handleInputChange("imageUrls", urls)}
-                  imageUrls={formData["imageUrls"] || []} // Ensure this is an array
-                  setFiles={setFiles}
-                  adId={adId || ""}
-                  userName={userName}
-                  category={selectedCategory}
-                />
-                {formErrors["imageUrls"] && (
-                  <p className="text-red-500 text-sm">
-                    {formErrors["imageUrls"]}
-                  </p>
-                )}
-              </div>
-            </>
-          )}
-
-        
-          {fields.map((field: any) => (
-            <div key={field.name} className="flex gap-3 items-center mt-3">
-              {field.type === "checkbox" && (
-                <div className="mt-3 mb-3">
-                  {capitalizeFirstLetter(field.name.replace("-", " "))}
-                </div>
-              )}
-              {field.type === "related-autocompletes" && (
-                <MakeModelAutocomplete
-                  plainTextData={field.options}
-                  make={formData["make"] || ""}
-                  formErrorsmake={formErrors["make"]}
-                  model={formData["model"] || ""}
-                  formErrorsmodel={formErrors["model"]}
-                  onChange={handleInputAutoCompleteChange}
-                />
-              )}
-              {field.type === "text" && (
-                <TextField
-                  required={field.required}
-                  id={field.name}
-                  label={capitalizeFirstLetter(field.name.replace("-", " "))}
-                  value={formData[field.name] || ""}
-                  onChange={(e) =>
-                    handleInputChange(field.name, e.target.value)
-                  }
-                  variant="outlined"
-                  placeholder={`Enter ${field.name.replace("-", " ")}`}
-                  InputProps={{
-                    classes: {
-                      root: "bg-white dark:bg-[#2D3236] dark:text-gray-100",
-                      notchedOutline: "border-gray-300 dark:border-gray-600",
-                      focused: "",
-                    },
-                  }}
-                  InputLabelProps={{
-                    classes: {
-                      root: "text-gray-500 dark:text-gray-400",
-                      focused: "text-green-500 dark:text-green-400",
-                    },
-                  }}
-                  className="w-full"
-                />
-              )}
-              {field.type === "youtube-link" && (
-                <TextField
-                  required={field.required}
-                  id={field.type}
-                  label={"YouTube or TikTok Video link"}
-                  value={formData[field.type] || ""}
-                  onChange={(e) =>
-                    handleInputChange(field.type, e.target.value)
-                  }
-                  variant="outlined"
-                  placeholder={`Enter YouTube or TikTok Video link`}
-                  InputProps={{
-                    classes: {
-                      root: "bg-white dark:bg-[#2D3236] dark:text-gray-100",
-                      notchedOutline: "border-gray-300 dark:border-gray-600",
-                      focused: "",
-                    },
-                  }}
-                  InputLabelProps={{
-                    classes: {
-                      root: "text-gray-500 dark:text-gray-400",
-                      focused: "text-green-500 dark:text-green-400",
-                    },
-                  }}
-                  className="w-full"
-                />
-              )}
-              {field.type === "virtualTourLink" && (
-                <TextField
-                  required={field.required}
-                  id={field.type}
-                  label={"3D Virtual Property Tour Link"}
-                  value={formData[field.type] || ""}
-                  onChange={(e) =>
-                    handleInputChange(field.type, e.target.value)
-                  }
-                  variant="outlined"
-                  placeholder={`Enter 3D Virtual Property Tour Link`}
-                  InputProps={{
-                    classes: {
-                      root: "bg-white dark:bg-[#2D3236] dark:text-gray-100",
-                      notchedOutline: "border-gray-300 dark:border-gray-600",
-                      focused: "",
-                    },
-                  }}
-                  InputLabelProps={{
-                    classes: {
-                      root: "text-gray-500 dark:text-gray-400",
-                      focused: "text-green-500 dark:text-green-400",
-                    },
-                  }}
-                  className="w-full"
-                />
-              )}
-             {field.type === "budget" && (
-                <div className="flex flex-col w-full">
-                  <TextField
-                    required={field.required}
-                     id={"price"}
-                    label={capitalizeFirstLetter(field.name)}
-                      value={formatToCurrency(formData[field.name] ?? 0)}
-                      onChange={(e) =>
-                        handleInputChangeMoney(field.name, e.target.value)
-                      }
-                    variant="outlined"
-                    placeholder={`Enter ${field.name.replace("-", " ")}`}
-                    InputProps={{
-                      classes: {
-                        root: "bg-white dark:bg-[#2D3236] dark:text-gray-100",
-                        notchedOutline: "border-gray-300 dark:border-gray-600",
-                        focused: "",
-                      },
-                    }}
-                    InputLabelProps={{
-                      classes: {
-                        root: "text-gray-500 dark:text-gray-400",
-                        focused: "text-green-500 dark:text-green-400",
-                      },
-                    }}
-                    className="w-full"
+          )} */}
+            {selectedSubCategory && selectedCategory !== 'Wanted Ads' && (
+              <>
+                <div className="flex flex-col bg-white w-full mt-3 gap-0 border dark:bg-[#2D3236] py-2 px-1 rounded-sm border border-gray-300 dark:border-gray-600 items-center">
+                  <FileUploader
+                    onFieldChange={(urls) => handleInputChange("imageUrls", urls)}
+                    imageUrls={formData["imageUrls"] || []} // Ensure this is an array
+                    setFiles={setFiles}
+                    adId={adId || ""}
+                    userName={userName}
+                    category={selectedCategory}
                   />
+                  {formErrors["imageUrls"] && (
+                    <p className="text-red-500 text-sm">
+                      {formErrors["imageUrls"]}
+                    </p>
+                  )}
                 </div>
-              )}
-
-              {field.type === "price" && (
-                <div className="flex flex-col w-full">
-                  <TextField
-                    required={field.required}
-                    id={field.name}
-                    label={capitalizeFirstLetter(field.name)}
-                    value={formatToCurrency(formData[field.name] ?? 0)}
-                    onChange={(e) =>
-                      handleInputChangeMoney(field.name, e.target.value)
-                    }
-                    variant="outlined"
-                    placeholder={`Enter ${field.name.replace("-", " ")}`}
-                    InputProps={{
-                      classes: {
-                        root: "bg-white dark:bg-[#2D3236] dark:text-gray-100",
-                        notchedOutline: "border-gray-300 dark:border-gray-600",
-                        focused: "",
-                      },
-                    }}
-                    InputLabelProps={{
-                      classes: {
-                        root: "text-gray-500 dark:text-gray-400",
-                        focused: "text-green-500 dark:text-green-400",
-                      },
-                    }}
-                    className="w-full"
-                  />
-                  <div className="mt-3 bg-white border-gray-300 cursor-pointer dark:border-gray-600 dark:bg-[#2D3236] dark:text-gray-100 text-sm py-2 px-1 rounded-sm border border-gray-300 dark:border-gray-600 w-full">
-                  <h3 className="text-sm font-semibold text-gray-700 dark:text-gray-300 mt-4">
-                    Are you open to negotiation?
-                  </h3>
-                  <div className="flex items-center space-x-4 mt-2">
-                    {["Yes", "No", "Not sure"].map((option) => (
-                      <label
-                        key={option}
-                        className="flex items-center space-x-2 cursor-pointer"
-                      >
-                        <input
-                          type="radio"
-                          name="negotiable"
-                          value={option.toLowerCase()}
-                          checked={
-                            formData["negotiable"]
-                              ? formData["negotiable"] === option.toLowerCase()
-                              : option.toLowerCase() === "not sure"
-                          } // Default to "not sure"
-                          onChange={() => {
-                            handleInputChange(
-                              "negotiable",
-                              option.toLowerCase()
-                            );
-                          }}
-                          className="hidden peer"
-                        />
-                        <div className="w-5 h-5 border-2 border-gray-400 rounded-full peer-checked:border-green-500 peer-checked:ring-2 peer-checked:ring-green-400 flex items-center justify-center">
-                          {(formData["negotiable"]
-                            ? formData["negotiable"] === option.toLowerCase()
-                            : option.toLowerCase() === "not sure") && (
-                            <div className="w-2.5 h-2.5 bg-green-500 rounded-full"></div>
-                          )}
-                        </div>
-                        <span
-                          className={
-                            (
-                              formData["negotiable"]
-                                ? formData["negotiable"] ===
-                                  option.toLowerCase()
-                                : option.toLowerCase() === "not sure"
-                            )
-                              ? "text-green-500 font-medium"
-                              : "text-gray-600 dark:text-gray-400"
-                          }
-                        >
-                          {option}
-                        </span>
-                      </label>
-                    ))}
-                  </div>
-                  </div>
-                </div>
-              )}
-              {field.type === "rentprice" && (
-                <div className="flex flex-col w-full">
-                  <div className="flex w-full gap-1">
-                    <TextField
-                      required={field.required}
-                      id={"price"}
-                      label={capitalizeFirstLetter("price")}
-                      value={formatToCurrency(formData["price"] ?? 0)}
-                      onChange={(e) =>
-                        handleInputChangeMoney("price", e.target.value)
-                      }
-                      variant="outlined"
-                      placeholder={`Enter Price`}
-                      InputProps={{
-                        classes: {
-                          root: "bg-white dark:bg-[#2D3236] dark:text-gray-100",
-                          notchedOutline:
-                            "border-gray-300 dark:border-gray-600",
-                          focused: "",
-                        },
-                      }}
-                      InputLabelProps={{
-                        classes: {
-                          root: "text-gray-500 dark:text-gray-400",
-                          focused: "text-green-500 dark:text-green-400",
-                        },
-                      }}
-                      className="w-full"
-                    />
-                    <select
-                      className="bg-white border-gray-300 cursor-pointer dark:border-gray-600 dark:bg-[#2D3236] dark:text-gray-100 text-sm py-2 px-1 rounded-sm border border-gray-300 dark:border-gray-600 w-[140px] lg:w-[200px]"
-                      value={formData["period"] || ""}
-                      onChange={(e) =>
-                        handleInputChange("period", e.target.value)
-                      }
-                    >
-                      <option value="per month" className="dark:text-gray-400">
-                      per month
-                      </option>
-                      <option value="per day">per day</option>
-                      <option value="per month">per month</option>
-                      <option value="per quarter-year">per quarter-year</option>
-                      <option value="per half-year">per half-year</option>
-                      <option value="per year">per year</option>
-                    </select>
-                  </div>
-                  <div className="mt-3 bg-white border-gray-300 cursor-pointer dark:border-gray-600 dark:bg-[#2D3236] dark:text-gray-100 text-sm py-2 px-1 rounded-sm border border-gray-300 dark:border-gray-600 w-full">
-                  <h3 className="text-sm font-semibold text-gray-700 dark:text-gray-300 mt-4">
-                    Are you open to negotiation?
-                  </h3>
-                  <div className="flex items-center space-x-4 mt-2">
-                    {["Yes", "No", "Not sure"].map((option) => (
-                      <label
-                        key={option}
-                        className="flex items-center space-x-2 cursor-pointer"
-                      >
-                        <input
-                          type="radio"
-                          name="negotiable"
-                          value={option.toLowerCase()}
-                          checked={
-                            formData["negotiable"]
-                              ? formData["negotiable"] === option.toLowerCase()
-                              : option.toLowerCase() === "not sure"
-                          } // Default to "not sure"
-                          onChange={() => {
-                            handleInputChange(
-                              "negotiable",
-                              option.toLowerCase()
-                            );
-                          }}
-                          className="hidden peer"
-                        />
-                        <div className="w-5 h-5 border-2 border-gray-400 rounded-full peer-checked:border-green-500 peer-checked:ring-2 peer-checked:ring-green-400 flex items-center justify-center">
-                          {(formData["negotiable"]
-                            ? formData["negotiable"] === option.toLowerCase()
-                            : option.toLowerCase() === "not sure") && (
-                            <div className="w-2.5 h-2.5 bg-green-500 rounded-full"></div>
-                          )}
-                        </div>
-                        <span
-                          className={
-                            (
-                              formData["negotiable"]
-                                ? formData["negotiable"] ===
-                                  option.toLowerCase()
-                                : option.toLowerCase() === "not sure"
-                            )
-                              ? "text-green-500 font-medium"
-                              : "text-gray-600 dark:text-gray-400"
-                          }
-                        >
-                          {option}
-                        </span>
-                      </label>
-                    ))}
-                  </div>
-                  </div>
-                </div>
-              )}
-              {field.type === "priceper" && (
-                <div className="flex flex-col w-full">
-                  <div className="flex w-full gap-1">
-                    <TextField
-                      required={field.required}
-                      id={"price"}
-                      label={capitalizeFirstLetter("price")}
-                      value={formatToCurrency(formData["price"] ?? 0)}
-                      onChange={(e) =>
-                        handleInputChangeMoney("price", e.target.value)
-                      }
-                      variant="outlined"
-                      placeholder={`Enter Price`}
-                      InputProps={{
-                        classes: {
-                          root: "bg-white dark:bg-[#2D3236] dark:text-gray-100",
-                          notchedOutline:
-                            "border-gray-300 dark:border-gray-600",
-                          focused: "",
-                        },
-                      }}
-                      InputLabelProps={{
-                        classes: {
-                          root: "text-gray-500 dark:text-gray-400",
-                          focused: "text-green-500 dark:text-green-400",
-                        },
-                      }}
-                      className="w-full"
-                    />
-                    <select
-                      className="bg-white border-gray-300 cursor-pointer dark:border-gray-600 dark:bg-[#2D3236] dark:text-gray-100 text-sm py-2 px-1 rounded-sm border border-gray-300 dark:border-gray-600 w-[140px] lg:w-[200px]"
-                      value={formData["per"] || "Outright Price"}
-                      onChange={(e) => handleInputChange("per", e.target.value)}
-                    >
-                      <option
-                        value="Outright Price"
-                        className="dark:text-gray-400"
-                      >
-                        Outright Price...
-                      </option>
-                      <option value="per acre">per acre</option>
-                      <option value="per plot">per plot</option>
-                      <option value="per SqF">per SqF</option>
-                    </select>
-                  </div>
-                  <div className="mt-3 bg-white border-gray-300 cursor-pointer dark:border-gray-600 dark:bg-[#2D3236] dark:text-gray-100 text-sm py-2 px-1 rounded-sm border border-gray-300 dark:border-gray-600 w-full">
-                  <h3 className="text-sm font-semibold text-gray-700 dark:text-gray-300 mt-4">
-                    Are you open to negotiation?
-                  </h3>
-                  <div className="flex items-center space-x-4 mt-2">
-                    {["Yes", "No", "Not sure"].map((option) => (
-                      <label
-                        key={option}
-                        className="flex items-center space-x-2 cursor-pointer"
-                      >
-                        <input
-                          type="radio"
-                          name="negotiable"
-                          value={option.toLowerCase()}
-                          checked={
-                            formData["negotiable"]
-                              ? formData["negotiable"] === option.toLowerCase()
-                              : option.toLowerCase() === "not sure"
-                          } // Default to "not sure"
-                          onChange={() => {
-                            handleInputChange(
-                              "negotiable",
-                              option.toLowerCase()
-                            );
-                          }}
-                          className="hidden peer"
-                        />
-                        <div className="w-5 h-5 border-2 border-gray-400 rounded-full peer-checked:border-green-500 peer-checked:ring-2 peer-checked:ring-green-400 flex items-center justify-center">
-                          {(formData["negotiable"]
-                            ? formData["negotiable"] === option.toLowerCase()
-                            : option.toLowerCase() === "not sure") && (
-                            <div className="w-2.5 h-2.5 bg-green-500 rounded-full"></div>
-                          )}
-                        </div>
-                        <span
-                          className={
-                            (
-                              formData["negotiable"]
-                                ? formData["negotiable"] ===
-                                  option.toLowerCase()
-                                : option.toLowerCase() === "not sure"
-                            )
-                              ? "text-green-500 font-medium"
-                              : "text-gray-600 dark:text-gray-400"
-                          }
-                        >
-                          {option}
-                        </span>
-                      </label>
-                    ))}
-                  </div>
-                  </div>
-                </div>
-              )}
-              {field.type === "bulkprice" && (
-                <div className="flex flex-col w-full">
-                  <div className="flex w-full gap-1">
-                    <TextField
-                      required={field.required}
-                      id={"price"}
-                      label={capitalizeFirstLetter("price")}
-                      value={formatToCurrency(formData["price"] ?? 0)}
-                      onChange={(e) =>
-                        handleInputChangeMoney("price", e.target.value)
-                      }
-                      variant="outlined"
-                      placeholder={`Enter Price`}
-                      InputProps={{
-                        classes: {
-                          root: "bg-white dark:bg-[#2D3236] dark:text-gray-100",
-                          notchedOutline:
-                            "border-gray-300 dark:border-gray-600",
-                          focused: "",
-                        },
-                      }}
-                      InputLabelProps={{
-                        classes: {
-                          root: "text-gray-500 dark:text-gray-400",
-                          focused: "text-green-500 dark:text-green-400",
-                        },
-                      }}
-                      className="w-full"
-                    />
-                    <button
-                      onClick={handleOpenPopupBulk}
-                      className="text-sm lg:text-base py-3 w-[200px] px-1 rounded-sm text-green-600 bg-green-100 border border-green-600 hover:bg-green-200">
-                      <AddOutlinedIcon /> Add Bulk Price
-                    </button>
-                   
-
-                    {showPopupBulk && (
-                      
-                          <BulkPriceManager
-                            selected={formData["bulkprice"] || []}
-                            name={"bulkprice"}
-                            onChange={handleInputAutoCompleteChange}
-                            handleClosePopupBulk={handleClosePopupBulk}
-                          />
-                      
-                    )}
-                  </div>
-
-                  <div className="mt-3 bg-white border-gray-300 cursor-pointer dark:border-gray-600 dark:bg-[#2D3236] dark:text-gray-100 text-sm py-2 px-1 rounded-sm border border-gray-300 dark:border-gray-600 w-full">
-                  <h3 className="text-sm font-semibold text-gray-700 dark:text-gray-300 mt-4">
-                    Are you open to negotiation?
-                  </h3>
-                  <div className="flex items-center space-x-4 mt-2">
-                    {["Yes", "No", "Not sure"].map((option) => (
-                      <label
-                        key={option}
-                        className="flex items-center space-x-2 cursor-pointer"
-                      >
-                        <input
-                          type="radio"
-                          name="negotiable"
-                          value={option.toLowerCase()}
-                          checked={
-                            formData["negotiable"]
-                              ? formData["negotiable"] === option.toLowerCase()
-                              : option.toLowerCase() === "not sure"
-                          } // Default to "not sure"
-                          onChange={() => {
-                            handleInputChange(
-                              "negotiable",
-                              option.toLowerCase()
-                            );
-                          }}
-                          className="hidden peer"
-                        />
-                        <div className="w-5 h-5 border-2 border-gray-400 rounded-full peer-checked:border-green-500 peer-checked:ring-2 peer-checked:ring-green-400 flex items-center justify-center">
-                          {(formData["negotiable"]
-                            ? formData["negotiable"] === option.toLowerCase()
-                            : option.toLowerCase() === "not sure") && (
-                            <div className="w-2.5 h-2.5 bg-green-500 rounded-full"></div>
-                          )}
-                        </div>
-                        <span
-                          className={
-                            (
-                              formData["negotiable"]
-                                ? formData["negotiable"] ===
-                                  option.toLowerCase()
-                                : option.toLowerCase() === "not sure"
-                            )
-                              ? "text-green-500 font-medium"
-                              : "text-gray-600 dark:text-gray-400"
-                          }
-                        >
-                          {option}
-                        </span>
-                      </label>
-                    ))}
-                  </div>
-                  </div>
-                </div>
-              )}
-
-              {field.type === "serviceprice" && (
-                <div className="flex w-full gap-1">
-                  <PriceInput
-                    priceType_={formData["contact"] || "specify"}
-                    unit_={formData["unit"] || "per service"}
-                    negotiable_={formData["negotiable"] || "not sure"}
-                    onChange={handleInputAutoCompleteChange}
-                    price_={formData["price"] || ""}
-                  />
-                </div>
-              )}
-          {field.type === "parcelNumber" && (
-  <div className="space-y-1 w-full">
-    <div className="flex items-center justify-between">
-      <label
-        htmlFor={field.name}
-        className="block text-sm font-medium text-gray-700 dark:text-gray-200"
-      >
-        Parcel / LR Number
-        <span className="ml-1 text-sm text-gray-500">
-          (Optional, but recommended for verification)
-        </span>
-      </label>
-
-      <div className="flex flex-col items-end">
-        {/* Tooltip */}
-        <TooltipProvider>
-          <Tooltip>
-            <TooltipTrigger asChild>
-              <span className="text-green-600 cursor-help text-sm">🔒 Mapa Verified?</span>
-            </TooltipTrigger>
-            <TooltipContent side="top" align="end">
-              <p>✅ We use this to check for land disputes and increase trust with buyers.</p>
-            </TooltipContent>
-          </Tooltip>
-        </TooltipProvider>
-
-        {/* Popup Trigger */}
-        <MapaPricingModal /> {/* ← Inserted here */}
-      </div>
-    </div>
-
-    {/* Privacy Note */}
-    <p className="text-xs text-gray-500 dark:text-gray-400 italic">
-      🔐 Your parcel number will be used only for verification and <strong>will not be displayed publicly</strong>.
-    </p>
-
-    <TextField
-      required={false}
-      id={field.name}
-      label=""
-      value={formData[field.name] || ''}
-      onChange={(e) => handleInputChange(field.name, e.target.value)}
-      variant="outlined"
-      placeholder="Enter parcel/LR number (if available)"
-      InputProps={{
-        classes: {
-          root: "bg-white dark:bg-[#2D3236] dark:text-gray-100",
-          notchedOutline: "border-gray-300 dark:border-gray-600",
-          focused: "",
-        },
-      }}
-      InputLabelProps={{
-        classes: {
-          root: "text-gray-500 dark:text-gray-400",
-          focused: "text-green-500 dark:text-green-400",
-        },
-      }}
-      className="w-full"
-    />
-
-    {/* Badge if parcel number is entered */}
-    {formData[field.name] && (
-      <div className="inline-flex items-center gap-1 text-sm text-green-700 bg-green-100 px-2 py-1 rounded-full mt-1 border border-green-400">
-        🔒 Mapa Verified: Parcel number submitted
-      </div>
-    )}
-
-    {/* Warning for fake info */}
-    <p className="text-xs text-red-500 mt-1">
-      🚫 Submitting fake parcel numbers may result in suspension or blacklisting.
-    </p>
-  </div>
-)}
+              </>
+            )}
 
 
-              {field.type === "number" && (
-                <>
-                  <TextField
-                    required={field.required}
-                    id={field.name}
-                    label={capitalizeFirstLetter(field.name.replace("-", " "))}
-                    value={formData[field.name] || 0}
-                    onChange={(e) =>
-                      handleInputChange(field.name, e.target.value)
-                    }
-                    variant="outlined"
-                    placeholder={`Enter ${field.name.replace("-", " ")}`}
-                    InputProps={{
-                      classes: {
-                        root: "bg-white dark:bg-[#2D3236] dark:text-gray-100",
-                        notchedOutline: "border-gray-300 dark:border-gray-600",
-                        focused: "",
-                      },
-                    }}
-                    InputLabelProps={{
-                      classes: {
-                        root: "text-gray-500 dark:text-gray-400",
-                        focused: "text-green-500 dark:text-green-400",
-                      },
-                    }}
-                    className="w-full"
-                  />
-                </>
-              )}
-                {field.type === "money" && (
-                <>
-                  <TextField
-                    required={field.required}
-                    id={field.name}
-                    label={capitalizeFirstLetter(field.name.replace("-", " "))}
-                    value={formatToCurrency(formData[field.name] ?? 0)}
-                    onChange={(e) =>
-                      handleInputChangeMoney(field.name, e.target.value)
-                    }
-                    variant="outlined"
-                    placeholder={`Enter ${field.name.replace("-", " ")}`}
-                    InputProps={{
-                      classes: {
-                        root: "bg-white dark:bg-[#2D3236] dark:text-gray-100",
-                        notchedOutline: "border-gray-300 dark:border-gray-600",
-                        focused: "",
-                      },
-                    }}
-                    InputLabelProps={{
-                      classes: {
-                        root: "text-gray-500 dark:text-gray-400",
-                        focused: "text-emerald-500 dark:text-emerald-400",
-                      },
-                    }}
-                    className="w-full"
-                  />
-                </>
-              )}
-              {field.type === "select" && (
-                <FormControl
-                  fullWidth
-                  variant="outlined"
-                  sx={{
-                    "& .MuiOutlinedInput-root": {
-                      "& fieldset": {
-                        borderColor: "#4B5563", // Light mode border
-                      },
-                      "&:hover fieldset": {
-                        borderColor: "#2563EB", // Border on hover
-                      },
-                      "&.Mui-focused fieldset": {
-                        borderColor: "#2563EB", // Border when focused
-                      },
-                    },
-                  }}
-                  className="rounded-md dark:border-gray-600"
-                >
-                  <InputLabel className="font-medium text-gray-500 dark:text-gray-400">
+            {fields.map((field: any) => (
+              <div key={field.name} className="flex gap-3 items-center mt-3">
+                {field.type === "checkbox" && (
+                  <div className="mt-3 mb-3">
                     {capitalizeFirstLetter(field.name.replace("-", " "))}
-                    {field.required && <>*</>}
-                  </InputLabel>
-                  <Select
+                  </div>
+                )}
+                {field.type === "related-autocompletes" && (
+                  <MakeModelAutocomplete
+                    plainTextData={field.options}
+                    make={formData["make"] || ""}
+                    formErrorsmake={formErrors["make"]}
+                    model={formData["model"] || ""}
+                    formErrorsmodel={formErrors["model"]}
+                    onChange={handleInputAutoCompleteChange}
+                  />
+                )}
+                {field.type === "text" && (
+                  <TextField
+                    required={field.required}
+                    id={field.name}
+                    label={capitalizeFirstLetter(field.name.replace("-", " "))}
                     value={formData[field.name] || ""}
                     onChange={(e) =>
                       handleInputChange(field.name, e.target.value)
                     }
-                    required={field.required}
-                    label={capitalizeFirstLetter(field.name.replace("-", " "))}
-                    className="dark:text-gray-100 dark:bg-[#2D3236] bg-white"
-                  >
-                    {field.options?.map((option: any) => (
-                      <MenuItem key={option} value={option}>
-                        {option}
-                      </MenuItem>
-                    ))}
-                  </Select>
-                </FormControl>
-              )}
-              {field.type === "year" && (
-                <AutoComplete
-                  data={years}
-                  name={field.name}
-                  onChange={handleInputYearChange}
-                  selected={formData[field.name] || ""}
-                />
-              )}
-              {field.type === "autocomplete" && (
-                <AutoComplete
-                  data={field.options}
-                  name={field.name}
-                  onChange={handleInputAutoCompleteChange}
-                  selected={formData[field.name] || ""}
-                />
-              )}
-              {field.type === "multi-select" && (
-                <div className="w-full flex py-2 px-1 rounded-sm border border-gray-300 dark:border-gray-600 flex-wrap gap-2 dark:bg-[#2D3236] bg-white">
-                  <Multiselect
-                    features={field.options}
-                    name={field.name}
-                    selectedFeatures={formData[field.name] || []}
-                    onChange={handleCheckboxChange}
+                    variant="outlined"
+                    placeholder={`Enter ${field.name.replace("-", " ")}`}
+                    InputProps={{
+                      classes: {
+                        root: "bg-white dark:bg-[#2D3236] dark:text-gray-100",
+                        notchedOutline: "border-gray-300 dark:border-gray-600",
+                        focused: "",
+                      },
+                    }}
+                    InputLabelProps={{
+                      classes: {
+                        root: "text-gray-500 dark:text-gray-400",
+                        focused: "text-green-500 dark:text-green-400",
+                      },
+                    }}
+                    className="w-full"
                   />
-                </div>
-              )}
-
-              {field.type === "radio" && (
-                <div className="w-full flex py-2 px-3 rounded-sm border border-gray-300 dark:border-gray-600 flex-wrap gap-2 dark:bg-[#2D3236] bg-white">
-                  <FormControl>
-                    <FormLabel className="text-gray-800 dark:text-[#e4ebeb]">
-                      {capitalizeFirstLetter(field.name.replace("-", " "))}
-                    </FormLabel>
-                    <RadioGroup
-                      name={field.name}
-                      value={formData[field.name]} // Default to the first option
-                      //value={formData[field.name] || field.options[0]} // Default to the first option
+                )}
+                {field.type === "youtube-link" && (
+                  <TextField
+                    required={field.required}
+                    id={field.type}
+                    label={"YouTube or TikTok Video link"}
+                    value={formData[field.type] || ""}
+                    onChange={(e) =>
+                      handleInputChange(field.type, e.target.value)
+                    }
+                    variant="outlined"
+                    placeholder={`Enter YouTube or TikTok Video link`}
+                    InputProps={{
+                      classes: {
+                        root: "bg-white dark:bg-[#2D3236] dark:text-gray-100",
+                        notchedOutline: "border-gray-300 dark:border-gray-600",
+                        focused: "",
+                      },
+                    }}
+                    InputLabelProps={{
+                      classes: {
+                        root: "text-gray-500 dark:text-gray-400",
+                        focused: "text-green-500 dark:text-green-400",
+                      },
+                    }}
+                    className="w-full"
+                  />
+                )}
+                {field.type === "virtualTourLink" && (
+                  <TextField
+                    required={field.required}
+                    id={field.type}
+                    label={"3D Virtual Property Tour Link"}
+                    value={formData[field.type] || ""}
+                    onChange={(e) =>
+                      handleInputChange(field.type, e.target.value)
+                    }
+                    variant="outlined"
+                    placeholder={`Enter 3D Virtual Property Tour Link`}
+                    InputProps={{
+                      classes: {
+                        root: "bg-white dark:bg-[#2D3236] dark:text-gray-100",
+                        notchedOutline: "border-gray-300 dark:border-gray-600",
+                        focused: "",
+                      },
+                    }}
+                    InputLabelProps={{
+                      classes: {
+                        root: "text-gray-500 dark:text-gray-400",
+                        focused: "text-green-500 dark:text-green-400",
+                      },
+                    }}
+                    className="w-full"
+                  />
+                )}
+                {field.type === "budget" && (
+                  <div className="flex flex-col w-full">
+                    <TextField
+                      required={field.required}
+                      id={"price"}
+                      label={capitalizeFirstLetter(field.name)}
+                      value={formatToCurrency(formData[field.name] ?? 0)}
                       onChange={(e) =>
-                        handleInputChange(field.name, e.target.value)
+                        handleInputChangeMoney(field.name, e.target.value)
                       }
-                      className="space-y-0"
-                    >
-                      {field.options?.map((option: any, index: number) => (
-                        <FormControlLabel
-                          key={index}
-                          value={option}
-                          control={
-                            <Radio
-                              sx={{
-                                color: "gray", // Unchecked color
-                                "&.Mui-checked": {
-                                  color: "green", // Checked color
-                                },
-                              }}
-                            />
-                          }
-                          label={option}
-                          className="text-gray-800 dark:text-[#e4ebeb]"
-                        />
-                      ))}
-                    </RadioGroup>
-                  </FormControl>
-                </div>
-              )}
-              {field.type === "checkbox" &&
-                field.options?.map((option: any, index: number) => (
-                  <label key={index}>
-                    <input
-                      type="checkbox"
-                      name={field.name}
-                      value={option}
-                      onChange={(e) =>
-                        handleInputChange(field.name, e.target.value)
-                      }
+                      variant="outlined"
+                      placeholder={`Enter ${field.name.replace("-", " ")}`}
+                      InputProps={{
+                        classes: {
+                          root: "bg-white dark:bg-[#2D3236] dark:text-gray-100",
+                          notchedOutline: "border-gray-300 dark:border-gray-600",
+                          focused: "",
+                        },
+                      }}
+                      InputLabelProps={{
+                        classes: {
+                          root: "text-gray-500 dark:text-gray-400",
+                          focused: "text-green-500 dark:text-green-400",
+                        },
+                      }}
+                      className="w-full"
                     />
-                    {option}
-                  </label>
-                ))}
-              {field.type === "textarea" && (
-  <div style={{ width: "100%", height: "300px", borderRadius: "8px", border:"1px", overflow: "hidden" }}>
-                <ReactQuill
-  value={formData[field.name] || ""}
-  onChange={(value) => handleInputChange(field.name, value)}
-  className="bg-white w-full w-[200px] text-black mb-0"
-  modules={modules} // Pass the custom toolbar modules
-  placeholder={`Enter ${capitalizeFirstLetter(field.name.replace("-", " "))}*`}
-  style={{ height: "100%", width: "100%", border:"1px", borderRadius: "8px" }}
-/>
-</div>
-)}
+                  </div>
+                )}
 
-              {field.type === "phone" && (<div className="flex w-full flex-col">
-                <div className="flex w-full gap-1">
-                  <select
+                {field.type === "price" && (
+                  <div className="flex flex-col w-full">
+                    <TextField
+                      required={field.required}
+                      id={field.name}
+                      label={capitalizeFirstLetter(field.name)}
+                      value={formatToCurrency(formData[field.name] ?? 0)}
+                      onChange={(e) =>
+                        handleInputChangeMoney(field.name, e.target.value)
+                      }
+                      variant="outlined"
+                      placeholder={`Enter ${field.name.replace("-", " ")}`}
+                      InputProps={{
+                        classes: {
+                          root: "bg-white dark:bg-[#2D3236] dark:text-gray-100",
+                          notchedOutline: "border-gray-300 dark:border-gray-600",
+                          focused: "",
+                        },
+                      }}
+                      InputLabelProps={{
+                        classes: {
+                          root: "text-gray-500 dark:text-gray-400",
+                          focused: "text-green-500 dark:text-green-400",
+                        },
+                      }}
+                      className="w-full"
+                    />
+                    <div className="mt-3 bg-white border-gray-300 cursor-pointer dark:border-gray-600 dark:bg-[#2D3236] dark:text-gray-100 text-sm py-2 px-1 rounded-sm border border-gray-300 dark:border-gray-600 w-full">
+                      <h3 className="text-sm font-semibold text-gray-700 dark:text-gray-300 mt-4">
+                        Are you open to negotiation?
+                      </h3>
+                      <div className="flex items-center space-x-4 mt-2">
+                        {["Yes", "No", "Not sure"].map((option) => (
+                          <label
+                            key={option}
+                            className="flex items-center space-x-2 cursor-pointer"
+                          >
+                            <input
+                              type="radio"
+                              name="negotiable"
+                              value={option.toLowerCase()}
+                              checked={
+                                formData["negotiable"]
+                                  ? formData["negotiable"] === option.toLowerCase()
+                                  : option.toLowerCase() === "not sure"
+                              } // Default to "not sure"
+                              onChange={() => {
+                                handleInputChange(
+                                  "negotiable",
+                                  option.toLowerCase()
+                                );
+                              }}
+                              className="hidden peer"
+                            />
+                            <div className="w-5 h-5 border-2 border-gray-400 rounded-full peer-checked:border-green-500 peer-checked:ring-2 peer-checked:ring-green-400 flex items-center justify-center">
+                              {(formData["negotiable"]
+                                ? formData["negotiable"] === option.toLowerCase()
+                                : option.toLowerCase() === "not sure") && (
+                                  <div className="w-2.5 h-2.5 bg-green-500 rounded-full"></div>
+                                )}
+                            </div>
+                            <span
+                              className={
+                                (
+                                  formData["negotiable"]
+                                    ? formData["negotiable"] ===
+                                    option.toLowerCase()
+                                    : option.toLowerCase() === "not sure"
+                                )
+                                  ? "text-green-500 font-medium"
+                                  : "text-gray-600 dark:text-gray-400"
+                              }
+                            >
+                              {option}
+                            </span>
+                          </label>
+                        ))}
+                      </div>
+                    </div>
+                  </div>
+                )}
+                {field.type === "rentprice" && (
+                  <div className="flex flex-col w-full">
+                    <div className="flex w-full gap-1">
+                      <TextField
+                        required={field.required}
+                        id={"price"}
+                        label={capitalizeFirstLetter("price")}
+                        value={formatToCurrency(formData["price"] ?? 0)}
+                        onChange={(e) =>
+                          handleInputChangeMoney("price", e.target.value)
+                        }
+                        variant="outlined"
+                        placeholder={`Enter Price`}
+                        InputProps={{
+                          classes: {
+                            root: "bg-white dark:bg-[#2D3236] dark:text-gray-100",
+                            notchedOutline:
+                              "border-gray-300 dark:border-gray-600",
+                            focused: "",
+                          },
+                        }}
+                        InputLabelProps={{
+                          classes: {
+                            root: "text-gray-500 dark:text-gray-400",
+                            focused: "text-green-500 dark:text-green-400",
+                          },
+                        }}
+                        className="w-full"
+                      />
+                      <select
+                        className="bg-white border-gray-300 cursor-pointer dark:border-gray-600 dark:bg-[#2D3236] dark:text-gray-100 text-sm py-2 px-1 rounded-sm border border-gray-300 dark:border-gray-600 w-[140px] lg:w-[200px]"
+                        value={formData["period"] || ""}
+                        onChange={(e) =>
+                          handleInputChange("period", e.target.value)
+                        }
+                      >
+                        <option value="per month" className="dark:text-gray-400">
+                          per month
+                        </option>
+                        <option value="per day">per day</option>
+                        <option value="per month">per month</option>
+                        <option value="per quarter-year">per quarter-year</option>
+                        <option value="per half-year">per half-year</option>
+                        <option value="per year">per year</option>
+                      </select>
+                    </div>
+                    <div className="mt-3 bg-white border-gray-300 cursor-pointer dark:border-gray-600 dark:bg-[#2D3236] dark:text-gray-100 text-sm py-2 px-1 rounded-sm border border-gray-300 dark:border-gray-600 w-full">
+                      <h3 className="text-sm font-semibold text-gray-700 dark:text-gray-300 mt-4">
+                        Are you open to negotiation?
+                      </h3>
+                      <div className="flex items-center space-x-4 mt-2">
+                        {["Yes", "No", "Not sure"].map((option) => (
+                          <label
+                            key={option}
+                            className="flex items-center space-x-2 cursor-pointer"
+                          >
+                            <input
+                              type="radio"
+                              name="negotiable"
+                              value={option.toLowerCase()}
+                              checked={
+                                formData["negotiable"]
+                                  ? formData["negotiable"] === option.toLowerCase()
+                                  : option.toLowerCase() === "not sure"
+                              } // Default to "not sure"
+                              onChange={() => {
+                                handleInputChange(
+                                  "negotiable",
+                                  option.toLowerCase()
+                                );
+                              }}
+                              className="hidden peer"
+                            />
+                            <div className="w-5 h-5 border-2 border-gray-400 rounded-full peer-checked:border-green-500 peer-checked:ring-2 peer-checked:ring-green-400 flex items-center justify-center">
+                              {(formData["negotiable"]
+                                ? formData["negotiable"] === option.toLowerCase()
+                                : option.toLowerCase() === "not sure") && (
+                                  <div className="w-2.5 h-2.5 bg-green-500 rounded-full"></div>
+                                )}
+                            </div>
+                            <span
+                              className={
+                                (
+                                  formData["negotiable"]
+                                    ? formData["negotiable"] ===
+                                    option.toLowerCase()
+                                    : option.toLowerCase() === "not sure"
+                                )
+                                  ? "text-green-500 font-medium"
+                                  : "text-gray-600 dark:text-gray-400"
+                              }
+                            >
+                              {option}
+                            </span>
+                          </label>
+                        ))}
+                      </div>
+                    </div>
+                  </div>
+                )}
+                {field.type === "priceper" && (
+                  <div className="flex flex-col w-full">
+                    <div className="flex w-full gap-1">
+                      <TextField
+                        required={field.required}
+                        id={"price"}
+                        label={capitalizeFirstLetter("price")}
+                        value={formatToCurrency(formData["price"] ?? 0)}
+                        onChange={(e) =>
+                          handleInputChangeMoney("price", e.target.value)
+                        }
+                        variant="outlined"
+                        placeholder={`Enter Price`}
+                        InputProps={{
+                          classes: {
+                            root: "bg-white dark:bg-[#2D3236] dark:text-gray-100",
+                            notchedOutline:
+                              "border-gray-300 dark:border-gray-600",
+                            focused: "",
+                          },
+                        }}
+                        InputLabelProps={{
+                          classes: {
+                            root: "text-gray-500 dark:text-gray-400",
+                            focused: "text-green-500 dark:text-green-400",
+                          },
+                        }}
+                        className="w-full"
+                      />
+                      <select
+                        className="bg-white border-gray-300 cursor-pointer dark:border-gray-600 dark:bg-[#2D3236] dark:text-gray-100 text-sm py-2 px-1 rounded-sm border border-gray-300 dark:border-gray-600 w-[140px] lg:w-[200px]"
+                        value={formData["per"] || "Outright Price"}
+                        onChange={(e) => handleInputChange("per", e.target.value)}
+                      >
+                        <option
+                          value="Outright Price"
+                          className="dark:text-gray-400"
+                        >
+                          Outright Price...
+                        </option>
+                        <option value="per acre">per acre</option>
+                        <option value="per plot">per plot</option>
+                        <option value="per SqF">per SqF</option>
+                      </select>
+                    </div>
+                    <div className="mt-3 bg-white border-gray-300 cursor-pointer dark:border-gray-600 dark:bg-[#2D3236] dark:text-gray-100 text-sm py-2 px-1 rounded-sm border border-gray-300 dark:border-gray-600 w-full">
+                      <h3 className="text-sm font-semibold text-gray-700 dark:text-gray-300 mt-4">
+                        Are you open to negotiation?
+                      </h3>
+                      <div className="flex items-center space-x-4 mt-2">
+                        {["Yes", "No", "Not sure"].map((option) => (
+                          <label
+                            key={option}
+                            className="flex items-center space-x-2 cursor-pointer"
+                          >
+                            <input
+                              type="radio"
+                              name="negotiable"
+                              value={option.toLowerCase()}
+                              checked={
+                                formData["negotiable"]
+                                  ? formData["negotiable"] === option.toLowerCase()
+                                  : option.toLowerCase() === "not sure"
+                              } // Default to "not sure"
+                              onChange={() => {
+                                handleInputChange(
+                                  "negotiable",
+                                  option.toLowerCase()
+                                );
+                              }}
+                              className="hidden peer"
+                            />
+                            <div className="w-5 h-5 border-2 border-gray-400 rounded-full peer-checked:border-green-500 peer-checked:ring-2 peer-checked:ring-green-400 flex items-center justify-center">
+                              {(formData["negotiable"]
+                                ? formData["negotiable"] === option.toLowerCase()
+                                : option.toLowerCase() === "not sure") && (
+                                  <div className="w-2.5 h-2.5 bg-green-500 rounded-full"></div>
+                                )}
+                            </div>
+                            <span
+                              className={
+                                (
+                                  formData["negotiable"]
+                                    ? formData["negotiable"] ===
+                                    option.toLowerCase()
+                                    : option.toLowerCase() === "not sure"
+                                )
+                                  ? "text-green-500 font-medium"
+                                  : "text-gray-600 dark:text-gray-400"
+                              }
+                            >
+                              {option}
+                            </span>
+                          </label>
+                        ))}
+                      </div>
+                    </div>
+                  </div>
+                )}
+                {field.type === "bulkprice" && (
+                  <div className="flex flex-col w-full">
+                    <div className="flex w-full gap-1">
+                      <TextField
+                        required={field.required}
+                        id={"price"}
+                        label={capitalizeFirstLetter("price")}
+                        value={formatToCurrency(formData["price"] ?? 0)}
+                        onChange={(e) =>
+                          handleInputChangeMoney("price", e.target.value)
+                        }
+                        variant="outlined"
+                        placeholder={`Enter Price`}
+                        InputProps={{
+                          classes: {
+                            root: "bg-white dark:bg-[#2D3236] dark:text-gray-100",
+                            notchedOutline:
+                              "border-gray-300 dark:border-gray-600",
+                            focused: "",
+                          },
+                        }}
+                        InputLabelProps={{
+                          classes: {
+                            root: "text-gray-500 dark:text-gray-400",
+                            focused: "text-green-500 dark:text-green-400",
+                          },
+                        }}
+                        className="w-full"
+                      />
+                      <button
+                        onClick={handleOpenPopupBulk}
+                        className="text-sm lg:text-base py-3 w-[200px] px-1 rounded-sm text-green-600 bg-green-100 border border-green-600 hover:bg-green-200">
+                        <AddOutlinedIcon /> Add Bulk Price
+                      </button>
+
+
+                      {showPopupBulk && (
+
+                        <BulkPriceManager
+                          selected={formData["bulkprice"] || []}
+                          name={"bulkprice"}
+                          onChange={handleInputAutoCompleteChange}
+                          handleClosePopupBulk={handleClosePopupBulk}
+                        />
+
+                      )}
+                    </div>
+
+                    <div className="mt-3 bg-white border-gray-300 cursor-pointer dark:border-gray-600 dark:bg-[#2D3236] dark:text-gray-100 text-sm py-2 px-1 rounded-sm border border-gray-300 dark:border-gray-600 w-full">
+                      <h3 className="text-sm font-semibold text-gray-700 dark:text-gray-300 mt-4">
+                        Are you open to negotiation?
+                      </h3>
+                      <div className="flex items-center space-x-4 mt-2">
+                        {["Yes", "No", "Not sure"].map((option) => (
+                          <label
+                            key={option}
+                            className="flex items-center space-x-2 cursor-pointer"
+                          >
+                            <input
+                              type="radio"
+                              name="negotiable"
+                              value={option.toLowerCase()}
+                              checked={
+                                formData["negotiable"]
+                                  ? formData["negotiable"] === option.toLowerCase()
+                                  : option.toLowerCase() === "not sure"
+                              } // Default to "not sure"
+                              onChange={() => {
+                                handleInputChange(
+                                  "negotiable",
+                                  option.toLowerCase()
+                                );
+                              }}
+                              className="hidden peer"
+                            />
+                            <div className="w-5 h-5 border-2 border-gray-400 rounded-full peer-checked:border-green-500 peer-checked:ring-2 peer-checked:ring-green-400 flex items-center justify-center">
+                              {(formData["negotiable"]
+                                ? formData["negotiable"] === option.toLowerCase()
+                                : option.toLowerCase() === "not sure") && (
+                                  <div className="w-2.5 h-2.5 bg-green-500 rounded-full"></div>
+                                )}
+                            </div>
+                            <span
+                              className={
+                                (
+                                  formData["negotiable"]
+                                    ? formData["negotiable"] ===
+                                    option.toLowerCase()
+                                    : option.toLowerCase() === "not sure"
+                                )
+                                  ? "text-green-500 font-medium"
+                                  : "text-gray-600 dark:text-gray-400"
+                              }
+                            >
+                              {option}
+                            </span>
+                          </label>
+                        ))}
+                      </div>
+                    </div>
+                  </div>
+                )}
+
+                {field.type === "serviceprice" && (
+                  <div className="flex w-full gap-1">
+                    <PriceInput
+                      priceType_={formData["contact"] || "specify"}
+                      unit_={formData["unit"] || "per service"}
+                      negotiable_={formData["negotiable"] || "not sure"}
+                      onChange={handleInputAutoCompleteChange}
+                      price_={formData["price"] || ""}
+                    />
+                  </div>
+                )}
+                {field.type === "parcelNumber" && (
+                  <div className="space-y-1 w-full">
+                    <div className="flex items-center justify-between">
+                      <label
+                        htmlFor={field.name}
+                        className="block text-sm font-medium text-gray-700 dark:text-gray-200"
+                      >
+                        Parcel / LR Number
+                        <span className="ml-1 text-sm text-gray-500">
+                          (Optional, but recommended for verification)
+                        </span>
+                      </label>
+
+                      <div className="flex flex-col items-end">
+                        {/* Tooltip */}
+                        <TooltipProvider>
+                          <Tooltip>
+                            <TooltipTrigger asChild>
+                              <span className="text-green-600 cursor-help text-sm">🔒 Mapa Verified?</span>
+                            </TooltipTrigger>
+                            <TooltipContent side="top" align="end">
+                              <p>✅ We use this to check for land disputes and increase trust with buyers.</p>
+                            </TooltipContent>
+                          </Tooltip>
+                        </TooltipProvider>
+
+                        {/* Popup Trigger */}
+                        <MapaPricingModal /> {/* ← Inserted here */}
+                      </div>
+                    </div>
+
+                    {/* Privacy Note */}
+                    <p className="text-xs text-gray-500 dark:text-gray-400 italic">
+                      🔐 Your parcel number will be used only for verification and <strong>will not be displayed publicly</strong>.
+                    </p>
+
+                    <TextField
+                      required={false}
+                      id={field.name}
+                      label=""
+                      value={formData[field.name] || ''}
+                      onChange={(e) => handleInputChange(field.name, e.target.value)}
+                      variant="outlined"
+                      placeholder="Enter parcel/LR number (if available)"
+                      InputProps={{
+                        classes: {
+                          root: "bg-white dark:bg-[#2D3236] dark:text-gray-100",
+                          notchedOutline: "border-gray-300 dark:border-gray-600",
+                          focused: "",
+                        },
+                      }}
+                      InputLabelProps={{
+                        classes: {
+                          root: "text-gray-500 dark:text-gray-400",
+                          focused: "text-green-500 dark:text-green-400",
+                        },
+                      }}
+                      className="w-full"
+                    />
+
+                    {/* Badge if parcel number is entered */}
+                    {formData[field.name] && (
+                      <div className="inline-flex items-center gap-1 text-sm text-green-700 bg-green-100 px-2 py-1 rounded-full mt-1 border border-green-400">
+                        🔒 Mapa Verified: Parcel number submitted
+                      </div>
+                    )}
+
+                    {/* Warning for fake info */}
+                    <p className="text-xs text-red-500 mt-1">
+                      🚫 Submitting fake parcel numbers may result in suspension or blacklisting.
+                    </p>
+                  </div>
+                )}
+
+
+                {field.type === "number" && (
+                  <>
+                    <TextField
+                      required={field.required}
+                      id={field.name}
+                      label={capitalizeFirstLetter(field.name.replace("-", " "))}
+                      value={formData[field.name] || 0}
+                      onChange={(e) =>
+                        handleInputChange(field.name, e.target.value)
+                      }
+                      variant="outlined"
+                      placeholder={`Enter ${field.name.replace("-", " ")}`}
+                      InputProps={{
+                        classes: {
+                          root: "bg-white dark:bg-[#2D3236] dark:text-gray-100",
+                          notchedOutline: "border-gray-300 dark:border-gray-600",
+                          focused: "",
+                        },
+                      }}
+                      InputLabelProps={{
+                        classes: {
+                          root: "text-gray-500 dark:text-gray-400",
+                          focused: "text-green-500 dark:text-green-400",
+                        },
+                      }}
+                      className="w-full"
+                    />
+                  </>
+                )}
+                {field.type === "money" && (
+                  <>
+                    <TextField
+                      required={field.required}
+                      id={field.name}
+                      label={capitalizeFirstLetter(field.name.replace("-", " "))}
+                      value={formatToCurrency(formData[field.name] ?? 0)}
+                      onChange={(e) =>
+                        handleInputChangeMoney(field.name, e.target.value)
+                      }
+                      variant="outlined"
+                      placeholder={`Enter ${field.name.replace("-", " ")}`}
+                      InputProps={{
+                        classes: {
+                          root: "bg-white dark:bg-[#2D3236] dark:text-gray-100",
+                          notchedOutline: "border-gray-300 dark:border-gray-600",
+                          focused: "",
+                        },
+                      }}
+                      InputLabelProps={{
+                        classes: {
+                          root: "text-gray-500 dark:text-gray-400",
+                          focused: "text-emerald-500 dark:text-emerald-400",
+                        },
+                      }}
+                      className="w-full"
+                    />
+                  </>
+                )}
+                {field.type === "select" && (
+                  <FormControl
+                    fullWidth
+                    variant="outlined"
+                    sx={{
+                      "& .MuiOutlinedInput-root": {
+                        "& fieldset": {
+                          borderColor: "#4B5563", // Light mode border
+                        },
+                        "&:hover fieldset": {
+                          borderColor: "#2563EB", // Border on hover
+                        },
+                        "&.Mui-focused fieldset": {
+                          borderColor: "#2563EB", // Border when focused
+                        },
+                      },
+                    }}
+                    className="rounded-md dark:border-gray-600"
+                  >
+                    <InputLabel className="font-medium text-gray-500 dark:text-gray-400">
+                      {capitalizeFirstLetter(field.name.replace("-", " "))}
+                      {field.required && <>*</>}
+                    </InputLabel>
+                    <Select
+                      value={formData[field.name] || ""}
+                      onChange={(e) =>
+                        handleInputChange(field.name, e.target.value)
+                      }
+                      required={field.required}
+                      label={capitalizeFirstLetter(field.name.replace("-", " "))}
+                      className="dark:text-gray-100 dark:bg-[#2D3236] bg-white"
+                    >
+                      {field.options?.map((option: any) => (
+                        <MenuItem key={option} value={option}>
+                          {option}
+                        </MenuItem>
+                      ))}
+                    </Select>
+                  </FormControl>
+                )}
+                {field.type === "year" && (
+                  <AutoComplete
+                    data={years}
+                    name={field.name}
+                    onChange={handleInputYearChange}
+                    selected={formData[field.name] || ""}
+                  />
+                )}
+                {field.type === "autocomplete" && (
+                  <AutoComplete
+                    data={field.options}
+                    name={field.name}
+                    onChange={handleInputAutoCompleteChange}
+                    selected={formData[field.name] || ""}
+                  />
+                )}
+                {field.type === "multi-select" && (
+                  <div className="w-full flex py-2 px-1 rounded-sm border border-gray-300 dark:border-gray-600 flex-wrap gap-2 dark:bg-[#2D3236] bg-white">
+                    <Multiselect
+                      features={field.options}
+                      name={field.name}
+                      selectedFeatures={formData[field.name] || []}
+                      onChange={handleCheckboxChange}
+                    />
+                  </div>
+                )}
+
+                {field.type === "radio" && (
+                  <div className="w-full flex py-2 px-3 rounded-sm border border-gray-300 dark:border-gray-600 flex-wrap gap-2 dark:bg-[#2D3236] bg-white">
+                    <FormControl>
+                      <FormLabel className="text-gray-800 dark:text-[#e4ebeb]">
+                        {capitalizeFirstLetter(field.name.replace("-", " "))}
+                      </FormLabel>
+                      <RadioGroup
+                        name={field.name}
+                        value={formData[field.name]} // Default to the first option
+                        //value={formData[field.name] || field.options[0]} // Default to the first option
+                        onChange={(e) =>
+                          handleInputChange(field.name, e.target.value)
+                        }
+                        className="space-y-0"
+                      >
+                        {field.options?.map((option: any, index: number) => (
+                          <FormControlLabel
+                            key={index}
+                            value={option}
+                            control={
+                              <Radio
+                                sx={{
+                                  color: "gray", // Unchecked color
+                                  "&.Mui-checked": {
+                                    color: "green", // Checked color
+                                  },
+                                }}
+                              />
+                            }
+                            label={option}
+                            className="text-gray-800 dark:text-[#e4ebeb]"
+                          />
+                        ))}
+                      </RadioGroup>
+                    </FormControl>
+                  </div>
+                )}
+                {field.type === "checkbox" &&
+                  field.options?.map((option: any, index: number) => (
+                    <label key={index}>
+                      <input
+                        type="checkbox"
+                        name={field.name}
+                        value={option}
+                        onChange={(e) =>
+                          handleInputChange(field.name, e.target.value)
+                        }
+                      />
+                      {option}
+                    </label>
+                  ))}
+                {field.type === "textarea" && (
+                  <div style={{ width: "100%", height: "300px", borderRadius: "8px", border: "1px", overflow: "hidden" }}>
+                    <ReactQuill
+                      value={formData[field.name] || ""}
+                      onChange={(value) => handleInputChange(field.name, value)}
+                      className="bg-white w-full w-[200px] text-black mb-0"
+                      modules={modules} // Pass the custom toolbar modules
+                      placeholder={`Enter ${capitalizeFirstLetter(field.name.replace("-", " "))}*`}
+                      style={{ height: "100%", width: "100%", border: "1px", borderRadius: "8px" }}
+                    />
+                  </div>
+                )}
+
+                {field.type === "phone" && (
+                  <div className="flex w-full flex-col">
+                    <div className="flex w-full gap-1">
+
+                      {phoneNumber ? (<>
+
+                        <TextField
+                          required={field.required}
+                          id={field.name}
+                          disabled // ⛔ Prevent editing
+                          label={`${capitalizeFirstLetter(field.name)} (Verified)`} // ✅ Optional: Indicate it's verified
+                          type="tel"
+                          value={`${countryCode}${phoneNumber}`}
+                          variant="outlined"
+                          InputProps={{
+                            readOnly: true,
+                            classes: {
+                              root: "bg-gray-100 dark:bg-[#2D3236] dark:text-gray-100",
+                              notchedOutline: "border-green-500",
+                              focused: "",
+                            },
+                          }}
+                          InputLabelProps={{
+                            classes: {
+                              root: "text-green-600 dark:text-green-400",
+                              focused: "text-green-600 dark:text-green-400",
+                            },
+                          }}
+                          className="w-full"
+                        />
+                        <p className="w-[150px] text-green-600 text-sm mt-1">✅ Phone verified</p>
+                        {/*     <select
                     className="border-gray-300 dark:border-gray-600 dark:bg-[#2D3236] dark:text-gray-100 text-sm py-2 px-1 rounded-sm border border-gray-300 dark:border-gray-600 w-[140px] lg:w-[200px]"
                     value={countryCode}
                     onChange={handleCountryCodeChange}
@@ -2007,121 +2053,128 @@ const handleInputChangeMoney = (field: string, value: string) => {
                 </div>
                  {phoneError && (
                   <p className="text-red-500 text-sm">{phoneError}</p>
-                )}
-              </div>)}
+                )}*/}
+                      </>) : (<>
+                        <div className="p-4">
+                          <h1 className="text-xl font-bold mb-4">Verify Your Phone</h1>
+                          <PhoneVerification onVerified={handleVerified} />
+                        </div>
+                      </>)}
+                    </div>
+                  </div>)}
 
-              {field.type === "delivery" && (
-                <div className="flex flex-col w-full gap-1">
+                {field.type === "delivery" && (
+                  <div className="flex flex-col w-full gap-1">
                     <button
                       onClick={handleOpenPopup}
                       className="py-3 w-full px-1 rounded-sm text-green-600 bg-green-100 border border-green-600 hover:bg-green-200">
                       <AddOutlinedIcon /> Add Delivery Option
                     </button>
-                  
 
-                  {showPopup && (
-                    
-                        <DeliveryOptions
-                          name={"delivery"}
-                          subcategory={selectedSubCategory || ""}
-                          onChange={handleInputOnChange}
-                          selected={formData["delivery"] || []}
-                          onSave={handleSave} // Pass the save handler to the child
-                        />
-                    
-                  )}
-                </div>
-              )}
-               {field.type === "location" && (
-                  <div className="flex flex-col w-full gap-1">
-                      <GooglePlacesAutocomplete
-                        apiKey={GOOGLE_MAPS_API_KEY}
-                        selectProps={{
-    placeholder: "Search location",
-    onChange: handleSelect,
-    styles: {
-      control: (provided) => ({
-        ...provided,
-        padding: '6px',
-        borderRadius: '4px',
-        borderColor: '#ccc',
-        boxShadow: 'none',
-        minHeight: '55px',
-      }),
-      placeholder: (provided) => ({
-        ...provided,
-        color: '#888',
-      }),
-      menu: (provided) => ({
-        ...provided,
-        zIndex: 9999, // ensure it appears on top
-      }),
-    },
-  }}
-                        autocompletionRequest={{
-                          componentRestrictions: {
-                            country: ["KE"], // Limits results to Kenya
-                          },
-                        }}
+
+                    {showPopup && (
+
+                      <DeliveryOptions
+                        name={"delivery"}
+                        subcategory={selectedSubCategory || ""}
+                        onChange={handleInputOnChange}
+                        selected={formData["delivery"] || []}
+                        onSave={handleSave} // Pass the save handler to the child
                       />
-                         {locationError && (
-                <p className="text-red-500 text-sm">{locationError}</p>
-              )}
-                   </div> )}
-              
-                    {field.type === "propertyarea" && (
-                <div className="flex flex-col w-full gap-1">
-                   <button
+
+                    )}
+                  </div>
+                )}
+                {field.type === "location" && (
+                  <div className="flex flex-col w-full gap-1">
+                    <GooglePlacesAutocomplete
+                      apiKey={GOOGLE_MAPS_API_KEY}
+                      selectProps={{
+                        placeholder: "Search location",
+                        onChange: handleSelect,
+                        styles: {
+                          control: (provided) => ({
+                            ...provided,
+                            padding: '6px',
+                            borderRadius: '4px',
+                            borderColor: '#ccc',
+                            boxShadow: 'none',
+                            minHeight: '55px',
+                          }),
+                          placeholder: (provided) => ({
+                            ...provided,
+                            color: '#888',
+                          }),
+                          menu: (provided) => ({
+                            ...provided,
+                            zIndex: 9999, // ensure it appears on top
+                          }),
+                        },
+                      }}
+                      autocompletionRequest={{
+                        componentRestrictions: {
+                          country: ["KE"], // Limits results to Kenya
+                        },
+                      }}
+                    />
+                    {locationError && (
+                      <p className="text-red-500 text-sm">{locationError}</p>
+                    )}
+                  </div>)}
+
+                {field.type === "propertyarea" && (
+                  <div className="flex flex-col w-full gap-1">
+                    <button
                       onClick={handleOpenPopupArea}
                       className="py-3 w-full px-1 cursor-pointer rounded-sm text-green-600 bg-green-100 border border-green-600 hover:bg-green-200">
-                      <AddLocationAltOutlinedIcon /> 
+                      <AddLocationAltOutlinedIcon />
                       {formData["propertyarea"]?.mapaddress ? (<>
-                               {formData["propertyarea"]?.mapaddress}
-                              </>):(<> {(selectedCategory ==="Property Services" || selectedCategory ==="Wanted Ads") ? (<> Add Location</>):(<>Add Property Location</>)}</>)} 
-                     
+                        {formData["propertyarea"]?.mapaddress}
+                      </>) : (<> {(selectedCategory === "Property Services" || selectedCategory === "Wanted Ads") ? (<> Add Location</>) : (<>Add Property Location</>)}</>)}
+
                     </button>
                     {locationError && (
-                <p className="text-red-500 text-sm">{locationError}</p>
-              )}
-             
-                  {showPopupArea && (
-                    <div className="fixed inset-0 flex items-center justify-center bg-[#e4ebeb] z-50">
-                    
-                     
-                        
+                      <p className="text-red-500 text-sm">{locationError}</p>
+                    )}
+
+                    {showPopupArea && (
+                      <div className="fixed inset-0 flex items-center justify-center bg-[#e4ebeb] z-50">
+
+
+
                         <MapDrawingTool
-  name="propertyarea"
-  selectedCategory={selectedCategory}
-  data={formData["propertyarea"] || []}
-  onSave={handleSaveMap}
-  onClose={handleOnClose}
-  onChange={(name, data) => {
-    console.log(data);
-   setMapData(data);
-  }}
-/>
+                          name="propertyarea"
+                          selectedCategory={selectedCategory}
+                          data={formData["propertyarea"] || []}
+                          onSave={handleSaveMap}
+                          onClose={handleOnClose}
+                          onChange={(name, data) => {
+                            console.log(data);
+                            setMapData(data);
+                          }}
+                        />
+                      </div>
+                    )}
                   </div>
-                  )}
-                </div>
-                 
-              )}
+
+                )}
                 {field.type === "notify" && (
-  <label className="flex items-center mt-2 mb-2 gap-2 dark:text-gray-400 text-green-600 text-sm">
-    <BellIcon className="w-4 h-4" />
-    {field.options}
-  </label>
-)}
-              {formErrors[field.name] && (
-                <p className="text-red-500 text-sm">{formErrors[field.name]}</p>
-              )}
-            </div>
-          ))}
-           
-          {type === "Create" && selectedCategory !=='Wanted Ads' && selectedSubCategory && (
-            <>
-              <div className="rounded-lg mt-4 p-0">
-        
-              <div className="w-full mt-2 p-0 dark:text-gray-100 rounded-lg">
+                  <label className="flex items-center mt-2 mb-2 gap-2 dark:text-gray-400 text-green-600 text-sm">
+                    <BellIcon className="w-4 h-4" />
+                    {field.options}
+                  </label>
+                )}
+                {formErrors[field.name] && (
+                  <p className="text-red-500 text-sm">{formErrors[field.name]}</p>
+                )}
+              </div>
+            ))}
+
+            {type === "Create" && selectedCategory !== 'Wanted Ads' && selectedSubCategory && (
+              <>
+                <div className="rounded-lg mt-4 p-0">
+
+                  <div className="w-full mt-2 p-0 dark:text-gray-100 rounded-lg">
                     <div className="flex flex-col mb-5">
                       <p className="text-gray-700 dark:text-gray-300 font-semibold text-xl">
                         Promote your ad
@@ -2139,11 +2192,10 @@ const handleInputChangeMoney = (field: string, value: string) => {
                           return (
                             <div
                               key={index}
-                              className={`mb-2 dark:bg-[#2D3236] border bg-white rounded-lg cursor-pointer ${
-                                activePackage === pack
-                                  ? "bg-[#F2FFF2] border-[#4DCE7A] border-2"
-                                  : ""
-                              }`}
+                              className={`mb-2 dark:bg-[#2D3236] border bg-white rounded-lg cursor-pointer ${activePackage === pack
+                                ? "bg-[#F2FFF2] border-[#4DCE7A] border-2"
+                                : ""
+                                }`}
                             >
                               {/*  <div
                                 className={`text-lg font-bold rounded-t-md text-white py-2 px-4 mb-4 flex flex-col items-center justify-center`}
@@ -2156,7 +2208,7 @@ const handleInputChangeMoney = (field: string, value: string) => {
                               <div
                                 onClick={() =>
                                   (!issamepackage && pack.name === "Free") ||
-                                  (issamepackage && pack.name === "Free" &&  remainingAds === 0)
+                                    (issamepackage && pack.name === "Free" && remainingAds === 0)
                                     ? handleClick(pack)
                                     : handleClick(pack)
                                 }
@@ -2185,7 +2237,7 @@ const handleInputChangeMoney = (field: string, value: string) => {
                                       ))}
                                   </ul>
                                 </div>
-              
+
                                 <div className="p-3">
                                   <div className="text-gray-600 mb-1">
                                     <div className="flex gap-2 text-sm">
@@ -2198,11 +2250,11 @@ const handleInputChangeMoney = (field: string, value: string) => {
                                       ) : (
                                         <>
                                           {(!issamepackage && pack.name === "Free") ||
-                                          (issamepackage &&
-                                            pack.name === "Free" &&
-                                            remainingAds === 0) ? (
+                                            (issamepackage &&
+                                              pack.name === "Free" &&
+                                              remainingAds === 0) ? (
                                             <div>
-                                            {/*   <div className="p-0 items-center flex rounded-full bg-grey-50">
+                                              {/*   <div className="p-0 items-center flex rounded-full bg-grey-50">
                                                 <p className="bg-gray-500 border rounded-xl p-2 text-white font-bold text-xs">
                                                   Disabled
                                                 </p>
@@ -2237,16 +2289,14 @@ const handleInputChangeMoney = (field: string, value: string) => {
                                             {pack.price.map((price: any, index: number) => (
                                               <li
                                                 key={index}
-                                                className={`flex items-center gap-0 ${
-                                                  index !== activeButton ? "hidden" : ""
-                                                }`}
+                                                className={`flex items-center gap-0 ${index !== activeButton ? "hidden" : ""
+                                                  }`}
                                               >
                                                 <p
-                                                  className={`font-semibold ${
-                                                    activePackage === pack
-                                                      ? "text-[#30AF5B]"
-                                                      : "text-gray-800 dark:text-gray-400"
-                                                  }`}
+                                                  className={`font-semibold ${activePackage === pack
+                                                    ? "text-[#30AF5B]"
+                                                    : "text-gray-800 dark:text-gray-400"
+                                                    }`}
                                                 >
                                                   Ksh {price.amount.toLocaleString()}/{" "}
                                                   {activeButtonTitle}
@@ -2264,21 +2314,19 @@ const handleInputChangeMoney = (field: string, value: string) => {
                                 <>
                                   <div className="flex flex-wrap justify-end items-center p-2">
                                     <button
-                                      className={`mr-2 mb-2 text-xs w-[80px] lg:w-[90px] lg:text-sm ${
-                                        activeButton === 0
-                                          ? "bg-gradient-to-b from-[#4DCE7A] to-[#30AF5B] text-white p-2 rounded-full"
-                                          : "border border-[#30AF5B] text-[#30AF5B] rounded-full p-2"
-                                      }`}
+                                      className={`mr-2 mb-2 text-xs w-[80px] lg:w-[90px] lg:text-sm ${activeButton === 0
+                                        ? "bg-gradient-to-b from-[#4DCE7A] to-[#30AF5B] text-white p-2 rounded-full"
+                                        : "border border-[#30AF5B] text-[#30AF5B] rounded-full p-2"
+                                        }`}
                                       onClick={() => handleButtonClick(0, "1 week")}
                                     >
                                       1 week
                                     </button>
                                     <button
-                                      className={`mr-2 mb-2 text-xs w-[80px] lg:w-[90px] lg:text-sm ${
-                                        activeButton === 1
-                                          ? "bg-gradient-to-b from-[#4DCE7A] to-[#30AF5B] text-white p-2 rounded-full"
-                                          : "border border-[#30AF5B] text-[#30AF5B] rounded-full p-2"
-                                      }`}
+                                      className={`mr-2 mb-2 text-xs w-[80px] lg:w-[90px] lg:text-sm ${activeButton === 1
+                                        ? "bg-gradient-to-b from-[#4DCE7A] to-[#30AF5B] text-white p-2 rounded-full"
+                                        : "border border-[#30AF5B] text-[#30AF5B] rounded-full p-2"
+                                        }`}
                                       onClick={() => handleButtonClick(1, "1 month")}
                                     >
                                       1 month
@@ -2291,46 +2339,46 @@ const handleInputChangeMoney = (field: string, value: string) => {
                         })}
                     </div>
 
-                    </div>
-             
+                  </div>
+
+                </div>
+
+              </>
+            )}
+
+            <button
+              disabled={loading}
+              onClick={handleSubmit}
+              className="py-3 w-full px-1 mt-2 items-center justify-center rounded-sm bg-green-600 text-white hover:bg-green-700">
+              <div className="flex w-full justify-center gap-1 items-center">
+                {loading && <CircularProgressWithLabel value={uploadProgress} />}
+
+                {loading ? "Submitting..." : `${type} Ad `}
               </div>
-            
-            </>
-          )}
-
-<button
-  disabled={loading}
-                      onClick={handleSubmit}
-                      className="py-3 w-full px-1 mt-2 items-center justify-center rounded-sm bg-green-600 text-white hover:bg-green-700">
-                       <div className="flex w-full justify-center gap-1 items-center">
-              {loading && <CircularProgressWithLabel value={uploadProgress} />}
-
-              {loading ? "Submitting..." : `${type} Ad `}
-            </div>
             </button>
-          <p className="mt-2 mb-2 text-xs text-gray-600 dark:text-gray-500 text-center">
-            By clicking on Create Ad, you accept the{" "}
-            <span onClick={() => handleOpenTerms()} className="text-green-600 cursor-pointer underline">
-              Terms of Use
-            </span>
-          </p>
+            <p className="mt-2 mb-2 text-xs text-gray-600 dark:text-gray-500 text-center">
+              By clicking on Create Ad, you accept the{" "}
+              <span onClick={() => handleOpenTerms()} className="text-green-600 cursor-pointer underline">
+                Terms of Use
+              </span>
+            </p>
+          </div>
         </div>
-      </div>
 
 
-      {loading && (<div className="fixed inset-0 flex items-center justify-center bg-black bg-opacity-80 z-50">
-            <div className="justify-center items-center dark:text-gray-300 rounded-lg p-1 lg:p-6 w-full md:max-w-3xl lg:max-w-4xl h-[90vh] flex flex-col">
-              {/* Header */}
-              <div className="flex font-bold gap-1 text-[#D1D5DB] items-center">
-              
-               {type ==="Update" ? <><CircularProgress  sx={{ color: '#D1D5DB' }}/>Updating Ad...</>:<><CircularProgressWithLabel value={uploadProgress} />Creating Ad...</>} 
-              </div>
+        {loading && (<div className="fixed inset-0 flex items-center justify-center bg-black bg-opacity-80 z-50">
+          <div className="justify-center items-center dark:text-gray-300 rounded-lg p-1 lg:p-6 w-full md:max-w-3xl lg:max-w-4xl h-[90vh] flex flex-col">
+            {/* Header */}
+            <div className="flex font-bold gap-1 text-[#D1D5DB] items-center">
+
+              {type === "Update" ? <><CircularProgress sx={{ color: '#D1D5DB' }} />Updating Ad...</> : <><CircularProgressWithLabel value={uploadProgress} />Creating Ad...</>}
             </div>
-          </div>)} 
+          </div>
+        </div>)}
       </>)}
 
 
-     
+
 
     </>
   );

@@ -57,55 +57,55 @@ export default function BeaconTracker({ onClose }: Props) {
   const userMarker = useRef<google.maps.Marker>();
   const beaconMarkers = useRef<google.maps.Marker[]>([]);
   const polygonRef = useRef<google.maps.Polygon>();
- const { toast } = useToast();
+  const { toast } = useToast();
   const [openShowInfo, setOpenShowInfo] = useState(false);
- const [showHelp, setShowHelp] = useState(false);
- const [mode, setMode] = useState<'single' | 'subdivided'>('single');
- const [parcels, setParcels] = useState<Feature[]>([]);
+  const [showHelp, setShowHelp] = useState(false);
+  const [mode, setMode] = useState<'single' | 'subdivided'>('single');
+  const [parcels, setParcels] = useState<Feature[]>([]);
 
-    useEffect(() => {
-      if (!isLoaded || !navigator.geolocation) return;
-   
+  useEffect(() => {
+    if (!isLoaded || !navigator.geolocation) return;
+
     setOpenShowInfo(true);
- 
-      navigator.geolocation.getCurrentPosition(
-        (pos) => {
-          const position = {
-            lat: pos.coords.latitude,
-            lng: pos.coords.longitude,
-          };
-          setCurrentPos(position);
-          updateMap(position);
-        },
-        (err) => console.error("Initial Geolocation Error:", err),
-        {
-          enableHighAccuracy: true,
-          timeout: 5000,
-          maximumAge: 0,
-        }
-      );
-    
-      const watchId = navigator.geolocation.watchPosition(
-        (pos) => {
-          const position = {
-            lat: pos.coords.latitude,
-            lng: pos.coords.longitude,
-          };
-          setCurrentPos(position);
-          updateMap(position);
-        },
-        (err) => console.error("Geolocation Watch Error:", err),
-        {
-          enableHighAccuracy: true,
-          maximumAge: 5000,
-          timeout: 5000,
-        }
-      );
-    
-      return () => navigator.geolocation.clearWatch(watchId);
-    }, [isLoaded]);
-    
-  
+
+    navigator.geolocation.getCurrentPosition(
+      (pos) => {
+        const position = {
+          lat: pos.coords.latitude,
+          lng: pos.coords.longitude,
+        };
+        setCurrentPos(position);
+        updateMap(position);
+      },
+      (err) => console.error("Initial Geolocation Error:", err),
+      {
+        enableHighAccuracy: true,
+        timeout: 5000,
+        maximumAge: 0,
+      }
+    );
+
+    const watchId = navigator.geolocation.watchPosition(
+      (pos) => {
+        const position = {
+          lat: pos.coords.latitude,
+          lng: pos.coords.longitude,
+        };
+        setCurrentPos(position);
+        updateMap(position);
+      },
+      (err) => console.error("Geolocation Watch Error:", err),
+      {
+        enableHighAccuracy: true,
+        maximumAge: 5000,
+        timeout: 5000,
+      }
+    );
+
+    return () => navigator.geolocation.clearWatch(watchId);
+  }, [isLoaded]);
+
+
 
   const updateMap = (position: { lat: number; lng: number }) => {
     if (!window.google || !mapRef.current) return;
@@ -135,33 +135,33 @@ export default function BeaconTracker({ onClose }: Props) {
       userMarker.current?.setPosition(position);
     }
   };
-const refreshLocation = () => {
-  if (!navigator.geolocation) {
-    alert("Geolocation is not supported by your browser.");
-    return;
-  }
-
-  navigator.geolocation.getCurrentPosition(
-    (pos) => {
-      const position = {
-        lat: pos.coords.latitude,
-        lng: pos.coords.longitude,
-      };
-      setCurrentPos(position);
-      updateMap(position);
-    },
-    (err) => {
-      console.error("Error getting current position:", err);
-      alert("Unable to retrieve your location.");
-    },
-    {
-      enableHighAccuracy: true,
-      timeout: 5000,
-      maximumAge: 0,
+  const refreshLocation = () => {
+    if (!navigator.geolocation) {
+      alert("Geolocation is not supported by your browser.");
+      return;
     }
-  );
-};
-//const hasShownInfoRef = useRef(false);
+
+    navigator.geolocation.getCurrentPosition(
+      (pos) => {
+        const position = {
+          lat: pos.coords.latitude,
+          lng: pos.coords.longitude,
+        };
+        setCurrentPos(position);
+        updateMap(position);
+      },
+      (err) => {
+        console.error("Error getting current position:", err);
+        alert("Unable to retrieve your location.");
+      },
+      {
+        enableHighAccuracy: true,
+        timeout: 5000,
+        maximumAge: 0,
+      }
+    );
+  };
+  //const hasShownInfoRef = useRef(false);
   const captureBeacon = () => {
     if (!currentPos) return;
     const newBeacon = {
@@ -172,7 +172,7 @@ const refreshLocation = () => {
     addBeacon(newBeacon);
     setOpenShowInfo(false)
     // Only set openShowInfo the first time
-  
+
   };
 
   const addBeacon = (beacon: Beacon) => {
@@ -183,7 +183,7 @@ const refreshLocation = () => {
       draggable: true,
     });
 
-    marker.addListener('dragend', (e:any) => {
+    marker.addListener('dragend', (e: any) => {
       const updatedBeacons = [...beacons];
       updatedBeacons[beacons.length] = {
         ...beacon,
@@ -231,37 +231,37 @@ const refreshLocation = () => {
     // Ensure the polygon is updated with the new beacon
     updatePolygon([...beacons, { name: manualInput.name, lat, lng }]);
   };
-   
-    const handleShare = async () => {
-      if (navigator.share) {
-        try {
 
-            if (beacons.length < 3) {
-      alert("At least 3 points are needed to create a polygon.");
-      return;
-    }
-    const coordinates = beacons.map((b) => [b.lng, b.lat]);
-    if (coordinates[0][0] !== coordinates[coordinates.length - 1][0] ||
-        coordinates[0][1] !== coordinates[coordinates.length - 1][1]) {
-      coordinates.push(coordinates[0]);
-    }
-    //const encoded = encodeURIComponent(JSON.stringify(coordinates));
-    const url = `https://mapa.co.ke/?coordinates=${coordinates}`;
-          await navigator.share({
-            title: "Digital beacons",
-            text: "Explore this property location on mapa!",
-            url: url,
-          });
-          console.log("Share was successful.");
-        } catch (error) {
-          console.error("Sharing failed:", error);
+  const handleShare = async () => {
+    if (navigator.share) {
+      try {
+
+        if (beacons.length < 3) {
+          alert("At least 3 points are needed to create a polygon.");
+          return;
         }
-      } else {
-        // Fallback for browsers that do not support the Web Share API
-        console.log("Share not supported on this browser.");
-        // You can also show a modal or a tooltip with the URL or instructions here.
+        const coordinates = beacons.map((b) => [b.lng, b.lat]);
+        if (coordinates[0][0] !== coordinates[coordinates.length - 1][0] ||
+          coordinates[0][1] !== coordinates[coordinates.length - 1][1]) {
+          coordinates.push(coordinates[0]);
+        }
+        //const encoded = encodeURIComponent(JSON.stringify(coordinates));
+        const url = `https://mapa.co.ke/?coordinates=${coordinates}`;
+        await navigator.share({
+          title: "Digital beacons",
+          text: "Explore this property location on mapa!",
+          url: url,
+        });
+        console.log("Share was successful.");
+      } catch (error) {
+        console.error("Sharing failed:", error);
       }
-    };
+    } else {
+      // Fallback for browsers that do not support the Web Share API
+      console.log("Share not supported on this browser.");
+      // You can also show a modal or a tooltip with the URL or instructions here.
+    }
+  };
   const saveQRcode = async () => {
     if (beacons.length < 3) {
       alert("At least 3 points are needed to create a polygon.");
@@ -269,15 +269,15 @@ const refreshLocation = () => {
     }
     const coordinates = beacons.map((b) => [b.lng, b.lat]);
     if (coordinates[0][0] !== coordinates[coordinates.length - 1][0] ||
-        coordinates[0][1] !== coordinates[coordinates.length - 1][1]) {
+      coordinates[0][1] !== coordinates[coordinates.length - 1][1]) {
       coordinates.push(coordinates[0]);
     }
     //const encoded = encodeURIComponent(JSON.stringify(coordinates));
     const url = `https://mapa.co.ke/?coordinates=${coordinates}`;
-  
+
     try {
       const qrDataURL = await QRCode.toDataURL(url);
-  
+
       // Create download link
       const link = document.createElement('a');
       link.href = qrDataURL;
@@ -296,16 +296,16 @@ const refreshLocation = () => {
 
   }
 
-  
+
   const saveBeaconsToGeoJSON = () => {
-  
+
     if (beacons.length < 3) {
       alert("At least 3 points are needed to create a polygon.");
       return;
     }
     const coordinates = beacons.map((b) => [b.lng, b.lat]);
     if (coordinates[0][0] !== coordinates[coordinates.length - 1][0] ||
-        coordinates[0][1] !== coordinates[coordinates.length - 1][1]) {
+      coordinates[0][1] !== coordinates[coordinates.length - 1][1]) {
       coordinates.push(coordinates[0]);
     }
     const geojson = {
@@ -313,7 +313,7 @@ const refreshLocation = () => {
       features: [
         {
           type: "Feature",
-          properties: { name: "Beacon Polygon" },
+          properties: { name: "Land" },
           geometry: {
             type: "Polygon",
             coordinates: [coordinates],
@@ -351,167 +351,167 @@ const refreshLocation = () => {
       document.exitFullscreen?.();
     }
   };
- 
 
-const handleDraw = () => {
-  if (beacons.length < 3) {
-    toast({
-      variant: "destructive",
-      title: "Failed!",
-      description: "At least 3 points are needed to create a polygon.",
-      duration: 5000,
-    });
-    return;
-  }
 
-  const coordinates = beacons.map((b) => [b.lng, b.lat]);
+  const handleDraw = () => {
+    if (beacons.length < 3) {
+      toast({
+        variant: "destructive",
+        title: "Failed!",
+        description: "At least 3 points are needed to create a polygon.",
+        duration: 5000,
+      });
+      return;
+    }
 
-  // Close the polygon if not already
-  const [startLng, startLat] = coordinates[0];
-  const [endLng, endLat] = coordinates[coordinates.length - 1];
-  if (startLng !== endLng || startLat !== endLat) {
-    coordinates.push([startLng, startLat]);
-  }
+    const coordinates = beacons.map((b) => [b.lng, b.lat]);
 
-  const plotName = `Parcel ${parcels.length + 1}`;
+    // Close the polygon if not already
+    const [startLng, startLat] = coordinates[0];
+    const [endLng, endLat] = coordinates[coordinates.length - 1];
+    if (startLng !== endLng || startLat !== endLat) {
+      coordinates.push([startLng, startLat]);
+    }
 
-  const featureWithType: Feature = {
-    type: "Feature",
-    properties: {
-      name: plotName,
-    },
-    geometry: {
-      type: "Polygon",
-      coordinates: [coordinates],
-    },
-  };
+    const plotName = `Parcel ${parcels.length + 1}`;
 
- 
+    const featureWithType: Feature = {
+      type: "Feature",
+      properties: {
+        name: plotName,
+      },
+      geometry: {
+        type: "Polygon",
+        coordinates: [coordinates],
+      },
+    };
+
+
     setParcels((prev) => [...prev, featureWithType]);
     setBeacons([]);
     polygonRef.current?.setMap(null);
     polygonRef.current = undefined;
     beaconMarkers.current.forEach(marker => marker.setMap(null));
     beaconMarkers.current = [];
- 
-};
 
-
-const exportToGeoJSON = () => {
-  
-  if (parcels.length === 0) {
-    
-        toast({
-          variant: "destructive",
-          title: "Failed!",
-          description: "No parcels to export.",
-          duration: 5000,
-        });
-      return;
-    }
-  const geoJson = {
-    type: "FeatureCollection",
-    features: parcels,
   };
 
-  const blob = new Blob([JSON.stringify(geoJson, null, 2)], {
-    type: "application/json",
-  });
 
-  const url = URL.createObjectURL(blob);
-  const link = document.createElement("a");
-  link.href = url;
-  link.download = "digital_beacons.geojson";
-  link.click();
-  URL.revokeObjectURL(url);
-  setParcels([]);
-};
-const generateMultipleParcelQRCode = async () => {
-  if (parcels.length === 0) return;
+  const exportToGeoJSON = () => {
 
-  // Build URL with encoded coordinates
-  const params = parcels
-    .map((parcel, index) => {
-      const encoded = encodeURIComponent(JSON.stringify(parcel.geometry.coordinates));
-      return `parcel${index + 1}=${encoded}`;
-    })
-    .join("&");
+    if (parcels.length === 0) {
 
-  const url = `https://mapa.co.ke/?${params}`;
+      toast({
+        variant: "destructive",
+        title: "Failed!",
+        description: "No parcels to export.",
+        duration: 5000,
+      });
+      return;
+    }
+    const geoJson = {
+      type: "FeatureCollection",
+      features: parcels,
+    };
 
-  try {
-    // Generate QR code data URL
-    const qrDataURL = await QRCode.toDataURL(url);
+    const blob = new Blob([JSON.stringify(geoJson, null, 2)], {
+      type: "application/json",
+    });
 
-    // Create and trigger download link
+    const url = URL.createObjectURL(blob);
     const link = document.createElement("a");
-    link.href = qrDataURL;
-    link.download = "mapa-qr-code.png";
-    document.body.appendChild(link);
+    link.href = url;
+    link.download = "digital_beacons.geojson";
     link.click();
-    document.body.removeChild(link);
-
-    // Optional cleanup logic
+    URL.revokeObjectURL(url);
     setParcels([]);
-    polygonRef.current?.setMap(null);
-    polygonRef.current = undefined;
-    beaconMarkers.current.forEach((marker) => marker.setMap(null));
-    beaconMarkers.current = [];
+  };
+  const generateMultipleParcelQRCode = async () => {
+    if (parcels.length === 0) return;
 
-  } catch (err) {
-    console.error("Failed to generate QR code", err);
-  }
+    // Build URL with encoded coordinates
+    const params = parcels
+      .map((parcel, index) => {
+        const encoded = encodeURIComponent(JSON.stringify(parcel.geometry.coordinates));
+        return `parcel${index + 1}=${encoded}`;
+      })
+      .join("&");
 
-  console.log("URL with multiple parcels:", url);
-  return url;
-};
+    const url = `https://mapa.co.ke/?${params}`;
+
+    try {
+      // Generate QR code data URL
+      const qrDataURL = await QRCode.toDataURL(url);
+
+      // Create and trigger download link
+      const link = document.createElement("a");
+      link.href = qrDataURL;
+      link.download = "mapa-qr-code.png";
+      document.body.appendChild(link);
+      link.click();
+      document.body.removeChild(link);
+
+      // Optional cleanup logic
+      setParcels([]);
+      polygonRef.current?.setMap(null);
+      polygonRef.current = undefined;
+      beaconMarkers.current.forEach((marker) => marker.setMap(null));
+      beaconMarkers.current = [];
+
+    } catch (err) {
+      console.error("Failed to generate QR code", err);
+    }
+
+    console.log("URL with multiple parcels:", url);
+    return url;
+  };
 
 
-const generateMultipleParcelLink = async () => {
-  if (parcels.length === 0) return;
+  const generateMultipleParcelLink = async () => {
+    if (parcels.length === 0) return;
 
-  // Build URL with encoded coordinates
-  const params = parcels
-    .map((parcel, index) => {
-      const encoded = encodeURIComponent(JSON.stringify(parcel.geometry.coordinates));
-      return `parcel${index + 1}=${encoded}`;
-    })
-    .join("&");
+    // Build URL with encoded coordinates
+    const params = parcels
+      .map((parcel, index) => {
+        const encoded = encodeURIComponent(JSON.stringify(parcel.geometry.coordinates));
+        return `parcel${index + 1}=${encoded}`;
+      })
+      .join("&");
 
-  const url = `https://mapa.co.ke/?${params}`;
+    const url = `https://mapa.co.ke/?${params}`;
 
-  try {
-    // Generate QR code data URL
-    await navigator.share({
-            title: "Digital beacons",
-            text: "Explore this property location on mapa!",
-            url: url,
-          });
-          console.log("Share was successful.");
+    try {
+      // Generate QR code data URL
+      await navigator.share({
+        title: "Digital beacons",
+        text: "Explore this property location on mapa!",
+        url: url,
+      });
+      console.log("Share was successful.");
 
-    // Optional cleanup logic
-    setParcels([]);
-    polygonRef.current?.setMap(null);
-    polygonRef.current = undefined;
-    beaconMarkers.current.forEach((marker) => marker.setMap(null));
-    beaconMarkers.current = [];
+      // Optional cleanup logic
+      setParcels([]);
+      polygonRef.current?.setMap(null);
+      polygonRef.current = undefined;
+      beaconMarkers.current.forEach((marker) => marker.setMap(null));
+      beaconMarkers.current = [];
 
-  } catch (err) {
-    console.error("Failed to generate QR code", err);
-  }
+    } catch (err) {
+      console.error("Failed to generate QR code", err);
+    }
 
-  console.log("URL with multiple parcels:", url);
-  return url;
-};
+    console.log("URL with multiple parcels:", url);
+    return url;
+  };
 
   return (
     <div id="map-container" className="h-[100vh] w-full relative">
-       {!isLoaded && (
-          <div className="absolute inset-0 z-10 flex items-center justify-center bg-white/70">
-            <div className="animate-spin rounded-full h-8 w-8 border-t-2 border-b-2 border-gray-800" />
-            <span className="ml-2 text-gray-700 font-medium">Loading map...</span>
-          </div>
-        )}  
+      {!isLoaded && (
+        <div className="absolute inset-0 z-10 flex items-center justify-center bg-white/70">
+          <div className="animate-spin rounded-full h-8 w-8 border-t-2 border-b-2 border-gray-800" />
+          <span className="ml-2 text-gray-700 font-medium">Loading map...</span>
+        </div>
+      )}
       <div className="w-full h-full rounded-b-xl shadow-md border" ref={mapRef}></div>
 
       {/* Buttons */}
@@ -526,11 +526,11 @@ const generateMultipleParcelLink = async () => {
             <TooltipContent><p>Toggle Fullscreen</p></TooltipContent>
           </Tooltip>
         </TooltipProvider>
- 
+
         <TooltipProvider>
           <Tooltip>
             <TooltipTrigger asChild>
-              <Button onClick={()=> { captureBeacon();}} className="w-14 text-gray-600" variant="outline">
+              <Button onClick={() => { captureBeacon(); }} className="w-14 text-gray-600" variant="outline">
                 <AddLocationAltOutlinedIcon />
               </Button>
             </TooltipTrigger>
@@ -539,18 +539,18 @@ const generateMultipleParcelLink = async () => {
         </TooltipProvider>
 
         {/* Add Manual Beacon Button */}
-      <TooltipProvider>
-        <Tooltip>
-          <TooltipTrigger asChild>
-            <Button onClick={() => setManualInputVisible(true)} className="w-14 text-gray-600" variant="outline">
-              <EditLocationOutlinedIcon />
-            </Button>
-          </TooltipTrigger>
-          <TooltipContent><p>Add manual beacon</p></TooltipContent>
-        </Tooltip>
-      </TooltipProvider>
+        <TooltipProvider>
+          <Tooltip>
+            <TooltipTrigger asChild>
+              <Button onClick={() => setManualInputVisible(true)} className="w-14 text-gray-600" variant="outline">
+                <EditLocationOutlinedIcon />
+              </Button>
+            </TooltipTrigger>
+            <TooltipContent><p>Add manual beacon</p></TooltipContent>
+          </Tooltip>
+        </TooltipProvider>
 
-<TooltipProvider>
+        <TooltipProvider>
           <Tooltip>
             <TooltipTrigger asChild>
               <Button onClick={deleteAll} variant="outline" className="w-14 text-gray-600">
@@ -572,7 +572,7 @@ const generateMultipleParcelLink = async () => {
         </TooltipProvider>
       </div>
 
-   
+
       {/* Beacon List */}
       {beacons.length > 0 && (
         <div className="absolute items-center top-20 left-2 p-2 text-white bg-green-600 z-10 rounded-md shadow-lg max-h-[200px] overflow-auto text-sm">
@@ -584,63 +584,63 @@ const generateMultipleParcelLink = async () => {
             ))}
           </ul>
           <Button
-  onClick={() => handleDraw()}
-  variant={"outline"}
-  className="shadow-lg mt-2 text-gray-900 text-sm"
->
-  <AddOutlinedIcon sx={{ fontSize: 14 }}/>Add
-</Button>
+            onClick={() => handleDraw()}
+            variant={"outline"}
+            className="shadow-lg mt-2 text-gray-900 text-sm"
+          >
+            <AddOutlinedIcon sx={{ fontSize: 14 }} />Add
+          </Button>
         </div>
       )}
 
 
-        {/* Beacon List */}
-   {parcels.length > 0 && (
-  <div className="absolute flex gap-5 bottom-2 left-2 p-2 text-white bg-green-600 z-10 rounded-md shadow-lg text-sm">
-    Parcels drawn: {parcels.length}
-      <TooltipProvider>
-  <Tooltip>
-    <DropdownMenu>
-      <TooltipTrigger asChild>
-        <DropdownMenuTrigger asChild>
-          <Button className="text-gray-600 text-sm" variant="outline">
-            <SaveAltOutlinedIcon sx={{ fontSize: 14 }}/>Save
-          </Button>
-        </DropdownMenuTrigger>
-      </TooltipTrigger>
-      <TooltipContent><p>Save</p></TooltipContent>
+      {/* Beacon List */}
+      {parcels.length > 0 && (
+        <div className="absolute flex gap-5 bottom-2 left-2 p-2 text-white bg-green-600 z-10 rounded-md shadow-lg text-sm">
+          Parcels drawn: {parcels.length}
+          <TooltipProvider>
+            <Tooltip>
+              <DropdownMenu>
+                <TooltipTrigger asChild>
+                  <DropdownMenuTrigger asChild>
+                    <Button className="text-gray-600 text-sm" variant="outline">
+                      <SaveAltOutlinedIcon sx={{ fontSize: 14 }} />Save
+                    </Button>
+                  </DropdownMenuTrigger>
+                </TooltipTrigger>
+                <TooltipContent><p>Save</p></TooltipContent>
 
-      <DropdownMenuContent align="end">
-        <DropdownMenuItem onClick={exportToGeoJSON}>
-        <FileDownloadOutlinedIcon/>Save as GeoJSON
-        </DropdownMenuItem>
-        <DropdownMenuItem onClick={generateMultipleParcelQRCode}>
-       <QrCode2OutlinedIcon/> Save as QR Code
-        </DropdownMenuItem>
-         <DropdownMenuItem onClick={generateMultipleParcelLink}>
-       <Share2/> Share link
-        </DropdownMenuItem>
-      </DropdownMenuContent>
-    </DropdownMenu>
-  </Tooltip>
-</TooltipProvider>
-  </div>
-)}
-    {/* Manual Input Form */}
-       {manualInputVisible && (
+                <DropdownMenuContent align="end">
+                  <DropdownMenuItem onClick={exportToGeoJSON}>
+                    <FileDownloadOutlinedIcon />Save as GeoJSON
+                  </DropdownMenuItem>
+                  <DropdownMenuItem onClick={generateMultipleParcelQRCode}>
+                    <QrCode2OutlinedIcon /> Save as QR Code
+                  </DropdownMenuItem>
+                  <DropdownMenuItem onClick={generateMultipleParcelLink}>
+                    <Share2 /> Share link
+                  </DropdownMenuItem>
+                </DropdownMenuContent>
+              </DropdownMenu>
+            </Tooltip>
+          </TooltipProvider>
+        </div>
+      )}
+      {/* Manual Input Form */}
+      {manualInputVisible && (
         <div className="absolute bottom-10 left-10 z-10 p-4 bg-white shadow-md rounded-md">
-         
-         <div className='flex justify-between items-center'> <h3 className="text-lg font-semibold">Add Manual Beacon</h3>
-         <button
-         onClick={() => setManualInputVisible(false)}  // Close the form
-        className="absolute top-2 right-2 text-gray-500 hover:text-black text-sm"
-        title="Close"
-      >
-        ✕
-      </button>
-              </div>
+
+          <div className='flex justify-between items-center'> <h3 className="text-lg font-semibold">Add Manual Beacon</h3>
+            <button
+              onClick={() => setManualInputVisible(false)}  // Close the form
+              className="absolute top-2 right-2 text-gray-500 hover:text-black text-sm"
+              title="Close"
+            >
+              ✕
+            </button>
+          </div>
           <p className='text-sm text-gray-400'>Survey documents or paper maps</p>
-       
+
           <form
             onSubmit={(e) => {
               e.preventDefault();
@@ -676,7 +676,7 @@ const generateMultipleParcelLink = async () => {
               />
             </div>
             <div className="flex justify-end space-x-2 mt-2">
-             
+
               <button
                 type="submit"
                 className="px-4 py-2 w-full bg-green-600 text-white rounded"
@@ -688,81 +688,81 @@ const generateMultipleParcelLink = async () => {
         </div>
       )}
 
-   {openShowInfo && (
-  <div className="fixed inset-0 bg-black bg-opacity-40 z-50 flex items-center justify-center">
-    <div className="bg-[#e4ebeb] p-6 rounded-md shadow-lg w-[320px] relative">
-    {/* Close Button */}
-    <button
-      onClick={() => setOpenShowInfo(false)}
-      className="absolute top-2 right-2 text-gray-500 hover:text-black text-sm"
-      title="Close"
-    >
-      ✕
-    </button>
+      {openShowInfo && (
+        <div className="fixed inset-0 bg-black bg-opacity-40 z-50 flex items-center justify-center">
+          <div className="bg-[#e4ebeb] p-6 rounded-md shadow-lg w-[320px] relative">
+            {/* Close Button */}
+            <button
+              onClick={() => setOpenShowInfo(false)}
+              className="absolute top-2 right-2 text-gray-500 hover:text-black text-sm"
+              title="Close"
+            >
+              ✕
+            </button>
 
-    <p className="font-bold text-base mb-2">📌 How to Capture Beacons</p>
+            <p className="font-bold text-base mb-2">📌 How to Capture Beacons</p>
 
-    <ul className="list-disc list-inside space-y-1">
-      <li>Walk or move around the land boundary on the map.</li>
-      <li>Click <strong>Capture Beacon</strong> at each turn or corner.</li>
-      <li>Capture points in a <strong>clockwise</strong> or <strong>anticlockwise</strong> order.</li>
-      <li>You can <strong>drag markers</strong> to the exact location if needed.</li>
-    </ul>
+            <ul className="list-disc list-inside space-y-1">
+              <li>Walk or move around the land boundary on the map.</li>
+              <li>Click <strong>Capture Beacon</strong> at each turn or corner.</li>
+              <li>Capture points in a <strong>clockwise</strong> or <strong>anticlockwise</strong> order.</li>
+              <li>You can <strong>drag markers</strong> to the exact location if needed.</li>
+            </ul>
 
-   <p className="mt-3">
-  After capturing all beacons, click the <strong>Save</strong> button to export the boundary as a <strong>QR code</strong>, <strong>Share link</strong> or download it as a <strong>GeoJSON</strong> file.
-</p>
+            <p className="mt-3">
+              After capturing all beacons, click the <strong>Save</strong> button to export the boundary as a <strong>QR code</strong>, <strong>Share link</strong> or download it as a <strong>GeoJSON</strong> file.
+            </p>
 
-    <div className="mt-4 flex gap-4 flex-col">
-     <button
-        className="w-full bg-green-600 hover:bg-green-700 text-white px-4 py-2 rounded"
-        onClick={() => {
-          setOpenShowInfo(false);
-          window.location.href = "intent://maps.google.com/#Intent;scheme=https;package=com.google.android.apps.maps;end";
-        }}
-      >
-         Open Google Maps for Better GPS Accuracy
-      </button>  <Button variant="default" className="w-full" onClick={() => setOpenShowInfo(false)}>
-        Got it
-      </Button>
-    </div>
-  </div>
-  </div>
-)}
-
-<button
-  onClick={() => setShowHelp(true)}
-  className="fixed bottom-4 right-4 bg-blue-600 text-white px-4 py-2 rounded-full shadow-lg z-50"
->
-  Help
-</button>
-{showHelp && (
-  <div className="fixed inset-0 bg-black bg-opacity-40 z-50 flex items-center justify-center">
-    <div className="bg-white p-6 rounded-md shadow-lg w-[320px] relative">
-      <button
-        className="absolute top-2 right-2 text-gray-500 hover:text-black"
-        onClick={() => setShowHelp(false)}
-      >
-        ✕
-      </button>
-
-      <h2 className="text-lg font-semibold mb-2"><MyLocationOutlinedIcon /> Having trouble with GPS?</h2>
-      <p className="text-sm mb-4">
-        If it&apos;s taking too long to get your precise GPS position, try opening the Google Maps app to help improve location accuracy. After that, return to the Digital Beacon app.
-      </p>
+            <div className="mt-4 flex gap-4 flex-col">
+              <button
+                className="w-full bg-green-600 hover:bg-green-700 text-white px-4 py-2 rounded"
+                onClick={() => {
+                  setOpenShowInfo(false);
+                  window.location.href = "intent://maps.google.com/#Intent;scheme=https;package=com.google.android.apps.maps;end";
+                }}
+              >
+                Open Google Maps for Better GPS Accuracy
+              </button>  <Button variant="default" className="w-full" onClick={() => setOpenShowInfo(false)}>
+                Got it
+              </Button>
+            </div>
+          </div>
+        </div>
+      )}
 
       <button
-        className="w-full bg-green-600 hover:bg-green-700 text-white px-4 py-2 rounded"
-        onClick={() => {
-          setShowHelp(false);
-          window.location.href = "intent://maps.google.com/#Intent;scheme=https;package=com.google.android.apps.maps;end";
-        }}
+        onClick={() => setShowHelp(true)}
+        className="fixed bottom-4 right-4 bg-blue-600 text-white px-4 py-2 rounded-full shadow-lg z-50"
       >
-        Open Google Maps
+        Help
       </button>
-    </div>
-  </div>
-)}
+      {showHelp && (
+        <div className="fixed inset-0 bg-black bg-opacity-40 z-50 flex items-center justify-center">
+          <div className="bg-white p-6 rounded-md shadow-lg w-[320px] relative">
+            <button
+              className="absolute top-2 right-2 text-gray-500 hover:text-black"
+              onClick={() => setShowHelp(false)}
+            >
+              ✕
+            </button>
+
+            <h2 className="text-lg font-semibold mb-2"><MyLocationOutlinedIcon /> Having trouble with GPS?</h2>
+            <p className="text-sm mb-4">
+              If it&apos;s taking too long to get your precise GPS position, try opening the Google Maps app to help improve location accuracy. After that, return to the Digital Beacon app.
+            </p>
+
+            <button
+              className="w-full bg-green-600 hover:bg-green-700 text-white px-4 py-2 rounded"
+              onClick={() => {
+                setShowHelp(false);
+                window.location.href = "intent://maps.google.com/#Intent;scheme=https;package=com.google.android.apps.maps;end";
+              }}
+            >
+              Open Google Maps
+            </button>
+          </div>
+        </div>
+      )}
 
 
     </div>

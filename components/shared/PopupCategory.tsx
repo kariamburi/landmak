@@ -22,27 +22,27 @@ interface WindowProps {
   handleOpenBook: () => void;
   handleOpenPlan: () => void;
   handleOpenChat: () => void;
-  handleAdEdit: (ad:any) => void;
-  handleAdView: (ad:any) => void;
+  handleAdEdit: (ad: any) => void;
+  handleAdView: (ad: any) => void;
   handleOpenAbout: () => void;
   handleOpenTerms: () => void;
   handleOpenPrivacy: () => void;
   handleOpenSafety: () => void;
-  handleOpenShop: (shopId:any) => void;
-  handleCategory: (value:string) => void;
+  handleOpenShop: (shopId: any) => void;
+  handleCategory: (value: string) => void;
   handleOpenPerfomance: () => void;
   handleOpenSettings: () => void;
   handleOpenSearchByTitle: () => void;
-  handleOpenSearchTab: (value:string) => void;
-  handleOpenChatId: (value:string) => void;
+  handleOpenSearchTab: (value: string) => void;
+  handleOpenChatId: (value: string) => void;
   userId: string;
   userName: string;
-  userImage:string;
+  userImage: string;
   queryObject: any;
-  categoryList:any;
-  subcategoryList:any;
-  user:any;
-  loans:any;
+  categoryList: any;
+  subcategoryList: any;
+  user: any;
+  loans: any;
 }
 
 const PopupCategory = ({
@@ -67,17 +67,17 @@ const PopupCategory = ({
   handleCategory,
   handleOpenSearchTab,
   handleOpenSearchByTitle,
-  handleOpenAbout,handleOpenTerms,handleOpenPrivacy,handleOpenSafety,handleOpenPlan,handleOpenChat,
+  handleOpenAbout, handleOpenTerms, handleOpenPrivacy, handleOpenSafety, handleOpenPlan, handleOpenChat,
 }: WindowProps) => {
- 
+
 
   if (!isOpen) return null;
 
   return (
-    <div className="fixed inset-0 flex items-center justify-center bg-white z-20">
-      <div className="dark:bg-[#131B1E] dark:text-gray-300 bg-white rounded-0 p-0 w-full h-[100vh] flex flex-col">
-       
-       {/*    <MainCategory
+    <div className="fixed inset-0 flex items-center justify-center bg-white z-50">
+      <div className="dark:bg-[#131B1E] z-5 dark:text-gray-300 bg-white rounded-0 p-0 w-full h-[100vh] flex flex-col">
+
+        {/*    <MainCategory
             userId={userId}
             userName={userName}
             userImage={userImage}
@@ -111,36 +111,36 @@ const PopupCategory = ({
           />*/}
         <EnhancedPropertySearch
           userId={userId}
-            userName={userName}
-            userImage={userImage}
-            emptyTitle="No ads have been created yet"
-            emptyStateSubtext="Go create some now"
-            limit={20}
-            user={user}
-            categoryList={categoryList}
-            subcategoryList={subcategoryList}
-            queryObject={queryObject}
-            onClose={onClose}
-            loading={false}
-            handleOpenSell={handleOpenSell}
-            handleAdView={handleAdView}
-            handleOpenAbout={handleOpenAbout} 
-      handleOpenTerms={handleOpenTerms}
-      handleOpenPrivacy={handleOpenPrivacy}
-      handleOpenSafety={handleOpenSafety}
-      handleOpenBook={handleOpenBook}
-      handleOpenPlan={handleOpenPlan}
-      handleOpenChat={handleOpenChat}
-      handleOpenShop={handleOpenShop} 
-            handleOpenPerfomance={handleOpenPerfomance}
-            handleOpenSettings={handleOpenSettings}
-            handleCategory={handleCategory}
-            handleAdEdit={handleAdEdit}
-            handleOpenSearchTab={handleOpenSearchTab}
-            handleOpenSearchByTitle={handleOpenSearchByTitle}
-            handleOpenChatId={handleOpenChatId}
-            loans={loans}
-            />
+          userName={userName}
+          userImage={userImage}
+          emptyTitle="No ads have been created yet"
+          emptyStateSubtext="Go create some now"
+          limit={20}
+          user={user}
+          categoryList={categoryList}
+          subcategoryList={subcategoryList}
+          queryObject={queryObject}
+          onClose={onClose}
+          loading={false}
+          handleOpenSell={handleOpenSell}
+          handleAdView={handleAdView}
+          handleOpenAbout={handleOpenAbout}
+          handleOpenTerms={handleOpenTerms}
+          handleOpenPrivacy={handleOpenPrivacy}
+          handleOpenSafety={handleOpenSafety}
+          handleOpenBook={handleOpenBook}
+          handleOpenPlan={handleOpenPlan}
+          handleOpenChat={handleOpenChat}
+          handleOpenShop={handleOpenShop}
+          handleOpenPerfomance={handleOpenPerfomance}
+          handleOpenSettings={handleOpenSettings}
+          handleCategory={handleCategory}
+          handleAdEdit={handleAdEdit}
+          handleOpenSearchTab={handleOpenSearchTab}
+          handleOpenSearchByTitle={handleOpenSearchByTitle}
+          handleOpenChatId={handleOpenChatId}
+          loans={loans}
+        />
         <Toaster />
       </div>
     </div>

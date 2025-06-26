@@ -76,6 +76,12 @@ import PopupFaq from "./PopupFaq";
 import PropertyMap from "./PropertyMap";
 import InitialAvatar from "./InitialAvatar";
 import { DrawerDemo } from "./DrawerDemo";
+import { MapIcon, ListBulletIcon, Squares2X2Icon } from '@heroicons/react/24/outline';
+import { GoogleMap, InfoWindow, Marker, OverlayView, useLoadScript } from "@react-google-maps/api";
+import HorizontalCardPublic from "./HorizontalCardPublic";
+import { formatKsh } from "@/lib/help";
+import Navbar from "./navbar";
+import CardAuto from "./CardAuto";
 type Ad = {
   data?: {
     subcategory?: string;
@@ -127,6 +133,18 @@ type CollectionProps = {
   myloans: any;
   collectionType?: "Ads_Organized" | "My_Tickets" | "All_Ads";
 };
+const options = [
+  { value: 'both', label: 'Split View', icon: <Squares2X2Icon className="w-5 h-5" /> },
+  { value: 'map', label: 'Map View', icon: <MapIcon className="w-5 h-5" /> },
+  { value: 'list', label: 'List View', icon: <ListBulletIcon className="w-5 h-5" /> },
+];
+
+const defaultCenter = {
+  lat: -1.286389, // Nairobi, Kenya
+  lng: 36.817223,
+};
+const GOOGLE_MAPS_API_KEY = process.env.NEXT_PUBLIC_GOOGLEAPIKEY as string;
+
 const getParcelsFromURL = () => {
   const searchParams = new URLSearchParams(window.location.search);
   const parcels: any[] = [];
@@ -145,7 +163,7 @@ const getParcelsFromURL = () => {
 
   return parcels;
 };
-const MainPage = ({
+export default function MainView({
   userprofile,
   emptyTitle,
   emptyStateSubtext,
@@ -162,8 +180,8 @@ const MainPage = ({
   loans,
   myloans,
 
-}: CollectionProps) => {
-  // const isAdCreator = pathname === "/ads/";
+}: CollectionProps) {
+
   const [newpage, setnewpage] = useState(false);
   const observer = useRef<IntersectionObserver | null>(null);
   const [data, setAds] = useState<IdynamicAd[]>([]); // Initialize with an empty array
@@ -248,7 +266,7 @@ const MainPage = ({
 
 
   useEffect(() => {
-    console.log(categoryList);
+
     const fetchData = async () => {
       const params = new URLSearchParams(window.location.search);
       const id = params.get("Ad");
@@ -369,7 +387,9 @@ const MainPage = ({
 
   const handleSidebarToggle = (e: React.MouseEvent) => {
     e.stopPropagation();
-    setShowSidebar(!showSidebar);
+    setShowCategories(false);
+    setShowList(true);
+    setShowMap(false);
   };
   const [isChatOpen, setChatOpen] = useState(false);
   const toggleChat = () => {
@@ -823,12 +843,6 @@ const MainPage = ({
 
     if (node) observer.current.observe(node);
   };
-  const breakpointColumns = {
-    default: 4, // 3 columns on large screens
-    1100: 3, // 2 columns for screens <= 1100px
-    700: 2, // 1 column for screens <= 700px
-  };
-
 
 
   const footerRef = useRef<HTMLDivElement | null>(null);
@@ -917,8 +931,243 @@ const MainPage = ({
 
 
 
+
+
+
+
+  const [selectedCategory, setSelectedCategory] = useState(queryObject.subcategory);
+  const [distance, setDistance] = useState(200);
+  const [showList, setShowList] = useState(true);
+  const [showCategories, setShowCategories] = useState(true);
+  const [showMap, setShowMap] = useState(true);
+  const [showLocationModal, setShowLocationModal] = useState(false);
+  const [selectedLocation, setSelectedLocation] = useState("");
+
+  const [selectedLandUse, setSelectedLandUse] = useState([]);
+  const [ownership, setOwnership] = useState("");
+  const [onlyVerified, setOnlyVerified] = useState(false);
+  const [postedWithin, setPostedWithin] = useState("");
+  const [clearQuery, setclearQuery] = useState(false);
+
+  // Toggle property list
+  useEffect(() => {
+    const isMobile = window.innerWidth < 640; // Tailwind's sm breakpoint
+
+    if (isMobile) {
+      setShowCategories(false);
+      setShowList(true);
+      setShowMap(false); // Show only list on mobile
+    } else {
+      setShowCategories(true);
+      setShowList(true);
+      setShowMap(true); // Show both on desktop
+    }
+  }, []);
+  const toggleMap = () => {
+    if (!showMap && !showList) setShowList(true); // always show at least one
+    setShowMap(!showMap);
+  };
+
+  const toggleList = () => {
+    if (!showMap && !showList) setShowMap(true);
+    setShowList(!showList);
+  };
+
+
+  const toggleMapCommit = () => {
+    setShowList(false);
+    setShowMap(true);
+  };
+  const toggleListCommit = () => {
+    setShowList(true);
+    setShowMap(false);
+  };
+
+  //const [selectedCoordinates, setSelectedCoordinates] = useState<{ lat: number; lng: number } | null>(null);
+
+  const [allAds, setAllAds] = useState<any[]>([]); // All ads fetched from backend
+  const [mapCenter, setMapCenter] = useState(defaultCenter);
+  const [selectedAd, setSelectedAd] = useState<any | null>(null);
+
+  const [zoom, setZoom] = useState<number>(12);
+
+  const { isLoaded } = useLoadScript({
+    googleMapsApiKey: GOOGLE_MAPS_API_KEY,
+    libraries: ["places", "geometry", "drawing"],
+  });
+  const [hasFetched, setHasFetched] = useState(false);
+  // Before mount
+
+  // Fetch ads on component mount or when newqueryObject changes
+  useEffect(() => {
+    fetchAds();
+  }, [newqueryObject]); // 🚫 remove radius from dependencies
+
+
+
+
+
+  const [breakpointColumns, setBreakpointColumns] = useState(1); // Default to 1
+  const listRef = useRef<HTMLDivElement>(null);
+
+  useEffect(() => {
+    const observer = new ResizeObserver((entries) => {
+      for (let entry of entries) {
+        const width = entry.contentRect.width;
+        if (width < 340) {
+          setBreakpointColumns(1);
+        }
+        else if (width < 640) {
+          setBreakpointColumns(2);
+        } else if (width < 1024) {
+          setBreakpointColumns(4);
+        } else if (width < 1280) {
+          setBreakpointColumns(5);
+        } else {
+          setBreakpointColumns(6);
+        }
+      }
+    });
+
+    if (listRef.current) {
+      observer.observe(listRef.current);
+    }
+
+    return () => {
+      if (listRef.current) {
+        observer.unobserve(listRef.current);
+      }
+    };
+  }, []);
+
+  const mapRef = useRef<google.maps.Map | null>(null);
+  //const circleRef = useRef<google.maps.Circle | null>(null);
+
+  // Handle circle creation and bounds fit
+  useEffect(() => {
+    if (!mapRef.current || !mapCenter) return;
+
+    // Remove old circle
+    // if (circleRef.current) {
+    // circleRef.current.setMap(null);
+    //}
+
+    // Create new circle
+    //const newCircle = new google.maps.Circle({
+    //  center: mapCenter,
+    //  radius: distance * 1000, // km to meters
+    //  map: mapRef.current,
+    //  fillColor: "#4285F4",
+    //  fillOpacity: 0.2,
+    //  strokeColor: "#4285F4",
+    //  strokeOpacity: 1,
+    //  strokeWeight: 1,
+    //});
+
+    //circleRef.current = newCircle;
+
+    // Fit bounds logic
+    const bounds = new google.maps.LatLngBounds();
+
+    if (data.length > 0) {
+      // Extend bounds to each marker
+      data.forEach((property: any) => {
+        bounds.extend(
+          new google.maps.LatLng(
+            property.data.propertyarea.location.coordinates[0],
+            property.data.propertyarea.location.coordinates[1]
+          )
+        );
+      });
+
+      // Also extend to center in case ads are offset
+      bounds.extend(new google.maps.LatLng(mapCenter.lat, mapCenter.lng));
+
+      mapRef.current.fitBounds(bounds);
+    } else {
+      // If no data, fit to the circle's bounds
+      //const circleBounds = newCircle.getBounds();
+      // if (circleBounds) {
+      //  mapRef.current.fitBounds(circleBounds);
+      //}
+    }
+  }, [mapCenter, distance, data]);
+  const [selectedAddress, setSelectedAddress] = useState("");
+
+  useEffect(() => {
+    if (!mapRef.current || !mapCenter) return;
+
+    const geocoder = new google.maps.Geocoder();
+    geocoder.geocode({ location: mapCenter }, (results, status) => {
+      if (status === "OK" && results && results.length > 0) {
+        const components = results[0].address_components;
+
+        let town = "";
+        let country = "";
+
+        components.forEach((comp) => {
+          if (comp.types.includes("locality")) {
+            town = comp.long_name;
+          }
+          if (comp.types.includes("country")) {
+            country = comp.long_name;
+          }
+        });
+
+        if (town && country) {
+          setSelectedAddress(`${town}, ${country}`);
+        } else {
+          // fallback to formatted_address
+          setSelectedAddress(results[0].formatted_address);
+        }
+      } else {
+        setSelectedAddress("Unknown location");
+      }
+    });
+
+  }, [mapCenter, mapRef.current]);
+
+
+
+  const [open, setOpen] = useState(false);
+  const [selected, setSelected] = useState(options[0]);
+
+  const handleSelectOpt = (opt: typeof options[number]) => {
+    setSelected(opt);
+    setOpen(false);
+    setShowMap(opt.value === 'map' || opt.value === 'both');
+    setShowList(opt.value === 'list' || opt.value === 'both');
+  };
+  const [priceRange, setPriceRange] = useState<[number, number]>([500000, 20000000]);
+
+  const minPrice = 0;
+  const maxPrice = 100_000_000;
+  const getRangeGradient = (min: number, max: number) => {
+    const startPercent = ((min - minPrice) / (maxPrice - minPrice)) * 100;
+    const endPercent = ((max - minPrice) / (maxPrice - minPrice)) * 100;
+
+    return `linear-gradient(to right, #d1d5db ${startPercent}%, #16a34a ${startPercent}%, #16a34a ${endPercent}%, #d1d5db ${endPercent}%)`;
+  };
+
+
+
+
+
+
+  const [adsCount, setAdsCount] = useState<any>([]);
+  const [AdsCountPerVerifiedTrue, setAdsCountPerVerifiedTrue] = useState<any>([]);
+  const [AdsCountPerVerifiedFalse, setAdsCountPerVerifiedFalse] = useState<any>([]);
+  const [loadingCount, setLoadingCount] = useState<boolean>(true);
+
+
+  const [landSize, setLandSize] = useState([0, 10000]);
+  const now = new Date();
+  const [filteredProperties, setFilteredProperties] = useState<IdynamicAd[]>([]);
+  const [averagePricePerAcre, setAveragePricePerAcre] = useState(0);
+
+
   return (
-    <div className="relative flex w-full h-screen">
+    <div className="flex bg-[#e4ebeb] flex-col lg:flex-row w-full h-screen overflow-hidden">
       <Head>
         <title>mapa | Buy, Sell & Rent Properties and More in Kenya</title>
         <meta
@@ -949,55 +1198,223 @@ const MainPage = ({
         <link rel="canonical" href="https://mapa.co.ke" />
       </Head>
 
+      {/* Mobile Top Bar */}
+      <div className="fixed top-0 left-0 right-0 z-50 bg-[#e4ebeb] p-0 border-b flex items-center justify-between">
+        {showCategories && (
+          <div className="w-[360px] hidden lg:inline">
+
+          </div>)}
+
+        <div
+          className={`bg-gradient-to-b from-green-600 to-green-600 lg:from-[#e4ebeb] justify-center pl-2 pr-2 h-[60px] lg:to-[#e4ebeb] transition-all duration-300 overflow-hidden w-full flex flex-col items-center ${showBottomNav ? "max-h-[60px] opacity-100" : "max-h-0 opacity-0"
+            }`}
+        >
+          <div className="w-full h-full justify-between flex items-center">
+            <div className="flex items-center gap-1">
+              <img src="/logo_white.png" alt="Logo" className="w-8 h-8 lg:hidden rounded-full" />
+              <img src="/logo.png" alt="Logo" className="w-8 h-8 hidden lg:inline rounded-full" />
+              <StyledBrandName />
+            </div>
+
+            <div className="flex gap-2 items-center"><div className="hidden lg:inline">
+              <div className="flex items-center gap-2">
+                <SignedIn>
+                  <div
+                    className="w-8 h-8 flex items-center justify-center rounded-full dark:bg-[#131B1E] dark:hover:bg-[#2D3236] bg-white hover:bg-gray-100 emerald-500 tooltip tooltip-bottom hover:cursor-pointer"
+                    data-tip="Messages"
+                    onClick={() => {
+                      handleOpenBook();
+                    }}
+                  >
+                    <TooltipProvider>
+                      <Tooltip>
+                        <TooltipTrigger asChild>
+                          <BookmarkIcon sx={{ fontSize: 16 }} className="" />
+                        </TooltipTrigger>
+                        <TooltipContent>
+                          <p>Bookmark</p>
+                        </TooltipContent>
+                      </Tooltip>
+                    </TooltipProvider>
+                  </div>
+                </SignedIn>
+                <SignedOut>
+                  <div
+                    className="w-8 h-8 flex items-center justify-center rounded-full dark:bg-[#131B1E] dark:hover:bg-[#2D3236] bg-white hover:bg-gray-100 tooltip tooltip-bottom hover:cursor-pointer"
+                    data-tip="Messages"
+                    onClick={() => {
+                      setIsOpenP(true);
+                      router.push("/sign-in");
+                    }}
+                  >
+                    <TooltipProvider>
+                      <Tooltip>
+                        <TooltipTrigger asChild>
+                          <BookmarkIcon sx={{ fontSize: 16 }} />
+                        </TooltipTrigger>
+                        <TooltipContent>
+                          <p>Bookmark</p>
+                        </TooltipContent>
+                      </Tooltip>
+                    </TooltipProvider>
+                  </div>
+                </SignedOut>
+                <SignedIn>
+                  <div
+                    className="w-8 h-8 flex items-center justify-center rounded-full dark:bg-[#131B1E] dark:hover:bg-[#2D3236] bg-white hover:bg-gray-100 tooltip tooltip-bottom hover:cursor-pointer"
+                    data-tip="Messages"
+                    onClick={() => {
+                      handleOpenChat();
+                    }}
+                  >
+                    <TooltipProvider>
+                      <Tooltip>
+                        <TooltipTrigger asChild>
+                          <div className="relative flex items-center justify-center">
+                            <MessageIcon sx={{ fontSize: 16 }} className="absolute " />
+                            <div className="absolute z-10">
+                              <Unreadmessages userId={userId} popup={"home"} />
+                            </div>
+                          </div>
+                        </TooltipTrigger>
+                        <TooltipContent>
+                          <div
+                            onClick={() => {
+                              handleOpenChat();
+                            }}
+                            className="flex gap-1"
+                          >
+                            Chats
+                            <Unreadmessages userId={userId} popup={"home"} />
+                          </div>
+                        </TooltipContent>
+                      </Tooltip>
+                    </TooltipProvider>
+                  </div>
+                </SignedIn>
+                <SignedOut>
+                  <div
+                    className="w-8 h-8 flex items-center justify-center rounded-full dark:bg-[#131B1E] dark:hover:bg-[#2D3236] bg-white tooltip tooltip-bottom hover:cursor-pointer"
+                    data-tip="Messages"
+                    onClick={() => {
+                      setIsOpenP(true);
+                      router.push("/sign-in");
+                    }}
+                  >
+                    <TooltipProvider>
+                      <Tooltip>
+                        <TooltipTrigger asChild>
+                          <MessageIcon sx={{ fontSize: 16 }} className="absolute" />
+                        </TooltipTrigger>
+                        <TooltipContent>
+                          <p>Message</p>
+                        </TooltipContent>
+                      </Tooltip>
+                    </TooltipProvider>
+                  </div>
+                </SignedOut>
+
+
+                <div
+                  className="w-8 h-8 flex items-center justify-center rounded-full dark:bg-[#131B1E] dark:hover:bg-[#2D3236] bg-white hover:bg-gray-100 tooltip tooltip-bottom hover:cursor-pointer"
+                  data-tip="Messages"
+                  onClick={() => {
+                    handleOpenPlan();
+                  }}
+                >
+                  <TooltipProvider>
+                    <Tooltip>
+                      <TooltipTrigger asChild>
+                        <DiamondIcon sx={{ fontSize: 16 }} className="" />
+                      </TooltipTrigger>
+                      <TooltipContent>
+                        <p>Premium Services</p>
+                      </TooltipContent>
+                    </Tooltip>
+                  </TooltipProvider>
+                </div>
+                <div>
+                  <SignedIn>
+
+                    <Button onClick={() => {
+                      handleOpenSell();
+                    }} variant="default" className="flex bg-green-600 hover:bg-green-700 items-center gap-2">
+                      <AddOutlinedIcon sx={{ fontSize: 16 }} /> SELL
+                    </Button>
+
+                  </SignedIn>
+
+
+                </div>
+                <div>
+                  <SignedOut>
+                    <Button onClick={() => {
+                      setIsOpenP(true);
+                      router.push("/sign-in");
+                    }} variant="default" className="flex bg-green-600 hover:bg-green-700 items-center gap-2">
+                      <AddOutlinedIcon sx={{ fontSize: 16 }} /> SELL
+                    </Button>
+
+
+                  </SignedOut>
+                </div>
+              </div>
+            </div>
+
+              <div className="flex gap-2">
+                <SignedIn>
+                  <div className="w-8 h-8 flex items-center justify-center rounded-full dark:bg-[#131B1E] dark:hover:bg-[#2D3236] bg-white tooltip tooltip-bottom hover:cursor-pointer">
+                    <UserButton afterSignOutUrl="/" />
+                  </div>
+                </SignedIn>
+
+                <MobileNav userstatus={userprofile?.user?.status ?? "User"} userId={userId ?? null} user={userprofile?.user ?? []}
+                  popup={"home"}
+                  handleOpenSell={handleOpenSell}
+                  handleOpenBook={handleOpenBook}
+                  handleOpenPlan={handleOpenPlan}
+                  handleOpenChat={handleOpenChat}
+                  handleOpenShop={handleOpenShop}
+                  handleOpenPerfomance={handleOpenPerfomance}
+                  handleOpenSettings={handleOpenSettings}
+                  handleOpenAbout={handleOpenAbout}
+                  handleOpenTerms={handleOpenTerms}
+                  handleOpenPrivacy={handleOpenPrivacy}
+                  handleOpenSafety={handleOpenSafety}
+                  onClose={handleClose} />
+              </div>
+
+            </div>
+          </div>
+        </div>
+
+
+
+
+
+
+        <AppPopup />
+
+
+      </div>
+
       {/* Sidebar */}
-      <div
-        onClick={(e) => e.stopPropagation()} // Prevent sidebar from closing on itself click
-        className={`bg-white shadow-lg transition-transform duration-300 ease-in-out fixed md:relative z-10 ${showSidebar
-            ? "w-full md:w-1/4 p-3 transform translate-x-0"
-            : "-translate-x-full md:w-0 md:translate-x-0"
-          }`}
-      >
-        <Button onClick={handleSidebarToggle} className="mb-4 md:hidden">
-          {showSidebar ? "Hide" : "Show"} Sidebar
-        </Button>
+      {showCategories && (
+        <aside className="fixed lg:static top-14 left-0 z-50 bg-white w-[300px] lg:w-[280px] h-[calc(100vh-4rem)] lg:h-[calc(100vh-0rem)] overflow-y-auto p-1 border-r shadow-md lg:shadow-none transform transition-transform duration-300 lg:translate-x-0 translate-x-0 lg:flex flex-col">
+          <div className="flex flex-col space-y-0 h-full">
+            <div className="flex justify-between lg:justify-center items-center w-full">
+              <p className="p-4 text-gray-500 font-bold">CATEGORIES</p>
 
-        {showSidebar && (
-
-          <div className="flex flex-col space-y-4 h-full">
-            {/* <div className="flex flex-col space-y-4 h-full overflow-y-auto">*/}
-            <div className="flex justify-between items-center w-full">
-              <p className="p-1">CATEGORIES</p>
-              <SignedIn>
-
-                <Button onClick={() => {
-                  handleOpenSell();
-
-                }} variant="outline" className="flex items-center gap-2">
-                  <AddOutlinedIcon sx={{ fontSize: 16 }} /> SELL
-                </Button>
-
-              </SignedIn>
-
-              <SignedOut>
-                <Button onClick={() => {
-                  setIsOpenP(true);
-                  router.push("/sign-in");
-                }} variant="outline" className="flex items-center gap-2">
-                  <AddOutlinedIcon sx={{ fontSize: 16 }} /> SELL
-                </Button>
-
-
-              </SignedOut>
-              <Button onClick={handleSidebarToggle} className="md:hidden">
+              <Button onClick={handleSidebarToggle} className="md:hidden bg-green-600 rounded-l-full">
                 <X />
               </Button>
             </div>
             {/* Scroll Buttons */}
             <div className="relative flex-1 overflow-hidden">
-          
+
               <ScrollArea
                 ref={viewportRef_}
-                className="h-full overflow-y-auto text-sm lg:text-base w-full dark:bg-[#2D3236] bg-white rounded-t-md border p-4">
+                className="h-full overflow-y-auto text-sm lg:text-base w-full dark:bg-[#2D3236] bg-white rounded-md border p-4">
 
                 <div className="relative flex z-20">
 
@@ -1031,8 +1448,8 @@ const MainPage = ({
                             }}
                             onMouseEnter={() => setHoveredCategory(category.name)}
                             className={`relative text-black dark:text-[#F1F3F3] flex flex-col items-center justify-center cursor-pointer p-2 border-b dark:border-gray-600 dark:hover:bg-[#131B1E] hover:bg-green-100 ${hoveredCategory === category.name
-                                ? "bg-green-100 dark:bg-[#131B1E]"
-                                : "dark:bg-[#2D3236] bg-white"
+                              ? "bg-green-100 dark:bg-[#131B1E]"
+                              : "dark:bg-[#2D3236] bg-white"
                               } `}
                           >
                             <div className={`flex gap-1 items-center mb-1 h-full w-full`}>
@@ -1051,8 +1468,8 @@ const MainPage = ({
                                 <div className="flex flex-col">
                                   <h2
                                     className={`text-xs font-bold ${category.name === "Wanted Ads" ? (category.adCount + loans.adCount) > 0 : category.adCount > 0
-                                        ? ""
-                                        : "text-gray-500 dark:text-gray-500"
+                                      ? ""
+                                      : "text-gray-500 dark:text-gray-500"
                                       } `}
                                   >
                                     {category.name}
@@ -1066,8 +1483,8 @@ const MainPage = ({
                               </span>
                               <span
                                 className={`text-right my-auto ${category.adCount > 0
-                                    ? ""
-                                    : "text-gray-500 dark:text-gray-500"
+                                  ? ""
+                                  : "text-gray-500 dark:text-gray-500"
                                   } `}
                               >
                                 <ArrowForwardIosIcon sx={{ fontSize: 16 }} />
@@ -1087,37 +1504,15 @@ const MainPage = ({
 
                 </div>
               </ScrollArea>
-
-              {/*  <div className="absolute bottom-1 left-1/2 z-50 flex flex-col gap-2">
-    {!showScrollUp && (
-          <button
-            onClick={() => scrollBy(300)}
-            className="bg-[#e4ebeb] text-black p-0 h-10 w-10 rounded-full shadow"
-          >
-           <KeyboardArrowDownOutlinedIcon/>
-          </button>
-        )}
-       
-      </div>*/}
             </div>
           </div>
-        )}
-      </div>
-
-      {/* Overlay */}
-      {showSidebar && window.innerWidth < 768 && (
-        <div
-          className="fixed inset-0 bg-black bg-opacity-50 z-40 md:hidden"
-          onClick={() => setShowSidebar(false)}
-        ></div>
+        </aside>
       )}
 
-      {/* Ads Section */}
-      <div
-        className={`flex-1 flex-col transition-all duration-300 h-screen ${showSidebar ? "hidden md:block" : "block"
-          }`}
-      >
 
+      {/* Main Content */}
+      <main className="flex-1 bg-[#e4ebeb] flex flex-col p-2 h-full overflow-hidden pt-[60px]">
+        {/* Header */}
         {hoveredCategory && (
           <div
             className={`flex flex-col absolute w-[290px] top-20 z-20 dark:bg-[#2D3236] bg-white p-2 shadow-lg transition-all duration-300`}
@@ -1178,8 +1573,8 @@ const MainPage = ({
                         <div className="flex flex-col">
                           <h2
                             className={`text-xs font-bold ${sub.subcategory?.trim().toLowerCase() === "Property Financing Requests".toLowerCase() ? (sub.adCount + loans.adCount) > 0 : sub.adCount > 0
-                                ? ""
-                                : "text-gray-500 dark:text-gray-500"
+                              ? ""
+                              : "text-gray-500 dark:text-gray-500"
                               } `}
                           >
                             {sub.subcategory}
@@ -1198,378 +1593,391 @@ const MainPage = ({
 
           </div>
         )}
-        <div onMouseEnter={() => setHoveredCategory(null)} className="relative p-0 lg:p-2 h-screen flex flex-col">
-          <Button
-            onClick={handleSidebarToggle}
-            className="hidden lg:inline absolute bottom-5 left-4 z-10 md:block bg-green-600 text-white shadow-lg hover:bg-green-700"
-          >
-            {showSidebar ? (<><KeyboardArrowLeftOutlinedIcon /> Hide Categories</>) : (<><KeyboardArrowRightOutlinedIcon /> Show Categories</>)}
-          </Button>
+        <div className="flex justify-between items-center gap-1 m-1">
+          <HeaderMain handleFilter={handleFilter} handleOpenPlan={handleOpenPlan} AdsCountPerRegion={AdsCountPerRegion} queryObject={newqueryObject}
+            handleAdEdit={handleAdEdit}
+            handleAdView={handleAdView}
+            handleCategory={handleCategory}
+            handleOpenSell={handleOpenSell}
+            handleOpenSearchByTitle={handleOpenSearchByTitle}
+            userName={userName}
+            userImage={userImage}
+          />
+          <div className="relative hidden lg:inline w-48 text-sm">
+            <button
+              onClick={() => setOpen(!open)}
+              className="flex items-center justify-between w-full px-4 py-2 border rounded bg-white shadow-sm"
+            >
+              <span className="flex items-center gap-2">
+                {selected.icon}
+                {selected.label}
+              </span>
+              <svg
+                className="w-4 h-4 ml-2"
+                fill="none"
+                viewBox="0 0 24 24"
+                stroke="currentColor"
+              >
+                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M19 9l-7 7-7-7" />
+              </svg>
+            </button>
 
-          {/* Header Section */}
-          <div className="flex flex-col gap-0 top-0 left-0 w-full bg-gradient-to-b from-[#e4ebeb] to-[#e4ebeb] lg:from-white lg:to-white p-0 lg:shadow-md z-10 md:relative md:w-auto md:shadow-none">
+            {open && (
+              <ul className="absolute mt-1 w-full bg-white border rounded shadow z-50">
+                {options.map((opt) => (
+                  <li
+                    key={opt.value}
+                    onClick={() => handleSelectOpt(opt)}
+                    className="cursor-pointer px-4 py-2 hover:bg-gray-100 flex items-center gap-2"
+                  >
+                    {opt.icon}
+                    {opt.label}
+                  </li>
+                ))}
+              </ul>
+            )}
+          </div>
+        </div>
+
+
+        <div className="relative flex-1 overflow-hidden">
+          {/* Toggle Button */}
+
+          {/* Dynamic Layout */}
+          <div
+            className="grid gap-4 h-full transition-all duration-300 relative"
+            style={{
+              gridTemplateColumns:
+                showList && showMap
+                  ? '1fr 1fr'
+                  : showList || showMap
+                    ? '1fr'
+                    : '0fr',
+            }}
+          >
+            {/* Property List */}
             <div
-              className={`bg-gradient-to-b from-green-600 to-green-600 lg:from-white justify-center pl-2 pr-2 h-[60px] lg:to-white transition-all duration-300 overflow-hidden w-full flex flex-col items-center ${showBottomNav ? "max-h-[60px] opacity-100" : "max-h-0 opacity-0"
+              ref={listRef}
+              className={`relative transition-all b-white rounded-sm lg:p-1 duration-300 overflow-y-auto ${showList ? 'block' : 'hidden'
                 }`}
             >
-              <div className="w-full h-full justify-between flex items-center">
-                <div className="flex items-center gap-1">
-                  <img src="/logo_white.png" alt="Logo" className="w-8 h-8 lg:hidden rounded-full" />
-                  <img src="/logo.png" alt="Logo" className="w-8 h-8 hidden lg:inline rounded-full" />
-                  <StyledBrandName />
-                </div>
-
-                <div className="flex gap-2 items-center"><div className="hidden lg:inline">
-                  <div className="flex items-center gap-2">
-                    <SignedIn>
-                      <div
-                        className="w-8 h-8 flex items-center justify-center rounded-full dark:bg-[#131B1E] dark:hover:bg-[#2D3236] bg-[#e4ebeb] hover:bg-gray-300 emerald-500 tooltip tooltip-bottom hover:cursor-pointer"
-                        data-tip="Messages"
-                        onClick={() => {
-                          handleOpenBook();
-                        }}
-                      >
-                        <TooltipProvider>
-                          <Tooltip>
-                            <TooltipTrigger asChild>
-                              <BookmarkIcon sx={{ fontSize: 16 }} className="" />
-                            </TooltipTrigger>
-                            <TooltipContent>
-                              <p>Bookmark</p>
-                            </TooltipContent>
-                          </Tooltip>
-                        </TooltipProvider>
-                      </div>
-                    </SignedIn>
-                    <SignedOut>
-                      <div
-                        className="w-8 h-8 flex items-center justify-center rounded-full dark:bg-[#131B1E] dark:hover:bg-[#2D3236] bg-[#e4ebeb] hover:bg-gray-300 tooltip tooltip-bottom hover:cursor-pointer"
-                        data-tip="Messages"
-                        onClick={() => {
-                          setIsOpenP(true);
-                          router.push("/sign-in");
-                        }}
-                      >
-                        <TooltipProvider>
-                          <Tooltip>
-                            <TooltipTrigger asChild>
-                              <BookmarkIcon sx={{ fontSize: 16 }} />
-                            </TooltipTrigger>
-                            <TooltipContent>
-                              <p>Bookmark</p>
-                            </TooltipContent>
-                          </Tooltip>
-                        </TooltipProvider>
-                      </div>
-                    </SignedOut>
-                    <SignedIn>
-                      <div
-                        className="w-8 h-8 flex items-center justify-center rounded-full dark:bg-[#131B1E] dark:hover:bg-[#2D3236] bg-[#e4ebeb] hover:bg-gray-300 tooltip tooltip-bottom hover:cursor-pointer"
-                        data-tip="Messages"
-                        onClick={() => {
-                          handleOpenChat();
-                        }}
-                      >
-                        <TooltipProvider>
-                          <Tooltip>
-                            <TooltipTrigger asChild>
-                              <div className="relative flex items-center justify-center">
-                                <MessageIcon sx={{ fontSize: 16 }} className="absolute " />
-                                <div className="absolute z-10">
-                                  <Unreadmessages userId={userId} popup={"home"} />
-                                </div>
-                              </div>
-                            </TooltipTrigger>
-                            <TooltipContent>
-                              <div
-                                onClick={() => {
-                                  handleOpenChat();
-                                }}
-                                className="flex gap-1"
-                              >
-                                Chats
-                                <Unreadmessages userId={userId} popup={"home"} />
-                              </div>
-                            </TooltipContent>
-                          </Tooltip>
-                        </TooltipProvider>
-                      </div>
-                    </SignedIn>
-                    <SignedOut>
-                      <div
-                        className="w-8 h-8 flex items-center justify-center rounded-full dark:bg-[#131B1E] dark:hover:bg-[#2D3236] bg-white tooltip tooltip-bottom hover:cursor-pointer"
-                        data-tip="Messages"
-                        onClick={() => {
-                          setIsOpenP(true);
-                          router.push("/sign-in");
-                        }}
-                      >
-                        <TooltipProvider>
-                          <Tooltip>
-                            <TooltipTrigger asChild>
-                              <MessageIcon sx={{ fontSize: 16 }} className="absolute" />
-                            </TooltipTrigger>
-                            <TooltipContent>
-                              <p>Message</p>
-                            </TooltipContent>
-                          </Tooltip>
-                        </TooltipProvider>
-                      </div>
-                    </SignedOut>
-
-
-                    <div
-                      className="w-8 h-8 flex items-center justify-center rounded-full dark:bg-[#131B1E] dark:hover:bg-[#2D3236] bg-[#e4ebeb] hover:bg-gray-300 tooltip tooltip-bottom hover:cursor-pointer"
-                      data-tip="Messages"
-                      onClick={() => {
-                        handleOpenPlan();
-                      }}
-                    >
-                      <TooltipProvider>
-                        <Tooltip>
-                          <TooltipTrigger asChild>
-                            <DiamondIcon sx={{ fontSize: 16 }} className="" />
-                          </TooltipTrigger>
-                          <TooltipContent>
-                            <p>Premium Services</p>
-                          </TooltipContent>
-                        </Tooltip>
-                      </TooltipProvider>
-                    </div>
-                    <div>
-                      <SignedIn>
-
-                        <Button onClick={() => {
-                          handleOpenSell();
-                        }} variant="default" className="flex bg-green-600 hover:bg-green-700 items-center gap-2">
-                          <AddOutlinedIcon sx={{ fontSize: 16 }} /> SELL
-                        </Button>
-
-                      </SignedIn>
-
-
-                    </div>
-                    <div>
-                      <SignedOut>
-                        <Button onClick={() => {
-                          setIsOpenP(true);
-                          router.push("/sign-in");
-                        }} variant="default" className="flex bg-green-600 hover:bg-green-700 items-center gap-2">
-                          <AddOutlinedIcon sx={{ fontSize: 16 }} /> SELL
-                        </Button>
-
-
-                      </SignedOut>
-                    </div>
-                  </div>
-                </div>
-
-                  <div className="flex gap-2">
-                    <SignedIn>
-                      <div className="w-8 h-8 flex items-center justify-center rounded-full dark:bg-[#131B1E] dark:hover:bg-[#2D3236] bg-white tooltip tooltip-bottom hover:cursor-pointer">
-                        <UserButton afterSignOutUrl="/" />
-                      </div>
-                    </SignedIn>
-
-                    <MobileNav userstatus={userprofile?.user?.status ?? "User"} userId={userId ?? null} user={userprofile?.user ?? []}
-                      popup={"home"}
-                      handleOpenSell={handleOpenSell}
-                      handleOpenBook={handleOpenBook}
-                      handleOpenPlan={handleOpenPlan}
-                      handleOpenChat={handleOpenChat}
-                      handleOpenShop={handleOpenShop}
-                      handleOpenPerfomance={handleOpenPerfomance}
-                      handleOpenSettings={handleOpenSettings}
-                      handleOpenAbout={handleOpenAbout}
-                      handleOpenTerms={handleOpenTerms}
-                      handleOpenPrivacy={handleOpenPrivacy}
-                      handleOpenSafety={handleOpenSafety}
-                      onClose={handleClose} />
-                  </div>
-
-                </div>
-              </div>
-            </div>
-
-
-
-
-
-            <HeaderMain handleFilter={handleFilter} handleOpenPlan={handleOpenPlan} AdsCountPerRegion={AdsCountPerRegion} queryObject={newqueryObject}
-              handleAdEdit={handleAdEdit}
-              handleAdView={handleAdView}
-              handleCategory={handleCategory}
-              handleOpenSell={handleOpenSell}
-              handleOpenSearchByTitle={handleOpenSearchByTitle}
-              userName={userName}
-              userImage={userImage}
-            />
-            <AppPopup />
-
-
-
-          </div>
-
-
-
-
-
-          <div
-            ref={viewportRef}
-            className="h-full overflow-y-scroll bg-[#e4ebeb] lg:rounded-t-0 border"
-
-          >
-            <style jsx>{`
+              <style jsx>{`
     @media (max-width: 1024px) {
       div::-webkit-scrollbar {
         display: none;
       }
     }
   `}</style>
-            <div className="lg:hidden px-1">
-              <MenuSubmobileMain
-                categoryList={categoryList}
-                subcategoryList={subcategoryList}
-                handleSubCategory={handleSubCategory}
-                handleOpenSell={handleOpenSell}
+              <div className="lg:hidden px-1">
+                <MenuSubmobileMain
+                  categoryList={categoryList}
+                  subcategoryList={subcategoryList}
+                  handleSubCategory={handleSubCategory}
+                  handleOpenSell={handleOpenSell}
+                  handleCategory={handleCategory}
+                  handleOpenChat={handleOpenChat}
+                  handleOpenSearchTab={handleOpenSearchTab}
+                  handleOpenSettings={handleOpenSettings}
+                  handlePayNow={handlePay}
+                  userId={userId}
+                  loans={loans}
+                  user={userprofile}
+                  packagesList={packagesList}
+                />
+              </div>
+
+              {data?.length > 0 ? (<>
+
+                <Masonry
+                  breakpointCols={breakpointColumns}
+                  className="flex mt-2 lg:mt-0 gap-1 lg:gap-4 min-h-screen"
+                  columnClassName="bg-clip-padding"
+                >
+                  {data.map((ad: any, index: number) => {
+                    let isAdCreator;
+                    if (ad.loanterm) {
+                      isAdCreator = userId === ad.userId._id.toString();
+                    } else {
+                      isAdCreator = userId === ad.organizer._id.toString();
+                    }
+
+                    if (data.length === index + 1) {
+                      return (
+                        <div
+
+                          key={ad._id}
+                          className="flex justify-center"
+                        >
+                          {/* Render Ad */}
+                          {breakpointColumns === 1 ? (<HorizontalCardPublic
+                            ad={ad}
+                            userId={userId}
+                            isAdCreator={isAdCreator}
+                            handleAdEdit={handleAdEdit}
+                            handleAdView={handleAdView}
+                            handleOpenPlan={handleOpenPlan}
+                            //handleOpenChatId={handleOpenChatId}
+                            userName={userName}
+                            userImage={userImage}
+                          />) : (<CardAuto
+                            ad={ad}
+                            hasOrderLink={true}
+                            hidePrice={true}
+                            userId={userId}
+                            userName={userName}
+                            userImage={userImage}
+                            handleAdEdit={handleAdEdit}
+                            handleAdView={handleAdView}
+                            handleOpenPlan={handleOpenPlan}
+                            handleOpenChatId={handleOpenChatId}
+                          />)}
+                        </div>
+                      );
+                    } else {
+                      return (
+                        <div key={ad._id} className="flex justify-center">
+                          {/* Render Ad */}
+                          {breakpointColumns === 1 ? (<HorizontalCardPublic
+                            ad={ad}
+                            userId={userId}
+                            isAdCreator={isAdCreator}
+                            handleAdEdit={handleAdEdit}
+                            handleAdView={handleAdView}
+                            handleOpenPlan={handleOpenPlan}
+                            // handleOpenChatId={handleOpenChatId}
+                            userName={userName}
+                            userImage={userImage}
+                          />) : (<CardAuto
+                            ad={ad}
+                            hasOrderLink={true}
+                            hidePrice={true}
+                            userId={userId}
+                            userName={userName}
+                            userImage={userImage}
+                            handleAdEdit={handleAdEdit}
+                            handleAdView={handleAdView}
+                            handleOpenPlan={handleOpenPlan}
+                            handleOpenChatId={handleOpenChatId}
+                          />)}
+                        </div>
+                      );
+                    }
+                  })}
+                </Masonry>
+
+              </>) : (
+                loading === false && (
+                  <>
+                    <div className="flex items-center h-full w-full flex-col gap-1 rounded-sm bg-white py-28 text-center">
+                      <h3 className="font-semibold mb-2">{newqueryObject.category === 'Property services' ? (<>Service Providers</>) : (<>Properties</>)} within Kenya</h3>
+                      <p className="text-sm text-gray-500">No {newqueryObject.category === 'Property services' ? (<>Service Providers</>) : (<>Properties</>)} found.</p>
+                      <SignedIn>
+
+                        <Button onClick={() => {
+
+                          handleOpenSell();
+                          //router.push("/ads/create");
+
+                        }} variant="default">
+                          <AddOutlinedIcon sx={{ fontSize: 16 }} /> Create Ad
+                        </Button>
+
+                      </SignedIn>
+
+                      <SignedOut>
+                        <Button onClick={() => {
+                          // setIsOpenP(true);
+                          router.push("/sign-in");
+                        }} variant="outline">
+                          <AddOutlinedIcon sx={{ fontSize: 16 }} /> Create Ad
+                        </Button>
+
+
+                      </SignedOut>
+                    </div>
+                  </>
+                )
+              )}
+
+
+              {/* {loading && (
+
+                <div className="w-full rounded-sm bg-white h-full flex flex-col items-center justify-center">
+                  <h3 className="font-semibold mb-2">{newqueryObject.category === 'Property services' ? (<>Service Providers</>) : (<>Properties</>)} within Kenya</h3>
+                  <Image
+                    src="/assets/icons/loading2.gif"
+                    alt="loading"
+                    width={40}
+                    height={40}
+                    unoptimized
+                  />
+                </div>
+
+              )}*/}
+              <FloatingChatIcon onClick={toggleChat} isOpen={isChatOpen} />
+              <ChatWindow
+                isOpen={isChatOpen}
+                onClose={toggleChat}
+                senderId={userId || ''}
+                senderName={userName || ''}
+                senderImage={userImage || ''}
+                recipientUid={AdminId}
+                handleAdEdit={handleAdEdit}
+                handleAdView={handleAdView}
                 handleCategory={handleCategory}
-                handleOpenChat={handleOpenChat}
-                handleOpenSearchTab={handleOpenSearchTab}
-                handleOpenSettings={handleOpenSettings}
-                handlePayNow={handlePay}
-                userId={userId}
-                loans={loans}
-                user={userprofile}
-                packagesList={packagesList}
+                handleOpenSell={handleOpenSell}
+                handleOpenPlan={handleOpenPlan}
               />
-            </div>
 
-            {data.length > 0 ? (
-              <Masonry
-                breakpointCols={breakpointColumns}
-                className="p-1 mt-4 mb-20 lg:mb-0 lg:mt-0 w-full flex gap-2 lg:gap-4 overflow-hidden"
-                columnClassName="bg-clip-padding"
-              >
-                {data.map((ad: any, index: number) => {
-                  const hasOrderLink = collectionType === "Ads_Organized";
-                  const hidePrice = collectionType === "My_Tickets";
 
-                  return (
-                    <div
-                      ref={data.length === index + 1 ? lastAdRef : null}
-                      key={ad._id}
-                      className="flex justify-center w-full"
-                    >
-                      <CardAutoHeight
-                        ad={ad}
-                        hasOrderLink={hasOrderLink}
-                        hidePrice={hidePrice}
-                        userId={userId}
-                        userName={userName}
-                        userImage={userImage}
-                        handleAdEdit={handleAdEdit}
-                        handleAdView={handleAdView}
-                        handleOpenPlan={handleOpenPlan}
-                        handleOpenChatId={handleOpenChatId}
+              {loading && (
+                <div>
+                  {isInitialLoading ? (
+                    <div className="grid grid-cols-2 lg:grid-cols-4 gap-2">
+                      {Array.from({ length: 12 }).map((_, index) => (
+                        <div key={index} className="bg-[#e4ebeb] dark:bg-[#2D3236] p-4 rounded-lg shadow-md w-full">
+                          <Skeleton variant="rectangular" width="100%" height={140} />
+                          <Skeleton variant="text" width="80%" height={30} className="mt-2" />
+                          <Skeleton variant="text" width="60%" height={25} />
+                        </div>
+                      ))}
+                    </div>
+                  ) : (
+                    <div className="w-full rounded-sm bg-white h-full flex flex-col items-center justify-center">
+                      <h3 className="font-semibold mb-2">{newqueryObject.category === 'Property services' ? (<>Service Providers</>) : (<>Properties</>)} within Kenya</h3>
+                      <Image
+                        src="/assets/icons/loading2.gif"
+                        alt="loading"
+                        width={40}
+                        height={40}
+                        unoptimized
                       />
                     </div>
-                  );
-                })}
-              </Masonry>
-            ) : (
-              !loading && (
-                <div className="flex items-center justify-center min-h-[400px] w-full flex-col gap-3 rounded-[14px] bg-grey-50 py-28 text-center">
-                  <h3 className="font-bold text-[16px] lg:text-[25px]">{emptyTitle}</h3>
-                  <p className="text-sm lg:p-regular-14">{emptyStateSubtext}</p>
-
-                  <SignedIn>
-                    <Button onClick={() => handleOpenSell()} variant="default" className="flex items-center gap-2">
-                      <AddOutlinedIcon sx={{ fontSize: 16 }} /> Create Ad
-                    </Button>
-                  </SignedIn>
-
-                  <SignedOut>
-                    <Button onClick={() => { setIsOpenP(true); router.push("/sign-in"); }} variant="outline" className="flex items-center gap-2">
-                      <AddOutlinedIcon sx={{ fontSize: 16 }} /> Create Ad
-                    </Button>
-                  </SignedOut>
+                  )}
                 </div>
-              )
-            )}
-
-
-            <FloatingChatIcon onClick={toggleChat} isOpen={isChatOpen} />
-            <ChatWindow
-              isOpen={isChatOpen}
-              onClose={toggleChat}
-              senderId={userId || ''}
-              senderName={userName || ''}
-              senderImage={userImage || ''}
-              recipientUid={AdminId}
-              handleAdEdit={handleAdEdit}
-              handleAdView={handleAdView}
-              handleCategory={handleCategory}
-              handleOpenSell={handleOpenSell}
-              handleOpenPlan={handleOpenPlan}
-            />
-
-
-            {loading && (
-              <div>
-                {isInitialLoading ? (
-                  <div className="grid grid-cols-2 lg:grid-cols-4 gap-2">
-                    {Array.from({ length: 12 }).map((_, index) => (
-                      <div key={index} className="bg-[#e4ebeb] dark:bg-[#2D3236] p-4 rounded-lg shadow-md w-full">
-                        <Skeleton variant="rectangular" width="100%" height={140} />
-                        <Skeleton variant="text" width="80%" height={30} className="mt-2" />
-                        <Skeleton variant="text" width="60%" height={25} />
-                      </div>
-                    ))}
-                  </div>
-                ) : (
-                  <div className="w-full min-h-[400px] h-full flex flex-col items-center justify-center">
-                    <Image src="/assets/icons/loading2.gif" alt="loading" width={40} height={40} unoptimized />
-                  </div>
-                )}
+              )}
+              {/* Floating Map Button - Only on mobile */}
+              {showList && !showMap && (
+                <button
+                  className="fixed items-center flex gap-1 bottom-[60px] right-4 bg-green-600 text-white px-4 py-2 rounded-full shadow-lg sm:hidden"
+                  onClick={() => toggleMapCommit()}
+                >
+                  <MapIcon className="w-5 h-5" /> View Map
+                </button>
+              )}
+              <div className="hidden lg:inline">
+                <Footersub
+                  handleOpenAbout={handleOpenAbout}
+                  handleOpenTerms={handleOpenTerms}
+                  handleOpenPrivacy={handleOpenPrivacy}
+                  handleOpenSafety={handleOpenSafety}
+                />
               </div>
-            )}
-
-            <div className="hidden lg:inline">
-              <Footersub
-                handleOpenAbout={handleOpenAbout}
-                handleOpenTerms={handleOpenTerms}
-                handleOpenPrivacy={handleOpenPrivacy}
-                handleOpenSafety={handleOpenSafety}
-              />
             </div>
-          </div>
 
-
-
-
-
-
-
-          <footer>
-
-
+            {/* Map View */}
             <div
-              className={`lg:hidden fixed bottom-0 left-0 right-0 transition-transform duration-300 ${showBottomNav ? "translate-y-0" : "translate-y-full"
+              className={`relative mb-10 lg:mb-0 transition-all lg:rounded-xl shadow-md border duration-300 overflow-hidden ${showMap ? 'block' : 'hidden'
                 }`}
             >
-              <BottomNavigation
-                userId={userId}
-                popup={"home"}
-                onClose={handleClose}
-                handleOpenSell={handleOpenSell}
-                handleOpenChat={handleOpenChat}
-                handleOpenSettings={handleOpenSettings}
-                handleOpenSearchTab={handleOpenSearchTab}
-                handleOpenP={handleOpenP} />
+              {isLoaded ? (<><GoogleMap
+                mapContainerStyle={{ width: "100%", height: "100%" }}
+                center={mapCenter}
+                zoom={zoom}
+                onLoad={(map) => {
+                  mapRef.current = map;
+                }}
+                options={{
+                  zoomControl: true, // Enable zoom controls
+                  mapTypeControl: true, // Enable map type switch
+                  streetViewControl: true, // Enable Street View control
+                  fullscreenControl: true, // Enable Fullscreen button
+                  mapTypeId: "hybrid", // Hybrid = Satellite + Labels
+                  zoomControlOptions: {
+                    position: google.maps.ControlPosition.LEFT_BOTTOM, // Places zoom control at the bottom-right
+                  },
+                }}
+                onClick={(e) => {
+                  setMapCenter({ lat: e.latLng?.lat() || 0, lng: e.latLng?.lng() || 0 });
+                }
+                }
+              >
+
+
+                {data.map((property: any) => (
+                  <Marker
+                    key={property.id}
+                    onClick={() => setSelectedAd(property)}
+                    position={{
+                      lat: property.data.propertyarea.location.coordinates[0], // Latitude should be at index 1
+                      lng: property.data.propertyarea.location.coordinates[1], // Longitude should be at index 0
+                    }}
+                    icon={{
+                      url: "http://maps.google.com/mapfiles/ms/icons/green-dot.png", // Green marker
+                    }}
+                  />
+
+                ))}
+
+
+                {/* InfoWindow for selected ad */}
+                {selectedAd && (
+                  <InfoWindow
+                    position={{
+                      lat: selectedAd.data.propertyarea.location.coordinates[0], // Latitude should be at index 1
+                      lng: selectedAd.data.propertyarea.location.coordinates[1], // Longitude should be at index 0
+                    }}
+                    onCloseClick={() => setSelectedAd(null)}
+                  >
+                    <div
+                      className="relative bg-green-600 flex cursor-pointer items-center justify-center p-0 w-[150px] h-[100px] rounded-lg bg-cover bg-center text-white"
+                      style={{ backgroundImage: `url(${selectedAd.data.imageUrls[0]})` }}
+                    >
+                      <div
+                        onClick={() => {
+
+                          handleAdView(selectedAd);
+                        }}
+                        className="absolute cursor-pointer inset-0 bg-black/50 rounded-lg"
+                      ></div>
+                      <div className="relative cursor-pointer z-10 flex flex-col items-start p-2">
+                        <div
+                          onClick={() => {
+
+                            handleAdView(selectedAd);
+                          }}
+                          className=" text-xs text-white">
+                          {selectedAd.data.title}
+                        </div>
+                        <b className="text-xs font-semibold text-white">
+                          {formatKsh(selectedAd.data.price)}
+                        </b>
+                      </div>
+                    </div>
+                  </InfoWindow>
+                )}
+
+
+              </GoogleMap></>) : (<> <div className="absolute inset-0 z-5 flex items-center justify-center bg-white/70">
+                <div className="animate-spin rounded-full h-8 w-8 border-t-2 border-b-2 border-gray-800" />
+                <span className="ml-2 text-gray-700 font-medium">Loading map...</span>
+              </div></>)}
+
+              {/* Back to List Button */}
+              {showMap && !showList && (
+                <button
+                  className="flex items-center gap-1 absolute bottom-[60px] left-4 bg-white text-black px-3 py-1 rounded shadow"
+                  onClick={() => toggleListCommit()}
+                >
+                  ← Back to List <ListBulletIcon className="w-5 h-5" />
+                </button>
+              )}
             </div>
-          </footer>
+          </div>
         </div>
-      </div>
+
+
+      </main>
       <PopupCategory isOpen={isOpenCategory} onClose={handleCloseCategory} userId={userId} userName={userName} userImage={userImage} queryObject={newqueryObject} handleOpenSell={handleOpenSell} handleAdView={handleAdView} handleOpenAbout={handleOpenAbout} handleOpenTerms={handleOpenTerms} handleOpenPrivacy={handleOpenPrivacy} handleOpenSafety={handleOpenSafety} handleOpenBook={handleOpenBook} handleOpenPlan={handleOpenPlan} handleOpenChat={handleOpenChat}
         handleOpenShop={handleOpenShop}
         handleOpenPerfomance={handleOpenPerfomance}
@@ -1812,8 +2220,178 @@ const MainPage = ({
         onClose={handleClose}
         handleSubCategory={handleSubCategory} />
       <ProgressPopup isOpen={isOpenP} onClose={handleCloseP} />
-    </div>
-  );
-};
+      <footer>
 
-export default MainPage;
+
+        <div
+          className={`lg:hidden fixed bottom-0 left-0 right-0 transition-transform duration-300 ${showBottomNav ? "translate-y-0" : "translate-y-full"
+            }`}
+        >
+          <BottomNavigation
+            userId={userId}
+            popup={"home"}
+            onClose={handleClose}
+            handleOpenSell={handleOpenSell}
+            handleOpenChat={handleOpenChat}
+            handleOpenSettings={handleOpenSettings}
+            handleOpenSearchTab={handleOpenSearchTab}
+            handleOpenP={handleOpenP} />
+        </div>
+      </footer>
+    </div>
+
+  );
+}
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+

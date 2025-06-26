@@ -14,6 +14,7 @@ import {
   getAdsCountAllRegionCached
 } from "@/lib/actions/cached.actions";
 import EnhancedPropertySearch from "@/components/shared/EnhancedPropertySearch";
+import MainView from "@/components/shared/MainView";
 
 // ✅ ISR: Revalidate every 60 seconds
 export const revalidate = 60;
@@ -26,8 +27,8 @@ export default async function Home({ searchParams }: SearchParamProps) {
 
   const queryObject = searchParams
     ? Object.fromEntries(
-        Object.entries(searchParams).filter(([_, v]) => v !== undefined)
-      )
+      Object.entries(searchParams).filter(([_, v]) => v !== undefined)
+    )
     : {};
 
   let user: any = [];
@@ -45,7 +46,7 @@ export default async function Home({ searchParams }: SearchParamProps) {
     subcategoryList,
     packagesList,
     AdsCountPerRegion,
-   loans
+    loans
   ] = await Promise.all([
     getAllCategoriesCached(),
     getAllSubCategoriesCached(),
@@ -56,7 +57,7 @@ export default async function Home({ searchParams }: SearchParamProps) {
 
   return (
     <main>
-      <MainPage
+      <MainView
         emptyTitle="No Ads Found"
         emptyStateSubtext="Come back later"
         collectionType="All_Ads"
@@ -73,7 +74,7 @@ export default async function Home({ searchParams }: SearchParamProps) {
         loans={loans}
         myloans={myloans}
       />
-    
+
       <Toaster />
     </main>
   );

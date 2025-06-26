@@ -25,13 +25,14 @@ import { useRouter } from "next/navigation";
 import { IUser } from "@/lib/database/models/user.model";
 import { UserDefaultValues } from "@/constants";
 import { UserFormSchema } from "@/lib/validator";
-import { updateUserFromSettings } from "@/lib/actions/user.actions";
+import { updateUserFromSettings, updateUserPhone } from "@/lib/actions/user.actions";
 import { useToast } from "@/components/ui/use-toast";
 import { TextField } from "@mui/material";
 import { SignedIn, UserButton } from "@clerk/nextjs";
 import { useUploadThing } from "@/lib/uploadthing";
 import { FileuploaderBusiness } from "./FileuploaderBusiness";
 import { verificationStatus } from "@/lib/actions/verificationstatus";
+import PhoneVerification from "./PhoneVerification";
 
 type setingsProp = {
   type: "Create" | "Update";
@@ -130,8 +131,8 @@ const SettingsEdit = ({ user, type, userId }: setingsProp) => {
   const initialValues =
     user && type === "Update"
       ? {
-          ...user,
-        }
+        ...user,
+      }
       : UserDefaultValues;
   const [selectedDays, setSelectedDays] = useState<string[]>(
     user?.businessworkingdays ?? []
@@ -192,9 +193,9 @@ const SettingsEdit = ({ user, type, userId }: setingsProp) => {
           user: {
             ...values,
             imageUrl: uploadedImageUrl,
-            phone: phoneNumber
-              ? countryCode + removeLeadingZero(phoneNumber)
-              : "",
+            // phone: phoneNumber
+            // ? countryCode + removeLeadingZero(phoneNumber)
+            //  : "",
             whatsapp: whatsappNumber
               ? countryCodeWhatsapp + removeLeadingZero(whatsappNumber)
               : "",
@@ -213,7 +214,7 @@ const SettingsEdit = ({ user, type, userId }: setingsProp) => {
 
         if (updatedUser) {
           // form.reset();
-         // router.push(`/settings/`);
+          // router.push(`/settings/`);
           toast({
             title: "Successful!",
             description: "You have updated your details successfully",
@@ -291,6 +292,18 @@ const SettingsEdit = ({ user, type, userId }: setingsProp) => {
       return numberString;
     }
   }
+  const [changePhone, setChangePhone] = useState(false);
+  const handleVerified = async (phone: string) => {
+
+    await updateUserPhone(userId || '', phone);
+    const cleanNumber = phone.startsWith('+') ? phone.slice(1) : phone;
+    const countryCode = cleanNumber.slice(0, 3);
+    const localNumber = cleanNumber.slice(3);
+    setCountryCode('+' + countryCode)
+    setPhoneNumber(localNumber)
+    setChangePhone(false)
+    // You can now save the verified phone to your database
+  };
   return (
     <Form {...form}>
       <form
@@ -412,6 +425,178 @@ const SettingsEdit = ({ user, type, userId }: setingsProp) => {
             </AccordionContent>
           </AccordionItem>
           <AccordionItem value="item-2">
+            <AccordionTrigger>Contacts details</AccordionTrigger>
+            <AccordionContent>
+              <div className="p-1 rounded-[20px] m-0 dark:bg-[#131B1E] bg-white">
+                <div className="m-1">
+                  <div className="flex flex-col gap-5 mb-5 md:flex-row">
+
+
+                    {phoneNumber && !changePhone ? (<>
+
+                      <TextField
+                        disabled // ⛔ Prevent editing
+                        label={`Phone (Verified)`} // ✅ Optional: Indicate it's verified
+                        type="tel"
+                        value={`${countryCode}${phoneNumber}`}
+                        variant="outlined"
+                        InputProps={{
+                          readOnly: true,
+                          classes: {
+                            root: "bg-gray-100 dark:bg-[#2D3236] dark:text-gray-100",
+                            notchedOutline: "border-green-500",
+                            focused: "",
+                          },
+                        }}
+                        InputLabelProps={{
+                          classes: {
+                            root: "text-green-600 dark:text-green-400",
+                            focused: "text-green-600 dark:text-green-400",
+                          },
+                        }}
+                        className="w-full"
+                      />
+                      <div className="flex items-center justify-between mt-1">
+                        <p className="text-green-600 text-sm">✅ Phone verified</p>
+                        <button
+                          type="button"
+                          onClick={() => setChangePhone(true)}
+                          className="text-blue-600 text-sm underline ml-2"
+                        >
+                          Change
+                        </button>
+                      </div>
+
+                    </>) : (<>
+                      <div className="p-4">
+                        <h1 className="text-xl font-bold mb-4">Verify Your Phone</h1>
+                        <PhoneVerification onVerified={handleVerified} />
+                      </div>
+                    </>)}
+
+                  </div>
+
+                  <div className="flex flex-col gap-5 mb-5 md:flex-row">
+                    <FormField
+                      control={form.control}
+                      name="whatsapp"
+                      render={({ field }) => (
+                        <FormItem className="w-full">
+                          <FormControl>
+                            <div className="flex w-full gap-1">
+                              <select
+                                className="dark:bg-[#2D3236] dark:text-gray-100 bg-gray-100 p-1 text-sm lg:text-base border ml-2 rounded-sm w-[120px]"
+                                value={countryCodeWhatsapp}
+                                onChange={handleCountryCodeChangeWhatsapp}
+                              >
+                                <option value="+254">Kenya (+254)</option>
+                                <option value="+213">Algeria (+213)</option>
+                                <option value="+244">Angola (+244)</option>
+                                <option value="+229">Benin (+229)</option>
+                                <option value="+267">Botswana (+267)</option>
+                                <option value="+226">
+                                  Burkina Faso (+226)
+                                </option>
+                                <option value="+257">Burundi (+257)</option>
+                                <option value="+237">Cameroon (+237)</option>
+                                <option value="+238">Cape Verde (+238)</option>
+                                <option value="+236">
+                                  Central African Republic (+236)
+                                </option>
+                                <option value="+235">Chad (+235)</option>
+                                <option value="+269">Comoros (+269)</option>
+                                <option value="+243">
+                                  Democratic Republic of the Congo (+243)
+                                </option>
+                                <option value="+253">Djibouti (+253)</option>
+                                <option value="+20">Egypt (+20)</option>
+                                <option value="+240">
+                                  Equatorial Guinea (+240)
+                                </option>
+                                <option value="+291">Eritrea (+291)</option>
+                                <option value="+268">Eswatini (+268)</option>
+                                <option value="+251">Ethiopia (+251)</option>
+                                <option value="+241">Gabon (+241)</option>
+                                <option value="+220">Gambia (+220)</option>
+                                <option value="+233">Ghana (+233)</option>
+                                <option value="+224">Guinea (+224)</option>
+                                <option value="+245">
+                                  Guinea-Bissau (+245)
+                                </option>
+                                <option value="+225">Ivory Coast (+225)</option>
+                                <option value="+266">Lesotho (+266)</option>
+                                <option value="+231">Liberia (+231)</option>
+                                <option value="+218">Libya (+218)</option>
+                                <option value="+261">Madagascar (+261)</option>
+                                <option value="+265">Malawi (+265)</option>
+                                <option value="+223">Mali (+223)</option>
+                                <option value="+222">Mauritania (+222)</option>
+                                <option value="+230">Mauritius (+230)</option>
+                                <option value="+212">Morocco (+212)</option>
+                                <option value="+258">Mozambique (+258)</option>
+                                <option value="+264">Namibia (+264)</option>
+                                <option value="+227">Niger (+227)</option>
+                                <option value="+234">Nigeria (+234)</option>
+                                <option value="+242">
+                                  Republic of the Congo (+242)
+                                </option>
+                                <option value="+250">Rwanda (+250)</option>
+                                <option value="+239">
+                                  Sao Tome and Principe (+239)
+                                </option>
+                                <option value="+221">Senegal (+221)</option>
+                                <option value="+248">Seychelles (+248)</option>
+                                <option value="+232">
+                                  Sierra Leone (+232)
+                                </option>
+                                <option value="+252">Somalia (+252)</option>
+                                <option value="+27">South Africa (+27)</option>
+                                <option value="+211">South Sudan (+211)</option>
+                                <option value="+249">Sudan (+249)</option>
+                                <option value="+255">Tanzania (+255)</option>
+                                <option value="+228">Togo (+228)</option>
+                                <option value="+216">Tunisia (+216)</option>
+                                <option value="+256">Uganda (+256)</option>
+                                <option value="+260">Zambia (+260)</option>
+                                <option value="+263">Zimbabwe (+263)</option>
+                              </select>
+
+                              <TextField
+                                {...field}
+                                label="Whatsapp number"
+                                type="tel"
+                                value={whatsappNumber}
+                                onChange={handleInputChangeWhatsapp}
+                                variant="outlined"
+                                InputProps={{
+                                  classes: {
+                                    root: "dark:bg-[#2D3236] dark:text-gray-100",
+                                    notchedOutline:
+                                      "border-gray-300 dark:border-gray-600",
+                                    focused: "",
+                                  },
+                                }}
+                                InputLabelProps={{
+                                  classes: {
+                                    root: "text-gray-500 dark:text-gray-400",
+                                    focused:
+                                      "text-green-500 dark:text-green-400",
+                                  },
+                                }}
+                                className="w-full"
+                              />
+                            </div>
+                          </FormControl>
+                          <FormMessage />
+                        </FormItem>
+                      )}
+                    />
+                  </div>
+                </div>
+              </div>
+            </AccordionContent>
+          </AccordionItem>
+          <AccordionItem value="item-3">
             <AccordionTrigger>Business details</AccordionTrigger>
             <AccordionContent>
               <div className="rounded-[20px] p-1 dark:bg-[#131B1E] bg-white">
@@ -772,248 +957,7 @@ const SettingsEdit = ({ user, type, userId }: setingsProp) => {
               </div>
             </AccordionContent>
           </AccordionItem>
-          <AccordionItem value="item-3">
-            <AccordionTrigger>Contacts details</AccordionTrigger>
-            <AccordionContent>
-              <div className="p-1 rounded-[20px] m-0 dark:bg-[#131B1E] bg-white">
-                <div className="m-1">
-                  <div className="flex flex-col gap-5 mb-5 md:flex-row">
-                    <FormField
-                      control={form.control}
-                      name="phone"
-                      render={({ field }) => (
-                        <FormItem className="w-full">
-                          <FormControl>
-                            <div className="flex w-full gap-1">
-                              <select
-                                className="dark:bg-[#2D3236] dark:text-gray-100 bg-gray-100 text-sm lg:text-base p-1 border ml-2 rounded-sm w-[120px]"
-                                value={countryCode}
-                                onChange={handleCountryCodeChange}
-                              >
-                                <option value="+254">Kenya (+254)</option>
-                                <option value="+213">Algeria (+213)</option>
-                                <option value="+244">Angola (+244)</option>
-                                <option value="+229">Benin (+229)</option>
-                                <option value="+267">Botswana (+267)</option>
-                                <option value="+226">
-                                  Burkina Faso (+226)
-                                </option>
-                                <option value="+257">Burundi (+257)</option>
-                                <option value="+237">Cameroon (+237)</option>
-                                <option value="+238">Cape Verde (+238)</option>
-                                <option value="+236">
-                                  Central African Republic (+236)
-                                </option>
-                                <option value="+235">Chad (+235)</option>
-                                <option value="+269">Comoros (+269)</option>
-                                <option value="+243">
-                                  Democratic Republic of the Congo (+243)
-                                </option>
-                                <option value="+253">Djibouti (+253)</option>
-                                <option value="+20">Egypt (+20)</option>
-                                <option value="+240">
-                                  Equatorial Guinea (+240)
-                                </option>
-                                <option value="+291">Eritrea (+291)</option>
-                                <option value="+268">Eswatini (+268)</option>
-                                <option value="+251">Ethiopia (+251)</option>
-                                <option value="+241">Gabon (+241)</option>
-                                <option value="+220">Gambia (+220)</option>
-                                <option value="+233">Ghana (+233)</option>
-                                <option value="+224">Guinea (+224)</option>
-                                <option value="+245">
-                                  Guinea-Bissau (+245)
-                                </option>
-                                <option value="+225">Ivory Coast (+225)</option>
-                                <option value="+266">Lesotho (+266)</option>
-                                <option value="+231">Liberia (+231)</option>
-                                <option value="+218">Libya (+218)</option>
-                                <option value="+261">Madagascar (+261)</option>
-                                <option value="+265">Malawi (+265)</option>
-                                <option value="+223">Mali (+223)</option>
-                                <option value="+222">Mauritania (+222)</option>
-                                <option value="+230">Mauritius (+230)</option>
-                                <option value="+212">Morocco (+212)</option>
-                                <option value="+258">Mozambique (+258)</option>
-                                <option value="+264">Namibia (+264)</option>
-                                <option value="+227">Niger (+227)</option>
-                                <option value="+234">Nigeria (+234)</option>
-                                <option value="+242">
-                                  Republic of the Congo (+242)
-                                </option>
-                                <option value="+250">Rwanda (+250)</option>
-                                <option value="+239">
-                                  Sao Tome and Principe (+239)
-                                </option>
-                                <option value="+221">Senegal (+221)</option>
-                                <option value="+248">Seychelles (+248)</option>
-                                <option value="+232">
-                                  Sierra Leone (+232)
-                                </option>
-                                <option value="+252">Somalia (+252)</option>
-                                <option value="+27">South Africa (+27)</option>
-                                <option value="+211">South Sudan (+211)</option>
-                                <option value="+249">Sudan (+249)</option>
-                                <option value="+255">Tanzania (+255)</option>
-                                <option value="+228">Togo (+228)</option>
-                                <option value="+216">Tunisia (+216)</option>
-                                <option value="+256">Uganda (+256)</option>
-                                <option value="+260">Zambia (+260)</option>
-                                <option value="+263">Zimbabwe (+263)</option>
-                              </select>
 
-                              <TextField
-                                {...field}
-                                label="Phone number"
-                                type="tel"
-                                value={phoneNumber}
-                                onChange={handleInputChange}
-                                variant="outlined"
-                                InputProps={{
-                                  classes: {
-                                    root: "dark:bg-[#2D3236] dark:text-gray-100",
-                                    notchedOutline:
-                                      "border-gray-300 dark:border-gray-600",
-                                    focused: "",
-                                  },
-                                }}
-                                InputLabelProps={{
-                                  classes: {
-                                    root: "text-gray-500 dark:text-gray-400",
-                                    focused:
-                                      "text-green-500 dark:text-green-400",
-                                  },
-                                }}
-                                className="w-full"
-                              />
-                            </div>
-                          </FormControl>
-                          <FormMessage />
-                        </FormItem>
-                      )}
-                    />
-                  </div>
-
-                  <div className="flex flex-col gap-5 mb-5 md:flex-row">
-                    <FormField
-                      control={form.control}
-                      name="whatsapp"
-                      render={({ field }) => (
-                        <FormItem className="w-full">
-                          <FormControl>
-                            <div className="flex w-full gap-1">
-                              <select
-                                className="dark:bg-[#2D3236] dark:text-gray-100 bg-gray-100 p-1 text-sm lg:text-base border ml-2 rounded-sm w-[120px]"
-                                value={countryCodeWhatsapp}
-                                onChange={handleCountryCodeChangeWhatsapp}
-                              >
-                                <option value="+254">Kenya (+254)</option>
-                                <option value="+213">Algeria (+213)</option>
-                                <option value="+244">Angola (+244)</option>
-                                <option value="+229">Benin (+229)</option>
-                                <option value="+267">Botswana (+267)</option>
-                                <option value="+226">
-                                  Burkina Faso (+226)
-                                </option>
-                                <option value="+257">Burundi (+257)</option>
-                                <option value="+237">Cameroon (+237)</option>
-                                <option value="+238">Cape Verde (+238)</option>
-                                <option value="+236">
-                                  Central African Republic (+236)
-                                </option>
-                                <option value="+235">Chad (+235)</option>
-                                <option value="+269">Comoros (+269)</option>
-                                <option value="+243">
-                                  Democratic Republic of the Congo (+243)
-                                </option>
-                                <option value="+253">Djibouti (+253)</option>
-                                <option value="+20">Egypt (+20)</option>
-                                <option value="+240">
-                                  Equatorial Guinea (+240)
-                                </option>
-                                <option value="+291">Eritrea (+291)</option>
-                                <option value="+268">Eswatini (+268)</option>
-                                <option value="+251">Ethiopia (+251)</option>
-                                <option value="+241">Gabon (+241)</option>
-                                <option value="+220">Gambia (+220)</option>
-                                <option value="+233">Ghana (+233)</option>
-                                <option value="+224">Guinea (+224)</option>
-                                <option value="+245">
-                                  Guinea-Bissau (+245)
-                                </option>
-                                <option value="+225">Ivory Coast (+225)</option>
-                                <option value="+266">Lesotho (+266)</option>
-                                <option value="+231">Liberia (+231)</option>
-                                <option value="+218">Libya (+218)</option>
-                                <option value="+261">Madagascar (+261)</option>
-                                <option value="+265">Malawi (+265)</option>
-                                <option value="+223">Mali (+223)</option>
-                                <option value="+222">Mauritania (+222)</option>
-                                <option value="+230">Mauritius (+230)</option>
-                                <option value="+212">Morocco (+212)</option>
-                                <option value="+258">Mozambique (+258)</option>
-                                <option value="+264">Namibia (+264)</option>
-                                <option value="+227">Niger (+227)</option>
-                                <option value="+234">Nigeria (+234)</option>
-                                <option value="+242">
-                                  Republic of the Congo (+242)
-                                </option>
-                                <option value="+250">Rwanda (+250)</option>
-                                <option value="+239">
-                                  Sao Tome and Principe (+239)
-                                </option>
-                                <option value="+221">Senegal (+221)</option>
-                                <option value="+248">Seychelles (+248)</option>
-                                <option value="+232">
-                                  Sierra Leone (+232)
-                                </option>
-                                <option value="+252">Somalia (+252)</option>
-                                <option value="+27">South Africa (+27)</option>
-                                <option value="+211">South Sudan (+211)</option>
-                                <option value="+249">Sudan (+249)</option>
-                                <option value="+255">Tanzania (+255)</option>
-                                <option value="+228">Togo (+228)</option>
-                                <option value="+216">Tunisia (+216)</option>
-                                <option value="+256">Uganda (+256)</option>
-                                <option value="+260">Zambia (+260)</option>
-                                <option value="+263">Zimbabwe (+263)</option>
-                              </select>
-
-                              <TextField
-                                {...field}
-                                label="Whatsapp number"
-                                type="tel"
-                                value={whatsappNumber}
-                                onChange={handleInputChangeWhatsapp}
-                                variant="outlined"
-                                InputProps={{
-                                  classes: {
-                                    root: "dark:bg-[#2D3236] dark:text-gray-100",
-                                    notchedOutline:
-                                      "border-gray-300 dark:border-gray-600",
-                                    focused: "",
-                                  },
-                                }}
-                                InputLabelProps={{
-                                  classes: {
-                                    root: "text-gray-500 dark:text-gray-400",
-                                    focused:
-                                      "text-green-500 dark:text-green-400",
-                                  },
-                                }}
-                                className="w-full"
-                              />
-                            </div>
-                          </FormControl>
-                          <FormMessage />
-                        </FormItem>
-                      )}
-                    />
-                  </div>
-                </div>
-              </div>
-            </AccordionContent>
-          </AccordionItem>
           <AccordionItem value="item-4">
             <AccordionTrigger>Social Media</AccordionTrigger>
             <AccordionContent>
