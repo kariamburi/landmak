@@ -4,6 +4,7 @@ import { Menu, X } from "lucide-react";
 import { Button } from "../ui/button";
 import { ScrollArea } from "../ui/scroll-area";
 //import * as ScrollArea from "@radix-ui/react-scroll-area";
+
 import { AdminId, mode } from "@/constants";
 import { usePathname, useRouter, useSearchParams } from "next/navigation";
 import { IdynamicAd } from "@/lib/database/models/dynamicAd.model";
@@ -390,8 +391,9 @@ export default function MainView({
   const handleSidebarToggle = (e: React.MouseEvent) => {
     e.stopPropagation();
     setShowCategories(false);
-    setShowList(true);
-    setShowMap(false);
+    setHoveredCategory(null);
+    // setShowList(true);
+    //setShowMap(false);
   };
   const [isChatOpen, setChatOpen] = useState(false);
   const toggleChat = () => {
@@ -1409,12 +1411,18 @@ export default function MainView({
       {showCategories && (
         <aside className="fixed lg:static top-14 left-0 z-50 bg-white w-[300px] lg:w-[280px] h-[calc(100vh-4rem)] lg:h-[calc(100vh-0rem)] overflow-y-auto p-1 border-r shadow-md lg:shadow-none transform transition-transform duration-300 lg:translate-x-0 translate-x-0 lg:flex flex-col">
           <div className="flex flex-col space-y-0 h-full">
-            <div className="flex justify-between lg:justify-center items-center w-full">
+            <div className="flex justify-between items-center w-full">
               <p className="p-4 text-gray-500 font-bold">CATEGORIES</p>
 
-              <Button onClick={handleSidebarToggle} className="md:hidden bg-green-100 text-black text-sm rounded-l-full">
-                <X />
-              </Button>
+
+              <button
+                onClick={handleSidebarToggle}
+                title="Hide Categories"
+                className="flex items-center gap-1 px-3 py-1.5 text-sm rounded-l-full bg-[#e4ebeb] border shadow text-black hover:bg-white transition"
+              >
+                <KeyboardArrowLeftOutlinedIcon />
+
+              </button>
             </div>
             {/* Scroll Buttons */}
             <div className="relative flex-1 overflow-hidden">
@@ -1601,7 +1609,15 @@ export default function MainView({
           </div>
         )}
         <div className="flex justify-between items-center gap-1 m-1">
-          <div className="flex items-center gap-1 flex-wrap justify-start items-center mb-0">
+          {!showCategories && (<button
+            onClick={() => setShowCategories(true)}
+            title="Show Categories"
+            className="flex hidden lg:inline items-center gap-1 px-3 py-1.5 text-sm rounded-r-full bg-white border shadow text-black hover:bg-gray-100 transition"
+          >
+            <KeyboardArrowRightOutlinedIcon />
+
+          </button>)}
+          <div className="flex hidden lg:inline items-center gap-1 flex-wrap justify-start items-center mb-0">
 
             {showList &&
               (<div className="flex items-center gap-1">
@@ -1716,6 +1732,32 @@ export default function MainView({
                   user={userprofile}
                   packagesList={packagesList}
                 />
+              </div>
+              <div className="flex w-full lg:hidden justify-between items-center p-1">
+
+                <div className="flex items-center gap-1">
+                  <div
+                    className={`flex gap-1 items-center text-xs dark:bg-[#2D3236] bg-white rounded-sm p-1 cursor-pointer ${activeButton === 0 ? "text-[#30AF5B]" : "text-gray-500"
+                      }`}
+                    onClick={() => handleButtonClick(0)}
+                  >
+                    <ViewModuleIcon />
+
+                  </div>
+                  <div
+                    className={`flex gap-1 items-center text-xs dark:bg-[#2D3236] bg-white rounded-sm p-1 cursor-pointer ${activeButton === 1 ? "text-[#30AF5B]" : "text-gray-500"
+                      }`}
+                    onClick={() => handleButtonClick(1)}
+                  >
+                    <ViewListIcon />
+
+                  </div>
+
+                </div>
+
+
+
+                <div className="font-bold text-xl text-gray-700">Featured Properties</div>
               </div>
 
               {data?.length > 0 ? (<>

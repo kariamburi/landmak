@@ -38,11 +38,14 @@ import { Circle, GoogleMap, InfoWindow, Marker, useLoadScript } from "@react-goo
 import { formatKsh } from "@/lib/help";
 import VerticalCard from "./VerticalCard";
 import Masonry from "react-masonry-css";
+import ViewListIcon from "@mui/icons-material/ViewList";
+import ViewModuleIcon from "@mui/icons-material/ViewModule";
 import HorizontalCardPublic from "./HorizontalCardPublic";
 import { MapIcon, ListBulletIcon, Squares2X2Icon } from '@heroicons/react/24/outline';
 import FilterComponent from "./FilterComponent";
 import SidebarFilter from "./SidebarSearchmobile";
 import FilterFields from "./FilterFields";
+import HorizontalCard from "./HorizontalCard";
 
 const options = [
   { value: 'both', label: 'Split View', icon: <Squares2X2Icon className="w-5 h-5" /> },
@@ -703,7 +706,11 @@ export default function EnhancedPropertySearch({ userId,
     }
 
   };
+  const [activeButton, setActiveButton] = useState(0);
+  const handleButtonClick = (index: number) => {
+    setActiveButton(index);
 
+  };
 
   return (
     <div className="flex flex-col lg:flex-row w-full h-screen overflow-hidden">
@@ -725,17 +732,18 @@ export default function EnhancedPropertySearch({ userId,
 
       {/* Sidebar */}
       {showCategories && (
-        <aside className="fixed lg:static top-14 left-0 z-0 bg-white w-[300px] lg:w-[280px] h-[calc(100vh-4rem)] lg:h-[calc(100vh-1rem)] overflow-y-auto p-0 border-r shadow-md lg:shadow-none transform transition-transform duration-300 lg:translate-x-0 translate-x-0 lg:flex flex-col">
+        <aside className="fixed lg:static top-14 left-0 z-20 bg-white w-[300px] lg:w-[280px] h-[calc(100vh-4rem)] lg:h-[calc(100vh-1rem)] overflow-y-auto p-0 border-r shadow-md lg:shadow-none transform transition-transform duration-300 lg:translate-x-0 translate-x-0 lg:flex flex-col">
 
           {/* ✅ Sticky Header */}
           <div className="flex flex-col items-center mb-4 sticky top-0 z-10 bg-white p-2 border-b">
             <div className="w-full flex justify-end items-center">
               <button
                 onClick={() => setShowCategories(false)}
+                title="Hide Filters"
                 className="flex items-center gap-1 px-3 py-1.5 text-sm rounded-l-full bg-[#e4ebeb] border shadow text-black hover:bg-white transition"
               >
                 <ChevronLeft size={20} />
-                Hide Filters
+                <div className="lg:hidden">Hide Filter</div>
               </button>
             </div>
             <h2 className="font-semibold">
@@ -863,27 +871,8 @@ export default function EnhancedPropertySearch({ userId,
 
                 </div>
               </div>
-
-
-
             </div>
-            {/*<div className="mt-6 pt-4 border-t">
-  <h3 className="text-sm font-medium mb-2">Ownership Type</h3>
-  <div className="flex flex-col gap-1 text-sm">
-    {["Freehold", "Leasehold", "Title Deed"].map((type) => (
-      <label key={type} className="flex items-center gap-2">
-        <input
-          type="radio"
-          name="ownership"
-          value={type}
-          checked={ownership === type}
-          onChange={(e) => setOwnership(e.target.value)}
-        />
-        {type}
-      </label>
-    ))}
-  </div>
-</div>*/}
+
             <div className="mt-6 pt-4 border-t">
               <label className="flex items-center gap-2 text-sm font-medium">
                 <input
@@ -944,32 +933,20 @@ export default function EnhancedPropertySearch({ userId,
 
 
       {/* Main Content */}
-      <main className="flex-1 bg-[#e4ebeb] flex flex-col p-2 h-full overflow-hidden pt-[60px]">
+      <main className="flex-1 bg-[#e4ebeb] flex flex-col p-2 h-full overflow-hidden pt-[50px]">
         {/* Header */}
-        <div className="flex flex-wrap justify-between items-center gap-2 mb-2">
+        <div className="flex flex-wrap justify-between items-center gap-2 mb-1">
           <div className="flex gap-2 items-center">
             {!showCategories && (<button
               onClick={() => setShowCategories(true)}
-              className="flex items-center gap-2 px-4 py-2 text-sm font-medium text-green-600 bg-white border border-green-600 rounded-full shadow-sm hover:bg-green-50 active:bg-green-100 transition lg:text-base"
+              title="Show Filters"
+              className="flex items-center gap-1 px-3 py-1.5 text-sm rounded-r-full bg-white border shadow text-black hover:bg-gray-100 transition"
             >
-              <svg
-                xmlns="http://www.w3.org/2000/svg"
-                className="w-5 h-5"
-                fill="none"
-                viewBox="0 0 24 24"
-                stroke="currentColor"
-              >
-                <path
-                  strokeLinecap="round"
-                  strokeLinejoin="round"
-                  strokeWidth={2}
-                  d="M3 4a1 1 0 011-1h16a1 1 0 011 1v2a1 1 0 01-.293.707L15 13.414V19a1 1 0 01-1.447.894l-4-2A1 1 0 019 17v-3.586L3.293 6.707A1 1 0 013 6V4z"
-                />
-              </svg>
-              Filters
+              <ChevronRight size={20} />
+              <div className="lg:hidden">Show Filter</div>
             </button>)}
             <div className="flex flex-col">
-              <div className="flex flex-col lg:flex-row lg:gap-2 items-center">
+              <div className="flex flex-row lg:gap-2 items-center">
                 <h2 className="text-lg font-semibold">{newqueryObject.subcategory}</h2> <p className="lg:text-base text-sm">({data.length} ads within {distance} km)</p>
               </div>
               {averagePricePerAcre > 0 && (
@@ -986,7 +963,32 @@ export default function EnhancedPropertySearch({ userId,
 
 
           <div className="flex items-center gap-2">
-            <div className="flex w-full lg:w-auto border rounded px-2 bg-white shadow-sm items-center gap-0">
+            <div className="flex items-center gap-1 flex-wrap justify-start items-center mb-0">
+
+              {showList &&
+                (<div className="flex items-center gap-1">
+                  <div
+                    className={`flex gap-1 items-center text-xs dark:bg-[#2D3236] bg-white rounded-sm p-1 cursor-pointer ${activeButton === 0 ? "text-[#30AF5B]" : "text-gray-500"
+                      }`}
+                    onClick={() => handleButtonClick(0)}
+                  >
+                    <ViewModuleIcon />
+
+                  </div>
+                  <div
+                    className={`flex gap-1 items-center text-xs dark:bg-[#2D3236] bg-white rounded-sm p-1 cursor-pointer ${activeButton === 1 ? "text-[#30AF5B]" : "text-gray-500"
+                      }`}
+                    onClick={() => handleButtonClick(1)}
+                  >
+                    <ViewListIcon />
+
+                  </div>
+                </div>)
+              }
+
+
+            </div>
+            <div className="flex w-full lg:w-auto border rounded px-1 lg:px-2 bg-white shadow-sm items-center gap-0">
               <div className="flex flex-col">
 
                 {selectedAddress && (
@@ -1015,7 +1017,7 @@ export default function EnhancedPropertySearch({ userId,
               </div>
             </div>
 
-            <div className="relative hidden lg:inline w-48 text-sm">
+            <div className="relative hidden lg:inline text-sm">
               <button
                 onClick={() => setOpen(!open)}
                 className="flex items-center justify-between w-full px-4 py-2 border rounded bg-white shadow-sm"
@@ -1052,7 +1054,7 @@ export default function EnhancedPropertySearch({ userId,
 
             <button
               onClick={() => setShowLocationModal(true)}
-              className="flex items-center gap-2 px-3 py-2 border rounded-lg bg-white shadow-sm text-sm font-medium text-green-600 hover:text-green-800 hover:bg-green-50 transition"
+              className="flex whitespace-nowrap items-center gap-2 px-3 py-2 border rounded-lg bg-white shadow-sm text-xs lg:text-sm font-medium text-green-600 hover:text-green-800 hover:bg-green-50 transition"
             >
               <svg
                 xmlns="http://www.w3.org/2000/svg"
@@ -1107,7 +1109,7 @@ export default function EnhancedPropertySearch({ userId,
               {filteredProperties?.length > 0 ? (<>
 
                 <Masonry
-                  breakpointCols={breakpointColumns}
+                  breakpointCols={activeButton === 0 ? breakpointColumns : 1}
                   className="flex mt-2 lg:mt-0 gap-1 lg:gap-4 min-h-screen"
                   columnClassName="bg-clip-padding"
                 >
@@ -1127,54 +1129,59 @@ export default function EnhancedPropertySearch({ userId,
                           className="flex justify-center"
                         >
                           {/* Render Ad */}
-                          {breakpointColumns === 1 ? (<HorizontalCardPublic
-                            ad={ad}
-                            userId={userId}
-                            isAdCreator={isAdCreator}
-                            handleAdEdit={handleAdEdit}
-                            handleAdView={handleAdView}
-                            handleOpenPlan={handleOpenPlan}
-                            //handleOpenChatId={handleOpenChatId}
-                            userName={userName}
-                            userImage={userImage}
-                          />) : (<VerticalCard
-                            ad={ad}
-                            userId={userId}
-                            isAdCreator={isAdCreator}
-                            handleAdEdit={handleAdEdit}
-                            handleAdView={handleAdView}
-                            handleOpenPlan={handleOpenPlan}
-                            handleOpenChatId={handleOpenChatId}
-                            userName={userName}
-                            userImage={userImage}
-                          />)}
+                          {activeButton === 1 ? (
+                            <HorizontalCard
+                              ad={ad}
+                              userId={userId}
+                              isAdCreator={isAdCreator}
+                              handleAdEdit={handleAdEdit}
+                              handleAdView={handleAdView}
+                              handleOpenPlan={handleOpenPlan}
+                              handleOpenChatId={handleOpenChatId}
+                              userName={userName}
+                              userImage={userImage}
+                              fullview={breakpointColumns}
+                            />) : (
+                            <VerticalCard
+                              ad={ad}
+                              userId={userId}
+                              isAdCreator={isAdCreator}
+                              handleAdEdit={handleAdEdit}
+                              handleAdView={handleAdView}
+                              handleOpenPlan={handleOpenPlan}
+                              handleOpenChatId={handleOpenChatId}
+                              userName={userName}
+                              userImage={userImage}
+                            />)}
                         </div>
                       );
                     } else {
                       return (
                         <div key={ad._id} className="flex justify-center">
                           {/* Render Ad */}
-                          {breakpointColumns === 1 ? (<HorizontalCardPublic
-                            ad={ad}
-                            userId={userId}
-                            isAdCreator={isAdCreator}
-                            handleAdEdit={handleAdEdit}
-                            handleAdView={handleAdView}
-                            handleOpenPlan={handleOpenPlan}
-                            // handleOpenChatId={handleOpenChatId}
-                            userName={userName}
-                            userImage={userImage}
-                          />) : (<VerticalCard
-                            ad={ad}
-                            userId={userId}
-                            isAdCreator={isAdCreator}
-                            handleAdEdit={handleAdEdit}
-                            handleAdView={handleAdView}
-                            handleOpenPlan={handleOpenPlan}
-                            handleOpenChatId={handleOpenChatId}
-                            userName={userName}
-                            userImage={userImage}
-                          />)}
+                          {activeButton === 1 ? (
+                            <HorizontalCard
+                              ad={ad}
+                              userId={userId}
+                              isAdCreator={isAdCreator}
+                              handleAdEdit={handleAdEdit}
+                              handleAdView={handleAdView}
+                              handleOpenPlan={handleOpenPlan}
+                              handleOpenChatId={handleOpenChatId}
+                              userName={userName}
+                              userImage={userImage}
+                              fullview={breakpointColumns}
+                            />) : (<VerticalCard
+                              ad={ad}
+                              userId={userId}
+                              isAdCreator={isAdCreator}
+                              handleAdEdit={handleAdEdit}
+                              handleAdView={handleAdView}
+                              handleOpenPlan={handleOpenPlan}
+                              handleOpenChatId={handleOpenChatId}
+                              userName={userName}
+                              userImage={userImage}
+                            />)}
                         </div>
                       );
                     }

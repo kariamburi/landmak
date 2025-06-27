@@ -160,7 +160,7 @@ const SearchNow = ({
         </div>
       </div>
       <div className="lg:hidden">
-        <div className="relative border border-gray-300 dark:border-gray-600 flex justify-between items-center dark:bg-[#2D3236] bg-white pr-1 rounded-sm w-full">
+        <div className="relative border border-gray-300 dark:border-gray-600 flex justify-between items-center dark:bg-[#2D3236] bg-white p-1 rounded-sm w-full">
 
           <div className="flex items-center w-full">
             {focus && (
@@ -186,7 +186,7 @@ const SearchNow = ({
           <div>
             <button
               onClick={handleOpenSearchByTitle}
-              className="flex justify-center items-center h-8 w-8 hover:bg-green-700 bg-green-600 text-white rounded-sm"
+              className="flex justify-center items-center h-10 w-10 hover:bg-green-700 bg-green-600 text-white rounded-sm"
             >
               <SearchOutlinedIcon />
             </button>

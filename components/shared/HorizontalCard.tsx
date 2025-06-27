@@ -553,18 +553,19 @@ const HorizontalCard = ({
             <p className="dark:text-gray-300 text-[12px] lg:hidden">
               <span dangerouslySetInnerHTML={{ __html: truncateDescription(ad?.data.description, 100) }} />
             </p>
-
-            {ad.data.propertyarea?.mapaddress && (
-              <div className="text-gray-500 flex gap-1 items-center dark:text-gray-500 text-xs">
-                <LocationOnIcon sx={{ fontSize: 14 }} />
-                {truncateaddress(ad.data.propertyarea?.mapaddress, 25)}
-              </div>
-            )}
-            {ad.calcDistance && (
-              <div className="flex-wrap text-sm mt-1 fount-bold bg-green-100 rounded-lg p-1 text-green-600">
-                {Math.round(ad.calcDistance / 100) / 10} KM Away
-              </div>
-            )}
+            <div className="flex justify-between items-center w-full">
+              {ad.data.propertyarea?.mapaddress && (
+                <div className="text-gray-500 flex gap-1 items-center dark:text-gray-500 text-xs">
+                  <LocationOnIcon sx={{ fontSize: 14 }} />
+                  {truncateaddress(ad.data.propertyarea?.mapaddress, 25)}
+                </div>
+              )}
+              {ad.calcDistance && (
+                <div className="flex text-[10px] mt-1 fount-bold bg-green-100 rounded-lg p-1 text-green-600">
+                  {Math.round(ad.calcDistance / 100) / 10} KM Away
+                </div>
+              )}
+            </div>
             {isAdCreator ? (
               <div className="flex justify-between items-center w-full">
                 <div

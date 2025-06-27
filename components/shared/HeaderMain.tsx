@@ -90,7 +90,7 @@ export default function HeaderMain({ userName, userImage, handleFilter, handleOp
                 <TooltipTrigger asChild>
                   <button
                     onClick={handleOpenPopupMap}
-                    className="flex gap-2  bg-white items-center justify-center w-full py-2 px-2 border-gray-300 border rounded-sm hover:bg-gray-100"
+                    className="flex gap-2  bg-white items-center justify-center w-full py-3 lg:py-2 px-2 border-gray-300 border rounded-sm hover:bg-gray-100"
                   >
                     {/*  🗺️ */}
                     <div className="flex gap-3 items-center">
@@ -113,7 +113,7 @@ export default function HeaderMain({ userName, userImage, handleFilter, handleOp
                 <TooltipTrigger asChild>
                   <button
                     onClick={handleOpenPopupBeacon}
-                    className="flex gap-2  bg-white items-center justify-center w-full py-2 px-2 border-gray-300 border rounded-sm hover:bg-gray-100"
+                    className="flex gap-2  bg-white items-center justify-center w-full py-3 lg:py-2 px-2 border-gray-300 border rounded-sm hover:bg-gray-100"
                   >
 
                     <AddLocationAltOutlinedIcon sx={{ fontSize: 20 }} />
@@ -158,7 +158,7 @@ export default function HeaderMain({ userName, userImage, handleFilter, handleOp
                   <TooltipTrigger asChild>
                     <button
                       onClick={handleOpenPopupMap}
-                      className="flex gap-2  bg-white justify-between items-center justify-center w-full py-2 px-2 border-gray-300 border rounded-sm hover:bg-gray-100"
+                      className="flex gap-2  bg-white justify-between items-center justify-center w-full py-3 lg:py-2 px-2 border-gray-300 border rounded-sm hover:bg-gray-100"
                     >
                       {/*  🗺️ */}
                       <div className="flex gap-3 items-center">
