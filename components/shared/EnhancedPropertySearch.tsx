@@ -946,7 +946,7 @@ export default function EnhancedPropertySearch({ userId,
               <div className="lg:hidden">Filter</div>
             </button>)}
             <div className="flex flex-col">
-              <div className="flex flex-row lg:gap-2 items-center">
+              <div className="flex flex-col lg:flex-row lg:gap-2 items-center">
                 <h2 className="text-lg font-semibold whitespace-nowrap">{newqueryObject.subcategory}</h2> <p className="lg:text-base text-xs">({data.length} ads within {distance} km)</p>
               </div>
               {averagePricePerAcre > 0 && (
@@ -962,7 +962,7 @@ export default function EnhancedPropertySearch({ userId,
           {/* Address (for smaller screens, wrap below header if needed) */}
 
 
-          <div className="flex items-center gap-2">
+          <div className="flex w-full lg:w-auto justify-between lg:justify-start items-center gap-2">
             <div className="flex items-center gap-1 flex-wrap justify-start items-center mb-0">
 
               {showList &&
@@ -1095,7 +1095,7 @@ export default function EnhancedPropertySearch({ userId,
                   step="10"
                   value={distance}
                   onChange={(e) => setDistance(Number(e.target.value))}
-                  className="w-80 cursor-pointer appearance-none h-2 accent-green-600 rounded-lg outline-none"
+                  className="w-60 cursor-pointer appearance-none h-2 accent-green-600 rounded-lg outline-none"
                   style={{
                     background: `linear-gradient(to right, #16a34a 0%, #16a34a ${(distance - 10) / 1.9}%, #E5E7EB ${(distance - 10) / 1.9}%, #E5E7EB 100%)`,
                   }}
