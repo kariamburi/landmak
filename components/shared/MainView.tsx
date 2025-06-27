@@ -32,6 +32,8 @@ import {
   formUrlQuerymultiple,
   removeKeysFromQuery,
 } from "@/lib/utils";
+import ViewListIcon from "@mui/icons-material/ViewList";
+import ViewModuleIcon from "@mui/icons-material/ViewModule";
 import ProgressPopup from "./ProgressPopup";
 import MenuSubmobileMain from "./MenuSubmobileMain";
 import Masonry from "react-masonry-css";
@@ -78,10 +80,10 @@ import InitialAvatar from "./InitialAvatar";
 import { DrawerDemo } from "./DrawerDemo";
 import { MapIcon, ListBulletIcon, Squares2X2Icon } from '@heroicons/react/24/outline';
 import { GoogleMap, InfoWindow, Marker, OverlayView, useLoadScript } from "@react-google-maps/api";
-import HorizontalCardPublic from "./HorizontalCardPublic";
 import { formatKsh } from "@/lib/help";
 import Navbar from "./navbar";
 import CardAuto from "./CardAuto";
+import HorizontalCard from "./HorizontalCard";
 type Ad = {
   data?: {
     subcategory?: string;
@@ -1164,7 +1166,11 @@ export default function MainView({
   const now = new Date();
   const [filteredProperties, setFilteredProperties] = useState<IdynamicAd[]>([]);
   const [averagePricePerAcre, setAveragePricePerAcre] = useState(0);
+  const [activeButton, setActiveButton] = useState(0);
+  const handleButtonClick = (index: number) => {
+    setActiveButton(index);
 
+  };
 
   return (
     <div className="flex bg-[#e4ebeb] flex-col lg:flex-row w-full h-screen overflow-hidden">
@@ -1406,7 +1412,7 @@ export default function MainView({
             <div className="flex justify-between lg:justify-center items-center w-full">
               <p className="p-4 text-gray-500 font-bold">CATEGORIES</p>
 
-              <Button onClick={handleSidebarToggle} className="md:hidden bg-green-600 rounded-l-full">
+              <Button onClick={handleSidebarToggle} className="md:hidden bg-green-100 text-black text-sm rounded-l-full">
                 <X />
               </Button>
             </div>
@@ -1595,6 +1601,31 @@ export default function MainView({
           </div>
         )}
         <div className="flex justify-between items-center gap-1 m-1">
+          <div className="flex items-center gap-1 flex-wrap justify-start items-center mb-0">
+
+            {showList &&
+              (<div className="flex items-center gap-1">
+                <div
+                  className={`flex gap-1 items-center text-xs dark:bg-[#2D3236] bg-white rounded-sm p-1 cursor-pointer ${activeButton === 0 ? "text-[#30AF5B]" : "text-gray-500"
+                    }`}
+                  onClick={() => handleButtonClick(0)}
+                >
+                  <ViewModuleIcon />
+
+                </div>
+                <div
+                  className={`flex gap-1 items-center text-xs dark:bg-[#2D3236] bg-white rounded-sm p-1 cursor-pointer ${activeButton === 1 ? "text-[#30AF5B]" : "text-gray-500"
+                    }`}
+                  onClick={() => handleButtonClick(1)}
+                >
+                  <ViewListIcon />
+
+                </div>
+              </div>)
+            }
+
+
+          </div>
           <HeaderMain handleFilter={handleFilter} handleOpenPlan={handleOpenPlan} AdsCountPerRegion={AdsCountPerRegion} queryObject={newqueryObject}
             handleAdEdit={handleAdEdit}
             handleAdView={handleAdView}
@@ -1690,7 +1721,7 @@ export default function MainView({
               {data?.length > 0 ? (<>
 
                 <Masonry
-                  breakpointCols={breakpointColumns}
+                  breakpointCols={activeButton === 0 ? breakpointColumns : 1}
                   className="flex mt-2 lg:mt-0 gap-1 lg:gap-4 min-h-screen"
                   columnClassName="bg-clip-padding"
                 >
@@ -1710,56 +1741,62 @@ export default function MainView({
                           className="flex justify-center"
                         >
                           {/* Render Ad */}
-                          {breakpointColumns === 1 ? (<HorizontalCardPublic
-                            ad={ad}
-                            userId={userId}
-                            isAdCreator={isAdCreator}
-                            handleAdEdit={handleAdEdit}
-                            handleAdView={handleAdView}
-                            handleOpenPlan={handleOpenPlan}
-                            //handleOpenChatId={handleOpenChatId}
-                            userName={userName}
-                            userImage={userImage}
-                          />) : (<CardAuto
-                            ad={ad}
-                            hasOrderLink={true}
-                            hidePrice={true}
-                            userId={userId}
-                            userName={userName}
-                            userImage={userImage}
-                            handleAdEdit={handleAdEdit}
-                            handleAdView={handleAdView}
-                            handleOpenPlan={handleOpenPlan}
-                            handleOpenChatId={handleOpenChatId}
-                          />)}
+                          {activeButton === 1 ? (
+                            <HorizontalCard
+                              ad={ad}
+                              userId={userId}
+                              isAdCreator={isAdCreator}
+                              handleAdEdit={handleAdEdit}
+                              handleAdView={handleAdView}
+                              handleOpenPlan={handleOpenPlan}
+                              handleOpenChatId={handleOpenChatId}
+                              userName={userName}
+                              fullview={breakpointColumns}
+                              userImage={userImage}
+                            />) : (<CardAuto
+                              ad={ad}
+                              hasOrderLink={true}
+                              hidePrice={true}
+                              userId={userId}
+                              userName={userName}
+                              userImage={userImage}
+                              handleAdEdit={handleAdEdit}
+                              handleAdView={handleAdView}
+                              handleOpenPlan={handleOpenPlan}
+                              handleOpenChatId={handleOpenChatId}
+                            />)}
                         </div>
                       );
                     } else {
                       return (
                         <div key={ad._id} className="flex justify-center">
                           {/* Render Ad */}
-                          {breakpointColumns === 1 ? (<HorizontalCardPublic
-                            ad={ad}
-                            userId={userId}
-                            isAdCreator={isAdCreator}
-                            handleAdEdit={handleAdEdit}
-                            handleAdView={handleAdView}
-                            handleOpenPlan={handleOpenPlan}
-                            // handleOpenChatId={handleOpenChatId}
-                            userName={userName}
-                            userImage={userImage}
-                          />) : (<CardAuto
-                            ad={ad}
-                            hasOrderLink={true}
-                            hidePrice={true}
-                            userId={userId}
-                            userName={userName}
-                            userImage={userImage}
-                            handleAdEdit={handleAdEdit}
-                            handleAdView={handleAdView}
-                            handleOpenPlan={handleOpenPlan}
-                            handleOpenChatId={handleOpenChatId}
-                          />)}
+                          {activeButton === 1 ? (
+
+                            <HorizontalCard
+                              ad={ad}
+                              userId={userId}
+                              isAdCreator={isAdCreator}
+                              handleAdEdit={handleAdEdit}
+                              handleAdView={handleAdView}
+                              handleOpenPlan={handleOpenPlan}
+                              handleOpenChatId={handleOpenChatId}
+                              userName={userName}
+                              userImage={userImage}
+                              fullview={breakpointColumns}
+                            />) : (
+                            <CardAuto
+                              ad={ad}
+                              hasOrderLink={true}
+                              hidePrice={true}
+                              userId={userId}
+                              userName={userName}
+                              userImage={userImage}
+                              handleAdEdit={handleAdEdit}
+                              handleAdView={handleAdView}
+                              handleOpenPlan={handleOpenPlan}
+                              handleOpenChatId={handleOpenChatId}
+                            />)}
                         </div>
                       );
                     }
@@ -1800,21 +1837,6 @@ export default function MainView({
                 )
               )}
 
-
-              {/* {loading && (
-
-                <div className="w-full rounded-sm bg-white h-full flex flex-col items-center justify-center">
-                  <h3 className="font-semibold mb-2">{newqueryObject.category === 'Property services' ? (<>Service Providers</>) : (<>Properties</>)} within Kenya</h3>
-                  <Image
-                    src="/assets/icons/loading2.gif"
-                    alt="loading"
-                    width={40}
-                    height={40}
-                    unoptimized
-                  />
-                </div>
-
-              )}*/}
               <FloatingChatIcon onClick={toggleChat} isOpen={isChatOpen} />
               <ChatWindow
                 isOpen={isChatOpen}

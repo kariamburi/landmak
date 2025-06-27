@@ -508,7 +508,7 @@ const CardAuto = ({
             onClick={() => {
               handleAdView(ad);
             }}
-            className="flex gap-1 cursor-pointer items-center dark:text-green-500 text-emerald-700 no-underline"
+            className="flex-wrap gap-1 cursor-pointer items-center dark:text-green-500 text-emerald-700 no-underline"
           >
             {ad.data.contact && ad.data.contact === "contact" ? (
               <div className="font-bold">Contact for price</div>
@@ -542,7 +542,7 @@ const CardAuto = ({
             )}
           </div>
           {areaSize > 0 && (
-            <div className="flex mt-1 gap-2   text-[10px] dark:bg-[#131B1E] dark:text-gray-300 bg-[#ebf2f7] rounded-lg p-1 justify-center border">
+            <div className="flex mt-1 gap-2 text-[10px] dark:bg-[#131B1E] dark:text-gray-300 bg-[#ebf2f7] rounded-lg p-1 justify-center border">
               <label className="text-xs mb-1">
                 Approx. Land Size
                 <br />

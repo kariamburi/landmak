@@ -634,7 +634,7 @@ const VerticalCard = ({
                 onClick={() => {
                   handleAdView(ad);
                 }}
-                className="flex gap-1 cursor-pointer items-center dark:text-green-500 text-emerald-700 no-underline"
+                className="flex-wrap gap-1 cursor-pointer items-center dark:text-green-500 text-emerald-700 no-underline"
               >
                 {ad.data.contact && ad.data.contact === "contact" ? (
                   <div className="text-sm lg:text-base font-bold">Contact for price</div>
