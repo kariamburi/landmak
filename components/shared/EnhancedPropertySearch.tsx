@@ -940,14 +940,14 @@ export default function EnhancedPropertySearch({ userId,
             {!showCategories && (<button
               onClick={() => setShowCategories(true)}
               title="Show Filters"
-              className="flex items-center gap-1 px-3 py-1.5 text-sm rounded-r-full bg-white border shadow text-black hover:bg-gray-100 transition"
+              className="flex items-center gap-1 px-2 lg:px-3 py-1.5 text-sm rounded-r-full bg-white border shadow text-black hover:bg-gray-100 transition"
             >
               <ChevronRight size={20} />
-              <div className="lg:hidden">Show Filter</div>
+              <div className="lg:hidden">Filter</div>
             </button>)}
             <div className="flex flex-col">
               <div className="flex flex-row lg:gap-2 items-center">
-                <h2 className="text-lg font-semibold">{newqueryObject.subcategory}</h2> <p className="lg:text-base text-sm">({data.length} ads within {distance} km)</p>
+                <h2 className="text-lg font-semibold whitespace-nowrap">{newqueryObject.subcategory}</h2> <p className="lg:text-base text-xs">({data.length} ads within {distance} km)</p>
               </div>
               {averagePricePerAcre > 0 && (
                 <div className="text-[10px] text-gray-600 dark:text-gray-300 mt-0">
@@ -988,11 +988,11 @@ export default function EnhancedPropertySearch({ userId,
 
 
             </div>
-            <div className="flex w-full lg:w-auto border rounded px-1 lg:px-2 bg-white shadow-sm items-center gap-0">
+            <div className="hidden lg:inline flex w-full lg:w-auto border rounded px-1 lg:px-2 bg-white shadow-sm items-center gap-0">
               <div className="flex flex-col">
 
                 {selectedAddress && (
-                  <p className="text-sm text-gray-600 w-full lg:w-auto">
+                  <p className="text-sm w-full lg:w-auto">
                     <LocationOnIcon sx={{ fontSize: 14 }} /> {selectedAddress}
                   </p>
                 )}
@@ -1000,7 +1000,7 @@ export default function EnhancedPropertySearch({ userId,
 
 
                 <div className="flex gap-1 items-center">
-                  <label className="text-[10px] lg:text-xs">Radius ({distance} km):</label>
+                  <label className="text-[10px] text-gray-600 lg:text-xs">Radius ({distance} km):</label>
                   <input
                     type="range"
                     min="10"
@@ -1016,6 +1016,7 @@ export default function EnhancedPropertySearch({ userId,
                 </div>
               </div>
             </div>
+
 
             <div className="relative hidden lg:inline text-sm">
               <button
@@ -1073,6 +1074,34 @@ export default function EnhancedPropertySearch({ userId,
               Choose Location
             </button>
 
+          </div>
+          <div className="lg:hidden flex w-full border rounded px-1 lg:px-2 bg-white shadow-sm items-center gap-0">
+            <div className="flex flex-col">
+
+              {selectedAddress && (
+                <p className="text-sm w-full lg:w-auto">
+                  <LocationOnIcon sx={{ fontSize: 14 }} /> {selectedAddress}
+                </p>
+              )}
+
+
+
+              <div className="flex w-full justify-between gap-1 items-center">
+                <label className="text-[10px] text-gray-600 lg:text-xs">Radius ({distance} km):</label>
+                <input
+                  type="range"
+                  min="10"
+                  max="200"
+                  step="10"
+                  value={distance}
+                  onChange={(e) => setDistance(Number(e.target.value))}
+                  className="w-80 cursor-pointer appearance-none h-2 accent-green-600 rounded-lg outline-none"
+                  style={{
+                    background: `linear-gradient(to right, #16a34a 0%, #16a34a ${(distance - 10) / 1.9}%, #E5E7EB ${(distance - 10) / 1.9}%, #E5E7EB 100%)`,
+                  }}
+                />
+              </div>
+            </div>
           </div>
         </div>
 

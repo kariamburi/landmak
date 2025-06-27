@@ -626,7 +626,7 @@ const VerticalCard = ({
               )}
 
               {ad.calcDistance && (
-                <div className="inline-block text-xs text-green-600 bg-green-100 rounded px-2 py-[2px]">
+                <div className="inline-block text-[10px] text-green-600 bg-green-100 rounded px-2 py-[2px]">
                   {Math.round(ad.calcDistance / 100) / 10} KM Away
                 </div>
               )}
