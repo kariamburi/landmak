@@ -1,4 +1,4 @@
 module.exports = {
-  siteUrl: 'https://landmak.co.ke',
+  siteUrl: 'https://mapa.co.ke',
   generateRobotsTxt: true,
 };
