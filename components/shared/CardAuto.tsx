@@ -40,9 +40,9 @@ import { SoldConfirmation } from "./SoldConfirmation";
 import { DivIcon } from "leaflet";
 import { DisputeBadge } from "./DisputeBadge";
 import MapaVerifiedBadge from "./MapaVerifiedBadge";
-const shouldShowRenewButton = (updatedAt: Date, priority: number) => {
+const shouldShowRenewButton = (createdAt: Date, priority: number) => {
   const oneMonthAgo = subMonths(new Date(), 1);
-  return priority === 1 && isBefore(new Date(updatedAt), oneMonthAgo);
+  return priority === 1 && isBefore(new Date(createdAt), oneMonthAgo);
   //return true
 };
 // Correct import
@@ -589,7 +589,7 @@ const CardAuto = ({
           {ad.mapaVerificationStatus && ad.mapaVerificationStatus === 'verified' && <MapaVerifiedBadge size="sm" />}
 
 
-          {isAdCreator && shouldShowRenewButton(ad.updatedAt, ad.priority) && (<div className="flex mt-2 w-full text-xs justify-between items-center">
+          {isAdCreator && shouldShowRenewButton(ad.createdAt, ad.priority) && (<div className="flex mt-2 w-full text-xs justify-between items-center">
             <button
               className="bg-green-600 hover:bg-green-700 text-white p-2 rounded"
               onClick={() => handleRenew(ad._id)}

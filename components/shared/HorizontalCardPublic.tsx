@@ -39,9 +39,9 @@ import { SoldConfirmation } from "./SoldConfirmation";
 import { DisputeBadge } from "./DisputeBadge";
 import MapaVerificationForm from "./MapaVerificationForm";
 import MapaVerifiedBadge from "./MapaVerifiedBadge";
-const shouldShowRenewButton = (updatedAt: Date, priority: number) => {
+const shouldShowRenewButton = (createdAt: Date, priority: number) => {
   const oneMonthAgo = subMonths(new Date(), 1);
-  return priority === 1 && isBefore(new Date(updatedAt), oneMonthAgo);
+  return priority === 1 && isBefore(new Date(createdAt), oneMonthAgo);
 };
 // Correct import
 type CardProps = {
@@ -565,7 +565,7 @@ const HorizontalCardPublic = ({
             {isAdCreator && ad.adstatus === 'Active' && (isSale || isRent) && (
               <SoldConfirmation onStatusUpdate={onStatusUpdate} _id={ad._id} status={isSale ? 'Sold' : 'Rented'} />
             )}
-            {isAdCreator && shouldShowRenewButton(ad.updatedAt, ad.priority) && (<div className="flex mt-2 w-full text-xs justify-between items-center">
+            {isAdCreator && shouldShowRenewButton(ad.createdAt, ad.priority) && (<div className="flex mt-2 w-full text-xs justify-between items-center">
               <button
                 className="bg-green-600 hover:bg-green-700 text-white p-2 rounded"
                 onClick={() => handleRenew(ad._id)}
