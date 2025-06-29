@@ -82,11 +82,12 @@ const dynamicAdSchema = new Schema<IdynamicAd>(
   },
   { timestamps: false } // set to true if you want Mongoose to auto-manage createdAt + updatedAt
 );
-
+//delete mongoose.models.DynamicAd;
 // Optional compound index
 // dynamicAdSchema.index({ "data.category": 1, "data.subcategory": 1, adstatus: 1 });
 
-delete mongoose.models.DynamicAd;
+dynamicAdSchema.index({ "data.propertyarea.location": "2dsphere" });
+dynamicAdSchema.index({ "data.propertyarea.shapesGeo": "2dsphere" });
 const DynamicAd = models.DynamicAd || model<IdynamicAd>('DynamicAd', dynamicAdSchema);
 
 export default DynamicAd;

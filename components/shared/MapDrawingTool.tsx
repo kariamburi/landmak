@@ -56,8 +56,11 @@ type Shape = {
   color: string;
   area: any;
   status: string;
-  // overlay: google.maps.Polygon | google.maps.Polyline;
-  // labelMarker: google.maps.Marker;
+};
+type ShapesGeo = {
+  type: "Polygon";
+  coordinates: number[][][];
+
 };
 interface Props {
   name: string;
@@ -68,6 +71,8 @@ interface Props {
     markers: Marker[];
     shapes: Shape[];
     mapaddress: string;
+    totalArea: number;
+    shapesGeo: ShapesGeo[];
   };
   onSave: () => void;
   onClose: () => void;
@@ -80,6 +85,7 @@ interface Props {
       shapes: Shape[];
       mapaddress: string;
       totalArea: number;
+      shapesGeo: ShapesGeo[];
     }
   ) => void;
 }
@@ -100,6 +106,25 @@ const markerOptions = [
   { label: "Gravel Road", icon: "/assets/map/roadtype_gravel.png" },
   { label: "Police Station", icon: "/assets/map/police.png" },
 ];
+function shapeToGeoJsonPolygon(shape: Shape): GeoJSON.Polygon {
+  if (shape.type !== "polygon") throw new Error("Only polygons are supported");
+
+  const coordinates = shape.path.map(p => [Number(p.lng), Number(p.lat)]);
+
+  // Ensure polygon is closed (first point = last point)
+  if (
+    coordinates.length > 0 &&
+    (coordinates[0][0] !== coordinates[coordinates.length - 1][0] ||
+      coordinates[0][1] !== coordinates[coordinates.length - 1][1])
+  ) {
+    coordinates.push(coordinates[0]);
+  }
+
+  return {
+    type: "Polygon",
+    coordinates: [coordinates],
+  };
+}
 const getParcelsFromURL = (searchParams: URLSearchParams) => {
   const parcels: any[] = [];
 
@@ -117,9 +142,9 @@ const getParcelsFromURL = (searchParams: URLSearchParams) => {
   return parcels;
 };
 export default function MapDrawingTool({ name, selectedCategory, data, onChange, onSave, onClose }: Props) {
-  const [center, setCenter] = useState<any>(data.location?.coordinates ? { lat: data.location.coordinates[0], lng: data.location.coordinates[1] } : defaultcenter);
-  const [latitude, setLatitude] = useState(data.location?.coordinates ? data.location.coordinates[0] : '');
-  const [longitude, setLongitude] = useState(data.location?.coordinates ? data.location.coordinates[1] : '');
+  const [center, setCenter] = useState<any>(data.location?.coordinates ? { lat: data.location.coordinates[1], lng: data.location.coordinates[0] } : defaultcenter);
+  const [latitude, setLatitude] = useState(data.location?.coordinates ? data.location.coordinates[1] : '');
+  const [longitude, setLongitude] = useState(data.location?.coordinates ? data.location.coordinates[0] : '');
   const mapRef = useRef<HTMLDivElement>(null);
   const mapInstance = useRef<google.maps.Map | null>(null);
   const drawingManager = useRef<google.maps.drawing.DrawingManager | null>(null);
@@ -158,14 +183,17 @@ export default function MapDrawingTool({ name, selectedCategory, data, onChange,
       const safeAddress = mapaddress ?? "";
       setAddress(safeAddress);
       const totalArea = shapes.reduce((sum, shape) => sum + parseFloat(shape.area || 0), 0);
-
+      const shapesGeo: ShapesGeo[] = shapes
+        .filter(s => s.type === "polygon")
+        .map(shapeToGeoJsonPolygon);
       onChange(name, {
-        location: { type: "Point", coordinates: [center.lat, center.lng] },
+        location: { type: "Point", coordinates: [center.lng, center.lat] },
         polylines,
         markers,
         shapes,
         mapaddress: safeAddress,
         totalArea,
+        shapesGeo,
       });
     };
     fetchAddress();
@@ -210,14 +238,17 @@ export default function MapDrawingTool({ name, selectedCategory, data, onChange,
       const pos = marker.getPosition();
       if (!pos) return;
       const totalArea = shapes.reduce((sum, shape) => sum + parseFloat(shape.area || 0), 0);
-
+      const shapesGeo: ShapesGeo[] = shapes
+        .filter(s => s.type === "polygon")
+        .map(shapeToGeoJsonPolygon);
       onChange(name, {
-        location: { type: "Point", coordinates: [pos.lat(), pos.lng()] },
+        location: { type: "Point", coordinates: [pos.lng(), pos.lat()] },
         polylines,
         markers,
         shapes,
         mapaddress,
         totalArea,
+        shapesGeo,
       });
     });
     markerRef.current = marker;
@@ -309,14 +340,17 @@ export default function MapDrawingTool({ name, selectedCategory, data, onChange,
           );
           // propagate change
           const totalArea = shapes.reduce((sum, shape) => sum + parseFloat(shape.area || 0), 0);
-
+          const shapesGeo: ShapesGeo[] = shapes
+            .filter(s => s.type === "polygon")
+            .map(shapeToGeoJsonPolygon);
           onChange(name, {
-            location: { type: "Point", coordinates: [center.lat, center.lng] },
+            location: { type: "Point", coordinates: [center.lng, center.lat] },
             polylines,
             markers: newMarkers,
             shapes,
             mapaddress,
             totalArea,
+            shapesGeo,
           });
 
           return newMarkers;
@@ -588,14 +622,17 @@ export default function MapDrawingTool({ name, selectedCategory, data, onChange,
     const pos = mapInstance.current?.getCenter();
     if (pos) {
       const totalArea = shapes.reduce((sum, shape) => sum + parseFloat(shape.area || 0), 0);
-
+      const shapesGeo: ShapesGeo[] = shapes
+        .filter(s => s.type === "polygon")
+        .map(shapeToGeoJsonPolygon);
       onChange(name, {
-        location: { type: "Point", coordinates: [pos.lat(), pos.lng()] },
+        location: { type: "Point", coordinates: [pos.lng(), pos.lat()] },
         polylines,
         markers: [],
         shapes,
         mapaddress,
         totalArea,
+        shapesGeo,
       });
     }
   };
@@ -673,14 +710,17 @@ export default function MapDrawingTool({ name, selectedCategory, data, onChange,
     const pos = mapInstance.current?.getCenter();
     if (!pos) return;
     const totalArea = shapes.reduce((sum, shape) => sum + parseFloat(shape.area || 0), 0);
-
+    const shapesGeo: ShapesGeo[] = shapes
+      .filter(s => s.type === "polygon")
+      .map(shapeToGeoJsonPolygon);
     onChange(name, {
-      location: { type: "Point", coordinates: [pos.lat(), pos.lng()] },
+      location: { type: "Point", coordinates: [pos.lng(), pos.lat()] },
       polylines,
       markers,
       shapes,
       mapaddress,
       totalArea,
+      shapesGeo,
     });
   }, [polylines, markers, shapes]);
   const [selected, setSelected] = useState(markerOptions[0]);
@@ -956,14 +996,17 @@ export default function MapDrawingTool({ name, selectedCategory, data, onChange,
     setLatitude(latitude);
     setLongitude(longitude);
     const totalArea = shapes.reduce((sum, shape) => sum + parseFloat(shape.area || 0), 0);
-
+    const shapesGeo: ShapesGeo[] = shapes
+      .filter(s => s.type === "polygon")
+      .map(shapeToGeoJsonPolygon);
     onChange(name, {
-      location: { type: "Point", coordinates: [latitude, longitude] },
+      location: { type: "Point", coordinates: [longitude, latitude] },
       polylines,
       markers,
       shapes,
       mapaddress,
       totalArea,
+      shapesGeo,
     });
 
 
@@ -1331,14 +1374,17 @@ export default function MapDrawingTool({ name, selectedCategory, data, onChange,
                 setLatitude(coord.lat);
                 setLongitude(coord.lng);
                 const totalArea = shapes.reduce((sum, shape) => sum + parseFloat(shape.area || 0), 0);
-
+                const shapesGeo: ShapesGeo[] = shapes
+                  .filter(s => s.type === "polygon")
+                  .map(shapeToGeoJsonPolygon);
                 onChange(name, {
-                  location: { type: "Point", coordinates: [coord.lat, coord.lng] },
+                  location: { type: "Point", coordinates: [coord.lng, coord.lat] },
                   polylines,
                   markers,
                   shapes,
                   mapaddress,
                   totalArea,
+                  shapesGeo,
                 });
                 centerSet = true;
               }

@@ -379,7 +379,7 @@ const CardAuto = ({
                 </div>
               </div>
             )}
-          {isAdCreator && !hidePrice && (
+          {isAdCreator && (
             <div className="absolute right-2 top-10 flex flex-col gap-4 rounded-xl bg-white p-3 shadow-sm transition-all">
               <div
                 onClick={() => {
@@ -543,15 +543,15 @@ const CardAuto = ({
           </div>
           {areaSize > 0 && (
             <div className="flex mt-1 gap-2 text-[10px] dark:bg-[#131B1E] dark:text-gray-300 bg-[#ebf2f7] rounded-lg p-1 justify-center border">
-              <label className="text-xs mb-1">
+              <label className="mb-1">
                 Approx. Land Size
                 <br />
                 ≈ {areaSize.toFixed(2)} m²
-                <br />
-                ≈ {(areaSize / 4046.86).toFixed(2)} acres
-                <br />
-                ≈ {(areaSize / 10000).toFixed(2)} hectares
-                <br />
+
+                ≈ {(areaSize / 4046.86).toFixed(2)} ac
+
+                ≈ {(areaSize / 10000).toFixed(2)} ha
+
 
               </label>
             </div>

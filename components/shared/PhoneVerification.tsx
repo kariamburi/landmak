@@ -129,9 +129,9 @@ export default function PhoneVerification({
           </div>
         </>
       ) : (
-        <>
+        <div className="flex w-full gap-2">
           <input
-            className="w-full border px-2 py-2 rounded"
+            className="flex-1 border px-2 py-2 rounded"
             placeholder="Enter OTP"
             value={otp}
             onChange={(e) => setOtp(e.target.value)}
@@ -144,7 +144,7 @@ export default function PhoneVerification({
           >
             {loading ? "Verifying..." : "Verify OTP"}
           </div>
-        </>
+        </div>
       )}
 
       {error && <p className="text-red-500 text-sm">{error}</p>}

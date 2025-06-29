@@ -117,7 +117,7 @@ const markerOptions = [
 ];
 
 export default function MapDrawingTool({ data }: Props) {
-  const [center, setCenter] = useState<any>(data.location?.coordinates ? { lat: data.location.coordinates[0], lng: data.location.coordinates[1] } : defaultcenter);
+  const [center, setCenter] = useState<any>(data.location?.coordinates ? { lat: data.location.coordinates[1], lng: data.location.coordinates[0] } : defaultcenter);
   const mapRef = useRef<HTMLDivElement>(null);
   const mapInstance = useRef<google.maps.Map | null>(null);
   const drawingManager = useRef<google.maps.drawing.DrawingManager | null>(null);

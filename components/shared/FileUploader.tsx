@@ -17,22 +17,23 @@ import { Icon } from "@iconify/react";
 import imageCompression from "browser-image-compression";
 import threeDotsScale from "@iconify-icons/svg-spinners/3-dots-scale"; // Correct import
 import CircularProgress from "@mui/material/CircularProgress";
- // Correct import
+// Correct import
 type FileUploaderProps = {
   onFieldChange: (urls: string[]) => void;
   imageUrls: string[];
   userName: string;
   category: string;
+  anayze: string;
   adId: string;
   setFiles: Dispatch<SetStateAction<File[]>>;
 };
 const compressImagee = async (file: File): Promise<File> => {
   const options = {
-   // maxSizeMB: 2, // Target size in MB
-   // maxWidthOrHeight: 1280,
-   maxSizeMB: 0.8,           // Slightly higher quality, still compressed
-  maxWidthOrHeight: 1280,   // Better clarity on retina screens
-  useWebWorker: true,
+    // maxSizeMB: 2, // Target size in MB
+    // maxWidthOrHeight: 1280,
+    maxSizeMB: 0.8,           // Slightly higher quality, still compressed
+    maxWidthOrHeight: 1280,   // Better clarity on retina screens
+    useWebWorker: true,
   };
 
   try {
@@ -179,6 +180,7 @@ export function FileUploader({
   imageUrls,
   userName,
   category,
+  anayze,
   adId,
   onFieldChange,
   setFiles,
@@ -189,76 +191,76 @@ export function FileUploader({
   const [processingStatus, setProcessingStatus] = useState(false);
   const [showmessage, setmessage] = useState("");
   const onDrop = useCallback(
-  async (acceptedFiles: File[]) => {
-    setProcessingStatus(true);
-    try {
-      const processedFiles: File[] = [];
+    async (acceptedFiles: File[]) => {
+      setProcessingStatus(true);
+      try {
+        const processedFiles: File[] = [];
 
-      for (const originalFile of acceptedFiles) {
-        const isScreenshot =
-          /screenshot/i.test(originalFile.name) || /Screen\s?Shot/i.test(originalFile.name);
-        if (isScreenshot) {
-          toast({
-            variant: "destructive",
-            title: "Failed!",
-            description: `${originalFile.name} appears to be a screenshot and will not be uploaded.`,
-            duration: 5000,
-          });
-          continue;
-        }
+        for (const originalFile of acceptedFiles) {
+          const isScreenshot =
+            /screenshot/i.test(originalFile.name) || /Screen\s?Shot/i.test(originalFile.name);
+          if (isScreenshot) {
+            toast({
+              variant: "destructive",
+              title: "Failed!",
+              description: `${originalFile.name} appears to be a screenshot and will not be uploaded.`,
+              duration: 5000,
+            });
+            continue;
+          }
 
-        const previewUrl = convertFileToUrl(originalFile);
-        if (imageUrls.includes(previewUrl)) {
-          toast({
-            variant: "destructive",
-            title: "Failed!",
-            description: `${originalFile.name} has already been uploaded.`,
-            duration: 5000,
-          });
-          continue;
-        }
+          const previewUrl = convertFileToUrl(originalFile);
+          if (imageUrls.includes(previewUrl)) {
+            toast({
+              variant: "destructive",
+              title: "Failed!",
+              description: `${originalFile.name} has already been uploaded.`,
+              duration: 5000,
+            });
+            continue;
+          }
 
-        let file = originalFile;
+          let file = originalFile;
 
-        if (file.size > 0.8 * 1024 * 1024) {
-          try {
-            const compressed = await compressImage(file);
-            if (compressed.size > 0.8 * 1024 * 1024) {
-              toast({
-                variant: "destructive",
-                title: "Failed!",
-                description: `${file.name} is still too large after compression. Skipped.`,
-                duration: 5000,
-              });
+          if (file.size > 0.8 * 1024 * 1024) {
+            try {
+              const compressed = await compressImage(file);
+              if (compressed.size > 0.8 * 1024 * 1024) {
+                toast({
+                  variant: "destructive",
+                  title: "Failed!",
+                  description: `${file.name} is still too large after compression. Skipped.`,
+                  duration: 5000,
+                });
+                continue;
+              }
+              file = compressed;
+            } catch (err) {
+              console.error("Compression failed", err);
               continue;
             }
-            file = compressed;
-          } catch (err) {
-            console.error("Compression failed", err);
-            continue;
+          }
+
+          try {
+            const watermarked = await applyWatermark(file, userName.toUpperCase(), "Posted on mapa");
+            processedFiles.push(watermarked);
+          } catch (error) {
+            console.error("Watermarking failed, proceeding with original image:", error);
+            processedFiles.push(file);
           }
         }
 
-        try {
-          const watermarked = await applyWatermark(file, userName.toUpperCase(), "Posted on mapa");
-          processedFiles.push(watermarked);
-        } catch (error) {
-          console.error("Watermarking failed, proceeding with original image:", error);
-          processedFiles.push(file);
-        }
+        setFiles((prevFiles) => [...prevFiles, ...processedFiles]);
+        const urls = processedFiles.map((file) => convertFileToUrl(file));
+        onFieldChange([...imageUrls, ...urls]);
+      } catch (err) {
+        console.error("Processing failed", err);
+      } finally {
+        setProcessingStatus(false);
       }
-
-      setFiles((prevFiles) => [...prevFiles, ...processedFiles]);
-      const urls = processedFiles.map((file) => convertFileToUrl(file));
-      onFieldChange([...imageUrls, ...urls]);
-    } catch (err) {
-      console.error("Processing failed", err);
-    } finally {
-      setProcessingStatus(false);
-    }
-  },
-  [imageUrls, setFiles, onFieldChange, userName, toast]
-);
+    },
+    [imageUrls, setFiles, onFieldChange, userName, toast]
+  );
 
 
   const { getRootProps, getInputProps } = useDropzone({
@@ -295,67 +297,70 @@ export function FileUploader({
       <div className="text-left text-sm w-full">
         <div className="font-semibold">Add Photo</div>
         <div>
-         
-         {category ==='Property Services' || category ==='Wanted Ads' ? (<> 
-         <small className="dark:text-gray-500 text-[#464b4f]">Add Profile Image</small>
-         </>):(<><small className="dark:text-gray-500 text-[#464b4f]">Add at least 3 photos for this category</small>  <br />
-          <small className="dark:text-gray-500 text-[#464b4f]">
-            First picture - is the title picture.
-          </small>
-          </>)}   
-          
-        
+
+          {category === 'Property Services' || category === 'Wanted Ads' ? (<>
+            <small className="dark:text-gray-500 text-[#464b4f]">Add Profile Image</small>
+          </>) : (<><small className="dark:text-gray-500 text-[#464b4f]">Add at least 3 photos for this category</small>  <br />
+            <small className="dark:text-gray-500 text-[#464b4f]">
+              First picture - is the title picture.
+            </small>
+          </>)}
+
+
         </div>
         {processingStatus && (
-        <div className="flex p-2 gap-2 text-gray-500 justify-center items-center">
-          <CircularProgress sx={{ color: "gray" }} size={30}/> processing images...
-        </div>
-      )}
+          <div className="flex p-2 gap-2 text-gray-500 justify-center items-center">
+            <CircularProgress sx={{ color: "gray" }} size={30} /> processing images...
+          </div>
+        )}
+        {anayze && (
+          <div className="text-red-400 text-sm">
+            {anayze}
+          </div>)}
         {imageUrls.length > 0 ? (
           <div className="flex w-full m-1 ">
             <div {...getRootProps()}>
               <AddBoxIcon className="my-auto hover:cursor-pointer" />
             </div>
             <div className="grid grid-cols-3 lg:grid-cols-5 w-full p-2 rounded-sm">
-          
-{imageUrls.map((url, index) => {
- 
-  return (
-    <div
-      key={index}
-      className="relative justify-center items-center mb-1 rounded-sm bg-[#e4ebeb] shadow-sm p-1 mr-1 flex-shrink-0"
-    >
-      {/* Show spinner only when loading */}
-      {isLoading && (
-        <div className="absolute inset-0 flex justify-center items-center bg-gray-100">
-          <Icon icon={threeDotsScale} className="w-6 h-6 text-gray-500" />
-        </div>
-      )}
 
-      <Zoom>
-        <img
-          src={url}
-          alt={`image-${index}`}
-          className={`w-full h-[100px] object-cover object-center rounded-sm transition-opacity duration-300 ${
-            isLoading ? "opacity-0" : "opacity-100"
-          }`}
-          onLoad={() => setIsLoading(false)} // Hide spinner when loaded
-          onError={(e) => {
-            e.currentTarget.src = "/assets/icons/error.svg"; // Fallback image
-            setIsLoading(false); // Hide spinner on error
-          }}
-        />
-      </Zoom>
+              {imageUrls.map((url, index) => {
 
-      <div
-        onClick={() => handleRemoveImage(index)}
-        className="absolute top-0 right-0 rounded-xl bg-white p-1 shadow-sm"
-      >
-        <img src="/assets/icons/delete.svg" alt="delete" width={20} height={20} />
-      </div>
-    </div>
-  );
-})}
+                return (
+                  <div
+                    key={index}
+                    className="relative justify-center items-center mb-1 rounded-sm bg-[#e4ebeb] shadow-sm p-1 mr-1 flex-shrink-0"
+                  >
+                    {/* Show spinner only when loading */}
+                    {isLoading && (
+                      <div className="absolute inset-0 flex justify-center items-center bg-gray-100">
+                        <Icon icon={threeDotsScale} className="w-6 h-6 text-gray-500" />
+                      </div>
+                    )}
+
+                    <Zoom>
+                      <img
+                        src={url}
+                        alt={`image-${index}`}
+                        className={`w-full h-[100px] object-cover object-center rounded-sm transition-opacity duration-300 ${isLoading ? "opacity-0" : "opacity-100"
+                          }`}
+                        onLoad={() => setIsLoading(false)} // Hide spinner when loaded
+                        onError={(e) => {
+                          e.currentTarget.src = "/assets/icons/error.svg"; // Fallback image
+                          setIsLoading(false); // Hide spinner on error
+                        }}
+                      />
+                    </Zoom>
+
+                    <div
+                      onClick={() => handleRemoveImage(index)}
+                      className="absolute top-0 right-0 rounded-xl bg-white p-1 shadow-sm"
+                    >
+                      <img src="/assets/icons/delete.svg" alt="delete" width={20} height={20} />
+                    </div>
+                  </div>
+                );
+              })}
 
 
             </div>

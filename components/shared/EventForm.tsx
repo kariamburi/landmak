@@ -13,7 +13,7 @@ import { FileUploader } from "./FileUploader";
 import { useUploadThing } from "@/lib/uploadthing";
 import CircularProgressWithLabel from "./CircularProgressWithLabel";
 import { Button } from "../ui/button";
-import { createData, updateAd } from "@/lib/actions/dynamicAd.actions";
+import { checkAdConflicts, createData, updateAd } from "@/lib/actions/dynamicAd.actions";
 import TextField from "@mui/material/TextField";
 import Autocomplete from "@mui/material/Autocomplete";
 import CategorySelect from "./CategorySelect";
@@ -74,6 +74,8 @@ import MapDrawingTool from "./MapDrawingTool";
 import { createLoan } from "@/lib/actions/loan.actions";
 import { MapaPricingModal } from "./MapaPricingModal";
 import PhoneVerification from "./PhoneVerification";
+//import { checkAdConflicts } from "@/lib/actions/checkAdConflicts";
+import { analyzeBeforeUpload } from "@/lib/actions/analyzeBeforeUpload";
 const ReactQuill = dynamic(() => import("react-quill"), {
   ssr: false,
   loading: () => (
@@ -251,6 +253,7 @@ const AdForm = ({
   const [files, setFiles] = useState<File[]>([]);
   const [loading, setLoading] = useState(false);
   const [uploadProgress, setUploadProgress] = useState(2);
+  const [createStatus, setCreateStatus] = useState('Submitting');
   const [defaults, setDefualts] = useState<any>([]);
   const [negotiable, setNegotiable] = useState<"yes" | "no" | "not sure">(
     "not sure"
@@ -459,6 +462,7 @@ const AdForm = ({
   const [Priority_, setpriority] = useState(0);
   const [Adstatus_, setadstatus] = useState("Pending");
   const [color, setColor] = useState("#000000");
+  const [anayze, setAnalyze] = useState("");
   const [loadingSub, setLoadingSub] = useState<boolean>(true);
   const [ExpirationDate_, setexpirationDate] = useState(new Date());
 
@@ -537,8 +541,71 @@ const AdForm = ({
     setFormErrors({});
     return true;
   };
-
   const uploadFiles = async () => {
+    const uploadedUrls: string[] = [];
+    let i = 0;
+    for (const file of files) {
+      try {
+        const analysis = await analyzeBeforeUpload(file);
+
+        // Proceed to upload
+
+        const uploadedImages = await startUpload([file]);
+
+        if (uploadedImages && uploadedImages.length > 0) {
+          uploadedUrls.push(uploadedImages[0].url);
+          i++;
+          setUploadProgress(Math.round((i / files.length) * 100));
+        }
+      } catch (error: any) {
+        console.error("Image analysis failed:", error);
+
+        if (error.hasWatermark) {
+          setAnalyze("Remove watermark or overlaid text from images.");
+
+          //toast({
+          //  title: "Rejected",
+          //  description: "Remove watermark or overlaid text from images.",
+          //   variant: "destructive",
+          // });
+        } else if (error.likelyDownloaded) {
+          setAnalyze("Please upload original, not downloaded images.");
+
+          //toast({
+          //  title: "Rejected",
+          //  description: "Please upload original, not downloaded images.",
+          //  variant: "destructive",
+          // });
+        } else if (!error.isRealProperty) {
+          setAnalyze("Only real land/property photos are allowed.");
+
+          //toast({
+          //  title: "Rejected",
+          //  description: "Only real land/property photos are allowed.",
+          //  variant: "destructive",
+          // });
+        } else {
+          setAnalyze("Image analysis failed.");
+          // toast({
+          // title: "Error",
+          // description: "Image analysis failed.",
+          // variant: "destructive",
+          //});
+        }
+      }
+    }
+
+    const successfulUploads = uploadedUrls.filter((url) => !url.includes("blob:"));
+
+    if (successfulUploads.length === 0) {
+      throw new Error("All images failed analysis");
+    }
+
+    return successfulUploads;
+
+  };
+
+  const uploadFiless = async () => {
     const uploadedUrls: string[] = [];
     let i = 0;
     for (const file of files) {
@@ -765,15 +832,39 @@ const AdForm = ({
           };
 
         } else {
-          const uploadedUrls = await uploadFiles();
-          if (!uploadedUrls) return;
 
-          finalData = {
-            ...formData,
-            imageUrls: uploadedUrls,
-            price: parseCurrencyToNumber(formData["price"].toString()),
-            phone,
-          };
+          const precheck: any = await checkAdConflicts(formData);
+          if (precheck.error) {
+            toast({
+              variant: "destructive",
+              title: "Duplicate Detected",
+              description: precheck.error,
+              duration: 6000,
+            });
+            setLoading(false);
+            return;
+          }
+          try {
+            const uploadedUrls = await uploadFiles();
+           
+
+            finalData = {
+              ...formData,
+              imageUrls: uploadedUrls,
+              price: parseCurrencyToNumber(formData["price"].toString()),
+              phone,
+            };
+
+            // proceed to save the finalData...
+          } catch (error) {
+            console.error("Upload halted:", error);
+            toast({
+              title: "Upload Blocked",
+              description: "All selected images were rejected. Please upload valid property photos.",
+              variant: "destructive",
+            });
+            return;
+          }
         }
 
         const pricePack = Number(priceInput);
@@ -793,13 +884,6 @@ const AdForm = ({
           path: "/create",
         });
 
-        //  try {
-        //   if (!user.user.phone) {
-        //     await updateUserPhone(userId, phone);
-        //  }
-        //} catch (err) {
-        //  console.error("Failed to update user phone:", err);
-        //}
 
         setFormData(defaults);
         setFiles([]);
@@ -821,6 +905,7 @@ const AdForm = ({
             handleAdView?.(newAd);
           }
         }
+
 
       }
 
@@ -1133,6 +1218,7 @@ const AdForm = ({
                     adId={adId || ""}
                     userName={userName}
                     category={selectedCategory}
+                    anayze={anayze}
                   />
                   {formErrors["imageUrls"] && (
                     <p className="text-red-500 text-sm">
@@ -2371,15 +2457,11 @@ const AdForm = ({
             {/* Header */}
             <div className="flex font-bold gap-1 text-[#D1D5DB] items-center">
 
-              {type === "Update" ? <><CircularProgress sx={{ color: '#D1D5DB' }} />Updating Ad...</> : <><CircularProgressWithLabel value={uploadProgress} />Creating Ad...</>}
+              {type === "Update" ? <><CircularProgress sx={{ color: '#D1D5DB' }} />Updating Ad...</> : <><CircularProgress sx={{ color: '#D1D5DB' }} />{createStatus}...</>}
             </div>
           </div>
         </div>)}
       </>)}
-
-
-
-
     </>
   );
 };

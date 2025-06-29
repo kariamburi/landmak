@@ -126,7 +126,11 @@ export const createData = async (
 export async function getAlldynamicAd({ limit = 20, page = 1, queryObject }: GetAlldynamicAdParams) {
   try {
     await connectToDatabase();
+    // If using Mongoose
 
+    // Drop faulty index
+    //await DynamicAd.collection.dropIndex("data.propertyarea.location_2dsphere");
+    //await DynamicAd.collection.dropIndex("data.propertyarea.shapesGeo_2dsphere");
     const parseCurrencyToNumber = (value: string): number => {
       return Number(value.replace(/,/g, ""));
     };
@@ -218,7 +222,7 @@ export async function getAlldynamicAd({ limit = 20, page = 1, queryObject }: Get
       const ads = await DynamicAd.aggregate([
         {
           $geoNear: {
-            near: { type: "Point", coordinates: [parseFloat(lat), parseFloat(lng)] },
+            near: { type: "Point", coordinates: [parseFloat(lng), parseFloat(lat)] },
             spherical: true,
             distanceField: "calcDistance",
             query: { ...conditions, "data.propertyarea.location": { $exists: true, $ne: null } },
@@ -418,7 +422,7 @@ export async function getListingsNearLocation({ limit = 20, queryObject
     const ads = await DynamicAd.aggregate([
       {
         $geoNear: {
-          near: { type: "Point", coordinates: [parseFloat(lat), parseFloat(lng)] },
+          near: { type: "Point", coordinates: [parseFloat(lng), parseFloat(lat)] },
           spherical: true,
           distanceField: "calcDistance",
           query: conditions, // Filter by subcategory
@@ -1303,3 +1307,58 @@ export async function getAllAds() {
     return 0;
   }
 }
+export const checkAdConflicts = async (formData: any) => {
+  await connectToDatabase();
+
+  const propertyarea = formData?.propertyarea;
+  console.log(propertyarea?.shapesGeo);
+  // ✅ Check for overlapping shapesGeo
+  if (propertyarea?.shapesGeo && Array.isArray(propertyarea.shapesGeo)) {
+    for (const shape of propertyarea.shapesGeo) {
+      const overlapping = await DynamicAd.findOne({
+        adstatus: { $in: ["Active", "Pending"] },
+        "data.propertyarea.shapesGeo": {
+          $exists: true,
+          $elemMatch: {
+            $geoIntersects: {
+              $geometry: shape,
+            },
+          },
+        },
+      });
+
+      if (overlapping) {
+        return {
+          error: "A property with overlapping boundary already exists.",
+          overlappingAdId: overlapping._id.toString(),
+          title: overlapping.data?.title,
+          location: overlapping.data?.propertyarea?.mapaddress,
+        };
+      }
+    }
+  }
+
+  // ✅ Check for nearby existing location
+  if (propertyarea?.location?.coordinates) {
+    const nearby = await DynamicAd.findOne({
+      adstatus: { $in: ["Active", "Pending"] },
+      "data.propertyarea.location": {
+        $near: {
+          $geometry: propertyarea.location,
+          $maxDistance: 10, // in meters
+        },
+      },
+    });
+
+    if (nearby) {
+      return {
+        error: "This location already exists.",
+        nearbyAdId: nearby._id.toString(),
+        title: nearby.data?.title,
+      };
+    }
+  }
+
+  // ✅ If no conflicts found
+  return { success: true };
+};

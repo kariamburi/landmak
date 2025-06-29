@@ -344,8 +344,8 @@ export default function EnhancedPropertySearch({ userId,
       data.forEach((property: any) => {
         bounds.extend(
           new google.maps.LatLng(
-            property.data.propertyarea.location.coordinates[0],
-            property.data.propertyarea.location.coordinates[1]
+            property.data.propertyarea.location.coordinates[1],
+            property.data.propertyarea.location.coordinates[0]
           )
         );
       });
@@ -1315,8 +1315,8 @@ export default function EnhancedPropertySearch({ userId,
                     key={property.id}
                     onClick={() => setSelectedAd(property)}
                     position={{
-                      lat: property.data.propertyarea.location.coordinates[0], // Latitude should be at index 1
-                      lng: property.data.propertyarea.location.coordinates[1], // Longitude should be at index 0
+                      lat: property.data.propertyarea.location.coordinates[1], // Latitude should be at index 1
+                      lng: property.data.propertyarea.location.coordinates[0], // Longitude should be at index 0
                     }}
                     icon={{
                       url: "http://maps.google.com/mapfiles/ms/icons/green-dot.png", // Green marker
@@ -1329,14 +1329,18 @@ export default function EnhancedPropertySearch({ userId,
                 {selectedAd && (
                   <InfoWindow
                     position={{
-                      lat: selectedAd.data.propertyarea.location.coordinates[0], // Latitude should be at index 1
-                      lng: selectedAd.data.propertyarea.location.coordinates[1], // Longitude should be at index 0
+                      lat: selectedAd.data.propertyarea.location.coordinates[1], // Latitude should be at index 1
+                      lng: selectedAd.data.propertyarea.location.coordinates[0], // Longitude should be at index 0
                     }}
                     onCloseClick={() => setSelectedAd(null)}
                   >
                     <div
+                      onClick={() => {
+
+                        handleAdView(selectedAd);
+                      }}
                       className="relative bg-green-600 flex cursor-pointer items-center justify-center p-0 w-[150px] h-[100px] rounded-lg bg-cover bg-center text-white"
-                    // style={{ backgroundImage: `url(${selectedAd.data.imageUrls[0]})` }}
+                      style={{ backgroundImage: `url(${selectedAd.data.imageUrls[0]})` }}
                     >
                       <div
                         onClick={() => {

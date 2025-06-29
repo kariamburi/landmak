@@ -226,7 +226,7 @@ export default function MainView({
   const [CategorySelect, setCategorySelect] = useState('');
   const [wantedsubcategory, setWantedsubcategory] = useState('');
   const [wantedcategory, setWantedcategory] = useState('');
-
+  const [showCategories, setShowCategories] = useState(true);
   const { toast } = useToast()
 
   const router = useRouter();
@@ -254,7 +254,7 @@ export default function MainView({
     setIsOpenChat(false);
     setIsOpenChatId(false);
     setIsOpenReview(false);
-    setIsOpenShop(false);
+    // setIsOpenShop(false);
     setIsOpenSettings(false);
     setIsOpenPerfomance(false);
     setIsOpenSell(false);
@@ -833,7 +833,6 @@ export default function MainView({
     }
     fetchAds();
   }, [page, newqueryObject]);
-
   const lastAdRef = (node: any) => {
     if (loading) return;
     if (observer.current) observer.current.disconnect();
@@ -942,7 +941,6 @@ export default function MainView({
   const [selectedCategory, setSelectedCategory] = useState(queryObject.subcategory);
   const [distance, setDistance] = useState(200);
   const [showList, setShowList] = useState(true);
-  const [showCategories, setShowCategories] = useState(true);
   const [showMap, setShowMap] = useState(true);
   const [showLocationModal, setShowLocationModal] = useState(false);
   const [selectedLocation, setSelectedLocation] = useState("");
@@ -1078,8 +1076,8 @@ export default function MainView({
       data.forEach((property: any) => {
         bounds.extend(
           new google.maps.LatLng(
-            property.data.propertyarea.location.coordinates[0],
-            property.data.propertyarea.location.coordinates[1]
+            property.data.propertyarea.location.coordinates[1],
+            property.data.propertyarea.location.coordinates[0]
           )
         );
       });
@@ -1205,7 +1203,6 @@ export default function MainView({
         <link rel="manifest" href="/manifest.json" />
         <link rel="canonical" href="https://mapa.co.ke" />
       </Head>
-
       {/* Mobile Top Bar */}
       <div className="fixed top-0 left-0 right-0 z-50 bg-[#e4ebeb] p-0 border-b flex items-center justify-between">
         {showCategories && (
@@ -1396,15 +1393,7 @@ export default function MainView({
             </div>
           </div>
         </div>
-
-
-
-
-
-
         <AppPopup />
-
-
       </div>
 
       {/* Sidebar */}
@@ -1523,8 +1512,6 @@ export default function MainView({
           </div>
         </aside>
       )}
-
-
       {/* Main Content */}
       <main className="flex-1 bg-[#e4ebeb] flex flex-col p-2 h-full overflow-hidden pt-[60px]">
         {/* Header */}
@@ -1977,8 +1964,8 @@ export default function MainView({
                     key={property.id}
                     onClick={() => setSelectedAd(property)}
                     position={{
-                      lat: property.data.propertyarea.location.coordinates[0], // Latitude should be at index 1
-                      lng: property.data.propertyarea.location.coordinates[1], // Longitude should be at index 0
+                      lat: property.data.propertyarea.location.coordinates[1], // Latitude should be at index 1
+                      lng: property.data.propertyarea.location.coordinates[0], // Longitude should be at index 0
                     }}
                     icon={{
                       url: "http://maps.google.com/mapfiles/ms/icons/green-dot.png", // Green marker
@@ -1992,12 +1979,16 @@ export default function MainView({
                 {selectedAd && (
                   <InfoWindow
                     position={{
-                      lat: selectedAd.data.propertyarea.location.coordinates[0], // Latitude should be at index 1
-                      lng: selectedAd.data.propertyarea.location.coordinates[1], // Longitude should be at index 0
+                      lat: selectedAd.data.propertyarea.location.coordinates[1], // Latitude should be at index 1
+                      lng: selectedAd.data.propertyarea.location.coordinates[0], // Longitude should be at index 0
                     }}
                     onCloseClick={() => setSelectedAd(null)}
                   >
                     <div
+                      onClick={() => {
+
+                        handleAdView(selectedAd);
+                      }}
                       className="relative bg-green-600 flex cursor-pointer items-center justify-center p-0 w-[150px] h-[100px] rounded-lg bg-cover bg-center text-white"
                       style={{ backgroundImage: `url(${selectedAd.data.imageUrls[0]})` }}
                     >
@@ -2026,7 +2017,8 @@ export default function MainView({
                 )}
 
 
-              </GoogleMap></>) : (<> <div className="absolute inset-0 z-5 flex items-center justify-center bg-white/70">
+              </GoogleMap>
+              </>) : (<> <div className="absolute inset-0 z-5 flex items-center justify-center bg-white/70">
                 <div className="animate-spin rounded-full h-8 w-8 border-t-2 border-b-2 border-gray-800" />
                 <span className="ml-2 text-gray-700 font-medium">Loading map...</span>
               </div></>)}
@@ -2306,6 +2298,7 @@ export default function MainView({
             handleOpenP={handleOpenP} />
         </div>
       </footer>
+
     </div>
 
   );

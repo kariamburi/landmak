@@ -212,7 +212,7 @@ const HorizontalCardPublic = ({
             onClick={() => {
               handleAdView(ad);
             }}
-            className="relative rounded-l-lg w-[150px] h-[200px]"
+            className="relative rounded-l-lg w-[150px] h-full"
 
             style={
               ad.plan.name !== "Free"
@@ -460,7 +460,21 @@ const HorizontalCardPublic = ({
                 </div>
               </div>
             )}
+            {areaSize > 0 && (
+              <div className="flex mb-1 mt-1 gap-2 text-[10px] dark:bg-[#131B1E] dark:text-gray-300 bg-[#ebf2f7] rounded-lg p-1 justify-center border">
+                <label className="mb-1">
+                  Approx. Land Size
+                  <br />
+                  ≈ {areaSize.toFixed(2)} m²
 
+                  ≈ {(areaSize / 4046.86).toFixed(2)} ac
+
+                  ≈ {(areaSize / 10000).toFixed(2)} ha
+
+
+                </label>
+              </div>
+            )}
             <div className="flex justify-between w-full">
               <div className="flex gap-1 mt-1">
                 {ad.data.category?.toLowerCase().includes("rent") && (
