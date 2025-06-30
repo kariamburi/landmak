@@ -575,7 +575,7 @@ export default function BeaconTracker({ onClose }: Props) {
 
       {/* Beacon List */}
       {beacons.length > 0 && (
-        <div className="absolute items-center top-20 left-2 p-2 text-white bg-green-600 z-10 rounded-md shadow-lg max-h-[200px] overflow-auto text-sm">
+        <div className="absolute items-center bottom-20 left-2 p-2 text-white bg-green-600 z-10 rounded-md shadow-lg max-h-[200px] overflow-auto text-sm">
           <ul>
             {beacons.map((b, i) => (
               <li key={i}>
