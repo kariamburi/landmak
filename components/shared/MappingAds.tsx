@@ -764,8 +764,8 @@ export default function MapDrawingTool({ data }: Props) {
     if (directionsRendererRef.current) {
       directionsRendererRef.current.setMap(null);
     }
-    const lat = data.location.coordinates[0];
-    const lng = data.location.coordinates[1];
+    const lat = data.location.coordinates[1];
+    const lng = data.location.coordinates[0];
     const center = { lat, lng };
 
     // Draw radius circle
@@ -868,8 +868,8 @@ export default function MapDrawingTool({ data }: Props) {
   const handleRoute = () => {
     if (!mapInstance.current) return;
     const map = mapInstance.current;
-    const lat = data.location.coordinates[0];
-    const lng = data.location.coordinates[1];
+    const lat = data.location.coordinates[1];
+    const lng = data.location.coordinates[0];
     const position = { lat, lng };
 
     if (map) {

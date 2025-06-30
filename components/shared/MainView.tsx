@@ -1744,7 +1744,7 @@ export default function MainView({
 
 
 
-                <div className="font-bold text-xl text-gray-700">Featured Properties</div>
+                <div className="font-bold text-xl text-gray-700">Spotlight Listings</div>
               </div>
 
               {data?.length > 0 ? (<>

@@ -563,34 +563,14 @@ const AdForm = ({
         if (error.hasWatermark) {
           setAnalyze("Remove watermark or overlaid text from images.");
 
-          //toast({
-          //  title: "Rejected",
-          //  description: "Remove watermark or overlaid text from images.",
-          //   variant: "destructive",
-          // });
         } else if (error.likelyDownloaded) {
           setAnalyze("Please upload original, not downloaded images.");
 
-          //toast({
-          //  title: "Rejected",
-          //  description: "Please upload original, not downloaded images.",
-          //  variant: "destructive",
-          // });
         } else if (!error.isRealProperty) {
           setAnalyze("Only real land/property photos are allowed.");
 
-          //toast({
-          //  title: "Rejected",
-          //  description: "Only real land/property photos are allowed.",
-          //  variant: "destructive",
-          // });
         } else {
           setAnalyze("Image analysis failed.");
-          // toast({
-          // title: "Error",
-          // description: "Image analysis failed.",
-          // variant: "destructive",
-          //});
         }
       }
     }
@@ -846,7 +826,7 @@ const AdForm = ({
           }
           try {
             const uploadedUrls = await uploadFiles();
-           
+
 
             finalData = {
               ...formData,
