@@ -235,56 +235,57 @@ export default function SellerProfileSidebar({ userId, loggedId, user, daysRemai
                     </button>
                 </div>)}
 
-            <div className="text-sm text-gray-700 space-y-1 border-t p-1">
-                <p className="flex items-center gap-1"><FaBuilding /> Business: <span className="text-gray-500">{user?.businessname ? (<>{user?.businessname}</>) : (<>Not Provided</>)}</span></p>
-                <p className="flex items-center gap-1">
-                    <FaGlobe /> Website:{" "}
-                    <span className="text-gray-500">
-                        {user?.website ? (
-                            <a
-                                href={user.website.startsWith("http") ? user.website : `https://${user.website}`}
-                                target="_blank"
-                                rel="noopener noreferrer"
-                                className="text-green-600 hover:underline"
-                            >
-                                {user.website}
-                            </a>
+            <div className="mt-4 border-t pt-4">
+                <div className="text-sm text-gray-700 space-y-1">
+                    <p className="flex items-center gap-1"><FaBuilding /> Business: <span className="text-gray-500">{user?.businessname ? (<>{user?.businessname}</>) : (<>Not Provided</>)}</span></p>
+                    <p className="flex items-center gap-1">
+                        <FaGlobe /> Website:{" "}
+                        <span className="text-gray-500">
+                            {user?.website ? (
+                                <a
+                                    href={user.website.startsWith("http") ? user.website : `https://${user.website}`}
+                                    target="_blank"
+                                    rel="noopener noreferrer"
+                                    className="text-green-600 hover:underline"
+                                >
+                                    {user.website}
+                                </a>
+                            ) : (
+                                <>Not Provided</>
+                            )}
+                        </span>
+                    </p>
+                    <p className="flex items-center gap-1">
+                        <FaPhoneAlt /> Phone:{" "}
+                        {user?.phone ? (
+                            showPhone ? (
+                                <>
+                                    <span className="text-green-700 font-medium">{user.phone}</span>
+
+                                </>
+                            ) : (
+                                <button
+                                    onClick={() => setShowPhone(true)}
+                                    className="text-green-600 hover:underline text-sm"
+                                >
+                                    Click to show number
+                                </button>
+                            )
                         ) : (
-                            <>Not Provided</>
+                            <span className="text-gray-500">Not Provided</span>
                         )}
-                    </span>
-                </p>
-                <p className="flex items-center gap-1">
-                    <FaPhoneAlt /> Phone:{" "}
-                    {user?.phone ? (
-                        showPhone ? (
-                            <>
-                                <span className="text-green-700 font-medium">{user.phone}</span>
-
-                            </>
-                        ) : (
-                            <button
-                                onClick={() => setShowPhone(true)}
-                                className="text-green-600 hover:underline text-sm"
-                            >
-                                Click to show number
-                            </button>
-                        )
-                    ) : (
-                        <span className="text-gray-500">Not Provided</span>
+                    </p>
+                    {showPhone && (
+                        <>
+                            <p className="text-xs bg-gray-100 text-gray-500 mt-1 border rounded-sm p-1">
+                                ⚠️ Never pay before meeting the seller and verifying the property. mapa.co.ke doesn&apos;t offer payment protection. Report fraud: <a href="mailto:support@mapa.co.ke" className="underline">support@mapa.co.ke</a>
+                            </p>
+                        </>
                     )}
-                </p>
-                {showPhone && (
-                    <>
-                        <p className="text-xs bg-gray-100 text-gray-500 mt-1 border rounded-sm p-1">
-                            ⚠️ Never pay before meeting the seller and verifying the property. mapa.co.ke doesn&apos;t offer payment protection. Report fraud: <a href="mailto:support@mapa.co.ke" className="underline">support@mapa.co.ke</a>
-                        </p>
-                    </>
-                )}
-            </div>
+                </div>  </div>
 
-            <div className="text-sm text-gray-700 space-y-2">
-                <p className="font-semibold mt-3">🔗 Social Media</p>
+            <div className="text-sm text-gray-700 space-y-2 border-t p-1">
+                <p className="font-semibold mt-3">Social Media</p>
                 <div className="flex flex-wrap gap-3 text-xl text-gray-600">
 
                     {user?.facebook && (
@@ -317,18 +318,20 @@ export default function SellerProfileSidebar({ userId, loggedId, user, daysRemai
 
                 </div>
             </div>
-            <div className="flex justify-around text-sm text-gray-600 pt-3 border-t">
-                <button onClick={handleCopy} className="flex items-center gap-1 hover:text-green-600">
-                    <FaLink /> {copied ? "Copied!" : "Copy Link"}
-                </button>
-                <button onClick={saveQRcode} className="flex items-center gap-1 hover:text-green-600">
-                    <FaQrcode /> QR Code
-                </button>
-                <button onClick={handleShare} className="flex items-center gap-1 hover:text-green-600">
-                    <FaShareAlt /> Share
-                </button>
+            <div className="mt-4 border-t pt-4">
+                <p className="text-sm font-semibold text-gray-700 mb-2">Share Options</p>
+                <div className="flex justify-around text-sm text-gray-600 pt-3">
+                    <button onClick={handleCopy} className="flex items-center gap-1 hover:text-green-600">
+                        <FaLink /> {copied ? "Copied!" : "Copy Link"}
+                    </button>
+                    <button onClick={saveQRcode} className="flex items-center gap-1 hover:text-green-600">
+                        <FaQrcode /> QR Code
+                    </button>
+                    <button onClick={handleShare} className="flex items-center gap-1 hover:text-green-600">
+                        <FaShareAlt /> Share
+                    </button>
+                </div>
             </div>
-
             <div className="flex gap-1 text-center pt-3 border-t text-sm">
 
                 {isAdCreator && (<>

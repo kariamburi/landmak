@@ -225,15 +225,17 @@ const SellerProfileCard = ({ ad, fee, userId, userImage, userName, titleId, hand
       <div className="bg-white dark:bg-[#2D3236] rounded-xl shadow-sm p-4 w-full">
         {/* Seller Info */}
         <div className="flex items-center gap-4">
-          <div className="relative">
+          <div onClick={() => {
+            handleOpenShop(ad.organizer);
+          }} className="relative">
             {ad.organizer?.photo && !isDefaultClerkAvatar(ad.organizer.photo) ? (
               <img
                 src={ad.organizer.photo}
                 alt="Organizer avatar"
-                className="w-16 h-16 rounded-full object-cover"
+                className="w-16 h-16 cursor-pointer rounded-full object-cover"
               />
             ) : (
-              <div className="w-16 h-16 bg-green-500 text-white flex items-center justify-center text-2xl font-bold rounded-full">
+              <div className="w-16 h-16 cursor-pointer bg-green-500 text-white flex items-center justify-center text-2xl font-bold rounded-full">
                 {getInitials(ad.organizer?.firstName, ad.organizer?.lastName)}
               </div>
             )}
@@ -243,7 +245,7 @@ const SellerProfileCard = ({ ad, fee, userId, userImage, userName, titleId, hand
           <div>
             <div onClick={() => {
               handleOpenShop(ad.organizer);
-            }} className="text-lg font-semibold text-gray-800 dark:text-white"> {ad.organizer.firstName} {ad.organizer.lastName}</div>
+            }} className="text-lg cursor-pointer hover:underline font-semibold text-gray-800 dark:text-white"> {ad.organizer.firstName} {ad.organizer.lastName}</div>
             <Verification
               fee={fee}
               user={ad.organizer}
