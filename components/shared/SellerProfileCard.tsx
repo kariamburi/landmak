@@ -302,7 +302,7 @@ const SellerProfileCard = ({ ad, fee, userId, userImage, userName, titleId, hand
         </div>
         {showCallDisclaimer && (
           <p className="text-xs bg-gray-100 text-gray-500 mt-1 border rounded-sm p-1">
-            ⚠️ Never pay before meeting the seller and verifying the property. mapa.co.ke doesn't offer payment protection. Report fraud: <a href="mailto:support@mapa.co.ke" className="underline">support@mapa.co.ke</a>
+            ⚠️ Never pay before meeting the seller and verifying the property. mapa.co.ke doesn&apos;t offer payment protection. Report fraud: <a href="mailto:support@mapa.co.ke" className="underline">support@mapa.co.ke</a>
           </p>
         )}
         {/* Leave Feedback */}
