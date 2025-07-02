@@ -372,8 +372,7 @@ const AdForm = ({
           "Event Centres, Venues & Workstations",
           "Short Let Property",
           "Special Listings",
-          "Property Services",
-          "Wanted Ads"];
+          "Property Services"];
 
         const filteredCategories = uniqueCategories.filter(
           (cat: any) => allowedCategories.includes(cat.category.name)

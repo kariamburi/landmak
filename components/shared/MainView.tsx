@@ -1211,8 +1211,7 @@ export default function MainView({
           </div>)}
 
         <div
-          //className={`bg-gradient-to-b from-green-600 to-green-600 lg:from-[#e4ebeb] justify-center pl-2 pr-2 h-[60px] lg:to-[#e4ebeb] transition-all duration-300 overflow-hidden w-full flex flex-col items-center ${showBottomNav ? "max-h-[60px] opacity-100" : "max-h-0 opacity-0"
-          //  }`}
+          onMouseEnter={() => setHoveredCategory(null)}
           className={`bg-gradient-to-b from-green-600 to-green-600 lg:from-[#e4ebeb] justify-center pl-2 pr-2 h-[60px] lg:to-[#e4ebeb] transition-all duration-300 overflow-hidden w-full flex flex-col items-center`}
         >
           <div className="w-full h-full justify-between flex items-center">

@@ -457,7 +457,7 @@ const SettingsEdit = ({ user, type, userId }: setingsProp) => {
                         className="w-full"
                       />
                       <div className="flex items-center justify-between mt-1">
-                        <p className="text-green-600 text-sm">✅ Phone verified</p>
+                        <p className="text-green-600 w-[50px] text-sm">✅ Phone verified</p>
                         <button
                           type="button"
                           onClick={() => setChangePhone(true)}
@@ -601,7 +601,9 @@ const SettingsEdit = ({ user, type, userId }: setingsProp) => {
             <AccordionContent>
               <div className="rounded-[20px] p-1 dark:bg-[#131B1E] bg-white">
                 <div className="m-1">
-                  <div className="flex flex-col gap-5 mb-5 md:flex-row">
+
+
+                  {/* <div className="flex flex-col gap-5 mb-5 md:flex-row">
                     <FormField
                       control={form.control}
                       name="imageUrl"
@@ -618,7 +620,7 @@ const SettingsEdit = ({ user, type, userId }: setingsProp) => {
                         </FormItem>
                       )}
                     />
-                  </div>
+                  </div>*/}
                   <div className="flex flex-col gap-5 mb-5 md:flex-row">
                     <FormField
                       control={form.control}
@@ -652,7 +654,7 @@ const SettingsEdit = ({ user, type, userId }: setingsProp) => {
                       )}
                     />
                   </div>
-                  <div className="flex flex-col gap-5 mb-5 md:flex-row">
+                  {/*  <div className="flex flex-col gap-5 mb-5 md:flex-row">
                     <FormField
                       control={form.control}
                       name="aboutbusiness"
@@ -686,7 +688,7 @@ const SettingsEdit = ({ user, type, userId }: setingsProp) => {
                         </FormItem>
                       )}
                     />
-                  </div>
+                  </div>*/}
                   <div className="flex flex-col gap-5 mb-5 md:flex-row">
                     <FormField
                       control={form.control}
@@ -696,7 +698,7 @@ const SettingsEdit = ({ user, type, userId }: setingsProp) => {
                           <FormControl>
                             <TextField
                               {...field}
-                              label="Business Address"
+                              label="Location Address"
                               variant="outlined"
                               InputProps={{
                                 classes: {
@@ -720,7 +722,7 @@ const SettingsEdit = ({ user, type, userId }: setingsProp) => {
                       )}
                     />
                   </div>
-                  <div className="flex flex-col gap-5 mb-5 md:flex-row">
+                  {/*  <div className="flex flex-col gap-5 mb-5 md:flex-row">
                     <FormField
                       control={form.control}
                       name="latitude"
@@ -952,7 +954,7 @@ const SettingsEdit = ({ user, type, userId }: setingsProp) => {
                         </FormItem>
                       )}
                     />
-                  </div>
+                  </div>*/}
                 </div>
               </div>
             </AccordionContent>
