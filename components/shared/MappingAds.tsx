@@ -91,6 +91,7 @@ type Shape = {
   // labelMarker: google.maps.Marker;
 };
 interface Props {
+  category: string;
   data: {
     location: Location;
     polylines: Polyline[];
@@ -116,7 +117,7 @@ const markerOptions = [
   { label: "Police Station", icon: "/assets/map/police.png" },
 ];
 
-export default function MapDrawingTool({ data }: Props) {
+export default function MapDrawingTool({ category, data }: Props) {
   const [center, setCenter] = useState<any>(data.location?.coordinates ? { lat: data.location.coordinates[1], lng: data.location.coordinates[0] } : defaultcenter);
   const mapRef = useRef<HTMLDivElement>(null);
   const mapInstance = useRef<google.maps.Map | null>(null);
@@ -188,13 +189,13 @@ export default function MapDrawingTool({ data }: Props) {
 
     // 🔥 Call your map load handler here
     onMapLoad(map);
-    if (data.shapes.length === 0) {
+    if (!data.shapes || data.shapes.length === 0) {
       // remove any old marker
 
       const marker = new google.maps.Marker({
         position: center,
         map,
-        draggable: true,
+        draggable: false,
         title: "Location",
       });
       markerRef.current = marker;
@@ -1288,7 +1289,7 @@ export default function MapDrawingTool({ data }: Props) {
 
 
 
-      {isLoaded && (<>  <div className="absolute top-2 right-2 z-5 flex flex-col space-y-2">
+      {category !== 'Property Services' && isLoaded && (<>  <div className="absolute top-2 right-2 z-5 flex flex-col space-y-2">
         {/* Default Button 
    <TooltipProvider>
                    <Tooltip>

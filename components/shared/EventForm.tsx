@@ -324,7 +324,7 @@ const AdForm = ({
       .then(({ lat, lng }) => {
         setFormData((prevData) => ({
           ...prevData, propertyarea: {
-            location: { type: "Point", coordinates: [lat, lng] },
+            location: { type: "Point", coordinates: [lng, lat] },
             mapaddress: e.value.description,
           }
         }));
@@ -584,7 +584,7 @@ const AdForm = ({
 
   };
 
-  const uploadFiless = async () => {
+  const uploadFilesUpload = async () => {
     const uploadedUrls: string[] = [];
     let i = 0;
     for (const file of files) {
@@ -890,7 +890,7 @@ const AdForm = ({
 
       if (type === "Update") {
 
-        const uploadedUrls = await uploadFiles();
+        const uploadedUrls = await uploadFilesUpload();
         // Preserve existing imageUrls if no new files are uploaded
         const finalImageUrls =
           uploadedUrls.length > 0 ? uploadedUrls : formData.imageUrls;

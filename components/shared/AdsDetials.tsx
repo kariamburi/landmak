@@ -355,6 +355,24 @@ export default function AdsDetials({ ad, user, userId, userImage, userName, isMa
   const [inputMode, setInputMode] = useState<'Images' | 'Video' | 'Virtual'>('Images');
   // Safely get shapes array or fallback to empty array
   const areaSize = ad.data?.propertyarea?.totalArea || 0;
+  const getInitials = (firstName?: string, lastName?: string) => {
+    const first = firstName?.[0]?.toUpperCase() || '';
+    const last = lastName?.[0]?.toUpperCase() || '';
+    return `${first}${last}`;
+  };
+  function isDefaultClerkAvatar(imageUrl: string): boolean {
+    try {
+      const base64 = imageUrl.split("/").pop();
+      if (!base64) return false;
+
+      const json = atob(base64); // decode Base64
+      const data = JSON.parse(json);
+
+      return data.type === "default";
+    } catch (e) {
+      return false;
+    }
+  }
   return (
     <><div className="space-y-0 lg:flex lg:space-x-0 gap-2">
       <div
@@ -388,8 +406,9 @@ export default function AdsDetials({ ad, user, userId, userImage, userName, isMa
             </div>
           </div>
         )}
-        <div className="p-0">
-          {/* Top Tab Buttons */}
+
+
+        {ad.data.category !== "Property Services" && (<> <div className="p-0">
           <div className="lg:rounded-t-xl overflow-hidden">
             <div className="grid grid-cols-3 gap-1">
               <button
@@ -602,71 +621,86 @@ export default function AdsDetials({ ad, user, userId, userImage, userName, isMa
           </div>
         </div>
 
-        {/* Popup for displaying all images */}
-        {showPopup && (
-          <div className="bg-black fixed top-0 left-0 w-full min-h-screen flex justify-center items-center z-50">
-            <div className="bg-black p-4 w-full flex flex-col items-center justify-center z-50">
-              <button
-                onClick={closePopup}
-                className="z-10 fixed p-1 top-50 left-50 rounded-full hover:cursor-pointer m-1 p-2 absolute top-3 right-3 focus:outline-none"
-              >
-                <CloseIcon className="text-white dark:hover:text-gray-300 m-0" />
-              </button>
-              <div className="relative w-full justify-center">
-                <Carousel setApi={setApi} className="w-full">
-                  <CarouselContent>
-                    {ad.data.imageUrls.map((image: string, index: number) => (
-                      <CarouselItem key={index}>
-                        <div className="relative h-[500px] w-full">
+          {/* Popup for displaying all images */}
+          {showPopup && (
+            <div className="bg-black fixed top-0 left-0 w-full min-h-screen flex justify-center items-center z-50">
+              <div className="bg-black p-4 w-full flex flex-col items-center justify-center z-50">
+                <button
+                  onClick={closePopup}
+                  className="z-10 fixed p-1 top-50 left-50 rounded-full hover:cursor-pointer m-1 p-2 absolute top-3 right-3 focus:outline-none"
+                >
+                  <CloseIcon className="text-white dark:hover:text-gray-300 m-0" />
+                </button>
+                <div className="relative w-full justify-center">
+                  <Carousel setApi={setApi} className="w-full">
+                    <CarouselContent>
+                      {ad.data.imageUrls.map((image: string, index: number) => (
+                        <CarouselItem key={index}>
+                          <div className="relative h-[500px] w-full">
 
-                          {isLoadingpopup && (
-                            <div className="absolute inset-0 flex items-center justify-center bg-[#000000] bg-opacity-50">
-                              {/* Spinner or loading animation */}
-                              <CircularProgress sx={{ color: "gray" }} />
-                            </div>
-                          )}
-                          {isLoadingpopup && (
-                            <div
+                            {isLoadingpopup && (
+                              <div className="absolute inset-0 flex items-center justify-center bg-[#000000] bg-opacity-50">
+                                {/* Spinner or loading animation */}
+                                <CircularProgress sx={{ color: "gray" }} />
+                              </div>
+                            )}
+                            {isLoadingpopup && (
+                              <div
 
-                              className="absolute inset-0 flex justify-center items-center bg-[#000000] bg-opacity-50">
-                              <Icon icon={threeDotsScale} className="w-6 h-6 text-gray-500" />
-                            </div>
-                          )}
-                          <Zoom>
-                            <Image
-                              src={image}
-                              alt={`Image ${index + 1}`}
-                              layout="fill" // Ensures the image scales to the parent container
-                              className={`object-contain ${isLoadingpopup ? "opacity-0" : "opacity-100"
-                                } transition-opacity duration-300`}
-                              onLoadingComplete={() =>
-                                setIsLoadingpopup(false)
-                              }
-                              placeholder="empty" // Optional: you can use "empty" if you want a placeholder before loading
-                            />
-                          </Zoom>
-                        </div>
-                      </CarouselItem>
-                    ))}
-                  </CarouselContent>
-                  <CarouselPrevious className="h-[50px] w-[50px] ml-20 font-bold border-0 text-white bg-white bg-opacity-50 p-2" />
-                  <CarouselNext className="h-[50px] w-[50px] mr-20 font-bold border-0 bg-white bg-opacity-50 text-white p-2" />
-                </Carousel>
-                <div className="fixed bottom-5 left-5 p-1 text-center text-white text-sm text-muted-foreground z-10 mt">
-                  Slide {current} of {totalSlides}
+                                className="absolute inset-0 flex justify-center items-center bg-[#000000] bg-opacity-50">
+                                <Icon icon={threeDotsScale} className="w-6 h-6 text-gray-500" />
+                              </div>
+                            )}
+                            <Zoom>
+                              <Image
+                                src={image}
+                                alt={`Image ${index + 1}`}
+                                layout="fill" // Ensures the image scales to the parent container
+                                className={`object-contain ${isLoadingpopup ? "opacity-0" : "opacity-100"
+                                  } transition-opacity duration-300`}
+                                onLoadingComplete={() =>
+                                  setIsLoadingpopup(false)
+                                }
+                                placeholder="empty" // Optional: you can use "empty" if you want a placeholder before loading
+                              />
+                            </Zoom>
+                          </div>
+                        </CarouselItem>
+                      ))}
+                    </CarouselContent>
+                    <CarouselPrevious className="h-[50px] w-[50px] ml-20 font-bold border-0 text-white bg-white bg-opacity-50 p-2" />
+                    <CarouselNext className="h-[50px] w-[50px] mr-20 font-bold border-0 bg-white bg-opacity-50 text-white p-2" />
+                  </Carousel>
+                  <div className="fixed bottom-5 left-5 p-1 text-center text-white text-sm text-muted-foreground z-10 mt">
+                    Slide {current} of {totalSlides}
+                  </div>
                 </div>
+
               </div>
-
             </div>
-          </div>
-        )}
+          )}
 
-
+        </>)}
 
 
         {/* Ad details */}
         <div className="p-3 lg:rounded-b-xl bg-white">
+          {ad.data.category === "Property Services" && (<>
+            {ad.data.imageUrls[0] && !isDefaultClerkAvatar(ad.data.imageUrls[0]) ? (
+              <div className="w-40 h-40 p-1 mx-auto bg-green-600 rounded-full flex items-center justify-center text-xl font-bold text-green-700">
+                <img
+                  src={ad.data.imageUrls[0]}
+                  alt="Organizer avatar"
+                  className="w-full h-full rounded-full object-cover"
+                />
+              </div>
 
+            ) : (
+              <div className="w-32 h-32 mx-auto bg-green-500 rounded-full flex items-center justify-center text-xl font-bold text-white">
+                {getInitials(ad.organizer?.firstName, ad.organizer?.lastName)}
+              </div>
+            )}
+          </>)}
           <div
 
             className={`flex justify-end mb-2 items-center w-full ${isMapVisible ?
@@ -880,6 +914,7 @@ export default function AdsDetials({ ad, user, userId, userImage, userName, isMa
                     key !== "budget" &&
                     key !== "unit" &&
                     key !== "contact" &&
+                    key !== "Specializations-Type" &&
                     key !== "gps" &&
                     key !== "propertyarea" &&
                     key !== "virtualTourLink" &&
@@ -900,7 +935,23 @@ export default function AdsDetials({ ad, user, userId, userImage, userName, isMa
               )
             )}
           </div>
-
+          {ad.data["Specializations-Type"] && ad.data["Specializations-Type"].length > 0 && (
+            <>
+              <div className="border-t dark:border-gray-600 border-gray-300 mt-4 mb-4"></div>
+              <p className="mt-5 font-bold dark:text-gray-400 text-green-900">
+                Specializations Type
+              </p>
+              <div className="grid grid-cols-3 lg:grid-cols-5 w-full gap-1 mt-1">
+                {ad.data["Specializations-Type"].map((spc: any) => (
+                  <>
+                    <div className="flex flex-col items-center h-10 gap-2 text-[10px] lg:text-xs dark:bg-[#131B1E] bg-[#ebf2f7] rounded-xl p-1 justify-center border">
+                      {spc}
+                    </div>
+                  </>
+                ))}
+              </div>
+            </>
+          )}
           {ad.data.facilities && ad.data.facilities.length > 0 && (
             <>
               <div className="border-t dark:border-gray-600 border-gray-300 mt-4 mb-4"></div>
@@ -1549,7 +1600,7 @@ export default function AdsDetials({ ad, user, userId, userImage, userName, isMa
 
 
 
-          {(ad.data.category !== 'Property Services' || ad.data.category !== 'Wanted Ads') && (<>
+          {(ad.data.category !== 'Property Services') && (<>
             <div className="flex mt-4 w-full items-center">
               <SignedIn>
 
