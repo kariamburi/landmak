@@ -103,22 +103,22 @@ import { DisputeBadge } from "./DisputeBadge";
 import MapaVerifiedBadge from "./MapaVerifiedBadge";
 import LandDisputeReportForm from "./LandDisputeReportForm";
 import MapaVerificationForm from "./MapaVerificationForm";
- // Correct import
+// Correct import
 type CardProps = {
   ad: any;
-  user:any;
+  user: any;
   userId: string;
   userImage: string;
   userName: string;
   onClose: () => void;
-  handleSubCategory:(category: string, subcategory: string) => void;
-  handleOpenReview: (value:any) => void;
-  handleOpenShop: (value:any) => void;
-  handlePay: (id:string) => void;
+  handleSubCategory: (category: string, subcategory: string) => void;
+  handleOpenReview: (value: any) => void;
+  handleOpenShop: (value: any) => void;
+  handlePay: (id: string) => void;
   handleOpenPlan: () => void;
-  handleOpenSell: (category?:string, subcategory?:string) => void;
+  handleOpenSell: (category?: string, subcategory?: string) => void;
   handleOpenSafety: () => void;
-  
+
 };
 function checkPlatform(url: string) {
   const youtubeRegex = /(?:youtube\.com|youtu\.be)/;
@@ -132,23 +132,23 @@ function checkPlatform(url: string) {
     return "Unknown Platform";
   }
 }
-export default function Ads({ ad, user, userId, userImage, userName, onClose,handlePay, handleOpenSafety, handleOpenSell, handleSubCategory, handleOpenReview, handleOpenPlan, handleOpenShop,}: CardProps) {
+export default function Ads({ ad, user, userId, userImage, userName, onClose, handlePay, handleOpenSafety, handleOpenSell, handleSubCategory, handleOpenReview, handleOpenPlan, handleOpenShop, }: CardProps) {
   const [videoAdId, setvideoAdId] = React.useState<string | null>(null);
   const [tiktokvideoAdId, setTiktokvideoAdId] = React.useState<string | null>(null);
   const [selectedIndex, setSelectedIndex] = React.useState<number | null>(null);
   const isAdCreator = userId === ad.organizer._id;
- 
+
   const [showphone, setshowphone] = useState(false);
   const { toast } = useToast();
   const handleShowPhoneClick = (e: any) => {
     setshowphone(true);
     window.location.href = `tel:${ad.data.phone}`;
   };
- 
-    const [isOpenP, setIsOpenP] = useState(false);
-    const handleCloseP = () => {
-      setIsOpenP(false);
-    };
+
+  const [isOpenP, setIsOpenP] = useState(false);
+  const handleCloseP = () => {
+    setIsOpenP(false);
+  };
   const handleImageClick = (index: number) => {
     if (!api) {
       return;
@@ -173,13 +173,13 @@ export default function Ads({ ad, user, userId, userImage, userName, onClose,han
   const toggleChat = () => {
     setChatOpen(!isChatOpen);
   };
-const saleCategories = [
-  'Houses & Apartments for Sale',
-  'Land & Plots for Sale',
-  'Commercial Property for Sale',
-  'New builds'
-];
-const isSale = saleCategories.includes(ad.data.category);
+  const saleCategories = [
+    'Houses & Apartments for Sale',
+    'Land & Plots for Sale',
+    'Commercial Property for Sale',
+    'New builds'
+  ];
+  const isSale = saleCategories.includes(ad.data.category);
   const [api, setApi] = React.useState<CarouselApi>();
   const [api2, setApi2] = React.useState<CarouselApi>();
   const [current, setCurrent] = React.useState(0);
@@ -207,8 +207,8 @@ const isSale = saleCategories.includes(ad.data.category);
     if (ad.description) {
       sessionStorage.setItem("description", ad.data.description);
     }
-  
-   
+
+
   }, [
     api,
     ad._id,
@@ -273,14 +273,14 @@ const isSale = saleCategories.includes(ad.data.category);
     // Handle error when formatting date
   }
   const [isPopupOpen, setIsPopupOpen] = useState(false);
-   const [isPopupOpenDispute, setIsPopupOpenDispute] = useState(false);
+  const [isPopupOpenDispute, setIsPopupOpenDispute] = useState(false);
   const [isPopupOpenLoan, setIsPopupOpenLoan] = useState(false);
   const [isPopupOpenAAv, setIsPopupOpenAv] = useState(false);
   const [abuseDescription, setAbuseDescription] = useState("");
-   const [isPopupOpenBooking, setIsPopupOpenBooking] = useState(false);
-    const [isPopupOpenSchedule, setIsPopupOpenSchedule] = useState(false);
+  const [isPopupOpenBooking, setIsPopupOpenBooking] = useState(false);
+  const [isPopupOpenSchedule, setIsPopupOpenSchedule] = useState(false);
 
-const handleOpenPopupSchedule = () => {
+  const handleOpenPopupSchedule = () => {
     setIsPopupOpenSchedule(true);
   };
   const handleClosePopupSchedule = () => {
@@ -293,13 +293,13 @@ const handleOpenPopupSchedule = () => {
     setIsPopupOpenBooking(false);
   };
 
-   const handleOpenPopupLoan = () => {
+  const handleOpenPopupLoan = () => {
     setIsPopupOpenLoan(true);
   };
 
   const handleClosePopupLoan = () => {
     setIsPopupOpenLoan(false);
-   // Clear the textarea on close
+    // Clear the textarea on close
   };
 
   const handleOpenPopupAv = () => {
@@ -308,7 +308,7 @@ const handleOpenPopupSchedule = () => {
 
   const handleClosePopupAv = () => {
     setIsPopupOpenAv(false);
-   // Clear the textarea on close
+    // Clear the textarea on close
   };
   const handleOpenPopup = () => {
     setIsPopupOpen(true);
@@ -319,13 +319,13 @@ const handleOpenPopupSchedule = () => {
     setAbuseDescription(""); // Clear the textarea on close
   };
 
-const handleOpenPopupDispute = () => {
+  const handleOpenPopupDispute = () => {
     setIsPopupOpenDispute(true);
   };
 
   const handleClosePopupDispute = () => {
     setIsPopupOpenDispute(false);
- 
+
   };
 
 
@@ -334,7 +334,7 @@ const handleOpenPopupDispute = () => {
   ) => {
     setAbuseDescription(event.target.value);
   };
- 
+
   const [isLoading, setIsLoading] = useState(true);
   const [isLoadingsmall, setIsLoadingsmall] = useState(true);
   const [isLoadingpopup, setIsLoadingpopup] = useState(true);
@@ -349,7 +349,7 @@ const handleOpenPopupDispute = () => {
       "_blank"
     );
   };
-  
+
   const [inputMode, setInputMode] = useState<'Images' | 'Video' | 'Virtual'>('Images');
   return (
     <>
@@ -364,7 +364,7 @@ const handleOpenPopupDispute = () => {
               }}
             >
               <div className="flex items-center gap-2 cursor-pointer ">
-                <p className="text-xs lg:text-sm"> All Ads</p><ArrowForwardIosOutlinedIcon sx={{ fontSize: 14 }}/>
+                <p className="text-xs lg:text-sm"> All Ads</p><ArrowForwardIosOutlinedIcon sx={{ fontSize: 14 }} />
               </div>
             </div>
           </div>
@@ -373,13 +373,13 @@ const handleOpenPopupDispute = () => {
               {ad && (
                 <div
                   onClick={() => {
-                    handleSubCategory(ad.data.category,'');
-                  
+                    handleSubCategory(ad.data.category, '');
+
                   }}
                   className="flex items-center gap-2 cursor-pointer"
                 >
-                 
-                  <p className="text-xs lg:text-sm">{ad.data.category}</p><ArrowForwardIosOutlinedIcon sx={{ fontSize: 14 }}/>
+
+                  <p className="text-xs lg:text-sm">{ad.data.category}</p><ArrowForwardIosOutlinedIcon sx={{ fontSize: 14 }} />
                 </div>
               )}
             </div>
@@ -389,20 +389,20 @@ const handleOpenPopupDispute = () => {
               {ad && (
                 <div
                   onClick={() => {
-                    handleSubCategory(ad.data.category,ad.data.subcategory);
-                  
+                    handleSubCategory(ad.data.category, ad.data.subcategory);
+
                   }}
                   className="flex items-center gap-2 cursor-pointer"
                 >
-                 
-                  <p className="text-xs lg:text-sm">{ad.data.subcategory}</p><ArrowForwardIosOutlinedIcon sx={{ fontSize: 14 }}/>
+
+                  <p className="text-xs lg:text-sm">{ad.data.subcategory}</p><ArrowForwardIosOutlinedIcon sx={{ fontSize: 14 }} />
                 </div>
               )}
             </div>
           </div>
           <div className="mt-2 border text-gray-800 dark:bg-[#2D3236] dark:text-gray-300 bg-white py-1 px-2 rounded-sm">
             <div className="flex items-center">
-           
+
               {ad && <p className="text-xs lg:text-sm">{ad.data.title}</p>}
             </div>
           </div>
@@ -414,259 +414,250 @@ const handleOpenPopupDispute = () => {
 
 
 
-  <div
+        <div
           className="mt-1 lg:mt-2 relative lg:flex-1 dark:bg-[#2D3236] dark:text-gray-300"
           style={
             ad.plan.name !== "Free"
               ? {
-                  borderTop: "0",
-                  borderColor: ad.plan.color, // Border color for non-free plans
-                }
+                borderTop: "0",
+                borderColor: ad.plan.color, // Border color for non-free plans
+              }
               : undefined
           }
         >
-{ad.plan.name !== "Free" && (
+          {ad.plan.name !== "Free" && (
+            <div
+              style={{
+                backgroundColor: ad.plan.color,
+              }}
+              className="hidden lg:inline absolute shadow-lg top-0 right-0 text-white text-[10px] py-1 px-3"
+            >
               <div
-                style={{
-                  backgroundColor: ad.plan.color,
+                onClick={() => {
+                  // setIsOpenP(true);
+                  // router.push("/plan");
+                  handleOpenPlan()
                 }}
-                className="hidden lg:inline absolute shadow-lg top-0 right-0 text-white text-[10px] py-1 px-3"
               >
-                <div
-                  onClick={() => {
-                   // setIsOpenP(true);
-                   // router.push("/plan");
-                    handleOpenPlan()
-                  }}
-                >
-                  <div className="flex gap-1 cursor-pointer">
-                    {ad.plan.name}
-                  </div>
+                <div className="flex gap-1 cursor-pointer">
+                  {ad.plan.name}
                 </div>
               </div>
-            )}
-  <div className="p-0">
-  {/* Top Tab Buttons */}
-  <div className="lg:rounded-t-xl overflow-hidden">
-    <div className="grid grid-cols-3 gap-1">
-      <button
-        title="Ad Pictures"
-        onClick={() => setInputMode("Images")}
-        className={`h-12 p-3 rounded-tl-0 lg:rounded-tl-xl flex gap-2 justify-center items-center text-[10px] lg:text-xs ${
-          inputMode === "Images"
-            ? "text-white bg-[#131B1E] dark:text-white"
-            : "bg-green-600 hover:bg-green-700 text-white"
-        }`}
-      >
-        <LocalSeeOutlinedIcon sx={{ fontSize: 16 }} /> Pictures
-      </button>
-
-      <button
-        title="Ad Video"
-        onClick={() => setInputMode("Video")}
-        className={`h-12 p-3 flex gap-2 justify-center items-center text-[10px] lg:text-xs ${
-          inputMode === "Video"
-            ? "text-white bg-[#131B1E] dark:text-white"
-            : "bg-green-600 hover:bg-green-700 text-white"
-        }`}
-      >
-        <YouTubeIcon sx={{ fontSize: 16 }} /> Video
-      </button>
-
-      <button
-        title="Ad 3D Virtual"
-        onClick={() => setInputMode("Virtual")}
-        className={`h-12 p-3 rounded-0 lg:rounded-tr-xl flex gap-2 justify-center items-center text-[10px] lg:text-xs ${
-          inputMode === "Virtual"
-            ? "text-white bg-[#131B1E] dark:text-white"
-            : "bg-green-600 hover:bg-green-700 text-white"
-        }`}
-      >
-        <ThreeDRotationOutlinedIcon sx={{ fontSize: 16 }} /> 3D Virtual Tour
-      </button>
-    </div>
-  </div>
-
-  {/* Content Sections */}
-  <div
-    className={`rounded-0 p-2 flex flex-col ${
-      inputMode === "Video" && checkPlatform(ad.data["youtube-link"]) === "TikTok"
-        ? "bg-white"
-        : "bg-[#131B1E]"
-    }`}
-  >
-    {/* Video */}
-    <div
-      className={`flex items-center justify-center w-full min-h-[400px] ${
-        inputMode === "Video" ? "block" : "hidden"
-      }`}
-    >
-      {ad.data["youtube-link"] ? (
-        checkPlatform(ad.data["youtube-link"]) === "TikTok" ? (
-          <TikTokEmbed videoUrl={ad.data["youtube-link"]} />
-        ) : (
-          <YouTubePlayer videoUrl={ad.data["youtube-link"]} />
-        )
-      ) : (
-        <div className="flex flex-col h-full items-center justify-center dark:text-gray-400 text-gray-600">
-          <VideocamOffOutlinedIcon />
-          No video available for this ad
-        </div>
-      )}
-    </div>
-
-    {/* Virtual Tour */}
-    <div
-      className={`flex items-center justify-center w-full min-h-[400px] ${
-        inputMode === "Virtual" ? "block" : "hidden"
-      }`}
-    >
-      {ad.data["virtualTourLink"] ? (
-        <VirtualTour virtualTourLink={ad.data["virtualTourLink"]} />
-      ) : (
-        <div className="flex flex-col h-full items-center justify-center dark:text-gray-400 text-gray-600">
-          <ViewInArOutlinedIcon />
-          No 3D Virtual Property Tour for this Ad
-        </div>
-      )}
-    </div>
-
-    {/* Image Carousel */}
-    <div className={`${inputMode === "Images" ? "block" : "hidden"}`}>
-      <div className="relative">
-        <Carousel setApi={setApi} plugins={[plugin.current as any]} className="w-full">
-          <CarouselContent>
-            {ad.data.imageUrls.length > 0 ? (<>
-                        
-            {ad.data.imageUrls.map((image: string, index: number) => (
-              <CarouselItem key={index}>
-                <div className="relative w-full">
-                  {isLoading && (<>
-                  <div className="absolute inset-0 flex items-center justify-center bg-[#000000] bg-opacity-50">
-<CircularProgress sx={{ color: "white" }} />
-</div>
-</>  )}
-                  <Zoom>
-                  <Image
-                          src={image}
-                          alt={`Image ${index + 1}`}
-                          width={800} // Adjust the width as needed
-                          height={500} // Adjust the height as needed
-                          className={`bg-[#000000] h-[400px] object-cover cursor-pointer ${
-                            isLoading ? "opacity-0" : "opacity-100"
-                          } transition-opacity duration-300`}
-                          onLoadingComplete={() => setIsLoading(false)}
-                          placeholder="empty" // Optional: you can use "empty" if you want a placeholder before loading
-                        />
-                  
-                  </Zoom>
-                </div>
-              </CarouselItem>
-            ))}
-</>):(<><CarouselItem> <Image
-                     src={"/fallback.jpg"}
-                    alt={"Ad image"}
-                    width={800} // Adjust the width as needed
-                    height={500} // Adjust the height as needed
-                    layout="fill"
-                    className={`object-cover h-[400px] cursor-pointer ${
-                        isLoading ? "opacity-0" : "opacity-100"
-                      } transition-opacity duration-300`}
-                    onLoadingComplete={() => setIsLoading(false)}
-                    placeholder="empty"
-                    /> </CarouselItem>
-                    </>)}
-          </CarouselContent>
-          <CarouselPrevious className="h-[50px] w-[50px] ml-20 font-bold border-0 text-white bg-white bg-opacity-50 p-2" />
-          <CarouselNext className="h-[50px] w-[50px] mr-20 font-bold border-0 bg-white bg-opacity-50 text-white p-2" />
-        </Carousel>
-
-        {/* Slide Count and Controls */}
-        <div className="flex gap-1 absolute bottom-0 right-0 items-center text-white text-[10px] lg:text-xs m-1 p-0">
-          <div className="flex pr-2 pl-2 h-10 rounded-sm items-center bg-black bg-opacity-50">
-            Slide {current} of {count}
-          </div>
-          <div className="p-1 cursor-pointer rounded-sm shadow" onClick={togglePopup}>
-            <Image
-              src="/assets/icons/expand.png"
-              alt="Expand"
-              className="w-8 ml-5 hover:cursor-pointer"
-              width={36}
-              height={36}
-            />
-          </div>
-        </div>
-
-        <div className="flex gap-1 absolute bottom-0 left-0 text-white text-xs m-1 p-0">
-          <div className="p-1 cursor-pointer rounded-sm" onClick={handlePlay}>
-            {autoplayEnabled ? (
-              <Image src="/assets/icons/pause.png" alt="Pause" className="w-8 ml-5" width={36} height={36} />
-            ) : (
-              <Image src="/assets/icons/play.png" alt="Play" className="w-8 ml-5" width={36} height={36} />
-            )}
-          </div>
-        </div>
-
-        {ad.organizer?.verified?.[0]?.accountverified && (
-          <div className="hidden lg:inline absolute bg-green-100 top-0 right-0 text-xs py-1 px-3 rounded-bl-lg">
-            <div className="flex gap-1 items-center cursor-pointer">
-              <VerifiedUserOutlinedIcon sx={{ fontSize: 16 }} />
-              Verified
             </div>
-          </div>
-        )}
-      </div>
-
-      {/* Thumbnail Navigation */}
-      <div className="flex space-x-1">
-        <Carousel setApi={setApi2} opts={{ align: "start" }} className="w-full ml-2 mr-2 mt-1">
-          <CarouselContent>
-            {ad.data.imageUrls.map((image: string, index: number) => (
-              <CarouselItem key={index} className="rounded-lg basis-1/3 lg:basis-1/6 pl-5 lg:pr-0">
-                <div
-                  style={{
-                    border: selectedIndex === index ? "3px solid black" : "3px solid transparent",
-                  }}
-                  className="p-0 w-full rounded-lg"
+          )}
+          <div className="p-0">
+            {/* Top Tab Buttons */}
+            <div className="lg:rounded-t-xl overflow-hidden">
+              <div className="grid grid-cols-3 gap-1">
+                <button
+                  title="Ad Pictures"
+                  onClick={() => setInputMode("Images")}
+                  className={`h-12 p-3 rounded-tl-0 lg:rounded-tl-xl flex gap-2 justify-center items-center text-[10px] lg:text-xs ${inputMode === "Images"
+                      ? "text-white bg-[#131B1E] dark:text-white"
+                      : "bg-green-600 hover:bg-green-700 text-white"
+                    }`}
                 >
-                  <span key={index} onClick={() => handleImageClick(index)}>
-                    <div className="relative">
-                      {isLoadingsmall && (<>
-                       {/* <div className="absolute inset-0 flex justify-center items-center bg-black bg-opacity-50">
-                          <Icon icon={threeDotsScale} className="w-6 h-6 text-gray-500" />
-                        </div>*/}
-                         <div className="absolute rounded-lg inset-0 flex items-center justify-center bg-[#000000] bg-opacity-50">
-                        
-                         <CircularProgress
-                           sx={{ color: "white" }}
-                           size={30}
-                         />
-                       </div>
-                       </> )}
-                      <Image
-                        src={image}
-                        alt={`Image ${index + 1}`}
-                        width={244}
-                        height={196}
-                        className={`h-[100px] rounded-lg object-cover cursor-pointer border-2 hover:border-green-500 ${
-                          isLoadingsmall ? "opacity-0" : "opacity-100"
-                        } transition-opacity duration-300`}
-                        onLoadingComplete={() => setIsLoadingsmall(false)}
+                  <LocalSeeOutlinedIcon sx={{ fontSize: 16 }} /> Pictures
+                </button>
+
+                <button
+                  title="Ad Video"
+                  onClick={() => setInputMode("Video")}
+                  className={`h-12 p-3 flex gap-2 justify-center items-center text-[10px] lg:text-xs ${inputMode === "Video"
+                      ? "text-white bg-[#131B1E] dark:text-white"
+                      : "bg-green-600 hover:bg-green-700 text-white"
+                    }`}
+                >
+                  <YouTubeIcon sx={{ fontSize: 16 }} /> Video
+                </button>
+
+                <button
+                  title="Ad 3D Virtual"
+                  onClick={() => setInputMode("Virtual")}
+                  className={`h-12 p-3 rounded-0 lg:rounded-tr-xl flex gap-2 justify-center items-center text-[10px] lg:text-xs ${inputMode === "Virtual"
+                      ? "text-white bg-[#131B1E] dark:text-white"
+                      : "bg-green-600 hover:bg-green-700 text-white"
+                    }`}
+                >
+                  <ThreeDRotationOutlinedIcon sx={{ fontSize: 16 }} /> 3D Virtual Tour
+                </button>
+              </div>
+            </div>
+
+            {/* Content Sections */}
+            <div
+              className={`rounded-0 p-2 flex flex-col ${inputMode === "Video" && checkPlatform(ad.data["youtube-link"]) === "TikTok"
+                  ? "bg-white"
+                  : "bg-[#131B1E]"
+                }`}
+            >
+              {/* Video */}
+              <div
+                className={`flex items-center justify-center w-full min-h-[400px] ${inputMode === "Video" ? "block" : "hidden"
+                  }`}
+              >
+                {ad.data["youtube-link"] ? (
+                  checkPlatform(ad.data["youtube-link"]) === "TikTok" ? (
+                    <TikTokEmbed videoUrl={ad.data["youtube-link"]} />
+                  ) : (
+                    <YouTubePlayer videoUrl={ad.data["youtube-link"]} />
+                  )
+                ) : (
+                  <div className="flex flex-col h-full items-center justify-center dark:text-gray-400 text-gray-600">
+                    <VideocamOffOutlinedIcon />
+                    No video available for this ad
+                  </div>
+                )}
+              </div>
+
+              {/* Virtual Tour */}
+              <div
+                className={`flex items-center justify-center w-full min-h-[400px] ${inputMode === "Virtual" ? "block" : "hidden"
+                  }`}
+              >
+                {ad.data["virtualTourLink"] ? (
+                  <VirtualTour virtualTourLink={ad.data["virtualTourLink"]} />
+                ) : (
+                  <div className="flex flex-col h-full items-center justify-center dark:text-gray-400 text-gray-600">
+                    <ViewInArOutlinedIcon />
+                    No 3D Virtual Property Tour for this Ad
+                  </div>
+                )}
+              </div>
+
+              {/* Image Carousel */}
+              <div className={`${inputMode === "Images" ? "block" : "hidden"}`}>
+                <div className="relative">
+                  <Carousel setApi={setApi} plugins={[plugin.current as any]} className="w-full">
+                    <CarouselContent>
+                      {ad.data.imageUrls.length > 0 ? (<>
+
+                        {ad.data.imageUrls.map((image: string, index: number) => (
+                          <CarouselItem key={index}>
+                            <div className="relative w-full">
+                              {isLoading && (<>
+                                <div className="absolute inset-0 flex items-center justify-center bg-[#000000] bg-opacity-50">
+                                  <CircularProgress sx={{ color: "white" }} />
+                                </div>
+                              </>)}
+                              <Zoom>
+                                <Image
+                                  src={image}
+                                  alt={`Image ${index + 1}`}
+                                  width={800} // Adjust the width as needed
+                                  height={500} // Adjust the height as needed
+                                  className={`bg-[#000000] h-[400px] object-cover cursor-pointer ${isLoading ? "opacity-0" : "opacity-100"
+                                    } transition-opacity duration-300`}
+                                  onLoadingComplete={() => setIsLoading(false)}
+                                  placeholder="empty" // Optional: you can use "empty" if you want a placeholder before loading
+                                />
+
+                              </Zoom>
+                            </div>
+                          </CarouselItem>
+                        ))}
+                      </>) : (<><CarouselItem> <Image
+                        src={"/fallback.jpg"}
+                        alt={"Ad image"}
+                        width={800} // Adjust the width as needed
+                        height={500} // Adjust the height as needed
+                        layout="fill"
+                        className={`object-cover h-[400px] cursor-pointer ${isLoading ? "opacity-0" : "opacity-100"
+                          } transition-opacity duration-300`}
+                        onLoadingComplete={() => setIsLoading(false)}
                         placeholder="empty"
+                      /> </CarouselItem>
+                      </>)}
+                    </CarouselContent>
+                    <CarouselPrevious className="h-[50px] w-[50px] ml-20 font-bold border-0 text-white bg-white bg-opacity-50 p-2" />
+                    <CarouselNext className="h-[50px] w-[50px] mr-20 font-bold border-0 bg-white bg-opacity-50 text-white p-2" />
+                  </Carousel>
+
+                  {/* Slide Count and Controls */}
+                  <div className="flex gap-1 absolute bottom-0 right-0 items-center text-white text-[10px] lg:text-xs m-1 p-0">
+                    <div className="flex pr-2 pl-2 h-10 rounded-sm items-center bg-black bg-opacity-50">
+                      Slide {current} of {count}
+                    </div>
+                    <div className="p-1 cursor-pointer rounded-sm shadow" onClick={togglePopup}>
+                      <Image
+                        src="/assets/icons/expand.png"
+                        alt="Expand"
+                        className="w-8 ml-5 hover:cursor-pointer"
+                        width={36}
+                        height={36}
                       />
                     </div>
-                  </span>
+                  </div>
+
+                  <div className="flex gap-1 absolute bottom-0 left-0 text-white text-xs m-1 p-0">
+                    <div className="p-1 cursor-pointer rounded-sm" onClick={handlePlay}>
+                      {autoplayEnabled ? (
+                        <Image src="/assets/icons/pause.png" alt="Pause" className="w-8 ml-5" width={36} height={36} />
+                      ) : (
+                        <Image src="/assets/icons/play.png" alt="Play" className="w-8 ml-5" width={36} height={36} />
+                      )}
+                    </div>
+                  </div>
+
+                  {ad.organizer?.verified?.[0]?.accountverified && (
+                    <div className="hidden lg:inline absolute bg-green-100 top-0 right-0 text-xs py-1 px-3 rounded-bl-lg">
+                      <div className="flex gap-1 items-center cursor-pointer">
+                        <VerifiedUserOutlinedIcon sx={{ fontSize: 16 }} />
+                        Verified
+                      </div>
+                    </div>
+                  )}
                 </div>
-              </CarouselItem>
-            ))}
-          </CarouselContent>
-          <CarouselPrevious className="md:h-10 md:w-10 lg:h-10 lg:w-10 ml-10 font-bold text-white border-2 bg-black bg-opacity-80 p-2" />
-          <CarouselNext className="md:h-10 md:w-10 lg:h-10 lg:w-10 mr-10 font-bold bg-black border-2 bg-opacity-80 text-white p-2" />
-        </Carousel>
-      </div>
-    </div>
-  </div>
-</div>
+
+                {/* Thumbnail Navigation */}
+                <div className="flex space-x-1">
+                  <Carousel setApi={setApi2} opts={{ align: "start" }} className="w-full ml-2 mr-2 mt-1">
+                    <CarouselContent>
+                      {ad.data.imageUrls.map((image: string, index: number) => (
+                        <CarouselItem key={index} className="rounded-lg basis-1/3 lg:basis-1/6 pl-5 lg:pr-0">
+                          <div
+                            style={{
+                              border: selectedIndex === index ? "3px solid black" : "3px solid transparent",
+                            }}
+                            className="p-0 w-full rounded-lg"
+                          >
+                            <span key={index} onClick={() => handleImageClick(index)}>
+                              <div className="relative">
+                                {isLoadingsmall && (<>
+                                  {/* <div className="absolute inset-0 flex justify-center items-center bg-black bg-opacity-50">
+                          <Icon icon={threeDotsScale} className="w-6 h-6 text-gray-500" />
+                        </div>*/}
+                                  <div className="absolute rounded-lg inset-0 flex items-center justify-center bg-[#000000] bg-opacity-50">
+
+                                    <CircularProgress
+                                      sx={{ color: "white" }}
+                                      size={30}
+                                    />
+                                  </div>
+                                </>)}
+                                <Image
+                                  src={image}
+                                  alt={`Image ${index + 1}`}
+                                  width={244}
+                                  height={196}
+                                  className={`h-[100px] rounded-lg object-cover cursor-pointer border-2 hover:border-green-500 ${isLoadingsmall ? "opacity-0" : "opacity-100"
+                                    } transition-opacity duration-300`}
+                                  onLoadingComplete={() => setIsLoadingsmall(false)}
+                                  placeholder="empty"
+                                />
+                              </div>
+                            </span>
+                          </div>
+                        </CarouselItem>
+                      ))}
+                    </CarouselContent>
+                    <CarouselPrevious className="md:h-10 md:w-10 lg:h-10 lg:w-10 ml-10 font-bold text-white border-2 bg-black bg-opacity-80 p-2" />
+                    <CarouselNext className="md:h-10 md:w-10 lg:h-10 lg:w-10 mr-10 font-bold bg-black border-2 bg-opacity-80 text-white p-2" />
+                  </Carousel>
+                </div>
+              </div>
+            </div>
+          </div>
 
           {/* Popup for displaying all images */}
           {showPopup && (
@@ -684,28 +675,27 @@ const handleOpenPopupDispute = () => {
                       {ad.data.imageUrls.map((image: string, index: number) => (
                         <CarouselItem key={index}>
                           <div className="relative h-[500px] w-full">
-                           
+
                             {isLoadingpopup && (
                               <div className="absolute inset-0 flex items-center justify-center bg-[#000000] bg-opacity-50">
                                 {/* Spinner or loading animation */}
                                 <CircularProgress sx={{ color: "gray" }} />
                               </div>
                             )}
-                              {isLoadingpopup && (
-                                              <div 
-                                             
-                                               className="absolute inset-0 flex justify-center items-center bg-[#000000] bg-opacity-50">
-                                                <Icon icon={threeDotsScale} className="w-6 h-6 text-gray-500" />
-                                              </div>
-                                            )}
+                            {isLoadingpopup && (
+                              <div
+
+                                className="absolute inset-0 flex justify-center items-center bg-[#000000] bg-opacity-50">
+                                <Icon icon={threeDotsScale} className="w-6 h-6 text-gray-500" />
+                              </div>
+                            )}
                             <Zoom>
                               <Image
                                 src={image}
                                 alt={`Image ${index + 1}`}
                                 layout="fill" // Ensures the image scales to the parent container
-                                className={`object-contain ${
-                                  isLoadingpopup ? "opacity-0" : "opacity-100"
-                                } transition-opacity duration-300`}
+                                className={`object-contain ${isLoadingpopup ? "opacity-0" : "opacity-100"
+                                  } transition-opacity duration-300`}
                                 onLoadingComplete={() =>
                                   setIsLoadingpopup(false)
                                 }
@@ -723,7 +713,7 @@ const handleOpenPopupDispute = () => {
                     Slide {current} of {totalSlides}
                   </div>
                 </div>
-            
+
               </div>
             </div>
           )}
@@ -736,7 +726,7 @@ const handleOpenPopupDispute = () => {
             <div className="lg:hidden flex justify-end mb-2 items-center w-full">
               <div className="flex flex-col justify-center">
                 <div className="flex gap-1 items-center justify-center">
-        
+
                   <div className="flex items-center">
                     {ad.data.negotiable === "yes" && (
                       <div className="flex gap-1 text-[10px] text-green-700 font-bold bg-white rounded-lg p-1 justify-center border">
@@ -783,14 +773,14 @@ const handleOpenPopupDispute = () => {
                       </p>
                     ) : (
                       <>
-                      
-                          <span className="text-lg lg:text-xl font-bold w-full rounded-full p-1 dark:text-green-500 text-green-600">
-              {ad.data.budget ? (<> Budget : Ksh {ad.data.budget.toLocaleString()}</>):(<> {ad.data.price > 0 && (
-                                   <span>
-                                  Ksh {ad.data.price.toLocaleString()}
-                                  </span>)} 
-                                  </>)}
-                </span>
+
+                        <span className="text-lg lg:text-xl font-bold w-full rounded-full p-1 dark:text-green-500 text-green-600">
+                          {ad.data.budget ? (<> Budget : Ksh {ad.data.budget.toLocaleString()}</>) : (<> {ad.data.price > 0 && (
+                            <span>
+                              Ksh {ad.data.price.toLocaleString()}
+                            </span>)}
+                          </>)}
+                        </span>
                       </>
                     )}{" "}
                     {ad.data.unit && ad.data.contact === "specify" && (
@@ -808,12 +798,12 @@ const handleOpenPopupDispute = () => {
                         {ad.data.period}
                       </div>
                     )}
-                     {ad.data["Maximum Amount"] && ad.data["Minimum Amount"] && (
-  <div className="flex flex-col font-bold">
-    <p>Min: Ksh {Number(ad.data["Minimum Amount"]).toLocaleString()} </p>
-    <p>Max: Ksh {Number(ad.data["Maximum Amount"]).toLocaleString()}</p>
-  </div>
-)}
+                    {ad.data["Maximum Amount"] && ad.data["Minimum Amount"] && (
+                      <div className="flex flex-col font-bold">
+                        <p>Min: Ksh {Number(ad.data["Minimum Amount"]).toLocaleString()} </p>
+                        <p>Max: Ksh {Number(ad.data["Maximum Amount"]).toLocaleString()}</p>
+                      </div>
+                    )}
                   </div>
                 </div>
                 {ad.data.bulkprice?.length > 0 && (
@@ -866,7 +856,7 @@ const handleOpenPopupDispute = () => {
               </div>
             </div>
             <div className="flex mb-2 items-center w-full">
-                       
+
               <p className="text-lg lg:text-2xl font-bold dark:text-gray-300 text-green-900">
                 {ad.data.title}
               </p>
@@ -879,24 +869,24 @@ const handleOpenPopupDispute = () => {
                 </p>
 
                 {ad.data.propertyarea?.mapaddress && (
-<p className="dark:text-gray-400 text-gray-700 text-[10px] lg:text-sm">
-<LocationOnIcon sx={{ fontSize: 20 }} />
-{ad.data.propertyarea?.mapaddress}
-</p>
-)} 
-               
+                  <p className="dark:text-gray-400 text-gray-700 text-[10px] lg:text-sm">
+                    <LocationOnIcon sx={{ fontSize: 20 }} />
+                    {ad.data.propertyarea?.mapaddress}
+                  </p>
+                )}
+
               </div>
               <p className="dark:text-gray-400 text-gray-700 text-[10px] lg:text-sm">
                 <VisibilityIcon sx={{ fontSize: 20 }} /> {ad.views} Views
               </p>
             </div>
             {ad.disputeStatus && (<DisputeBadge status={ad?.disputeStatus} />)}
-        {ad.mapaVerificationStatus && ad.mapaVerificationStatus === 'verified' && <MapaVerifiedBadge size="sm" />}
-  
-{!ad.mapaVerificationStatus && isSale && isAdCreator && (
-  <MapaVerificationForm userId={userId} ad={ad} userName={userName} userImage={userImage} />
-)}
-                  
+            {ad.mapaVerificationStatus && ad.mapaVerificationStatus === 'verified' && <MapaVerifiedBadge size="sm" />}
+
+            {!ad.mapaVerificationStatus && isSale && isAdCreator && (
+              <MapaVerificationForm userId={userId} ad={ad} userName={userName} userImage={userImage} />
+            )}
+
             <div className="border-t dark:border-gray-600 border-gray-300 mt-4 mb-4"></div>
             <div className="grid grid-cols-3 lg:grid-cols-5 w-full gap-1 mt-4">
               {Object.entries(ad.data as Record<string, any>).map(
@@ -931,7 +921,7 @@ const handleOpenPopupDispute = () => {
                         <>
                           <div key={key} className="mb-2 md:flex-row">
                             <div className="dark:text-gray-300 text-emerald-950 text-sm">
-                              {key ==='Maximum Amount' || key==='Minimum Amount' ? Number(value).toLocaleString():value}
+                              {key === 'Maximum Amount' || key === 'Minimum Amount' ? Number(value).toLocaleString() : value}
                             </div>
                             <div className="dark:text-gray-500 text-gray-600 text-xs">
                               {capitalizeFirstLetter(key.replace("-", " "))}
@@ -1001,11 +991,11 @@ const handleOpenPopupDispute = () => {
             </p>
             {/* <p className="my-1 text-text-green-600">{ad.data.description}</p>*/}
             <DescriptionComponent description={ad.data.description} />
-            
-          
-          
-          
-          
+
+
+
+
+
             {ad.data.delivery?.length > 0 && (
               <>
                 <div className="border-t dark:border-gray-600 border-gray-300 mt-4 mb-4"></div>
@@ -1123,7 +1113,7 @@ const handleOpenPopupDispute = () => {
                       </AccordionTrigger>
                       <AccordionContent className="border-0">
                         <div className="p-0 flex grid grid-cols-1 rounded-[20px] m-0 dark:bg-[#2D3236] bg-gray-100">
-                       
+
                           <div className="flex flex-col">
                             <SellerProfileCard
                               userId={userId}
@@ -1131,10 +1121,10 @@ const handleOpenPopupDispute = () => {
                               titleId={"Ad"}
                               fee={user?.fee ?? 500}
                               userImage={userImage}
-                              userName={userName} 
+                              userName={userName}
                               handleOpenReview={handleOpenReview}
                               handleOpenShop={handleOpenShop}
-                              handlePay={handlePay}                            />
+                              handlePay={handlePay} />
                           </div>
                           <div className="m-3 p-1">
                             {ad.organizer?.businessname && (
@@ -1423,188 +1413,188 @@ const handleOpenPopupDispute = () => {
                 </div>
               </>
             )}
- 
- {(ad.data.category !== 'Property Services' || ad.data.category !== 'Wanted Ads') && (<>
- <div className="flex mt-4 w-full items-center">
-              <SignedIn>
 
-<div className="flex flex-col gap-4 w-full">
- 
-    {isAdCreator ? (
-      
-      <>{!ad.hasSiteVisit && (<button onClick={handleOpenPopupSchedule} className="flex rounded-sm w-full py-3 px-2 text-lg text-green-600 border border-green-600 bg-green-100 hover:bg-green-200 justify-center items-center gap-1">
-              <CalendarMonthOutlinedIcon/>
-             Schedule Site Visit
-      </button>)}</>
-      ):(<> 
-      
-      {ad.hasSiteVisit && ( <button onClick={handleOpenPopupBooking} className="flex rounded-sm w-full py-3 px-2 text-lg text-white bg-black hover:bg-gray-900 justify-center items-center gap-1">
-              <CalendarMonthOutlinedIcon/>
-              Booking Site Visit
-      </button>)}
-     
-     <button onClick={handleOpenPopupLoan} className="flex rounded-sm w-full py-3 px-2 text-lg text-white bg-green-600 hover:bg-green-700 justify-center items-center gap-1">
-              <CreditScoreOutlinedIcon/>
-              Request this property Financing
-      </button>
-    </>)}    
-       
-</div>
+            {(ad.data.category !== 'Property Services' || ad.data.category !== 'Wanted Ads') && (<>
+              <div className="flex mt-4 w-full items-center">
+                <SignedIn>
 
-            
-       
-        </SignedIn>
+                  <div className="flex flex-col gap-4 w-full">
 
-        <SignedOut>
-          <div className="flex flex-col gap-4 w-full">
+                    {isAdCreator ? (
+
+                      <>{!ad.hasSiteVisit && (<button onClick={handleOpenPopupSchedule} className="flex rounded-sm w-full py-3 px-2 text-lg text-green-600 border border-green-600 bg-green-100 hover:bg-green-200 justify-center items-center gap-1">
+                        <CalendarMonthOutlinedIcon />
+                        Schedule Site Visit
+                      </button>)}</>
+                    ) : (<>
+
+                      {ad.hasSiteVisit && (<button onClick={handleOpenPopupBooking} className="flex rounded-sm w-full py-3 px-2 text-lg text-white bg-black hover:bg-gray-900 justify-center items-center gap-1">
+                        <CalendarMonthOutlinedIcon />
+                        Booking Site Visit
+                      </button>)}
+
+                      <button onClick={handleOpenPopupLoan} className="flex rounded-sm w-full py-3 px-2 text-lg text-white bg-green-600 hover:bg-green-700 justify-center items-center gap-1">
+                        <CreditScoreOutlinedIcon />
+                        Request this property Financing
+                      </button>
+                    </>)}
+
+                  </div>
 
 
- {isAdCreator ? (
-    <>{!ad.hasSiteVisit && (<button onClick={() => {
-              setIsOpenP(true);
-              router.push("/sign-in");
-            }} className="flex rounded-sm w-full py-3 px-2 text-lg text-white bg-blue-600 hover:bg-blue-700 justify-center items-center gap-1">
-              <CalendarMonthOutlinedIcon/>
-             Schedule Site Visit
-      </button>)}</>
-  
-  
-  ):(<> 
-      
-      
-         
-      {ad.hasSiteVisit && ( <button onClick={() => {
-              setIsOpenP(true);
-              router.push("/sign-in");
-            }} className="flex rounded-sm w-full py-3 px-2 text-lg text-white bg-black hover:bg-gray-900 justify-center items-center gap-1">
-              <CalendarMonthOutlinedIcon/>
-              Booking Site Visit
-      </button>)}
-      
-      
-     <button onClick={() => {
-              setIsOpenP(true);
-              router.push("/sign-in");
-            }} className="flex rounded-sm w-full py-3 px-2 text-lg text-white bg-green-600 hover:bg-green-700 justify-center items-center gap-1">
-              <CreditScoreOutlinedIcon/>
-              Request this property Financing
-      </button>
-    </>)}   
 
-      </div>
-      </SignedOut>
+                </SignedIn>
 
-        </div>
-        </>)}
+                <SignedOut>
+                  <div className="flex flex-col gap-4 w-full">
+
+
+                    {isAdCreator ? (
+                      <>{!ad.hasSiteVisit && (<button onClick={() => {
+                        setIsOpenP(true);
+                        router.push("/sign-in");
+                      }} className="flex rounded-sm w-full py-3 px-2 text-lg text-white bg-blue-600 hover:bg-blue-700 justify-center items-center gap-1">
+                        <CalendarMonthOutlinedIcon />
+                        Schedule Site Visit
+                      </button>)}</>
+
+
+                    ) : (<>
+
+
+
+                      {ad.hasSiteVisit && (<button onClick={() => {
+                        setIsOpenP(true);
+                        router.push("/sign-in");
+                      }} className="flex rounded-sm w-full py-3 px-2 text-lg text-white bg-black hover:bg-gray-900 justify-center items-center gap-1">
+                        <CalendarMonthOutlinedIcon />
+                        Booking Site Visit
+                      </button>)}
+
+
+                      <button onClick={() => {
+                        setIsOpenP(true);
+                        router.push("/sign-in");
+                      }} className="flex rounded-sm w-full py-3 px-2 text-lg text-white bg-green-600 hover:bg-green-700 justify-center items-center gap-1">
+                        <CreditScoreOutlinedIcon />
+                        Request this property Financing
+                      </button>
+                    </>)}
+
+                  </div>
+                </SignedOut>
+
+              </div>
+            </>)}
             <div className="flex justify-between w-full items-center">
-           
-           
-           
-           
-            <LandDisputeReportForm userId={userId} ad={ad} isOpen={isPopupOpenDispute} onClose={handleClosePopupDispute} userName={userName} userImage={userImage}/>
-            <ReportUnavailable  userId={userId} ad={ad} isOpen={isPopupOpenAAv} onClose={handleClosePopupAv} userName={userName} userImage={userImage}/>
-            <ReportAbuse  userId={userId} ad={ad} isOpen={isPopupOpen} onClose={handleClosePopup} userName={userName} userImage={userImage}/>
-            <RequestFinancing  userId={userId} ad={ad} isOpen={isPopupOpenLoan} onClose={handleClosePopupLoan} userName={userName} userImage={userImage}/>
-            <ProgressPopup isOpen={isOpenP} onClose={handleCloseP} /> 
-            <ScheduleVisitForm userId={userId} ad={ad} isOpen={isPopupOpenSchedule} onClose={handleClosePopupSchedule} userName={userName} userImage={userImage}/>
-            <BookingForm userId={userId} user={user} ad={ad} isOpen={isPopupOpenBooking} onClose={handleClosePopupBooking} userName={userName} userImage={userImage}/>
+
+
+
+
+              <LandDisputeReportForm userId={userId} ad={ad} isOpen={isPopupOpenDispute} onClose={handleClosePopupDispute} userName={userName} userImage={userImage} />
+              <ReportUnavailable userId={userId} ad={ad} isOpen={isPopupOpenAAv} onClose={handleClosePopupAv} userName={userName} userImage={userImage} />
+              <ReportAbuse userId={userId} ad={ad} isOpen={isPopupOpen} onClose={handleClosePopup} userName={userName} userImage={userImage} />
+              <RequestFinancing userId={userId} ad={ad} isOpen={isPopupOpenLoan} onClose={handleClosePopupLoan} userName={userName} userImage={userImage} />
+              <ProgressPopup isOpen={isOpenP} onClose={handleCloseP} />
+              <ScheduleVisitForm userId={userId} ad={ad} isOpen={isPopupOpenSchedule} onClose={handleClosePopupSchedule} userName={userName} userImage={userImage} />
+              <BookingForm userId={userId} user={user} ad={ad} isOpen={isPopupOpenBooking} onClose={handleClosePopupBooking} userName={userName} userImage={userImage} />
             </div>
-  <div className="mt-4 mb-4"></div>
-          
- {!isAdCreator && (<div className="p-2 text-sm rounded-lg overflow-hidden">
+            <div className="mt-4 mb-4"></div>
+
+            {!isAdCreator && (<div className="p-2 text-sm rounded-lg overflow-hidden">
               <div className="flex gap-2 justify-between">
-              <SignedIn>
-              <div onClick={handleOpenPopupAv}  className="flex p-2 rounded-sm bg-blue-100 border border-blue-600 cursor-pointer text-blue-600 items-center gap-1">
-              <AssistantPhotoOutlinedIcon sx={{ fontSize: 14 }}/>
-              Unavailable?
-      </div>
-       
-        </SignedIn>
+                <SignedIn>
+                  <div onClick={handleOpenPopupAv} className="flex p-2 rounded-sm bg-blue-100 border border-blue-600 cursor-pointer text-blue-600 items-center gap-1">
+                    <AssistantPhotoOutlinedIcon sx={{ fontSize: 14 }} />
+                    Unavailable?
+                  </div>
 
-    {isSale && (<><SignedOut>
-        <div onClick={() => {
-              setIsOpenP(true);
-              router.push("/sign-in");
-            }}
-              className="flex p-2 rounded-sm bg-blue-100 border border-blue-600 cursor-pointer text-blue-600 items-center gap-1">
-              <AssistantPhotoOutlinedIcon sx={{ fontSize: 14 }}/>
-              Unavailable?
-      </div>
+                </SignedIn>
 
-        </SignedOut>
+                {isSale && (<><SignedOut>
+                  <div onClick={() => {
+                    setIsOpenP(true);
+                    router.push("/sign-in");
+                  }}
+                    className="flex p-2 rounded-sm bg-blue-100 border border-blue-600 cursor-pointer text-blue-600 items-center gap-1">
+                    <AssistantPhotoOutlinedIcon sx={{ fontSize: 14 }} />
+                    Unavailable?
+                  </div>
+
+                </SignedOut>
 
 
-   <SignedIn>
-              <div onClick={handleOpenPopupDispute}  className="flex p-2 rounded-sm bg-yellow-100 border border-yellow-600 cursor-pointer text-yellow-600 items-center gap-1">
-              <AssistantPhotoOutlinedIcon sx={{ fontSize: 14 }}/>
-              Report Dispute
-              </div>
-       
-        </SignedIn></>)}    
+                  <SignedIn>
+                    <div onClick={handleOpenPopupDispute} className="flex p-2 rounded-sm bg-yellow-100 border border-yellow-600 cursor-pointer text-yellow-600 items-center gap-1">
+                      <AssistantPhotoOutlinedIcon sx={{ fontSize: 14 }} />
+                      Report Dispute
+                    </div>
 
-        <SignedOut>
-        <div  onClick={() => {
-             setIsOpenP(true);
-              router.push("/sign-in");
-            }}  className="flex p-2 rounded-sm bg-orange-100 border border-orange-600 cursor-pointer text-orange-600 items-center gap-1">
-              <AssistantPhotoOutlinedIcon sx={{ fontSize: 14 }}/>
-             Report Dispute
-              </div>
-         
-        </SignedOut>
+                  </SignedIn></>)}
 
-              <SignedIn>
-              <div onClick={handleOpenPopup}  className="flex p-2 rounded-sm bg-orange-100 border border-orange-600 cursor-pointer text-red-600 items-center gap-1">
-              <AssistantPhotoOutlinedIcon sx={{ fontSize: 14 }}/>
-              Report Abuse
-              </div>
-       
-        </SignedIn>
+                <SignedOut>
+                  <div onClick={() => {
+                    setIsOpenP(true);
+                    router.push("/sign-in");
+                  }} className="flex p-2 rounded-sm bg-orange-100 border border-orange-600 cursor-pointer text-orange-600 items-center gap-1">
+                    <AssistantPhotoOutlinedIcon sx={{ fontSize: 14 }} />
+                    Report Dispute
+                  </div>
 
-        <SignedOut>
-        <div  onClick={() => {
-             setIsOpenP(true);
-              router.push("/sign-in");
-            }}  className="flex p-2 rounded-sm cursor-pointer bg-red-100 border border-red-600 text-red-600 items-center gap-1">
-              <AssistantPhotoOutlinedIcon sx={{ fontSize: 14 }}/>
-              Report Abuse
-              </div>
-         
-        </SignedOut>
+                </SignedOut>
 
-            
+                <SignedIn>
+                  <div onClick={handleOpenPopup} className="flex p-2 rounded-sm bg-orange-100 border border-orange-600 cursor-pointer text-red-600 items-center gap-1">
+                    <AssistantPhotoOutlinedIcon sx={{ fontSize: 14 }} />
+                    Report Abuse
+                  </div>
+
+                </SignedIn>
+
+                <SignedOut>
+                  <div onClick={() => {
+                    setIsOpenP(true);
+                    router.push("/sign-in");
+                  }} className="flex p-2 rounded-sm cursor-pointer bg-red-100 border border-red-600 text-red-600 items-center gap-1">
+                    <AssistantPhotoOutlinedIcon sx={{ fontSize: 14 }} />
+                    Report Abuse
+                  </div>
+
+                </SignedOut>
+
+
               </div>
             </div>
-         
-)}
-   </div>
+
+            )}
+          </div>
         </div>
 
         {/* Right panel */}
-        <div 
-         className={`p-1 ${
-          ad.data.propertyarea ?
-          "lg:w-[40%]":"lg:w-[32%]"
-        }`}>
-        {ad.data.category !== 'Wanted Ads' && ad.data.propertyarea?.location && ad.data.propertyarea?.location.length !== 0 && (
-          <>
-            <div className="text-l mb-2 rounded-lg">
-              <div className="w-full">
-              <div className="w-full mt-1 rounded-t-lg p-2 bg-white">
-              <p className="text-gray-600 font-bold">Property Location</p>
+        <div
+          className={`p-1 ${ad.data.propertyarea ?
+              "lg:w-[40%]" : "lg:w-[32%]"
+            }`}>
+          {ad.data.category !== 'Wanted Ads' && ad.data.propertyarea?.location && ad.data.propertyarea?.location.length !== 0 && (
+            <>
+              <div className="text-l mb-2 rounded-lg">
+                <div className="w-full">
+                  <div className="w-full mt-1 rounded-t-lg p-2 bg-white">
+                    <p className="text-gray-600 font-bold">Property Location</p>
+                  </div>
+                  <MappingAds
+                    category={ad.data.category}
+                    data={ad.data.propertyarea}
+                  />
+                  {/*    <PropertyShapesGrid _id={ad._id} userId={userId} organizerId={ad.organizer._id} shapes={ad.data.propertyarea.shapes}/>*/}
+                </div>
               </div>
-                <MappingAds
-                  data={ad.data.propertyarea}
-                />
-               {/*    <PropertyShapesGrid _id={ad._id} userId={userId} organizerId={ad.organizer._id} shapes={ad.data.propertyarea.shapes}/>*/}
-              </div>
-            </div>
             </>
           )}
 
           <div className="hidden lg:inline">
-            
-            
+
+
             <div className="dark:bg-[#2D3236] dark:text-gray-300 bg-white p-2 border rounded-lg overflow-hidden flex flex-col items-center">
               <div className="flex gap-1 items-center no-underline">
                 {ad.data.contact && ad.data.contact === "contact" ? (
@@ -1613,14 +1603,14 @@ const handleOpenPopupDispute = () => {
                   </p>
                 ) : (
                   <>
-                     <span className="flex gap-1 text-2xl font-bold w-full rounded-full px-4 py-1 dark:text-green-500 text-green-600">
-               {ad.data.budget ? (<> Budget : Ksh {ad.data.budget.toLocaleString()}</>):(<> {ad.data.price > 0 && (
-                                   <span>
-                                  Ksh {ad.data.price.toLocaleString()}
-                                  </span>)} 
-                                  </>)}
-                </span>
-                   
+                    <span className="flex gap-1 text-2xl font-bold w-full rounded-full px-4 py-1 dark:text-green-500 text-green-600">
+                      {ad.data.budget ? (<> Budget : Ksh {ad.data.budget.toLocaleString()}</>) : (<> {ad.data.price > 0 && (
+                        <span>
+                          Ksh {ad.data.price.toLocaleString()}
+                        </span>)}
+                      </>)}
+                    </span>
+
                   </>
                 )}
                 {ad.data.unit && ad.data.contact === "specify" && (
@@ -1634,12 +1624,12 @@ const handleOpenPopupDispute = () => {
                     {ad.data.period}
                   </div>
                 )}
-                 {ad.data["Maximum Amount"] && ad.data["Minimum Amount"] && (
-  <div className="flex flex-col font-bold">
-    <p>Min: Ksh {Number(ad.data["Minimum Amount"]).toLocaleString()} </p>
-    <p>Max: Ksh {Number(ad.data["Maximum Amount"]).toLocaleString()}</p>
-  </div>
-)}
+                {ad.data["Maximum Amount"] && ad.data["Minimum Amount"] && (
+                  <div className="flex flex-col font-bold">
+                    <p>Min: Ksh {Number(ad.data["Minimum Amount"]).toLocaleString()} </p>
+                    <p>Max: Ksh {Number(ad.data["Maximum Amount"]).toLocaleString()}</p>
+                  </div>
+                )}
               </div>
               {ad.data.contact && ad.data.contact === "contact" && (
                 <div>
@@ -1731,7 +1721,7 @@ const handleOpenPopupDispute = () => {
                 </>
               )}
             </div>
-        
+
             <span className="hidden m-0">
               <div className="justify-between flex w-full  gap-1">
                 <SignedIn>
@@ -1810,7 +1800,7 @@ const handleOpenPopupDispute = () => {
             </span>
           </div>
 
-    
+
 
           <div className="hidden lg:inline">
             <div className="mt-3">
@@ -1821,171 +1811,171 @@ const handleOpenPopupDispute = () => {
                   titleId={"Ad"}
                   fee={user?.fee ?? 500}
                   userImage={userImage}
-                  userName={userName} 
+                  userName={userName}
                   handleOpenReview={handleOpenReview}
-                  handleOpenShop={handleOpenShop} 
-                  handlePay={handlePay}                />
+                  handleOpenShop={handleOpenShop}
+                  handlePay={handlePay} />
               </div>
             </div>
-         
+
           </div>
           <div className="mt-3 border dark:bg-[#2D3236] dark:text-gray-300 bg-white p-2 text-sm rounded-lg overflow-hidden">
-          
-              <div className="flex justify-between">
+
+            <div className="flex justify-between">
 
 
               <SignedIn>
-          
-              <Button   onClick={() => {
-                      
-                     // setIsOpenP(true);
-                     handleOpenReview(ad.organizer)
-                      //  router.push(`/reviews/${ad.organizer._id}`);
-                      
-                    }} variant="default" className="flex w-full bg-green-600 hover:bg-green-700 items-center gap-2">
-         😃
-         Leave Feedback?
-      </Button>
 
-        </SignedIn>
+                <Button onClick={() => {
 
-        <SignedOut>
+                  // setIsOpenP(true);
+                  handleOpenReview(ad.organizer)
+                  //  router.push(`/reviews/${ad.organizer._id}`);
 
-        <Button onClick={() => {
-              setIsOpenP(true);
-              router.push("/sign-in");
-            }} variant="default" className="flex w-full bg-green-600 hover:bg-green-700 items-center gap-2">
-         😃
-         Leave Feedback?
-      </Button>
+                }} variant="default" className="flex w-full bg-green-600 hover:bg-green-700 items-center gap-2">
+                  😃
+                  Leave Feedback?
+                </Button>
 
-         
-        </SignedOut>
+              </SignedIn>
+
+              <SignedOut>
+
+                <Button onClick={() => {
+                  setIsOpenP(true);
+                  router.push("/sign-in");
+                }} variant="default" className="flex w-full bg-green-600 hover:bg-green-700 items-center gap-2">
+                  😃
+                  Leave Feedback?
+                </Button>
 
 
-            
-                  
-              </div>
+              </SignedOut>
+
+
+
+
             </div>
+          </div>
 
 
-            <div className="mt-3 border dark:bg-[#2D3236] dark:text-gray-300 bg-white p-2 text-sm rounded-lg overflow-hidden">
-              <div className="font-bold text-lg text-center">Share Ad</div>
-              <div className="border-t dark:border-gray-600 border-gray-300 mt-4 mb-4"></div>
-              <div className="flex justify-between">
+          <div className="mt-3 border dark:bg-[#2D3236] dark:text-gray-300 bg-white p-2 text-sm rounded-lg overflow-hidden">
+            <div className="font-bold text-lg text-center">Share Ad</div>
+            <div className="border-t dark:border-gray-600 border-gray-300 mt-4 mb-4"></div>
+            <div className="flex justify-between">
 
-           < CopyShareAdLink _id={ad._id} titleId={"Ad"}/>
-              
-           
-              </div>
+              < CopyShareAdLink _id={ad._id} titleId={"Ad"} />
+
+
             </div>
+          </div>
 
 
-         
-        
-            <div className="mt-3 border dark:bg-[#2D3236] dark:text-gray-300 bg-white p-2 text-sm rounded-lg overflow-hidden">
-  <div className="font-bold text-lg text-center">Safety Tips for Buyers</div>
-<div className="border-t dark:border-gray-600 border-gray-300 mt-4 mb-4"></div>
-  <ol>
-    <li>
-      <div className="text-sm">
-        <p className="font-bold flex gap-2 text-sm">
-          <CheckCircleIcon sx={{ fontSize: 14 }} />
-          Verify the Seller
-        </p>
-        <p>
-          Always check the seller&apos;s profile, history, and contact details. Be cautious of listings from users without verified details or reviews.
-        </p>
-      </div>
-    </li>
 
-    <li>
-      <div className="mt-2 gap-2 text-sm">
-        <p className="font-bold flex gap-2 text-sm">
-          <CheckCircleIcon sx={{ fontSize: 14 }} />
-          Inspect the Property
-        </p>
-        <p>
-          Schedule a physical visit to the property before making any payments. Ensure all details match the listing description and ask questions about ownership.
-        </p>
-      </div>
-    </li>
 
-    <li>
-      <div className="gap-2 mt-2 text-sm">
-        <p className="font-bold flex gap-2 text-sm">
-          <CheckCircleIcon sx={{ fontSize: 14 }} />
-          Meet in Safe Locations
-        </p>
-        <p>
-          When meeting with the seller or their agent, choose public or secure places. Consider bringing someone along for added safety.
-        </p>
-      </div>
-    </li>
+          <div className="mt-3 border dark:bg-[#2D3236] dark:text-gray-300 bg-white p-2 text-sm rounded-lg overflow-hidden">
+            <div className="font-bold text-lg text-center">Safety Tips for Buyers</div>
+            <div className="border-t dark:border-gray-600 border-gray-300 mt-4 mb-4"></div>
+            <ol>
+              <li>
+                <div className="text-sm">
+                  <p className="font-bold flex gap-2 text-sm">
+                    <CheckCircleIcon sx={{ fontSize: 14 }} />
+                    Verify the Seller
+                  </p>
+                  <p>
+                    Always check the seller&apos;s profile, history, and contact details. Be cautious of listings from users without verified details or reviews.
+                  </p>
+                </div>
+              </li>
 
-    <li>
-      <div className="gap-2 mt-2 text-sm">
-        <p className="font-bold flex gap-2 text-sm">
-          <CheckCircleIcon sx={{ fontSize: 14 }} />
-          Avoid Advance Payments
-        </p>
-        <p>
-          Never send money before seeing the property or signing official documents. Use secure payment channels and demand proof of ownership.
-        </p>
-      </div>
-    </li>
+              <li>
+                <div className="mt-2 gap-2 text-sm">
+                  <p className="font-bold flex gap-2 text-sm">
+                    <CheckCircleIcon sx={{ fontSize: 14 }} />
+                    Inspect the Property
+                  </p>
+                  <p>
+                    Schedule a physical visit to the property before making any payments. Ensure all details match the listing description and ask questions about ownership.
+                  </p>
+                </div>
+              </li>
 
-    <li>
-      <div className="mt-2 font-bold text-green-600 hover:text-green-500 hover:cursor-pointer">
-        <div
-          onClick={() => {
-            handleOpenSafety();
-            // router.push("/safety");
-          }}
-        >
-          Read more...
-        </div>
-      </div>
-    </li>
-  </ol>
-</div>
+              <li>
+                <div className="gap-2 mt-2 text-sm">
+                  <p className="font-bold flex gap-2 text-sm">
+                    <CheckCircleIcon sx={{ fontSize: 14 }} />
+                    Meet in Safe Locations
+                  </p>
+                  <p>
+                    When meeting with the seller or their agent, choose public or secure places. Consider bringing someone along for added safety.
+                  </p>
+                </div>
+              </li>
+
+              <li>
+                <div className="gap-2 mt-2 text-sm">
+                  <p className="font-bold flex gap-2 text-sm">
+                    <CheckCircleIcon sx={{ fontSize: 14 }} />
+                    Avoid Advance Payments
+                  </p>
+                  <p>
+                    Never send money before seeing the property or signing official documents. Use secure payment channels and demand proof of ownership.
+                  </p>
+                </div>
+              </li>
+
+              <li>
+                <div className="mt-2 font-bold text-green-600 hover:text-green-500 hover:cursor-pointer">
+                  <div
+                    onClick={() => {
+                      handleOpenSafety();
+                      // router.push("/safety");
+                    }}
+                  >
+                    Read more...
+                  </div>
+                </div>
+              </li>
+            </ol>
+          </div>
 
 
 
           <div className="mt-3 border dark:bg-[#2D3236] dark:text-gray-300  bg-white p-2 text-sm rounded-lg overflow-hidden">
-              <div className="flex justify-between">
+            <div className="flex justify-between">
 
-            <SignedIn>
-            <Button onClick={() => {
-            
-            handleOpenSell(ad.data.category.toString(), ad.data.subcategory.toString());
-           // router.push("/ads/create");
-          
-        }} variant="default" className="flex bg-green-600 hover:bg-green-700 w-full items-center gap-2">
-        <SellOutlinedIcon sx={{ fontSize: 16 }}  />
-        Post Ad like this?
-      </Button>
-              
-            </SignedIn>
+              <SignedIn>
+                <Button onClick={() => {
 
-            <SignedOut>
-            <Button onClick={() => {
+                  handleOpenSell(ad.data.category.toString(), ad.data.subcategory.toString());
+                  // router.push("/ads/create");
+
+                }} variant="default" className="flex bg-green-600 hover:bg-green-700 w-full items-center gap-2">
+                  <SellOutlinedIcon sx={{ fontSize: 16 }} />
+                  Post Ad like this?
+                </Button>
+
+              </SignedIn>
+
+              <SignedOut>
+                <Button onClick={() => {
                   setIsOpenP(true);
                   router.push("/sign-in");
                 }} variant="default" className="flex bg-green-600 hover:bg-green-700 w-full items-center gap-2">
-        <SellOutlinedIcon sx={{ fontSize: 16 }}  />
-        Post Ad like this?
-      </Button>
-              
-            </SignedOut>
-              
-       
-              </div>
+                  <SellOutlinedIcon sx={{ fontSize: 16 }} />
+                  Post Ad like this?
+                </Button>
+
+              </SignedOut>
+
+
             </div>
+          </div>
 
         </div>
       </div>
-     
+
     </>
   );
 }
