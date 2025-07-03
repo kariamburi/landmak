@@ -687,7 +687,7 @@ export default function AdsDetials({ ad, user, userId, userImage, userName, isMa
         <div className="p-3 lg:rounded-b-xl bg-white">
           {ad.data.category === "Property Services" && (<>
             {ad.data.imageUrls[0] && !isDefaultClerkAvatar(ad.data.imageUrls[0]) ? (
-              <div className="w-40 h-40 p-1 mx-auto bg-green-600 rounded-full flex items-center justify-center text-xl font-bold text-green-700">
+              <div className="w-40 h-40 p-1 mb-2 mx-auto bg-green-600 rounded-full flex items-center justify-center text-xl font-bold text-green-700">
                 <img
                   src={ad.data.imageUrls[0]}
                   alt="Organizer avatar"
@@ -696,7 +696,7 @@ export default function AdsDetials({ ad, user, userId, userImage, userName, isMa
               </div>
 
             ) : (
-              <div className="w-32 h-32 mx-auto bg-green-500 rounded-full flex items-center justify-center text-xl font-bold text-white">
+              <div className="w-40 h-40 mb-2 mx-auto bg-green-500 rounded-full flex items-center justify-center text-xl font-bold text-white">
                 {getInitials(ad.organizer?.firstName, ad.organizer?.lastName)}
               </div>
             )}
@@ -707,8 +707,8 @@ export default function AdsDetials({ ad, user, userId, userImage, userName, isMa
               "inline" : "inline lg:hidden"
               }`}
           >
-            <div className="flex flex-col justify-center">
-              <div className="flex gap-1 items-center justify-center">
+            <div className="flex gap-1 w-full flex-col justify-center">
+              <div className="flex items-center justify-center">
 
                 <div className="flex items-center">
                   {ad.data.negotiable === "yes" && (
@@ -724,7 +724,7 @@ export default function AdsDetials({ ad, user, userId, userImage, userName, isMa
                   )}
                 </div>
                 {ad.data.contact && ad.data.contact === "contact" && (
-                  <div>
+                  <div className="flex items-center">
                     <SignedIn>
                       <button
                         className="bg-green-100 hover:bg-[#000000] text-green-700 text-xs border border-green-700 p-2 rounded-lg"
@@ -841,7 +841,7 @@ export default function AdsDetials({ ad, user, userId, userImage, userName, isMa
           </div>
           <div className="flex mb-2 items-center w-full">
 
-            <p className="text-lg lg:text-2xl font-bold dark:text-gray-300 text-green-900">
+            <p className="text-lg lg:text-2xl font-bold dark:text-gray-300 text-green-950">
               {ad.data.title}
             </p>
           </div>
