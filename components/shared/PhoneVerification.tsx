@@ -1,14 +1,13 @@
 "use client";
 
 import { useEffect, useState } from "react";
-import { auth } from "@/lib/firebase"; // Make sure this is the modular `getAuth()` instance
+import { auth } from "@/lib/firebase";
 import {
   RecaptchaVerifier,
   signInWithPhoneNumber,
   ConfirmationResult,
 } from "firebase/auth";
 
-// Extend `window` to include recaptchaVerifier
 declare global {
   interface Window {
     recaptchaVerifier: RecaptchaVerifier;
@@ -27,22 +26,15 @@ export default function PhoneVerification({
   const [error, setError] = useState("");
   const [loading, setLoading] = useState(false);
 
-  // Initialize reCAPTCHA once
   useEffect(() => {
     if (typeof window !== "undefined" && !window.recaptchaVerifier) {
-      const verifier = new RecaptchaVerifier(
-        auth,
-        "recaptcha-container",
-        {
-          size: "invisible",
-          callback: () => {
-            // reCAPTCHA solved
-          },
-          "expired-callback": () => {
-            console.warn("reCAPTCHA expired");
-          },
-        }
-      );
+      const verifier = new RecaptchaVerifier(auth, "recaptcha-container", {
+        size: "invisible",
+        callback: () => { },
+        "expired-callback": () => {
+          console.warn("reCAPTCHA expired");
+        },
+      });
 
       verifier.render().then(() => {
         window.recaptchaVerifier = verifier;
@@ -96,54 +88,52 @@ export default function PhoneVerification({
   };
 
   return (
-    <div className="flex gap-1 w-full space-y-4">
+    <div className="w-full space-y-4">
       {!confirmResult ? (
-        <>
-          <div className="flex gap-2">
-            <select
-              value={countryCode}
-              onChange={(e) => setCountryCode(e.target.value)}
-              className="border px-2 py-2 rounded"
-            >
-              <option value="+254">Kenya (+254)</option>
-              <option value="+255">Tanzania (+255)</option>
-              <option value="+256">Uganda (+256)</option>
-              <option value="+250">Rwanda (+250)</option>
-              {/* Add more country codes as needed */}
-            </select>
-            <input
-              className="flex-1 border px-2 py-2 rounded"
-              placeholder="712345678"
-              value={phone}
-              onChange={(e) => setPhone(e.target.value)}
-            />
+        <div className="flex flex-col md:flex-row gap-2 w-full">
+          <select
+            value={countryCode}
+            onChange={(e) => setCountryCode(e.target.value)}
+            className="border px-2 py-2 rounded w-full md:w-auto"
+          >
+            <option value="+254">Kenya (+254)</option>
+            <option value="+255">Tanzania (+255)</option>
+            <option value="+256">Uganda (+256)</option>
+            <option value="+250">Rwanda (+250)</option>
+          </select>
 
-            <div
-              onClick={() => {
-                if (!loading) sendOtp();
-              }}
-              className="flex cursor-pointer justify-center items-center w-[150px] bg-black text-white py-2 rounded"
-            >
-              {loading ? "Sending..." : "Send OTP"}
-            </div>
-          </div>
-        </>
-      ) : (
-        <div className="flex w-full gap-2">
           <input
-            className="flex-1 border px-2 py-2 rounded"
+            className="border px-2 py-2 rounded w-full"
+            placeholder="712345678"
+            value={phone}
+            onChange={(e) => setPhone(e.target.value)}
+          />
+
+          <button
+            onClick={() => {
+              if (!loading) sendOtp();
+            }}
+            className="w-full md:w-[150px] bg-black text-white py-2 rounded text-center"
+          >
+            {loading ? "Sending..." : "Send OTP"}
+          </button>
+        </div>
+      ) : (
+        <div className="flex flex-col md:flex-row gap-2 w-full">
+          <input
+            className="border px-2 py-2 rounded w-full"
             placeholder="Enter OTP"
             value={otp}
             onChange={(e) => setOtp(e.target.value)}
           />
-          <div
+          <button
             onClick={() => {
               if (!loading) verifyOtp();
             }}
-            className="flex cursor-pointer justify-center items-center w-[150px] bg-green-600 text-white py-2 rounded"
+            className="w-full md:w-[150px] bg-green-600 text-white py-2 rounded text-center"
           >
             {loading ? "Verifying..." : "Verify OTP"}
-          </div>
+          </button>
         </div>
       )}
 

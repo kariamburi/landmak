@@ -521,31 +521,31 @@ const AdForm = ({
 
   const validateForm = async () => {
     //console.log("start: ");
-    alert("Validation started");
+   // alert("Validation started");
 
     const validationSchema = createValidationSchema(fields, selectedCategory);
     console.log(formData);
-    alert("FormData: " + JSON.stringify(formData));
+   // alert("FormData: " + JSON.stringify(formData));
 
     const result = validationSchema.safeParse(formData);
     console.log(result);
-    alert("Validation result: " + JSON.stringify(result));
+   // alert("Validation result: " + JSON.stringify(result));
 
     if (!result.success) {
       const errors = result.error.errors.reduce((acc: any, err: any) => {
         acc[err.path[0]] = err.message;
         console.log(acc);
-        alert(`Field: ${err.path[0]} - Error: ${err.message}`);
+      //  alert(`Field: ${err.path[0]} - Error: ${err.message}`);
         return acc;
       }, {});
       console.log(errors);
-      alert("Final errors: " + JSON.stringify(errors));
+      //alert("Final errors: " + JSON.stringify(errors));
       setFormErrors(errors);
       return false;
     }
 
     console.log("success:");
-    alert("Validation success");
+   // alert("Validation success");
     setFormErrors({});
     return true;
   };
