@@ -521,21 +521,21 @@ const AdForm = ({
 
   const validateForm = async () => {
     //console.log("start: ");
-   // alert("Validation started");
+    // alert("Validation started");
 
     const validationSchema = createValidationSchema(fields, selectedCategory);
     console.log(formData);
-   // alert("FormData: " + JSON.stringify(formData));
+    // alert("FormData: " + JSON.stringify(formData));
 
     const result = validationSchema.safeParse(formData);
     console.log(result);
-   // alert("Validation result: " + JSON.stringify(result));
+    // alert("Validation result: " + JSON.stringify(result));
 
     if (!result.success) {
       const errors = result.error.errors.reduce((acc: any, err: any) => {
         acc[err.path[0]] = err.message;
         console.log(acc);
-      //  alert(`Field: ${err.path[0]} - Error: ${err.message}`);
+        //  alert(`Field: ${err.path[0]} - Error: ${err.message}`);
         return acc;
       }, {});
       console.log(errors);
@@ -545,7 +545,7 @@ const AdForm = ({
     }
 
     console.log("success:");
-   // alert("Validation success");
+    // alert("Validation success");
     setFormErrors({});
     return true;
   };
@@ -734,7 +734,7 @@ const AdForm = ({
 
   };
   function isValidKenyanPhoneNumber(phone: string): boolean {
-    const kenyanPhoneRegex = /^(?:\+254|254|0)?(7\d{8})$/;
+    const kenyanPhoneRegex = /^(?:\+254|254|0)?(1\d{8}|7\d{8})$/;
     return kenyanPhoneRegex.test(phone.trim());
   }
   const handleSubmit = async () => {
