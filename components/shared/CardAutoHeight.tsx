@@ -347,6 +347,7 @@ const CardAutoHeight = ({
           <h3 className="text-sm font-semibold text-gray-800 truncate">{ad.data.title.length > 50
             ? `${ad.data.title.substring(0, 50)}...`
             : ad.data.title}</h3>
+            
           <p className="text-xs text-gray-500">📍 {truncateaddress(ad.data.propertyarea?.mapaddress, 25)}</p>
           <p className="text-green-600 font-bold text-sm">
             {ad.data.price.toLocaleString()}

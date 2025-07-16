@@ -457,7 +457,7 @@ const SettingsEdit = ({ user, type, userId }: setingsProp) => {
                         className="w-full"
                       />
                       <div className="flex items-center justify-between mt-1">
-                        <p className="text-green-600 w-[50px] text-sm">✅ Phone verified</p>
+                        <p className="text-green-600 inline-flex text-sm">✅ Phone verified</p>
                         <button
                           type="button"
                           onClick={() => setChangePhone(true)}

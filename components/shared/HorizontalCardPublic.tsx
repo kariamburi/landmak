@@ -477,25 +477,30 @@ const HorizontalCardPublic = ({
             )}
             <div className="flex justify-between w-full">
               <div className="flex gap-1 mt-1">
+                {ad.data.category === 'Property Services' && (
+                  <div className="text-xs text-white bg-green-600 rounded p-1">
+                    {ad.data.subcategory}
+                  </div>
+                )}
                 {ad.data.category?.toLowerCase().includes("rent") && (
-                  <div className="inline-block text-xs text-white bg-green-600 rounded px-2 py-[2px]">
+                  <div className="items-center text-xs text-white bg-green-600 rounded p-1">
                     Rent
                   </div>
                 )}
                 {ad.data.category?.toLowerCase().includes("sale") && (
-                  <div className="inline-block text-xs text-white bg-green-600 rounded px-2 py-[2px]">
+                  <div className="text-xs text-white bg-green-600 rounded p-1">
                     Sale
                   </div>
                 )}
                 {ad.data.condition && (
-                  <div className="inline-block text-xs text-white bg-green-600 rounded px-2 py-[2px]">
+                  <div className="text-xs text-white bg-green-600 rounded p-1">
                     {ad.data.condition}
                   </div>
 
                 )}
 
                 {ad.data["land-Type"] && (
-                  <div className="inline-block text-xs text-white bg-green-600 rounded px-2 py-[2px]">
+                  <div className="text-xs text-white bg-green-600 rounded p-1">
                     {ad.data["land-Type"]}
                   </div>
 

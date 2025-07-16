@@ -789,6 +789,22 @@ export default function AdsDetials({ ad, user, userId, userImage, userName, isMa
                     </div>
                   )}
                 </div>
+                {ad.data.category === 'Property Services' && (
+                  <div className="inline-block text-xs text-white bg-green-600 rounded px-2 py-[2px]">
+                    {ad.data.subcategory}
+                  </div>
+                )}
+                {ad.data.category?.toLowerCase().includes("rent") && (<>
+
+                  <div className="inline-block text-xs text-white bg-green-600 rounded px-2 py-[2px]">
+                    Rent
+                  </div>
+                </>)}
+                {ad.data.category?.toLowerCase().includes("sale") && (
+                  <div className="inline-block text-xs text-white bg-green-600 rounded px-2 py-[2px]">
+                    Sale
+                  </div>
+                )}
               </div>
               {ad.data.bulkprice?.length > 0 && (
                 <>

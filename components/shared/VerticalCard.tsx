@@ -684,6 +684,11 @@ const VerticalCard = ({
                 </div>
               )}
               <div className="flex gap-2 text-gray-500 text-sm mt-2">
+                {ad.data.category === 'Property Services' && (
+                  <div className="inline-block text-xs text-white bg-green-600 rounded px-2 py-[2px]">
+                    {ad.data.subcategory}
+                  </div>
+                )}
                 {ad.data.category?.toLowerCase().includes("rent") && (<>
                   {/* <div className="flex gap-2 text-[10px] dark:bg-[#131B1E] dark:text-gray-300 bg-[#ebf2f7] rounded-lg p-1 justify-center border">
                 Rent

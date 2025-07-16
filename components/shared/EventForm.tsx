@@ -2035,7 +2035,7 @@ const AdForm = ({
                           }}
                           className="w-full"
                         />
-                        <p className="w-[150px] text-green-600 text-sm mt-1">✅ Phone verified</p>
+                        <p className="inline-flex text-green-600 text-sm mt-1">✅ Phone verified</p>
                         {/*     <select
                     className="border-gray-300 dark:border-gray-600 dark:bg-[#2D3236] dark:text-gray-100 text-sm py-2 px-1 rounded-sm border border-gray-300 dark:border-gray-600 w-[140px] lg:w-[200px]"
                     value={countryCode}

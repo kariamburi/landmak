@@ -274,9 +274,9 @@ const SellerProfileCard = ({ ad, fee, userId, userImage, userName, titleId, hand
               userImage={userImage}
               userName={userName}
             />
-            <button onClick={handlewhatsappClick} className="flex gap-1 items-center justify-center border border-green-500 text-green-700 hover:bg-green-50 py-1 rounded-md text-sm font-medium">
-              <FaWhatsapp /> WhatsApp
-            </button>
+            {ad.organizer.whatsapp && (<><button onClick={handlewhatsappClick} className="flex text-sm gap-1 items-center justify-center border border-green-500 text-green-700 hover:bg-green-50 py-1 px-2 rounded-md text-sm font-medium">
+              <MessageCircle className="w-5 h-5" /> WhatsApp
+            </button></>)}
           </SignedIn>
           <SignedOut>
             <button onClick={() => {

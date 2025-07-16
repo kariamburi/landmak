@@ -16,27 +16,42 @@ export const getAddressFromLatLng_ = async (lat: number, lng: number): Promise<s
     return null;
   }
 };
-export const getAddressFromLatLng = async (lat: number, lng: number): Promise<string | null> => {
+export const getAddressFromLatLng = async (
+  lat: number,
+  lng: number
+): Promise<string | null> => {
   try {
     const response = await fetch(
       `https://maps.googleapis.com/maps/api/geocode/json?latlng=${lat},${lng}&key=${process.env.NEXT_PUBLIC_GOOGLEAPIKEY}`
     );
     const data = await response.json();
+
     if (data.status === "OK") {
-      const addressComponents = data.results[0]?.address_components || [];
+      const components = data.results[0]?.address_components || [];
+
+      let neighborhood = "";
+      let sublocality = "";
       let city = "";
+      let county = "";
       let country = "";
 
-      addressComponents.forEach((component: any) => {
-        if (component.types.includes("locality")) {
-          city = component.long_name;
-        }
-        if (component.types.includes("country")) {
-          country = component.long_name;
+      components.forEach((comp: any) => {
+        if (comp.types.includes("neighborhood")) {
+          neighborhood = comp.long_name;
+        } else if (comp.types.includes("sublocality") || comp.types.includes("sublocality_level_1")) {
+          sublocality = comp.long_name;
+        } else if (comp.types.includes("locality")) {
+          city = comp.long_name;
+        } else if (comp.types.includes("administrative_area_level_2")) {
+          county = comp.long_name;
+        } else if (comp.types.includes("country")) {
+          country = comp.long_name;
         }
       });
 
-      return `${city}${city && country ? ', ' : ''}${country}` || null;
+      // Build full address
+      const parts = [neighborhood, sublocality, city || county, country].filter(Boolean);
+      return parts.join(", ");
     } else {
       console.error("Geocoding error:", data.status);
       return null;

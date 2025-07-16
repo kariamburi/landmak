@@ -16,9 +16,9 @@ import { VerificationPackId } from "@/constants";
 interface SettingsProp {
   user: any;
   userId: string;
-  fee:string;
+  fee: string;
   isAdCreator: boolean;
-  handlePayNow: (id:string) => void;
+  handlePayNow: (id: string) => void;
 }
 
 const Verificationmobile: React.FC<SettingsProp> = ({
@@ -28,7 +28,7 @@ const Verificationmobile: React.FC<SettingsProp> = ({
   isAdCreator,
   handlePayNow,
 }) => {
-  
+
   const router = useRouter();
   const [activationfee, setActivationFee] = useState(500);
 
@@ -81,7 +81,7 @@ const Verificationmobile: React.FC<SettingsProp> = ({
       />
       <div className="space-y-1">
         <h4 className="text-sm font-semibold text-emerald-600">
-        Verified Seller
+          Verified Seller
         </h4>
         <p className="text-sm">
           This seller account has been fully verified and is genuine.
@@ -100,7 +100,7 @@ const Verificationmobile: React.FC<SettingsProp> = ({
       <ShieldOutlinedIcon sx={{ fontSize: 24 }} className="text-[#ff0000]" />
       <div className="space-y-1">
         <h4 className="text-sm font-semibold text-[#ff0000]">
-        Unverified Seller
+          Unverified Seller
         </h4>
         <p className="text-sm">
           This seller account is currently unverified. Request verification to enhance
@@ -124,7 +124,7 @@ const Verificationmobile: React.FC<SettingsProp> = ({
       <ShieldOutlinedIcon sx={{ fontSize: 24 }} className="text-[#ff0000]" />
       <div className="space-y-1">
         <h4 className="text-sm font-semibold text-[#ff0000]">
-        Unverified Seller
+          Unverified Seller
         </h4>
         <p className="text-sm">
           The seller&apos;s account has not been verified.

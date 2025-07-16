@@ -668,6 +668,37 @@ const HorizontalCard = ({
               </div>
             )}
             <div className="flex justify-between w-full">
+              <div className="flex gap-1 mt-1">
+                {ad.data.category === 'Property Services' && (
+                  <div className="text-xs text-white bg-green-600 rounded p-1">
+                    {ad.data.subcategory}
+                  </div>
+                )}
+                {ad.data.category?.toLowerCase().includes("rent") && (
+                  <div className="items-center text-xs text-white bg-green-600 rounded p-1">
+                    Rent
+                  </div>
+                )}
+                {ad.data.category?.toLowerCase().includes("sale") && (
+                  <div className="inline-block text-xs text-white bg-green-600 rounded px-2 py-[2px]">
+                    Sale
+                  </div>
+                )}
+                {ad.data.condition && (
+                    <div className="items-center text-xs text-white bg-green-600 rounded p-1">
+                    {ad.data.condition}
+                  </div>
+
+                )}
+
+                {ad.data["land-Type"] && (
+                   <div className="items-center text-xs text-white bg-green-600 rounded p-1">
+                    {ad.data["land-Type"]}
+                  </div>
+
+                )}
+
+              </div>
               {ad.mapaVerificationStatus && ad.mapaVerificationStatus === 'verified' && <MapaVerifiedBadge size="sm" />}
 
               {!isAdCreator && !isbookmark && (
@@ -719,6 +750,7 @@ const HorizontalCard = ({
                 </div>
               )}
             </div>
+
             {ad.disputeStatus && (<DisputeBadge status={ad?.disputeStatus} />)}
 
             {ad.mapaVerificationStatus === 'unverified' && isSale && isAdCreator && (
