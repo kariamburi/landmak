@@ -1205,7 +1205,7 @@ const AdForm = ({
                     imageUrls={formData["imageUrls"] || []} // Ensure this is an array
                     setFiles={setFiles}
                     adId={adId || ""}
-                    userName={user.user.firstName + " " + user.user.LastName}
+                    userName={user.user.firstName + " " + user.user.lastName}
                     category={selectedCategory}
                     anayze={anayze}
                   />
