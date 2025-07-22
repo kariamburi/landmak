@@ -1205,7 +1205,7 @@ const AdForm = ({
                     imageUrls={formData["imageUrls"] || []} // Ensure this is an array
                     setFiles={setFiles}
                     adId={adId || ""}
-                    userName={userName}
+                    userName={user.user.firstName + " " + user.user.LastName}
                     category={selectedCategory}
                     anayze={anayze}
                   />
@@ -1468,6 +1468,7 @@ const AdForm = ({
                           per month
                         </option>
                         <option value="per day">per day</option>
+                        <option value="per night">per night</option>
                         <option value="per month">per month</option>
                         <option value="per quarter-year">per quarter-year</option>
                         <option value="per half-year">per half-year</option>
