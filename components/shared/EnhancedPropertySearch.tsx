@@ -100,7 +100,6 @@ export default function EnhancedPropertySearch({ userId,
   emptyStateSubtext,
   user,
   loans,
-
   queryObject,
   //adsCount,
   onClose,
@@ -420,20 +419,44 @@ export default function EnhancedPropertySearch({ userId,
     setShowMap(opt.value === 'map' || opt.value === 'both');
     setShowList(opt.value === 'list' || opt.value === 'both');
   };
-  const [priceRange, setPriceRange] = useState<[number, number]>([500000, 20000000]);
+  const landSizeCategories = [
+    "Land & Plots for Sale",
+    "Land & Plots for Rent",
+    "New Builds",                      // Optional
+    "Houses & Apartments for Sale",   // Optional
+  ];
 
-  const minPrice = 0;
-  const maxPrice = 100_000_000;
-  const getRangeGradient = (min: number, max: number) => {
-    const startPercent = ((min - minPrice) / (maxPrice - minPrice)) * 100;
-    const endPercent = ((max - minPrice) / (maxPrice - minPrice)) * 100;
-
-    return `linear-gradient(to right, #d1d5db ${startPercent}%, #16a34a ${startPercent}%, #16a34a ${endPercent}%, #d1d5db ${endPercent}%)`;
+  const categoryPriceRanges: {
+    [key: string]: { min: number; max: number; step: number };
+  } = {
+    "New builds": { min: 1000000, max: 200000000, step: 500000 },
+    "Houses & Apartments for Rent": { min: 2000, max: 600000, step: 5000 },
+    "Houses & Apartments for Sale": { min: 500000, max: 200000000, step: 1000000 },
+    "Land & Plots for Rent": { min: 10000, max: 1000000, step: 10000 },
+    "Land & Plots for Sale": { min: 50000, max: 10000000, step: 100000 },
+    "Commercial Property for Rent": { min: 10000, max: 1000000, step: 20000 },
+    "Commercial Property for Sale": { min: 1000000, max: 300000000, step: 500000 },
+    "Event Centres, Venues & Workstations": { min: 1000, max: 500000, step: 5000 },
+    "Short Let Property": { min: 1000, max: 50000, step: 500 },
+    "Special Listings": { min: 100000, max: 10000000, step: 100000 },
+    "Property Services": { min: 1000, max: 500000, step: 5000 },
   };
+  const [priceRange, setPriceRange] = useState<[number, number]>([0, 500000000]);
+  const [minPrice, setMinPrice] = useState(0);
+  const [maxPrice, setMaxPrice] = useState(0);
+  const [step, setStep] = useState(1000);
+  useEffect(() => {
+    const config = categoryPriceRanges[queryObject.category] || {
+      min: 0,
+      max: 500000000,
+      step: 1000,
+    };
 
-
-
-
+    setMinPrice(config.min);
+    setMaxPrice(config.max);
+    setStep(config.step);
+    setPriceRange([config.min, config.max]);
+  }, [selectedCategory]);
 
 
   const [adsCount, setAdsCount] = useState<any>([]);
@@ -779,7 +802,7 @@ export default function EnhancedPropertySearch({ userId,
                     type="range"
                     min={minPrice}
                     max={maxPrice}
-                    step={100000}
+                    step={step}
                     value={priceRange[0]}
                     onChange={(e) =>
                       setPriceRange([Number(e.target.value), Math.max(Number(e.target.value), priceRange[1])])
@@ -799,7 +822,7 @@ export default function EnhancedPropertySearch({ userId,
                     type="range"
                     min={minPrice}
                     max={maxPrice}
-                    step={100000}
+                    step={step}
                     value={priceRange[1]}
                     onChange={(e) =>
                       setPriceRange([Math.min(Number(e.target.value), priceRange[0]), Number(e.target.value)])
@@ -814,64 +837,65 @@ export default function EnhancedPropertySearch({ userId,
 
               </div>
             </div>
+            {landSizeCategories.includes(queryObject.category) && (
+              <div className="mt-6 pt-4 border-t">
+                <label className="block font-medium mb-2">Land Size</label>
 
-            <div className="mt-6 pt-4 border-t">
-              <label className="block font-medium mb-2">Land Size</label>
+                <div className="flex items-center gap-4">
+                  {/* Min Range */}
+                  <div className="flex flex-col w-full">
+                    <label className="text-sm mb-1">
+                      Min: {landSize[0]} m²
+                      <br />
+                      ≈ {(landSize[0] / 4046.86).toFixed(2)} acres
+                      <br />
+                      ≈ {(landSize[0] / 10000).toFixed(2)} hectares
+                    </label>
+                    <input
+                      type="range"
+                      min="0"
+                      max="10000"
+                      step="50"
+                      value={landSize[0]}
+                      onChange={(e) =>
+                        setLandSize([Number(e.target.value), Math.max(Number(e.target.value), landSize[1])])
+                      }
+                      className="w-full cursor-pointer appearance-none accent-green-600 h-2 rounded-lg outline-none"
+                      style={{
+                        background: `linear-gradient(to right, #16a34a 0%, #16a34a ${(landSize[0] / 10000) * 100}%, #e5e7eb ${(landSize[0] / 10000) * 100}%, #e5e7eb 100%)`,
+                      }}
+                    />
 
-              <div className="flex items-center gap-4">
-                {/* Min Range */}
-                <div className="flex flex-col w-full">
-                  <label className="text-sm mb-1">
-                    Min: {landSize[0]} m²
-                    <br />
-                    ≈ {(landSize[0] / 4046.86).toFixed(2)} acres
-                    <br />
-                    ≈ {(landSize[0] / 10000).toFixed(2)} hectares
-                  </label>
-                  <input
-                    type="range"
-                    min="0"
-                    max="10000"
-                    step="50"
-                    value={landSize[0]}
-                    onChange={(e) =>
-                      setLandSize([Number(e.target.value), Math.max(Number(e.target.value), landSize[1])])
-                    }
-                    className="w-full cursor-pointer appearance-none accent-green-600 h-2 rounded-lg outline-none"
-                    style={{
-                      background: `linear-gradient(to right, #16a34a 0%, #16a34a ${(landSize[0] / 10000) * 100}%, #e5e7eb ${(landSize[0] / 10000) * 100}%, #e5e7eb 100%)`,
-                    }}
-                  />
+                  </div>
 
-                </div>
+                  {/* Max Range */}
+                  <div className="flex flex-col w-full">
+                    <label className="text-sm mb-1">
+                      Max: {landSize[1]} m²
+                      <br />
+                      ≈ {(landSize[1] / 4046.86).toFixed(2)} acres
+                      <br />
+                      ≈ {(landSize[1] / 10000).toFixed(2)} hectares
+                    </label>
+                    <input
+                      type="range"
+                      min="0"
+                      max="10000"
+                      step="50"
+                      value={landSize[1]}
+                      onChange={(e) =>
+                        setLandSize([Math.min(Number(e.target.value), landSize[0]), Number(e.target.value)])
+                      }
+                      className="w-full cursor-pointer appearance-none accent-green-600 h-2 rounded-lg outline-none"
+                      style={{
+                        background: `linear-gradient(to right, #16a34a 0%, #16a34a ${(landSize[1] / 10000) * 100}%, #e5e7eb ${(landSize[1] / 10000) * 100}%, #e5e7eb 100%)`,
+                      }}
+                    />
 
-                {/* Max Range */}
-                <div className="flex flex-col w-full">
-                  <label className="text-sm mb-1">
-                    Max: {landSize[1]} m²
-                    <br />
-                    ≈ {(landSize[1] / 4046.86).toFixed(2)} acres
-                    <br />
-                    ≈ {(landSize[1] / 10000).toFixed(2)} hectares
-                  </label>
-                  <input
-                    type="range"
-                    min="0"
-                    max="10000"
-                    step="50"
-                    value={landSize[1]}
-                    onChange={(e) =>
-                      setLandSize([Math.min(Number(e.target.value), landSize[0]), Number(e.target.value)])
-                    }
-                    className="w-full cursor-pointer appearance-none accent-green-600 h-2 rounded-lg outline-none"
-                    style={{
-                      background: `linear-gradient(to right, #16a34a 0%, #16a34a ${(landSize[1] / 10000) * 100}%, #e5e7eb ${(landSize[1] / 10000) * 100}%, #e5e7eb 100%)`,
-                    }}
-                  />
-
+                  </div>
                 </div>
               </div>
-            </div>
+            )}
 
             <div className="mt-6 pt-4 border-t">
               <label className="flex items-center gap-2 text-sm font-medium">
