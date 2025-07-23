@@ -433,7 +433,7 @@ export default function EnhancedPropertySearch({ userId,
     "Houses & Apartments for Rent": { min: 2000, max: 600000, step: 5000 },
     "Houses & Apartments for Sale": { min: 500000, max: 200000000, step: 1000000 },
     "Land & Plots for Rent": { min: 10000, max: 1000000, step: 10000 },
-    "Land & Plots for Sale": { min: 50000, max: 10000000, step: 100000 },
+    "Land & Plots for Sale": { min: 50000, max: 100000000, step: 100000 },
     "Commercial Property for Rent": { min: 10000, max: 1000000, step: 20000 },
     "Commercial Property for Sale": { min: 1000000, max: 300000000, step: 500000 },
     "Event Centres, Venues & Workstations": { min: 1000, max: 500000, step: 5000 },
@@ -755,7 +755,7 @@ export default function EnhancedPropertySearch({ userId,
 
       {/* Sidebar */}
       {showCategories && (
-        <aside className="fixed lg:static top-14 left-0 z-20 bg-white w-[300px] lg:w-[280px] h-[calc(100vh-4rem)] lg:h-[calc(100vh-1rem)] overflow-y-auto p-0 border-r shadow-md lg:shadow-none transform transition-transform duration-300 lg:translate-x-0 translate-x-0 lg:flex flex-col">
+        <aside className="fixed lg:static top-14 left-0 z-20 bg-white w-[300px] lg:w-[280px] h-[calc(100vh-4rem)] lg:h-[calc(100vh-1rem)] overflow-y-auto pl-1 border-r shadow-md lg:shadow-none transform transition-transform duration-300 lg:translate-x-0 translate-x-0 lg:flex flex-col">
 
           {/* ✅ Sticky Header */}
           <div className="flex flex-col items-center mb-4 sticky top-0 z-10 bg-white p-2 border-b">

@@ -70,8 +70,8 @@ type sidebarProps = {
   category: string;
   categoryList?: any;
   subcategory?: string;
-  handleFilter:(value:any) => void;
-  loans:any;
+  handleFilter: (value: any) => void;
+  loans: any;
 };
 const SidebarSearchMain = ({
   category,
@@ -81,15 +81,15 @@ const SidebarSearchMain = ({
   loans,
 }: sidebarProps) => {
   const [query, setQuery] = useState(subcategory);
- 
+
   // Usage
   const handleQuery = (index: number, query: string) => {
 
     handleFilter({
-          category: category.toString(),
-           subcategory: query.toString(),
-        });
-        setQuery(query);
+      category: category.toString(),
+      subcategory: query.toString(),
+    });
+    setQuery(query);
   };
 
   const [isOpen, setIsOpen] = useState(false);
@@ -101,7 +101,7 @@ const SidebarSearchMain = ({
   const closeDialog = () => {
     setIsOpen(false);
   };
-  
+
 
 
   const selectedCategory = categoryList.find(
@@ -118,10 +118,10 @@ const SidebarSearchMain = ({
   const categoryImageUrl = selectedCategory
     ? selectedCategory.category.imageUrl[0]
     : "";
- 
+
   const filteredList =
     categoryList?.filter((cat: any) => cat.category.name === category) || [];
- const viewportRef_ = useRef<HTMLDivElement | null>(null);
+  const viewportRef_ = useRef<HTMLDivElement | null>(null);
   const [showScrollUp, setShowScrollUp] = useState(false);
 
   // Scroll listener to toggle scroll up/down buttons
@@ -146,46 +146,44 @@ const SidebarSearchMain = ({
 
   return (
     <>
-     <div className="h-full text-sm lg:text-base w-full">
-                        
-            {filteredList.map((sub: any, index: number) => (
-              <div
-                key={index}
-                onClick={() => handleQuery(index, sub.subcategory)}
-                className={`border-b dark:border-gray-600 flex items-center w-full justify-between p-1 mb-0 text-sm cursor-pointer dark:hover:bg-[#131B1E] dark:hover:text-white hover:bg-green-100 ${
-                  query === sub.subcategory
-                    ? "bg-green-600 text-white hover:bg-green-600"
-                    : "dark:bg-[#2D3236] bg-white"
-                }`}
-              >
-                <div className="flex w-full gap-1 items-center p-1">
-                  <Image
-                    className="h-6 w-7 object-cover"
-                    src={sub.imageUrl[0] || ""}
-                    alt={sub.subcategory}
-                    width={60}
-                    height={60}
-                  />
-                  <div className="flex text-sm flex-col">
-                    {sub.subcategory}
-                    <div
-                      className={`flex text-xs gap-1 ${
-                        query === sub.subcategory
-                          ? "dark:text-white text-white"
-                          : "dark:text-gray-500 text-gray-500"
-                      }`}
-                    >
-                      {sub.subcategory?.trim().toLowerCase() === "Property Financing Requests".toLowerCase() ?  (sub.adCount + loans.adCount): sub.adCount}
-                      <div>ads</div>
-                    </div>
-                  </div>
+      <div className="h-full text-sm lg:text-base w-full">
+
+        {filteredList.map((sub: any, index: number) => (
+          <div
+            key={index}
+            onClick={() => handleQuery(index, sub.subcategory)}
+            className={`border-b dark:border-gray-600 flex items-center w-full justify-between p-1 mb-0 text-sm cursor-pointer dark:hover:bg-[#131B1E] dark:hover:text-white hover:bg-green-100 ${query === sub.subcategory
+              ? "bg-green-600 text-white hover:bg-green-600 rounded-sm"
+              : "dark:bg-[#2D3236] bg-white"
+              }`}
+          >
+            <div className="flex w-full gap-1 items-center p-1">
+              <Image
+                className="h-6 w-7 object-cover"
+                src={sub.imageUrl[0] || ""}
+                alt={sub.subcategory}
+                width={60}
+                height={60}
+              />
+              <div className="flex text-sm flex-col">
+                {sub.subcategory}
+                <div
+                  className={`flex text-xs gap-1 ${query === sub.subcategory
+                    ? "dark:text-white text-white"
+                    : "dark:text-gray-500 text-gray-500"
+                    }`}
+                >
+                  {sub.subcategory?.trim().toLowerCase() === "Property Financing Requests".toLowerCase() ? (sub.adCount + loans.adCount) : sub.adCount}
+                  <div>ads</div>
                 </div>
-            
               </div>
-            ))}
- </div>
-  
- 
+            </div>
+
+          </div>
+        ))}
+      </div>
+
+
     </>
   );
 };
