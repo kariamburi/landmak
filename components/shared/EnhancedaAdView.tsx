@@ -10,12 +10,24 @@ import {
 } from "../ui/tooltip";
 import Navbar from "./navbar";
 import Ads from "./Ads";
+import ArrowBackOutlinedIcon from "@mui/icons-material/ArrowBackOutlined";
+import AddOutlinedIcon from '@mui/icons-material/AddOutlined';
+import MessageIcon from "@mui/icons-material/Message";
+import BookmarkIcon from "@mui/icons-material/Bookmark";
+import DiamondIcon from "@mui/icons-material/Diamond";
 import MappingAds from "./MappingAds";
 import AdsDetials from "./AdsDetials";
 import { MapIcon, ListBulletIcon, Squares2X2Icon } from '@heroicons/react/24/outline';
 import ChatButtonBottom from "./ChatButtonBottom";
 import { Toaster } from "../ui/toaster";
 import CollectionRelated from "./CollectionRelated";
+import MobileNav from "./MobileNav";
+import { SignedIn, SignedOut, UserButton } from "@clerk/nextjs";
+import { Button } from "../ui/button";
+import Unreadmessages from "./Unreadmessages";
+import StyledBrandName from "./StyledBrandName";
+import { useRouter } from "next/navigation";
+import ProgressPopup from "./ProgressPopup";
 const options = [
   { value: 'both', label: 'Split View', icon: <Squares2X2Icon className="w-5 h-5" /> },
   { value: 'map', label: 'Map View', icon: <MapIcon className="w-5 h-5" /> },
@@ -109,7 +121,12 @@ export default function EnhancedaAdView({
     setShowList(!showList);
   };
 
-
+  const truncatetitle = (address: string, maxLength: number) => {
+    if (address.length > maxLength) {
+      return address.substring(0, maxLength) + "...";
+    }
+    return address;
+  };
   const toggleMapCommit = () => {
     setShowList(false);
     setShowMap(true);
@@ -119,6 +136,14 @@ export default function EnhancedaAdView({
     setShowMap(false);
   };
 
+  const [isOpenP, setIsOpenP] = useState(false);
+  const router = useRouter();
+  const handleCloseP = () => {
+    setIsOpenP(false);
+  };
+  const handleOpenP = () => {
+    setIsOpenP(true);
+  };
 
   const [isOpenEnquire, setIsOpenEnquire] = useState(false);
   const handleCloseEnquire = () => {
@@ -132,110 +157,321 @@ export default function EnhancedaAdView({
       {/* Mobile Top Bar */}
       <div className="fixed top-0 left-0 right-0 z-50 flex items-center justify-between">
 
-        <Navbar user={user ?? []} userstatus={user?.status ?? "User"} userId={userId} onClose={onClose} popup={"sell"} handleOpenSell={handleOpenSell} handleOpenBook={handleOpenBook} handleOpenPlan={handleOpenPlan} handleOpenChat={handleOpenChat}
+
+        <div
+          className={`bg-gradient-to-b from-green-600 to-green-600 lg:from-[#e4ebeb] justify-center pl-2 pr-2 h-[60px] lg:to-[#e4ebeb] transition-all duration-300 overflow-hidden w-full flex flex-col items-center`}
+        >
+          <div className="w-full h-full justify-between flex items-center">
+            <div className="flex items-center gap-1">
+
+              <div
+                className="mr-2 w-5 h-8 flex text-white lg:text-gray-500 items-center justify-center rounded-sm tooltip tooltip-bottom hover:cursor-pointer lg:hover:text-green-600"
+                data-tip="Back"
+                onClick={() => {
+                  onClose()
+                }}
+              >
+                <TooltipProvider>
+                  <Tooltip>
+                    <TooltipTrigger asChild>
+                      <ArrowBackOutlinedIcon />
+                    </TooltipTrigger>
+                    <TooltipContent>
+                      <p>Back</p>
+                    </TooltipContent>
+                  </Tooltip>
+                </TooltipProvider>
+              </div>
+
+              <div className="flex items-center gap-2">
+
+                <img src="/logo_white.png" alt="Logo" className="w-8 h-8 lg:hidden rounded-full" />
+                <img src="/logo.png" alt="Logo" className="w-8 h-8 hidden lg:inline rounded-full" />
+                <StyledBrandName />
+              </div>
+
+            </div>
+            <div className="hidden lg:inline">
+
+              <div className="flex flex-wrap justify-between items-center gap-2">
+                <div className="flex">
+                  <div className="mt-2 shadow-sm border text-gray-600 hover:text-green-600 dark:hover:bg-[#3E454A] dark:bg-[#2D3236] dark:hover:text-gray-300 dark:text-gray-500 bg-white py-1 px-2 rounded-full mr-1">
+                    <div
+                      onClick={() => {
+                        onClose();
+                      }}
+                    >
+                      <div className="flex items-center gap-2 cursor-pointer ">
+                        <p className="text-xs lg:text-sm"> All Ads</p><ArrowForwardIosOutlinedIcon sx={{ fontSize: 14 }} />
+                      </div>
+                    </div>
+                  </div>
+                  <div className="mt-2 shadow-sm border text-gray-600 hover:text-green-600 dark:hover:bg-[#3E454A] dark:bg-[#2D3236] dark:hover:text-gray-300 dark:text-gray-500 bg-white py-1 px-2 rounded-full mr-1">
+                    <div className="flex items-center">
+                      {ad && (
+                        <div
+                          onClick={() => {
+                            handleSubCategory(ad.data.category, '');
+
+                          }}
+                          className="flex items-center gap-2 cursor-pointer"
+                        >
+
+                          <p className="text-xs lg:text-sm">{ad.data.category}</p><ArrowForwardIosOutlinedIcon sx={{ fontSize: 14 }} />
+                        </div>
+                      )}
+                    </div>
+                  </div>
+                  <div className="mt-2 shadow-sm border text-gray-600 hover:text-green-600 dark:hover:bg-[#3E454A] dark:bg-[#2D3236] dark:hover:text-gray-300 bg-white dark:text-gray-500 py-1 px-2 rounded-full mr-1">
+                    <div className="flex items-center">
+                      {ad && (
+                        <div
+                          onClick={() => {
+                            handleSubCategory(ad.data.category, ad.data.subcategory);
+
+                          }}
+                          className="flex items-center gap-2 cursor-pointer"
+                        >
+
+                          <p className="text-xs lg:text-sm">{ad.data.subcategory}</p><ArrowForwardIosOutlinedIcon sx={{ fontSize: 14 }} />
+                        </div>
+                      )}
+                    </div>
+                  </div>
+                  <div className="mt-2 shadow-sm border text-gray-800 dark:bg-[#2D3236] dark:text-gray-300 bg-white py-1 px-2 rounded-full">
+                    <div className="flex items-center">
+
+                      {ad && <p className="text-xs truncate w-full max-w-full lg:text-sm">{truncatetitle(ad.data.title, 30)}</p>}
+                    </div>
+                  </div>
+                </div>
+
+
+              </div>
+            </div>
+            <div className="flex gap-2 items-center">
+              <div className="hidden lg:inline">
+
+                <div className="flex items-center gap-2">
+                  <div className="relative w-48 text-sm">
+                    <button
+                      onClick={() => setOpen(!open)}
+                      className="flex items-center justify-between w-full px-4 py-2 border rounded bg-white shadow-sm"
+                    >
+                      <span className="flex items-center gap-2">
+                        {selected.icon}
+                        {selected.label}
+                      </span>
+                      <svg
+                        className="w-4 h-4 ml-2"
+                        fill="none"
+                        viewBox="0 0 24 24"
+                        stroke="currentColor"
+                      >
+                        <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M19 9l-7 7-7-7" />
+                      </svg>
+                    </button>
+
+                    {open && (
+                      <ul className="absolute mt-1 w-full bg-white border rounded shadow z-50">
+                        {options.map((opt) => (
+                          <li
+                            key={opt.value}
+                            onClick={() => handleSelectOpt(opt)}
+                            className="cursor-pointer px-4 py-2 hover:bg-gray-100 flex items-center gap-2"
+                          >
+                            {opt.icon}
+                            {opt.label}
+                          </li>
+                        ))}
+                      </ul>
+                    )}
+                  </div>
+                  <SignedIn>
+                    <div
+                      className="w-8 h-8 flex items-center justify-center rounded-full dark:bg-[#131B1E] dark:hover:bg-[#2D3236] bg-white hover:bg-gray-100 emerald-500 tooltip tooltip-bottom hover:cursor-pointer"
+                      data-tip="Messages"
+                      onClick={() => {
+                        handleOpenBook();
+                      }}
+                    >
+                      <TooltipProvider>
+                        <Tooltip>
+                          <TooltipTrigger asChild>
+                            <BookmarkIcon sx={{ fontSize: 16 }} className="" />
+                          </TooltipTrigger>
+                          <TooltipContent>
+                            <p>Bookmark</p>
+                          </TooltipContent>
+                        </Tooltip>
+                      </TooltipProvider>
+                    </div>
+                  </SignedIn>
+                  <SignedOut>
+                    <div
+                      className="w-8 h-8 flex items-center justify-center rounded-full dark:bg-[#131B1E] dark:hover:bg-[#2D3236] bg-white hover:bg-gray-100 tooltip tooltip-bottom hover:cursor-pointer"
+                      data-tip="Messages"
+                      onClick={() => {
+                        setIsOpenP(true);
+                        router.push("/sign-in");
+                      }}
+                    >
+                      <TooltipProvider>
+                        <Tooltip>
+                          <TooltipTrigger asChild>
+                            <BookmarkIcon sx={{ fontSize: 16 }} />
+                          </TooltipTrigger>
+                          <TooltipContent>
+                            <p>Bookmark</p>
+                          </TooltipContent>
+                        </Tooltip>
+                      </TooltipProvider>
+                    </div>
+                  </SignedOut>
+                  <SignedIn>
+                    <div
+                      className="w-8 h-8 flex items-center justify-center rounded-full dark:bg-[#131B1E] dark:hover:bg-[#2D3236] bg-white hover:bg-gray-100 tooltip tooltip-bottom hover:cursor-pointer"
+                      data-tip="Messages"
+                      onClick={() => {
+                        handleOpenChat();
+                      }}
+                    >
+                      <TooltipProvider>
+                        <Tooltip>
+                          <TooltipTrigger asChild>
+                            <div className="relative flex items-center justify-center">
+                              <MessageIcon sx={{ fontSize: 16 }} className="absolute " />
+                              <div className="absolute z-10">
+                                <Unreadmessages userId={userId} popup={"home"} />
+                              </div>
+                            </div>
+                          </TooltipTrigger>
+                          <TooltipContent>
+                            <div
+                              onClick={() => {
+                                handleOpenChat();
+                              }}
+                              className="flex gap-1"
+                            >
+                              Chats
+                              <Unreadmessages userId={userId} popup={"home"} />
+                            </div>
+                          </TooltipContent>
+                        </Tooltip>
+                      </TooltipProvider>
+                    </div>
+                  </SignedIn>
+                  <SignedOut>
+                    <div
+                      className="w-8 h-8 flex items-center justify-center rounded-full dark:bg-[#131B1E] dark:hover:bg-[#2D3236] bg-white tooltip tooltip-bottom hover:cursor-pointer"
+                      data-tip="Messages"
+                      onClick={() => {
+                        setIsOpenP(true);
+                        router.push("/sign-in");
+                      }}
+                    >
+                      <TooltipProvider>
+                        <Tooltip>
+                          <TooltipTrigger asChild>
+                            <MessageIcon sx={{ fontSize: 16 }} className="absolute" />
+                          </TooltipTrigger>
+                          <TooltipContent>
+                            <p>Message</p>
+                          </TooltipContent>
+                        </Tooltip>
+                      </TooltipProvider>
+                    </div>
+                  </SignedOut>
+
+
+                  <div
+                    className="w-8 h-8 flex items-center justify-center rounded-full dark:bg-[#131B1E] dark:hover:bg-[#2D3236] bg-white hover:bg-gray-100 tooltip tooltip-bottom hover:cursor-pointer"
+                    data-tip="Messages"
+                    onClick={() => {
+                      handleOpenPlan();
+                    }}
+                  >
+                    <TooltipProvider>
+                      <Tooltip>
+                        <TooltipTrigger asChild>
+                          <DiamondIcon sx={{ fontSize: 16 }} className="" />
+                        </TooltipTrigger>
+                        <TooltipContent>
+                          <p>Premium Services</p>
+                        </TooltipContent>
+                      </Tooltip>
+                    </TooltipProvider>
+                  </div>
+                  <div>
+                    <SignedIn>
+
+                      <Button onClick={() => {
+                        handleOpenSell();
+                      }} variant="default" className="flex bg-green-600 hover:bg-green-700 items-center gap-2">
+                        <AddOutlinedIcon sx={{ fontSize: 16 }} /> SELL
+                      </Button>
+
+                    </SignedIn>
+
+
+                  </div>
+                  <div>
+                    <SignedOut>
+                      <Button onClick={() => {
+                        setIsOpenP(true);
+                        router.push("/sign-in");
+                      }} variant="default" className="flex bg-green-600 hover:bg-green-700 items-center gap-2">
+                        <AddOutlinedIcon sx={{ fontSize: 16 }} /> SELL
+                      </Button>
+
+
+                    </SignedOut>
+                  </div>
+                </div>
+              </div>
+
+              <div className="flex gap-2">
+                <SignedIn>
+                  <div className="w-8 h-8 flex items-center justify-center rounded-full dark:bg-[#131B1E] dark:hover:bg-[#2D3236] bg-white tooltip tooltip-bottom hover:cursor-pointer">
+                    <UserButton afterSignOutUrl="/" />
+                  </div>
+                </SignedIn>
+
+                <MobileNav userstatus={user?.status ?? "User"} userId={userId ?? null} user={user ?? []}
+                  popup={"sell"}
+                  handleOpenSell={handleOpenSell}
+                  handleOpenBook={handleOpenBook}
+                  handleOpenPlan={handleOpenPlan}
+                  handleOpenChat={handleOpenChat}
+                  handleOpenShop={handleOpenShop}
+                  handleOpenPerfomance={handleOpenPerfomance}
+                  handleOpenSettings={handleOpenSettings}
+                  handleOpenAbout={handleOpenAbout}
+                  handleOpenTerms={handleOpenTerms}
+                  handleOpenPrivacy={handleOpenPrivacy}
+                  handleOpenSafety={handleOpenSafety}
+                  onClose={onClose} />
+              </div>
+
+            </div>
+          </div>
+        </div>
+
+        {/* <Navbar user={user ?? []} userstatus={user?.status ?? "User"} userId={userId} onClose={onClose} popup={"sell"} handleOpenSell={handleOpenSell} handleOpenBook={handleOpenBook} handleOpenPlan={handleOpenPlan} handleOpenChat={handleOpenChat}
           handleOpenPerfomance={handleOpenPerfomance}
           handleOpenSettings={handleOpenSettings}
           handleOpenAbout={handleOpenAbout}
           handleOpenTerms={handleOpenTerms}
           handleOpenPrivacy={handleOpenPrivacy}
           handleOpenSafety={handleOpenSafety}
-          handleOpenShop={handleOpenShop} />
+          handleOpenShop={handleOpenShop} />*/}
       </div>
 
       {/* Main Content */}
       <main className="flex-1 flex bg-[#e4ebeb] flex-col lg:p-4 h-full overflow-hidden pt-[50px] lg:pt-[55px]">
         {/* Header*/}
-        <div className="hidden lg:inline">
 
-          <div className="flex flex-wrap justify-between items-center gap-2 mb-4">
-            <div className="flex">
-              <div className="mt-2 border text-gray-600 hover:text-green-600 dark:hover:bg-[#3E454A] dark:bg-[#2D3236] dark:hover:text-gray-300 dark:text-gray-500 bg-white py-1 px-2 rounded-full mr-1">
-                <div
-                  onClick={() => {
-                    onClose();
-                  }}
-                >
-                  <div className="flex items-center gap-2 cursor-pointer ">
-                    <p className="text-xs lg:text-sm"> All Ads</p><ArrowForwardIosOutlinedIcon sx={{ fontSize: 14 }} />
-                  </div>
-                </div>
-              </div>
-              <div className="mt-2 border text-gray-600 hover:text-green-600 dark:hover:bg-[#3E454A] dark:bg-[#2D3236] dark:hover:text-gray-300 dark:text-gray-500 bg-white py-1 px-2 rounded-full mr-1">
-                <div className="flex items-center">
-                  {ad && (
-                    <div
-                      onClick={() => {
-                        handleSubCategory(ad.data.category, '');
 
-                      }}
-                      className="flex items-center gap-2 cursor-pointer"
-                    >
-
-                      <p className="text-xs lg:text-sm">{ad.data.category}</p><ArrowForwardIosOutlinedIcon sx={{ fontSize: 14 }} />
-                    </div>
-                  )}
-                </div>
-              </div>
-              <div className="mt-2 border text-gray-600 hover:text-green-600 dark:hover:bg-[#3E454A] dark:bg-[#2D3236] dark:hover:text-gray-300 bg-white dark:text-gray-500 py-1 px-2 rounded-full mr-1">
-                <div className="flex items-center">
-                  {ad && (
-                    <div
-                      onClick={() => {
-                        handleSubCategory(ad.data.category, ad.data.subcategory);
-
-                      }}
-                      className="flex items-center gap-2 cursor-pointer"
-                    >
-
-                      <p className="text-xs lg:text-sm">{ad.data.subcategory}</p><ArrowForwardIosOutlinedIcon sx={{ fontSize: 14 }} />
-                    </div>
-                  )}
-                </div>
-              </div>
-              <div className="mt-2 border text-gray-800 dark:bg-[#2D3236] dark:text-gray-300 bg-white py-1 px-2 rounded-full">
-                <div className="flex items-center">
-
-                  {ad && <p className="text-xs lg:text-sm">{ad.data.title}</p>}
-                </div>
-              </div>
-            </div>
-
-            <div className="relative w-48 text-sm">
-              <button
-                onClick={() => setOpen(!open)}
-                className="flex items-center justify-between w-full px-4 py-2 border rounded bg-white shadow-sm"
-              >
-                <span className="flex items-center gap-2">
-                  {selected.icon}
-                  {selected.label}
-                </span>
-                <svg
-                  className="w-4 h-4 ml-2"
-                  fill="none"
-                  viewBox="0 0 24 24"
-                  stroke="currentColor"
-                >
-                  <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M19 9l-7 7-7-7" />
-                </svg>
-              </button>
-
-              {open && (
-                <ul className="absolute mt-1 w-full bg-white border rounded shadow z-50">
-                  {options.map((opt) => (
-                    <li
-                      key={opt.value}
-                      onClick={() => handleSelectOpt(opt)}
-                      className="cursor-pointer px-4 py-2 hover:bg-gray-100 flex items-center gap-2"
-                    >
-                      {opt.icon}
-                      {opt.label}
-                    </li>
-                  ))}
-                </ul>
-              )}
-            </div>
-          </div>
-        </div>
         <div className="relative flex-1 overflow-hidden">
 
           {/* Dynamic Layout */}
@@ -340,6 +576,7 @@ export default function EnhancedaAdView({
 
 
       </main>
+      <ProgressPopup isOpen={isOpenP} onClose={handleCloseP} />
     </div>
   );
 }

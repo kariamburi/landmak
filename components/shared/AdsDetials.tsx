@@ -376,7 +376,7 @@ export default function AdsDetials({ ad, user, userId, userImage, userName, isMa
   return (
     <><div className="space-y-0 lg:flex lg:space-x-0 gap-2">
       <div
-        className="mt-0 lg:mt-1 relative lg:flex-1 dark:bg-[#2D3236] dark:text-gray-300"
+        className="mt-2 lg:mt-1 relative lg:flex-1 dark:bg-[#2D3236] dark:text-gray-300"
         style={
           ad.plan.name !== "Free"
             ? {
@@ -414,9 +414,9 @@ export default function AdsDetials({ ad, user, userId, userImage, userName, isMa
               <button
                 title="Ad Pictures"
                 onClick={() => setInputMode("Images")}
-                className={`h-12 p-3 rounded-tl-0 lg:rounded-tl-xl flex gap-2 justify-center items-center text-[10px] lg:text-xs ${inputMode === "Images"
+                className={`p-2 rounded-tl-0 lg:rounded-tl-xl flex gap-2 justify-center items-center text-[10px] lg:text-xs ${inputMode === "Images"
                   ? "text-white bg-[#131B1E] dark:text-white"
-                  : "bg-green-600 hover:bg-green-700 text-white"
+                  : "bg-green-700 hover:bg-green-600 text-white"
                   }`}
               >
                 <LocalSeeOutlinedIcon sx={{ fontSize: 16 }} /> Pictures
@@ -425,9 +425,9 @@ export default function AdsDetials({ ad, user, userId, userImage, userName, isMa
               <button
                 title="Ad Video"
                 onClick={() => setInputMode("Video")}
-                className={`h-12 p-3 flex gap-2 justify-center items-center text-[10px] lg:text-xs ${inputMode === "Video"
+                className={`p-2 flex gap-2 justify-center items-center text-[10px] lg:text-xs ${inputMode === "Video"
                   ? "text-white bg-[#131B1E] dark:text-white"
-                  : "bg-green-600 hover:bg-green-700 text-white"
+                  : "bg-green-700 hover:bg-green-600 text-white"
                   }`}
               >
                 <YouTubeIcon sx={{ fontSize: 16 }} /> Video
@@ -436,9 +436,9 @@ export default function AdsDetials({ ad, user, userId, userImage, userName, isMa
               <button
                 title="Ad 3D Virtual"
                 onClick={() => setInputMode("Virtual")}
-                className={`h-12 p-3 rounded-0 lg:rounded-tr-xl flex gap-2 justify-center items-center text-[10px] lg:text-xs ${inputMode === "Virtual"
+                className={`p-2 rounded-0 lg:rounded-tr-xl flex gap-2 justify-center items-center text-[10px] lg:text-xs ${inputMode === "Virtual"
                   ? "text-white bg-[#131B1E] dark:text-white"
-                  : "bg-green-600 hover:bg-green-700 text-white"
+                  : "bg-green-700 hover:bg-green-600 text-white"
                   }`}
               >
                 <ThreeDRotationOutlinedIcon sx={{ fontSize: 16 }} /> 3D Virtual Tour
@@ -508,7 +508,7 @@ export default function AdsDetials({ ad, user, userId, userImage, userName, isMa
                                 alt={`Image ${index + 1}`}
                                 width={800} // Adjust the width as needed
                                 height={500} // Adjust the height as needed
-                                className={`bg-[#000000] h-[400px] object-cover cursor-pointer ${isLoading ? "opacity-0" : "opacity-100"
+                                className={`bg-[#000000] h-[380px] object-cover cursor-pointer ${isLoading ? "opacity-0" : "opacity-100"
                                   } transition-opacity duration-300`}
                                 onLoadingComplete={() => setIsLoading(false)}
                                 placeholder="empty" // Optional: you can use "empty" if you want a placeholder before loading
@@ -524,7 +524,7 @@ export default function AdsDetials({ ad, user, userId, userImage, userName, isMa
                       width={800} // Adjust the width as needed
                       height={500} // Adjust the height as needed
                       layout="fill"
-                      className={`object-cover h-[400px] cursor-pointer ${isLoading ? "opacity-0" : "opacity-100"
+                      className={`object-cover h-[380px] cursor-pointer ${isLoading ? "opacity-0" : "opacity-100"
                         } transition-opacity duration-300`}
                       onLoadingComplete={() => setIsLoading(false)}
                       placeholder="empty"
@@ -602,7 +602,7 @@ export default function AdsDetials({ ad, user, userId, userImage, userName, isMa
                                 alt={`Image ${index + 1}`}
                                 width={244}
                                 height={196}
-                                className={`h-[100px] rounded-lg object-cover cursor-pointer border-2 hover:border-green-500 ${isLoadingsmall ? "opacity-0" : "opacity-100"
+                                className={`h-[70px] rounded-lg object-cover cursor-pointer border-2 hover:border-green-500 ${isLoadingsmall ? "opacity-0" : "opacity-100"
                                   } transition-opacity duration-300`}
                                 onLoadingComplete={() => setIsLoadingsmall(false)}
                                 placeholder="empty"
