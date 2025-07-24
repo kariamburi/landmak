@@ -524,7 +524,7 @@ export default function AdsDetials({ ad, user, userId, userImage, userName, isMa
                       width={800} // Adjust the width as needed
                       height={500} // Adjust the height as needed
                       layout="fill"
-                      className={`object-cover h-[380px] cursor-pointer ${isLoading ? "opacity-0" : "opacity-100"
+                      className={`object-cover h-[420px] lg:h-[380px] cursor-pointer ${isLoading ? "opacity-0" : "opacity-100"
                         } transition-opacity duration-300`}
                       onLoadingComplete={() => setIsLoading(false)}
                       placeholder="empty"
