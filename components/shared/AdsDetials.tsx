@@ -508,7 +508,7 @@ export default function AdsDetials({ ad, user, userId, userImage, userName, isMa
                                 alt={`Image ${index + 1}`}
                                 width={800} // Adjust the width as needed
                                 height={500} // Adjust the height as needed
-                                className={`bg-[#000000] h-[380px] object-cover cursor-pointer ${isLoading ? "opacity-0" : "opacity-100"
+                                className={`bg-[#000000] h-[420px] lg:h-[380px] object-cover cursor-pointer ${isLoading ? "opacity-0" : "opacity-100"
                                   } transition-opacity duration-300`}
                                 onLoadingComplete={() => setIsLoading(false)}
                                 placeholder="empty" // Optional: you can use "empty" if you want a placeholder before loading
