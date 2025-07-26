@@ -854,7 +854,7 @@ export default function MainView({
     handleClose();
     setadId(ad);
     setIsOpenAdView(true);
-    router.push(`/property/${ad._id}`, { scroll: false }) // update URL without scroll
+    //router.push(`/property/${ad._id}`, { scroll: false }) // update URL without scroll
 
   };
 
