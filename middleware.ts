@@ -16,16 +16,14 @@ const isProtectedRoute = createRouteMatcher([
   '/packages(.*)',
 ]);
 
-const isBot = (userAgent: string | null) => {
-  if (!userAgent) return false;
-  const botPatterns = [/googlebot/i, /bingbot/i, /slurp/i, /duckduckbot/i, /baiduspider/i, /yandex/i];
-  return botPatterns.some((pattern) => pattern.test(userAgent));
-};
-
 export default clerkMiddleware((auth, req) => {
-  const userAgent = req.headers.get('user-agent');
-  if (isBot(userAgent)) return; // ✅ Allow bots through without auth
-  if (isProtectedRoute(req)) auth().protect();
+  const userAgent = req.headers.get('user-agent') || '';
+
+  const isBot = /bot|crawler|spider|bing|slurp|duckduckgo|baidu|yandex/i.test(userAgent);
+
+  if (!isBot && isProtectedRoute(req)) {
+    auth().protect();
+  }
 });
 
 export const config = {
