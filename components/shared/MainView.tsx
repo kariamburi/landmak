@@ -788,6 +788,7 @@ export default function MainView({
 
     setadId([]);
     setIsOpenAdEdit(false);
+    router.replace('/', { scroll: false });
   };
 
   const handleAdEdit = (id: string) => {
