@@ -4,8 +4,9 @@ import { Menu, X } from "lucide-react";
 import { Button } from "../ui/button";
 import { ScrollArea } from "../ui/scroll-area";
 //import * as ScrollArea from "@radix-ui/react-scroll-area";
-
+//import { useRouter } from 'next/router';
 import { AdminId, mode } from "@/constants";
+//import { usePathname, useSearchParams } from "next/navigation";
 import { usePathname, useRouter, useSearchParams } from "next/navigation";
 import { IdynamicAd } from "@/lib/database/models/dynamicAd.model";
 import { getAlldynamicAd } from "@/lib/actions/dynamicAd.actions";
@@ -264,19 +265,89 @@ export default function MainView({
     setIsOpenPay(false);
     setIsOpenSearchTab(false);
     setIsOpenFaq(false);
-
+    router.replace('/', { scroll: false });
   };
-
+  const pathname = usePathname();
 
   useEffect(() => {
 
     const fetchData = async () => {
       const params = new URLSearchParams(window.location.search);
       const id = params.get("Ad");
+      const AdEdit = params.get("AdEdit");
       const Profile = params.get("Profile");
       const action = params.get("action");
       const coordinates = params.get("parcel1");
       const PrivacyPolicy = params.get("PrivacyPolicy");
+      const chatId = params.get("chatId");
+      const reviewId = params.get("reviewId");
+      const payId = params.get("payId");
+      const sell_category = params.get("sell_category");
+      const sell_subcategory = params.get("sell_subcategory");
+      const chat = params.get("chat");
+      const bookmark = params.get("bookmark");
+      const settings = params.get("settings");
+      const performance = params.get("performance");
+      const shop = params.get("shop");
+      const safety = params.get("safety");
+      const privacy = params.get("privacy");
+      const terms = params.get("terms");
+      const about = params.get("about");
+      if (about) {
+        handleOpenAbout();
+      }
+      if (terms) {
+        handleOpenTerms();
+      }
+      if (privacy) {
+        handleOpenPrivacy();
+      }
+      if (safety) {
+        handleOpenSafety();
+      }
+      if (shop) {
+        handleOpenShop(shop);
+      }
+      if (performance) {
+        handleOpenPerfomance();
+      }
+      if (settings) {
+        handleOpenSettings();
+      }
+      if (bookmark) {
+        handleOpenBook();
+      }
+      const plan = params.get("plan");
+      if (plan) {
+        handleOpenPlan();
+      }
+      if (chat) {
+        handleOpenChat();
+      }
+
+      if (sell_category) {
+        if (sell_category === 'sell') {
+          handleOpenSell('', '');
+        } else {
+          handleOpenSell(sell_category, sell_subcategory || '');
+        }
+
+      }
+      if (payId) {
+        handlePay(payId);
+      }
+      if (reviewId) {
+        handleOpenReview(reviewId);
+      }
+      if (chatId) {
+        handleOpenChatId(chatId);
+      }
+      if (AdEdit) {
+        const ad = await getAdById(AdEdit);
+        setadId(ad);
+        setIsOpenAdEdit(true);
+      }
+
       if (id) {
         const ad = await getAdById(id);
         setadId(ad);
@@ -427,7 +498,7 @@ export default function MainView({
     const coordinates = params.get("parcel1");
     const PrivacyPolicy = params.get("PrivacyPolicy");
     if (Profile || Ad || action || coordinates || PrivacyPolicy) {
-      router.push("/", { scroll: false });
+      router.replace('/', { scroll: false });
       setNewqueryObject([])
     }
 
@@ -446,7 +517,7 @@ export default function MainView({
     const coordinates = params.get("parcel1");
     const PrivacyPolicy = params.get("PrivacyPolicy");
     if (Profile || Ad || action || coordinates || PrivacyPolicy) {
-      router.push("/", { scroll: false });
+      router.replace('/', { scroll: false });
       setNewqueryObject([])
     }
 
@@ -477,7 +548,7 @@ export default function MainView({
     const coordinates = params.get("parcel1");
     const PrivacyPolicy = params.get("PrivacyPolicy");
     if (Profile || Ad || action || coordinates || PrivacyPolicy) {
-      router.push("/", { scroll: false });
+      router.replace('/', { scroll: false });
       setNewqueryObject([])
     }
     setrecipientUid('')
@@ -498,7 +569,7 @@ export default function MainView({
     const coordinates = params.get("parcel1");
     const PrivacyPolicy = params.get("PrivacyPolicy");
     if (Profile || Ad || action || coordinates || PrivacyPolicy) {
-      router.push("/", { scroll: false });
+      router.replace('/', { scroll: false });
       setNewqueryObject([])
     }
 
@@ -508,7 +579,7 @@ export default function MainView({
 
   const handleOpenShop = (shopId: any) => {
     handleClose();
-    console.log(shopId);
+    //console.log(shopId);
     setshopId(shopId)
     setIsOpenShop(true);
   };
@@ -520,7 +591,7 @@ export default function MainView({
     const coordinates = params.get("parcel1");
     const PrivacyPolicy = params.get("PrivacyPolicy");
     if (Profile || Ad || action || coordinates || PrivacyPolicy) {
-      router.push("/", { scroll: false });
+      router.replace('/', { scroll: false });
       setNewqueryObject([])
     }
     setrecipient([])
@@ -540,7 +611,7 @@ export default function MainView({
     const coordinates = params.get("parcel1");
     const PrivacyPolicy = params.get("PrivacyPolicy");
     if (Profile || Ad || action || coordinates || PrivacyPolicy) {
-      router.push("/", { scroll: false });
+      router.replace('/', { scroll: false });
       setNewqueryObject([])
     }
     setIsOpenChat(false);
@@ -558,7 +629,7 @@ export default function MainView({
     const coordinates = params.get("parcel1");
     const PrivacyPolicy = params.get("PrivacyPolicy");
     if (Profile || Ad || action || coordinates || PrivacyPolicy) {
-      router.push("/", { scroll: false });
+      router.replace('/', { scroll: false });
       setNewqueryObject([]);
     }
 
@@ -576,7 +647,7 @@ export default function MainView({
     const coordinates = params.get("parcel1");
     const PrivacyPolicy = params.get("PrivacyPolicy");
     if (Profile || Ad || action || coordinates || PrivacyPolicy) {
-      router.push("/", { scroll: false });
+      router.replace('/', { scroll: false });
       setNewqueryObject([])
     }
 
@@ -595,7 +666,7 @@ export default function MainView({
     const coordinates = params.get("parcel1");
     const PrivacyPolicy = params.get("PrivacyPolicy");
     if (Profile || Ad || action || coordinates || PrivacyPolicy) {
-      router.push("/", { scroll: false });
+      router.replace('/', { scroll: false });
       setNewqueryObject([])
     }
     setIsOpenTerms(false);
@@ -612,7 +683,7 @@ export default function MainView({
     const coordinates = params.get("parcel1");
     const PrivacyPolicy = params.get("PrivacyPolicy");
     if (Profile || Ad || action || coordinates || PrivacyPolicy) {
-      router.push("/", { scroll: false });
+      router.replace('/', { scroll: false });
       setNewqueryObject([])
     }
     setIsOpenPrivacy(false);
@@ -629,7 +700,7 @@ export default function MainView({
     const coordinates = params.get("parcel1");
     const PrivacyPolicy = params.get("PrivacyPolicy");
     if (Profile || Ad || action || coordinates || PrivacyPolicy) {
-      router.push("/", { scroll: false });
+      router.replace('/', { scroll: false });
       setNewqueryObject([])
     }
 
@@ -648,7 +719,7 @@ export default function MainView({
     const coordinates = params.get("parcel1");
     const PrivacyPolicy = params.get("PrivacyPolicy");
     if (Profile || Ad || action || coordinates || PrivacyPolicy) {
-      router.push("/", { scroll: false });
+      router.replace('/', { scroll: false });
       setNewqueryObject([])
     }
 
@@ -669,7 +740,7 @@ export default function MainView({
     const coordinates = params.get("parcel1");
     const PrivacyPolicy = params.get("PrivacyPolicy");
     if (Profile || Ad || action || coordinates || PrivacyPolicy) {
-      router.push("/", { scroll: false });
+      router.replace('/', { scroll: false });
       setNewqueryObject([])
     }
 
@@ -697,7 +768,7 @@ export default function MainView({
     const coordinates = params.get("parcel1");
     const PrivacyPolicy = params.get("PrivacyPolicy");
     if (Profile || Ad || action || coordinates || PrivacyPolicy) {
-      router.push("/", { scroll: false });
+      router.replace('/', { scroll: false });
       setNewqueryObject([])
     }
 
@@ -711,7 +782,7 @@ export default function MainView({
     const coordinates = params.get("parcel1");
     const PrivacyPolicy = params.get("PrivacyPolicy");
     if (Profile || Ad || action || coordinates || PrivacyPolicy) {
-      router.push("/", { scroll: false });
+      router.replace('/', { scroll: false });
       setNewqueryObject([])
     }
 
@@ -729,12 +800,13 @@ export default function MainView({
     const params = new URLSearchParams(window.location.search);
     const ad = params.get("Ad");
     if (ad) {
-      router.push("/", { scroll: false });
+      router.replace('/', { scroll: false });
       setNewqueryObject([])
     }
 
     setadId([]);
     setIsOpenAdView(false);
+    router.replace('/', { scroll: false });
   };
 
   const handleCloseCategory = () => {
@@ -745,7 +817,7 @@ export default function MainView({
     const coordinates = params.get("parcel1");
     const PrivacyPolicy = params.get("PrivacyPolicy");
     if (Profile || Ad || action || coordinates || PrivacyPolicy) {
-      router.push("/", { scroll: false });
+      router.replace('/', { scroll: false });
     }
     setNewqueryObject([])
     setIsOpenCategory(false);
@@ -771,7 +843,7 @@ export default function MainView({
     const coordinates = params.get("parcel1");
     const PrivacyPolicy = params.get("PrivacyPolicy");
     if (Profile || Ad || action || coordinates || PrivacyPolicy) {
-      router.push("/", { scroll: false });
+      router.replace('/', { scroll: false });
       setNewqueryObject([])
     }
 
@@ -781,6 +853,8 @@ export default function MainView({
     handleClose();
     setadId(ad);
     setIsOpenAdView(true);
+    router.push(`/property/${ad._id}`, { scroll: false }) // update URL without scroll
+
   };
 
   const handleFilter = (value: any) => {

@@ -41,51 +41,51 @@ interface AdsProps {
   ad: any;
   user: any;
   id: string;
-  onClose: () => void;
-  handleOpenAbout: () => void;
-  handleOpenTerms: () => void;
-  handleOpenPrivacy: () => void;
-  handleOpenSafety: () => void;
-  handleOpenSell: (category?: string, subcategory?: string) => void;
-  handleOpenPlan: () => void;
-  handleOpenChat: () => void;
-  handleOpenBook: () => void;
-  handleAdView: (ad: any) => void;
-  handleAdEdit: (ad: any) => void;
-  handlePay: (id: string) => void;
-  handleSubCategory: (category: string, subcategory: string) => void;
-  handleOpenReview: (value: any) => void;
-  handleOpenShop: (value: any) => void;
-  handleOpenChatId: (value: any) => void;
-  handleOpenSettings: () => void;
-  handleOpenPerfomance: () => void;
+  //onClose: () => void;
+  //handleOpenAbout: () => void;
+  ////handleOpenTerms: () => void;
+  //handleOpenPrivacy: () => void;
+  //handleOpenSafety: () => void;
+  //handleOpenSell: (category?: string, subcategory?: string) => void;
+  //handleOpenPlan: () => void;
+  //handleOpenChat: () => void;
+  //handleOpenBook: () => void;
+  //handleAdView: (ad: any) => void;
+  //handleAdEdit: (ad: any) => void;
+  //handlePay: (id: string) => void;
+  //handleSubCategory: (category: string, subcategory: string) => void;
+  //handleOpenReview: (value: any) => void;
+  //handleOpenShop: (value: any) => void;
+  //handleOpenChatId: (value: any) => void;
+  //handleOpenSettings: () => void;
+  //handleOpenPerfomance: () => void;
 }
 
-export default function EnhancedaAdView({
+export default function EnhancedaAdViewSeo({
   userId,
   userName,
   userImage,
   user,
   ad,
   id,
-  onClose,
-  handleOpenSell,
-  handleOpenBook,
-  handleOpenChat,
-  handleOpenPlan,
-  handleAdView,
-  handleAdEdit,
-  handleSubCategory,
-  handleOpenAbout,
-  handleOpenTerms,
-  handleOpenPrivacy,
-  handleOpenSafety,
-  handleOpenReview,
-  handleOpenShop,
-  handleOpenChatId,
-  handleOpenSettings,
-  handleOpenPerfomance,
-  handlePay,
+  //onClose,
+  //handleOpenSell,
+  //handleOpenBook,
+  //handleOpenChat,
+  //handleOpenPlan,
+  //handleAdView,
+  //handleAdEdit,
+  //handleSubCategory,
+  //handleOpenAbout,
+  //handleOpenTerms,
+  //handleOpenPrivacy,
+  //handleOpenSafety,
+  //handleOpenReview,
+  //handleOpenShop,
+  //handleOpenChatId,
+  //handleOpenSettings,
+  //handleOpenPerfomance,
+  //handlePay,
 }: AdsProps) {
 
   const [showList, setShowList] = useState(true);
@@ -152,6 +152,85 @@ export default function EnhancedaAdView({
   const handleOpenEnquire = () => {
     setIsOpenEnquire(true);
   };
+
+  const handleSubCategory = (category: string, subcategory: string) => {
+    setIsOpenP(true);
+    router.push("/?category=" + ad.data.category + "&subcategory=" + ad.data.subcategory);
+  };
+
+
+  const onClose = () => {
+    setIsOpenP(true);
+    router.push("/");
+  };
+  const handleOpenAbout = () => {
+    setIsOpenP(true);
+    router.push("/?about=about");
+  };
+  const handleOpenTerms = () => {
+    setIsOpenP(true);
+    router.push("/?terms=terms");
+  };
+  const handleOpenPrivacy = () => {
+    setIsOpenP(true);
+    router.push("/?privacy=privacy");
+  };
+
+  const handleOpenSafety = () => {
+    setIsOpenP(true);
+    router.push("/?safety=safety");
+  };
+  const handleOpenShop = (value: any) => {
+    setIsOpenP(true);
+    router.push("/?shop=" + value);
+  };
+  const handleOpenPerfomance = () => {
+    setIsOpenP(true);
+    router.push("/?performance=performance");
+  };
+  const handleOpenSettings = () => {
+    setIsOpenP(true);
+    router.push("/?settings=settings");
+  };
+
+  const handleOpenBook = () => {
+    setIsOpenP(true);
+    router.push("/?bookmark=bookmark");
+  };
+  const handleOpenPlan = () => {
+    setIsOpenP(true);
+    router.push("/?plan=plan");
+  };
+  const handleOpenChat = () => {
+    setIsOpenP(true);
+    router.push("/?chat=chat");
+  };
+
+  const handleOpenSell = (category?: string, subcategory?: string) => {
+    setIsOpenP(true);
+    router.push("/?sell_category=" + category || 'sell' + "&sell_subcategory=" + subcategory || '');
+  };
+  const handlePay = (id: string) => {
+    setIsOpenP(true);
+    router.push("/?payId=" + id);
+  };
+  const handleOpenReview = (value: any) => {
+    setIsOpenP(true);
+    router.push("/?reviewId=" + value);
+  };
+  const handleOpenChatId = (value: any) => {
+    setIsOpenP(true);
+    router.push("/?chatId=" + value);
+  };
+  const handleAdView = (ad: any) => {
+    setIsOpenP(true);
+    router.push("/?Ad=" + ad._id);
+  };
+  const handleAdEdit = () => {
+    setIsOpenP(true);
+    router.push("/?AdEdit=" + ad._id);
+  };
+
   return (
     <div className="flex flex-col lg:flex-row w-full h-screen overflow-hidden">
       {/* Mobile Top Bar */}
@@ -165,10 +244,11 @@ export default function EnhancedaAdView({
             <div className="flex items-center gap-1">
 
               <div
-                className="mr-2 w-5 h-8 flex text-white lg:text-gray-500 items-center justify-center rounded-sm tooltip tooltip-bottom hover:cursor-pointer lg:hover:text-green-600"
+                className="mr-2 w-5 h-8 flex text-white lg:text-gray-700 items-center justify-center rounded-sm tooltip tooltip-bottom hover:cursor-pointer lg:hover:text-green-600"
                 data-tip="Back"
                 onClick={() => {
-                  onClose()
+                  setIsOpenP(true);
+                  router.push("/");
                 }}
               >
                 <TooltipProvider>
@@ -177,7 +257,7 @@ export default function EnhancedaAdView({
                       <ArrowBackOutlinedIcon />
                     </TooltipTrigger>
                     <TooltipContent>
-                      <p>Back</p>
+                      <p>Home</p>
                     </TooltipContent>
                   </Tooltip>
                 </TooltipProvider>
@@ -191,14 +271,16 @@ export default function EnhancedaAdView({
               </div>
 
             </div>
-            <div className="hidden lg:inline">
+
+            {/*  <div className="hidden lg:inline">
 
               <div className="flex flex-wrap justify-between items-center gap-2">
                 <div className="flex">
                   <div className="mt-2 shadow-sm border text-gray-600 hover:text-green-600 dark:hover:bg-[#3E454A] dark:bg-[#2D3236] dark:hover:text-gray-300 dark:text-gray-500 bg-white py-1 px-2 rounded-full mr-1">
                     <div
                       onClick={() => {
-                        onClose();
+                        setIsOpenP(true);
+                        router.push("/");
                       }}
                     >
                       <div className="flex items-center gap-2 cursor-pointer ">
@@ -212,6 +294,7 @@ export default function EnhancedaAdView({
                         <div
                           onClick={() => {
                             handleSubCategory(ad.data.category, '');
+
 
                           }}
                           className="flex items-center gap-2 cursor-pointer"
@@ -228,6 +311,8 @@ export default function EnhancedaAdView({
                         <div
                           onClick={() => {
                             handleSubCategory(ad.data.category, ad.data.subcategory);
+                            // setIsOpenP(true);
+                            // router.push("/category=" + ad.data.category+"&subcategory=");
 
                           }}
                           className="flex items-center gap-2 cursor-pointer"
@@ -248,7 +333,10 @@ export default function EnhancedaAdView({
 
 
               </div>
-            </div>
+           
+           
+       </div>
+        */}
             <div className="flex gap-2 items-center">
               <div className="hidden lg:inline">
 
@@ -402,6 +490,7 @@ export default function EnhancedaAdView({
                       </Tooltip>
                     </TooltipProvider>
                   </div>
+
                   <div>
                     <SignedIn>
 
@@ -457,14 +546,7 @@ export default function EnhancedaAdView({
           </div>
         </div>
 
-        {/* <Navbar user={user ?? []} userstatus={user?.status ?? "User"} userId={userId} onClose={onClose} popup={"sell"} handleOpenSell={handleOpenSell} handleOpenBook={handleOpenBook} handleOpenPlan={handleOpenPlan} handleOpenChat={handleOpenChat}
-          handleOpenPerfomance={handleOpenPerfomance}
-          handleOpenSettings={handleOpenSettings}
-          handleOpenAbout={handleOpenAbout}
-          handleOpenTerms={handleOpenTerms}
-          handleOpenPrivacy={handleOpenPrivacy}
-          handleOpenSafety={handleOpenSafety}
-          handleOpenShop={handleOpenShop} />*/}
+
       </div>
 
       {/* Main Content */}

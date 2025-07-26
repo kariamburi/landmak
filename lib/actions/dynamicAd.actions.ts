@@ -585,7 +585,7 @@ export async function getAdById(adId: string) {
     await connectToDatabase()
 
     const Ads = await populateAd(DynamicAd.findById(adId))
-
+    //console.log(Ads);
     if (!Ads) throw new Error('Ad not found')
 
     return JSON.parse(JSON.stringify(Ads))
@@ -1197,7 +1197,7 @@ export const getAdsCountPerVerifiedFalse = async (category: string, subcategory:
       }
     ]);
 
-    console.log(AdsCountPerVerified);
+    //  console.log(AdsCountPerVerified);
 
     return JSON.parse(JSON.stringify(AdsCountPerVerified));
   } catch (error) {
@@ -1311,7 +1311,7 @@ export const checkAdConflicts = async (formData: any) => {
   await connectToDatabase();
 
   const propertyarea = formData?.propertyarea;
-  console.log(propertyarea?.shapesGeo);
+  // console.log(propertyarea?.shapesGeo);
   // ✅ Check for overlapping shapesGeo
   if (propertyarea?.shapesGeo && Array.isArray(propertyarea.shapesGeo)) {
     for (const shape of propertyarea.shapesGeo) {
