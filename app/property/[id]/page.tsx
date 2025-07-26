@@ -6,6 +6,7 @@ import { Toaster } from '@/components/ui/toaster';
 import { auth } from "@clerk/nextjs/server";
 import { getUserById } from '@/lib/actions/user.actions';
 import EnhancedaAdViewSeo from '@/components/shared/EnhancedaAdViewSeo';
+
 type Props = {
     params: {
         id: string;
@@ -17,14 +18,15 @@ export default async function PropertyPage({ params: { id } }: Props) {
     const userId = sessionClaims?.userId as string;
     const userName = sessionClaims?.userName as string;
     const userImage = sessionClaims?.userImage as string;
+
     let user: any = [];
-    let myloans: any = [];
 
     if (userId) {
         [user] = await Promise.all([
             getUserById(userId)
         ]);
     }
+
     const ad = await getAdById(id);
 
     if (!ad) {
@@ -42,17 +44,14 @@ export default async function PropertyPage({ params: { id } }: Props) {
         );
     }
 
+    const { data = {}, category = 'Real Estate', _id } = ad;
     const {
-        data: {
-            title,
-            description,
-            price,
-            imageUrl = [],
-            propertyadrea = {},
-        } = {},
-        category = 'Real Estate',
-        _id,
-    } = ad;
+        title,
+        description,
+        price,
+        imageUrl = [],
+        propertyadrea = {},
+    } = data;
 
     const displayImage = imageUrl[0] || '/fallback.jpg';
     const displayTitle = title || 'Property Details';
@@ -94,19 +93,16 @@ export default async function PropertyPage({ params: { id } }: Props) {
             </Head>
 
             <main className="px-0 py-0">
-
                 <EnhancedaAdViewSeo
                     ad={ad}
                     user={user}
                     userId={userId}
                     userName={userName}
                     userImage={userImage}
-                    id={ad._id}
+                    id={_id}
                 />
-
                 <Toaster />
             </main>
-
         </>
     );
 }
