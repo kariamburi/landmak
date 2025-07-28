@@ -1,31 +1,19 @@
 import { clerkMiddleware, createRouteMatcher } from '@clerk/nextjs/server';
 
+// ✅ Define only the **protected routes**
 const isProtectedRoute = createRouteMatcher([
-  '/shop(.*)',
-  '/chat(.*)',
-  '/plan(.*)',
-  '/pay(.*)',
-  '/bookmark(.*)',
-  '/reviews(.*)',
-  '/settings(.*)',
-  '/location(.*)',
-  '/performance(.*)',
-  '/faq(.*)',
   '/home(.*)',
-  '/categories(.*)',
-  '/packages(.*)',
 ]);
 
 export default clerkMiddleware((auth, req) => {
-  const userAgent = req.headers.get('user-agent') || '';
-
-  const isBot = /bot|crawler|spider|bing|slurp|duckduckgo|baidu|yandex/i.test(userAgent);
-
-  if (!isBot && isProtectedRoute(req)) {
-    auth().protect();
-  }
+  if (isProtectedRoute(req)) auth().protect();
 });
 
+// ✅ Match middleware to these routes
 export const config = {
-  matcher: ['/((?!.*\\..*|_next).*)', '/', '/(api|trpc)(.*)'],
+  matcher: [
+    '/((?!.+\\.[\\w]+$|_next).*)', // all routes except static files and _next
+    '/',
+    '/(api|trpc|property)(.*)',   // include routes like /api, /trpc, /property/:id
+  ],
 };
