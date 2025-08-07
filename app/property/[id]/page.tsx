@@ -1,11 +1,9 @@
 import { getAdById } from '@/lib/actions/dynamicAd.actions';
 import { notFound } from 'next/navigation';
 import Head from 'next/head';
-import EnhancedaAdView from '@/components/shared/EnhancedaAdView';
-import { Toaster } from '@/components/ui/toaster';
-import { auth } from "@clerk/nextjs/server";
-import { getUserById } from '@/lib/actions/user.actions';
 import EnhancedaAdViewSeo from '@/components/shared/EnhancedaAdViewSeo';
+import { Toaster } from '@/components/ui/toaster';
+import { headers } from 'next/headers';
 
 type Props = {
     params: {
@@ -14,18 +12,16 @@ type Props = {
 };
 
 export default async function PropertyPage({ params: { id } }: Props) {
-    let sessionClaims;
-    let user: any = [];
-    let ad: any = [];
-    let userId = '';
-    let userName = '';
-    let userImage = '';
+    const isBot = headers().get('x-skip-auth') === 'true';
+    let ad: any = null;
+    let user: any = null;
 
     try {
         ad = await getAdById(id);
     } catch (error) {
-
+        console.error('Failed to fetch ad:', error);
     }
+
     if (!ad) {
         return (
             <>
@@ -54,59 +50,72 @@ export default async function PropertyPage({ params: { id } }: Props) {
     const displayTitle = title || 'Property Details';
     const location = propertyadrea.myaddress || 'Kenya';
 
+    const sharedHead = (
+        <Head>
+            <title>{displayTitle} - {category} | mapa.co.ke</title>
+            <meta name="description" content={description || 'Find properties for sale or rent in Kenya on mapa.co.ke'} />
+            <meta name="keywords" content={`${category}, ${location}, mapa.co.ke`} />
+            <meta property="og:title" content={displayTitle} />
+            <meta property="og:description" content={description} />
+            <meta property="og:image" content={displayImage} />
+            <meta property="og:url" content={`https://mapa.co.ke/property/${_id}`} />
+            <link rel="canonical" href={`https://mapa.co.ke/property/${_id}`} />
+            <script
+                type="application/ld+json"
+                dangerouslySetInnerHTML={{
+                    __html: JSON.stringify({
+                        "@context": "https://schema.org",
+                        "@type": "Residence",
+                        name: displayTitle,
+                        description,
+                        image: displayImage,
+                        address: {
+                            "@type": "PostalAddress",
+                            addressLocality: location,
+                        },
+                        offers: {
+                            "@type": "Offer",
+                            priceCurrency: "KES",
+                            price,
+                            availability: "https://schema.org/InStock",
+                        },
+                    }),
+                }}
+            />
+        </Head>
+    );
+
+    // 👇 Simplified version for bots (to avoid middleware auth and dynamic rendering)
+    if (isBot) {
+        return (
+            <>
+                {sharedHead}
+                <main>
+                    <h1>{ad.title}</h1>
+                    <p>{ad.description}</p>
+                    <img src={ad.images?.[0] || displayImage} alt={ad.title} />
+                    <p>Price: {ad.price}</p>
+                    <p>Location: {ad.location}</p>
+                    <p>Posted by: {ad.organizer?.firstName || 'Seller'}</p>
+                </main>
+            </>
+        );
+    }
+
+    // 👇 Human version (with dynamic component)
     return (
         <>
-            <Head>
-                <title>{displayTitle} - {category} | mapa.co.ke</title>
-                <meta name="description" content={description || 'Find properties for sale or rent in Kenya on mapa.co.ke'} />
-                <meta name="keywords" content={`${category}, ${location}, mapa.co.ke`} />
-                <meta property="og:title" content={displayTitle} />
-                <meta property="og:description" content={description} />
-                <meta property="og:image" content={displayImage} />
-                <meta property="og:url" content={`https://mapa.co.ke/property/${_id}`} />
-                <link rel="canonical" href={`https://mapa.co.ke/property/${_id}`} />
-                <script
-                    type="application/ld+json"
-                    dangerouslySetInnerHTML={{
-                        __html: JSON.stringify({
-                            "@context": "https://schema.org",
-                            "@type": "Residence",
-                            name: displayTitle,
-                            description,
-                            image: displayImage,
-                            address: {
-                                "@type": "PostalAddress",
-                                addressLocality: location,
-                            },
-                            offers: {
-                                "@type": "Offer",
-                                priceCurrency: "KES",
-                                price,
-                                availability: "https://schema.org/InStock",
-                            },
-                        }),
-                    }}
-                />
-            </Head>
-
+            {sharedHead}
             <main className="px-0 py-0">
-
-                <h1>{ad.title}</h1>
-                <p>{ad.description}</p>
-                <img src={ad.images?.[0]} alt={ad.title} />
-                <p>Price: {ad.price}</p>
-                <p>Location: {ad.location}</p>
-                <p>Posted by: {ad.organizer?.firstName || 'Seller'}</p>
-
-                {/* <EnhancedaAdViewSeo
+                <EnhancedaAdViewSeo
                     ad={ad}
                     user={user}
-                    userId={userId}
-                    userName={userName}
-                    userImage={userImage}
+                    userId={user?.id || ''}
+                    userName={user?.name || ''}
+                    userImage={user?.image || ''}
                     id={_id}
                 />
-                <Toaster /> */}
+                <Toaster />
             </main>
         </>
     );

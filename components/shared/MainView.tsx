@@ -1249,35 +1249,6 @@ export default function MainView({
 
   return (
     <div className="flex bg-[#e4ebeb] flex-col lg:flex-row w-full h-screen overflow-hidden">
-      <Head>
-        <title>mapa | Buy, Sell & Rent Properties and More in Kenya</title>
-        <meta
-          name="viewport"
-          content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no"
-        />
-        <meta
-          name="description"
-          content="mapa.co.ke is Kenya's trusted online marketplace for buying, selling, and renting properties. Explore land, homes, apartments, and a wide range of other products and services."
-        />
-        <meta
-          property="og:title"
-          content="mapa | Buy, Sell & Rent Properties and More in Kenya"
-        />
-        <meta
-          property="og:description"
-          content="Discover the easiest way to buy, sell, or rent properties on mapa.co.ke. From land and homes to vehicles and electronics, find everything you need across Kenya."
-        />
-        <meta property="og:image" content="/logo.png" />
-        <meta property="og:url" content="https://mapa.co.ke" />
-        <meta property="og:type" content="website" />
-        <meta
-          name="keywords"
-          content="mapa, buy properties Kenya, sell land, rent house Kenya, marketplace Kenya, online shopping Kenya, real estate Kenya"
-        />
-        <meta name="author" content="mapa" />
-        <link rel="manifest" href="/manifest.json" />
-        <link rel="canonical" href="https://mapa.co.ke" />
-      </Head>
       {/* Mobile Top Bar */}
       <div className="fixed top-0 left-0 right-0 z-50 bg-[#e4ebeb] p-0 border-b flex items-center justify-between">
         {showCategories && (
