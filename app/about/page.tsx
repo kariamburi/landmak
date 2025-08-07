@@ -1,6 +1,4 @@
 // pages/about.tsx
-
-import YouTubePlayer from "@/components/shared/YouTubePlayer";
 import Head from "next/head";
 
 export default function About() {
@@ -74,9 +72,7 @@ export default function About() {
                                 <h2 className="text-2xl font-semibold mb-4 dark:text-gray-400 text-gray-800">
                                     Watch How It Works
                                 </h2>
-                                <div className="w-full max-w-4xl mx-auto mb-10">
-                                    <YouTubePlayer videoUrl={"https://www.youtube.com/watch?v=gV4VKG24ysU"} />
-                                </div>
+
                             </div>
 
                             <div>
