@@ -1,14 +1,19 @@
-import { authMiddleware } from "@clerk/nextjs/server";
+import { clerkMiddleware, createRouteMatcher } from '@clerk/nextjs/server';
 
-export default authMiddleware({
-  publicRoutes: [
-    "/",                // home
-    "/about",           // about page
-    "/terms",           // terms page
-    "/property/:id",    // dynamic property details
-  ],
+// ✅ Define only the **protected routes**
+const isProtectedRoute = createRouteMatcher([
+  '/home(.*)',
+]);
+
+export default clerkMiddleware((auth, req) => {
+  if (isProtectedRoute(req)) auth().protect();
 });
 
+// ✅ Match middleware to these routes
 export const config = {
-  matcher: ["/((?!_next/image|_next/static|favicon.ico|robots.txt|sitemap.xml).*)"],
+  matcher: [
+    '/((?!.+\\.[\\w]+$|_next).*)', // all routes except static files and _next
+    '/',
+    '/(api|trpc|property)(.*)',   // include routes like /api, /trpc, /property/:id
+  ],
 };
