@@ -12,7 +12,10 @@ type Props = {
 };
 
 export default async function PropertyPage({ params: { id } }: Props) {
-    const isBot = headers().get('x-skip-auth') === 'true';
+    // Correctly detect Googlebot and other crawlers using the User-Agent header
+    const userAgent = headers().get('user-agent') || '';
+    const isBot = /googlebot|bingbot|yandex|duckduckbot/i.test(userAgent);
+
     let ad: any = [];
     let user: any = [];
 

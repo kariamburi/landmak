@@ -14,7 +14,10 @@ import { Toaster } from "@/components/ui/toaster";
 export const revalidate = 60;
 
 export default async function Home({ searchParams }: SearchParamProps) {
-  const isBot = headers().get("x-skip-auth") === "true";
+  // Correctly detect Googlebot and other crawlers using the User-Agent header
+  const userAgent = headers().get('user-agent') || '';
+  const isBot = /googlebot|bingbot|yandex|duckduckbot/i.test(userAgent);
+
 
   let user: any = [];
   let myloans: any = [];
