@@ -1,28 +1,19 @@
-// middleware.ts
 import { clerkMiddleware, createRouteMatcher } from '@clerk/nextjs/server';
 
+// ✅ Define only the **protected routes**
 const isProtectedRoute = createRouteMatcher([
   '/home(.*)',
 ]);
 
 export default clerkMiddleware((auth, req) => {
-  const userAgent = req.headers.get('user-agent') || '';
-  const isBot = /bot|crawl|spider|google/i.test(userAgent);
-
-  if (isBot) {
-    req.headers.set('x-skip-auth', 'true');
-    return;
-  }
-
-  if (isProtectedRoute(req)) {
-    auth().protect();
-  }
+  if (isProtectedRoute(req)) auth().protect();
 });
 
+// ✅ Match middleware to these routes
 export const config = {
   matcher: [
-    '/((?!.+\\.[\\w]+$|_next).*)',
+    '/((?!.+\\.[\\w]+$|_next).*)', // all routes except static files and _next
     '/',
-    '/(api|trpc|property)(.*)',
+    '/(api|trpc|property)(.*)',   // include routes like /api, /trpc, /property/:id
   ],
 };
