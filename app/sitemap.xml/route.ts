@@ -1,46 +1,64 @@
-// app/sitemap.xml/route.ts
-
 import { getAllAds } from '@/lib/actions/dynamicAd.actions';
 import { NextResponse } from 'next/server';
 
 export async function GET() {
-    const baseUrl = 'https://mapa.co.ke';
+  const baseUrl = 'https://mapa.co.ke';
 
-    // Fetch ads (ensure it returns at least _id and updatedAt)
-    const ads = await getAllAds();
+  const staticUrls = [
+    {
+      loc: `${baseUrl}/`,
+      changefreq: 'daily',
+      priority: '1.0',
+    },
+    {
+      loc: `${baseUrl}/about`,
+      changefreq: 'monthly',
+      priority: '0.5',
+    },
+    {
+      loc: `${baseUrl}/terms`,
+      changefreq: 'monthly',
+      priority: '0.5',
+    },
+  ];
 
-    const urls = ads
-        .filter((ad: any) => ad && ad._id) // Ensure ad and ID exist
-        .map((ad: any) => {
-            const updatedDate = ad.updatedAt ? new Date(ad.updatedAt) : new Date();
+  // Fetch dynamic ads
+  const ads = await getAllAds();
 
-            // Fallback to current date if invalid
-            const lastmod = isNaN(updatedDate.getTime())
-                ? new Date().toISOString()
-                : updatedDate.toISOString();
+  const dynamicUrls = ads
+    .filter((ad: any) => ad && ad._id)
+    .map((ad: any) => {
+      const updatedDate = ad.updatedAt ? new Date(ad.updatedAt) : new Date();
+      const lastmod = isNaN(updatedDate.getTime())
+        ? new Date().toISOString()
+        : updatedDate.toISOString();
 
-            return `
-      <url>
-        <loc>${baseUrl}/property/${ad._id}</loc>
-        <lastmod>${lastmod}</lastmod>
-        <changefreq>weekly</changefreq>
-        <priority>0.8</priority>
-      </url>`;
-        });
+      return {
+        loc: `${baseUrl}/property/${ad._id}`,
+        lastmod,
+        changefreq: 'weekly',
+        priority: '0.8',
+      };
+    });
 
-    const xml = `<?xml version="1.0" encoding="UTF-8"?>
+  const xml = `<?xml version="1.0" encoding="UTF-8"?>
 <urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">
+  ${[...staticUrls, ...dynamicUrls]
+      .map((url) => {
+        return `
   <url>
-    <loc>${baseUrl}</loc>
-    <changefreq>daily</changefreq>
-    <priority>1.0</priority>
-  </url>
-  ${urls.join('\n')}
+    <loc>${url.loc}</loc>
+    ${url.lastmod ? `<lastmod>${url.lastmod}</lastmod>` : ''}
+    <changefreq>${url.changefreq}</changefreq>
+    <priority>${url.priority}</priority>
+  </url>`;
+      })
+      .join('\n')}
 </urlset>`;
 
-    return new NextResponse(xml, {
-        headers: {
-            'Content-Type': 'application/xml',
-        },
-    });
+  return new NextResponse(xml, {
+    headers: {
+      'Content-Type': 'application/xml',
+    },
+  });
 }
