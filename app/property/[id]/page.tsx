@@ -20,17 +20,7 @@ export default async function PropertyPage({ params: { id } }: Props) {
     let userId = '';
     let userName = '';
     let userImage = '';
-    try {
-        sessionClaims = auth().sessionClaims;
-        userId = sessionClaims?.userId as string;
-        userName = sessionClaims?.userName as string;
-        userImage = sessionClaims?.userImage as string;
-        [user] = await Promise.all([
-            getUserById(userId)
-        ]);
-    } catch (error) {
-        sessionClaims = null;
-    }
+
     try {
         ad = await getAdById(id);
     } catch (error) {
