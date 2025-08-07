@@ -20,10 +20,28 @@ import MainView from "@/components/shared/MainView";
 export const revalidate = 60;
 
 export default async function Home({ searchParams }: SearchParamProps) {
-  const { sessionClaims } = auth();
-  const userId = sessionClaims?.userId as string;
-  const userName = sessionClaims?.userName as string;
-  const userImage = sessionClaims?.userImage as string;
+
+  let sessionClaims;
+  let user: any = [];
+  let myloans: any = [];
+  let userId = '';
+  let userName = '';
+  let userImage = '';
+  try {
+    sessionClaims = auth().sessionClaims;
+    userId = sessionClaims?.userId as string;
+    userName = sessionClaims?.userName as string;
+    userImage = sessionClaims?.userImage as string;
+    [user, myloans] = await Promise.all([
+      getUserById(userId),
+      getByUserIdLaons(userId)
+    ]);
+  } catch (error) {
+    sessionClaims = null;
+
+  }
+
+
 
   const queryObject = searchParams
     ? Object.fromEntries(
@@ -31,15 +49,6 @@ export default async function Home({ searchParams }: SearchParamProps) {
     )
     : {};
 
-  let user: any = [];
-  let myloans: any = [];
-
-  if (userId) {
-    [user, myloans] = await Promise.all([
-      getUserById(userId),
-      getByUserIdLaons(userId)
-    ]);
-  }
 
   const [
     categoryList,

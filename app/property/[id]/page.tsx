@@ -3,6 +3,8 @@ import { notFound } from 'next/navigation';
 import Head from 'next/head';
 import EnhancedaAdView from '@/components/shared/EnhancedaAdView';
 import { Toaster } from '@/components/ui/toaster';
+import { auth } from "@clerk/nextjs/server";
+import { getUserById } from '@/lib/actions/user.actions';
 import EnhancedaAdViewSeo from '@/components/shared/EnhancedaAdViewSeo';
 
 type Props = {
@@ -12,15 +14,27 @@ type Props = {
 };
 
 export default async function PropertyPage({ params: { id } }: Props) {
-    const userId = "";
-    const userName = "";
-    const userImage = "";
+    let sessionClaims;
     let user: any = [];
     let ad: any = [];
+    let userId = '';
+    let userName = '';
+    let userImage = '';
+    try {
+        sessionClaims = auth().sessionClaims;
+        userId = sessionClaims?.userId as string;
+        userName = sessionClaims?.userName as string;
+        userImage = sessionClaims?.userImage as string;
+        [user] = await Promise.all([
+            getUserById(userId)
+        ]);
+    } catch (error) {
+        sessionClaims = null;
+    }
     try {
         ad = await getAdById(id);
     } catch (error) {
-        console.error("getAdById failed", error);
+
     }
     if (!ad) {
         return (
