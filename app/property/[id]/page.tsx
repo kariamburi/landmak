@@ -90,7 +90,15 @@ export default async function PropertyPage({ params: { id } }: Props) {
             </Head>
 
             <main className="px-0 py-0">
-                <EnhancedaAdViewSeo
+
+                <h1>{ad.title}</h1>
+                <p>{ad.description}</p>
+                <img src={ad.images?.[0]} alt={ad.title} />
+                <p>Price: {ad.price}</p>
+                <p>Location: {ad.location}</p>
+                <p>Posted by: {ad.organizer?.firstName || 'Seller'}</p>
+
+                {/* <EnhancedaAdViewSeo
                     ad={ad}
                     user={user}
                     userId={userId}
@@ -98,7 +106,7 @@ export default async function PropertyPage({ params: { id } }: Props) {
                     userImage={userImage}
                     id={_id}
                 />
-                <Toaster />
+                <Toaster /> */}
             </main>
         </>
     );
