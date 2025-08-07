@@ -13,8 +13,8 @@ type Props = {
 
 export default async function PropertyPage({ params: { id } }: Props) {
     const isBot = headers().get('x-skip-auth') === 'true';
-    let ad: any = null;
-    let user: any = null;
+    let ad: any = [];
+    let user: any = [];
 
     try {
         ad = await getAdById(id);
