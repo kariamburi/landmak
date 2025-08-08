@@ -1,6 +1,7 @@
 import { getAdById } from '@/lib/actions/dynamicAd.actions';
 import Head from 'next/head';
 import { headers } from 'next/headers';
+import Link from 'next/link';
 import { notFound } from 'next/navigation';
 
 type Props = {
@@ -10,8 +11,6 @@ type Props = {
 };
 
 export default async function PropertyPage({ params: { id } }: Props) {
-    const userAgent = headers().get('user-agent') || '';
-    const isBot = /googlebot|bingbot|yandex|duckduckbot/i.test(userAgent);
 
     let ad: any = null;
 
@@ -48,7 +47,7 @@ export default async function PropertyPage({ params: { id } }: Props) {
     const displayImage = imageUrl[0] || '/fallback.jpg';
     const displayTitle = title || 'Property Details';
     const location = propertyadrea.myaddress || 'Kenya';
-    const url = `https://mapa.co.ke/?Ad=${_id}`;
+    const url = `https://mapa.co.ke/property/${_id}`;
 
     const sharedHead = (
         <Head>
@@ -60,6 +59,7 @@ export default async function PropertyPage({ params: { id } }: Props) {
             <meta property="og:image" content={displayImage} />
             <meta property="og:url" content={url} />
             <link rel="canonical" href={url} />
+
             <script
                 type="application/ld+json"
                 dangerouslySetInnerHTML={{
@@ -86,36 +86,24 @@ export default async function PropertyPage({ params: { id } }: Props) {
     );
 
     // Bot-friendly minimal HTML
-    if (isBot) {
-        return (
-            <>
-                {sharedHead}
-                <main>
-                    <h1>{displayTitle}</h1>
-                    <p>{description}</p>
-                    <img src={displayImage} alt={displayTitle} />
-                    <p>Price: {price}</p>
-                    <p>Location: {location}</p>
-                    <p>Posted by: {ad.organizer?.firstName || 'Seller'}</p>
-                </main>
-            </>
-        );
-    }
+    return (
+        <>
+            {sharedHead}
+            <main>
+                <h1>{displayTitle}</h1>
+                <p>{description}</p>
+                <img src={displayImage} alt={displayTitle} />
+                <p>Price: {price}</p>
+                <p>Location: {location}</p>
+                <p>Posted by: {ad.organizer?.firstName || 'Seller'}</p>
+                <Link href={`/?Ad=${id}`}>
+                    <button className="bg-green-600 text-white px-4 py-2 rounded hover:bg-green-700">
+                        View Full Listing
+                    </button>
+                </Link>
 
-    // Human users should be redirected to /
-    if (!isBot) {
-        if (typeof window !== 'undefined') {
-            window.location.href = `/?Ad=${_id}`;
-        }
+            </main>
+        </>
+    );
 
-        return (
-            <>
-                {sharedHead}
-                <main className="p-6 text-center">
-                    <h1 className="text-2xl font-bold">Redirecting...</h1>
-                    <p>If not redirected, <a href={`/?Ad=${_id}`} className="text-green-600 underline">click here</a>.</p>
-                </main>
-            </>
-        );
-    }
 }
