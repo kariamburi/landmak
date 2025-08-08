@@ -71,7 +71,7 @@ export default function About() {
                                     }}
                                 >
 
-                                    <ArrowBackOutlinedIcon />  <p>Home</p>
+                                    <ArrowBackOutlinedIcon />
 
                                 </div>
 

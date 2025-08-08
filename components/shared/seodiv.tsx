@@ -42,7 +42,7 @@ const Seodiv: React.FC<Props> = ({ ad }) => {
                             }}
                         >
 
-                            <ArrowBackOutlinedIcon /> <p>Home</p>
+                            <ArrowBackOutlinedIcon />
 
                         </div>
 
@@ -57,7 +57,7 @@ const Seodiv: React.FC<Props> = ({ ad }) => {
 
                 </div>
             </div>
-            <div className="max-w-3xl mx-auto bg-white shadow-lg rounded-2xl overflow-hidden mt-10">
+            <div className="max-w-3xl mx-auto bg-white shadow-lg rounded-2xl overflow-hidden mt-0">
                 <div className="p-6">
                     <h1 className="text-3xl font-extrabold text-gray-900 mb-4">{ad.data.title}</h1>
                     <p className="text-gray-600 text-lg mb-6">

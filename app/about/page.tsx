@@ -58,7 +58,7 @@ export default function About() {
                                 }}
                             >
 
-                                 <ArrowBackOutlinedIcon /> <p>Home</p>
+                                <ArrowBackOutlinedIcon />
 
                             </div>
 
@@ -145,7 +145,7 @@ export default function About() {
                     </div>
                 </div>
             </div>
-            <ProgressPopup isOpen={isOpenP} onClose={handleCloseP} />
+                <ProgressPopup isOpen={isOpenP} onClose={handleCloseP} />
             </main>
         </>
     );
