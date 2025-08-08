@@ -1,7 +1,5 @@
 "use client";
 import React, { useEffect, useState } from "react";
-import { ChevronLeft, ChevronRight } from 'lucide-react';
-import ArrowForwardIosOutlinedIcon from '@mui/icons-material/ArrowForwardIosOutlined';
 import {
   Tooltip,
   TooltipContent,
@@ -22,7 +20,6 @@ import ChatButtonBottom from "./ChatButtonBottom";
 import { Toaster } from "../ui/toaster";
 import CollectionRelated from "./CollectionRelated";
 import MobileNav from "./MobileNav";
-import { SignedIn, SignedOut, UserButton } from "@clerk/nextjs";
 import { Button } from "../ui/button";
 import Unreadmessages from "./Unreadmessages";
 import StyledBrandName from "./StyledBrandName";
@@ -322,7 +319,7 @@ export default function EnhancedaAdViewSeo({
                               className="flex gap-1"
                             >
                               Chats
-                              <Unreadmessages userId={userId} popup={"home"} />
+
                             </div>
                           </TooltipContent>
                         </Tooltip>
@@ -409,11 +406,6 @@ export default function EnhancedaAdViewSeo({
               </div>
 
               <div className="flex gap-2">
-                {userId && (
-                  <div className="w-8 h-8 flex items-center justify-center rounded-full dark:bg-[#131B1E] dark:hover:bg-[#2D3236] bg-white tooltip tooltip-bottom hover:cursor-pointer">
-                    <UserButton afterSignOutUrl="/" />
-                  </div>
-                )}
 
                 <MobileNav userstatus={user?.status ?? "User"} userId={userId ?? null} user={user ?? []}
                   popup={"sell"}
