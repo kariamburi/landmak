@@ -3,6 +3,7 @@
 import React, { useState } from "react";
 import { useRouter } from "next/navigation";
 import sanitizeHtml from "sanitize-html";
+import ProgressPopup from "./ProgressPopup";
 interface Props {
     ad: any;
 }
@@ -58,6 +59,7 @@ const Seodiv: React.FC<Props> = ({ ad }) => {
                     </button>
                 </div>
             </div>
+            <ProgressPopup isOpen={isOpenP} onClose={handleCloseP} />
         </main>
     );
 };
