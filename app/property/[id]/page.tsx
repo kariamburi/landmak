@@ -12,9 +12,8 @@ type Props = {
 };
 
 export default async function PropertyPage({ params: { id } }: Props) {
-    // Correctly detect Googlebot and other crawlers using the User-Agent header
     const userAgent = headers().get('user-agent') || '';
-    const isBot = /googlebot|bingbot|yandex|duckduckbot/i.test(userAgent);
+    const isHuman = !/bot|crawler|spider|crawl|slurp|facebookexternalhit|embed|preview/i.test(userAgent);
 
     let ad: any = [];
     let user: any = [];
@@ -88,8 +87,7 @@ export default async function PropertyPage({ params: { id } }: Props) {
         </Head>
     );
 
-    // 👇 Simplified version for bots (to avoid middleware auth and dynamic rendering)
-    if (isBot) {
+    if (!isHuman) {
         return (
             <>
                 {sharedHead}
@@ -104,31 +102,35 @@ export default async function PropertyPage({ params: { id } }: Props) {
             </>
         );
     }
-    else {
-        // 👇 Human version (with dynamic component)
-        return (
-            <>
-                {sharedHead}
-                <main className="px-0 py-0">
-                    {/**   <EnhancedaAdViewSeo
-                    ad={ad}
-                    user={user}
-                    userId={user?.id || ''}
-                    userName={user?.name || ''}
-                    userImage={user?.image || ''}
-                    id={_id}
-                />
-                <Toaster />*/}
 
-                    <h1>{ad.title}</h1>
-                    <p>{ad.description}</p>
-                    <img src={ad.images?.[0] || displayImage} alt={ad.title} />
-                    <p>Price: {ad.price}</p>
-                    <p>Location: {ad.location}</p>
-                    <p>Posted by: {ad.organizer?.firstName || 'Seller'}</p>
-
-                </main>
-            </>
+    // 👇 Human version: Render EnhancedaAdViewSeo with try-catch
+    let enhancedContent = null;
+    try {
+        enhancedContent = (
+            <EnhancedaAdViewSeo
+                ad={ad}
+                user={user}
+                userId={user?.id || ''}
+                userName={user?.name || ''}
+                userImage={user?.image || ''}
+                id={_id}
+            />
         );
+    } catch (err) {
+        console.error('Failed to render EnhancedaAdViewSeo:', err);
     }
+
+    return (
+        <>
+            {sharedHead}
+            <main className="px-0 py-0">
+                {enhancedContent || (
+                    <div className="p-4 text-red-600">
+                        Failed to load property view.
+                    </div>
+                )}
+                <Toaster />
+            </main>
+        </>
+    );
 }
