@@ -1,11 +1,18 @@
 "use client"
 
+import ProgressPopup from "@/components/shared/ProgressPopup";
+import StyledBrandName from "@/components/shared/StyledBrandName";
 import Head from "next/head";
 import { useRouter } from "next/navigation";
-
+import { useState } from "react";
+import ArrowBackOutlinedIcon from "@mui/icons-material/ArrowBackOutlined";
 
 export default function About() {
     const router = useRouter();
+    const [isOpenP, setIsOpenP] = useState(false);
+    const handleCloseP = () => {
+        setIsOpenP(false);
+    };
     return (
         <>
             <Head>
@@ -48,17 +55,37 @@ export default function About() {
                 <link rel="canonical" href="https://www.mapa.co.ke/terms" />
             </Head>
             <main>
-                <div className="">
-                    <header className="flex justify-between items-center p-4 bg-white shadow">
+                <div>
+                    <div
+                        className={`bg-gradient-to-b from-green-600 to-green-600 lg:from-[#e4ebeb] justify-center pl-2 pr-2 h-[60px] lg:to-[#e4ebeb] transition-all duration-300 overflow-visible w-full flex flex-col items-center`}
+                    >
+                        <div className="w-full h-full justify-between flex items-center">
+                            <div className="flex items-center gap-1">
 
-                        <button onClick={() => {
-                            router.push('/');
-                        }}
-                            className="bg-green-600 hover:bg-green-700 text-white font-semibold px-4 py-2 rounded">
-                            Home
-                        </button>
+                                <div
+                                    className="mr-2 w-5 h-8 flex text-white lg:text-gray-700 items-center justify-center rounded-sm tooltip tooltip-bottom hover:cursor-pointer lg:hover:text-green-600"
+                                    data-tip="Back"
+                                    onClick={() => {
+                                        setIsOpenP(true);
+                                        router.push("/");
+                                    }}
+                                >
 
-                    </header>
+                                    <ArrowBackOutlinedIcon />  <p>Home</p>
+
+                                </div>
+
+                                <div className="flex items-center gap-2">
+
+                                    <img src="/logo_white.png" alt="Logo" className="w-8 h-8 lg:hidden rounded-full" />
+                                    <img src="/logo.png" alt="Logo" className="w-8 h-8 hidden lg:inline rounded-full" />
+                                    <StyledBrandName />
+                                </div>
+
+                            </div>
+
+                        </div>
+                    </div>
                     <div className="border rounded-lg dark:bg-[#2D3236] bg-white max-w-6xl mx-auto lg:flex-row mt-0 p-1 justify-center">
                         <div className="terms-and-conditions p-6 dark:text-gray-300 text-gray-800">
                             <h1 className="text-2xl font-bold mb-4 dark:text-gray-400">
@@ -147,7 +174,9 @@ export default function About() {
                             </p>
                         </div>
                     </div>
-                </div></main>
+                </div>
+                <ProgressPopup isOpen={isOpenP} onClose={handleCloseP} />
+            </main>
         </>
     );
 }
