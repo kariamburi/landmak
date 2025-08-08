@@ -25,7 +25,7 @@ const Seodiv: React.FC<Props> = ({ ad }) => {
         return truncatedMessage;
     };
     return (
-        <main>
+        <main className="bg-gray-200">
 
             <div
                 className={`bg-gradient-to-b from-green-600 to-green-600 lg:from-[#e4ebeb] justify-center pl-2 pr-2 h-[60px] lg:to-[#e4ebeb] transition-all duration-300 overflow-visible w-full flex flex-col items-center`}
@@ -42,7 +42,7 @@ const Seodiv: React.FC<Props> = ({ ad }) => {
                             }}
                         >
 
-                             <ArrowBackOutlinedIcon /> <p>Home</p>
+                            <ArrowBackOutlinedIcon /> <p>Home</p>
 
                         </div>
 
@@ -93,7 +93,7 @@ const Seodiv: React.FC<Props> = ({ ad }) => {
                             onClick={() => { setIsOpenP(true); router.push(`/?Ad=${ad._id}`); }}
                             className="bg-emerald-600 hover:bg-emerald-700 text-white font-semibold px-6 py-3 rounded-lg shadow transition"
                         >
-                            View Full Listing
+                            View Full Details
                         </button>
                     </div>
                 </div>
