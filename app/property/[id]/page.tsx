@@ -1,4 +1,3 @@
-import EnhancedaAdViewSeo from '@/components/shared/EnhancedaAdViewSeo';
 import Seodiv from '@/components/shared/seodiv';
 import { getAdById } from '@/lib/actions/dynamicAd.actions';
 import Head from 'next/head';
@@ -14,7 +13,7 @@ type Props = {
 
 export default async function PropertyPage({ params: { id } }: Props) {
 
-    let ad: any = [];
+    let ad: any = null;
 
     try {
         ad = await getAdById(id);
@@ -92,7 +91,7 @@ export default async function PropertyPage({ params: { id } }: Props) {
         <>
 
             {sharedHead}
-            <EnhancedaAdViewSeo ad={ad} userId={''} userName={''} userImage={''} user={[]} id={''} />
+            <Seodiv ad={ad} />
         </>
 
     );

@@ -1,9 +1,6 @@
-"use client"
-import React, { useState } from "react";
-import { FaShareAlt, FaFacebook, FaWhatsapp, FaTwitter } from "react-icons/fa";
-import ShareOutlinedIcon from "@mui/icons-material/ShareOutlined";
-import CloseOutlinedIcon from "@mui/icons-material/CloseOutlined";
-import { FacebookIcon, WhatsappIcon } from "next-share";
+"use client";
+
+import React from "react";
 import { useRouter } from "next/navigation";
 
 interface Props {
@@ -12,27 +9,44 @@ interface Props {
 
 const Seodiv: React.FC<Props> = ({ ad }) => {
     const router = useRouter();
+
     return (
-        <main className="max-w-3xl mx-auto p-6 bg-white shadow-md rounded-md">
-            <h1 className="text-2xl font-bold mb-2">{ad.data.title}</h1>
-            <p className="text-gray-700 mb-4">{ad.data.description}</p>
+        <main className="max-w-3xl mx-auto bg-white shadow-lg rounded-2xl overflow-hidden mt-10">
+            <div className="p-6">
+                <h1 className="text-3xl font-extrabold text-gray-900 mb-4">{ad.data.title}</h1>
+                <p className="text-gray-600 text-lg leading-relaxed mb-6">
+                    {ad.data.description}
+                </p>
 
-            <img
-                src={ad.data.imageUrls[0]}
-                alt={ad.data.title}
-                className="w-full h-auto rounded-md mb-4 object-cover max-h-[400px]"
-            />
+                <div className="rounded-lg overflow-hidden mb-6">
+                    <img
+                        src={ad.data.imageUrls[0]}
+                        alt={ad.data.title}
+                        className="w-full h-auto object-cover max-h-[400px] transition-transform duration-300 hover:scale-105"
+                    />
+                </div>
 
-            <div className="text-lg font-medium mb-2">Price: <span className="font-normal">{ad.data.price}</span></div>
-            <div className="text-lg font-medium mb-2">Location: <span className="font-normal">{ad.data?.propertyadrea?.myaddress || 'Kenya'}</span></div>
-            <div className="text-lg font-medium mb-6">Posted by: <span className="font-normal">{ad.organizer?.firstName || 'Seller'}</span></div>
-            <button onClick={() => {
-                router.push(`/?Ad=${ad.id}`);
-            }}
-                className="bg-green-600 hover:bg-green-700 text-white font-semibold px-4 py-2 rounded">
-                View Full Listing
-            </button>
+                <div className="space-y-3 text-gray-700 text-base">
+                    <div>
+                        <span className="font-semibold text-gray-800">Price:</span> {ad.data.price}
+                    </div>
+                    <div>
+                        <span className="font-semibold text-gray-800">Location:</span> {ad.data?.propertyadrea?.myaddress || 'Kenya'}
+                    </div>
+                    <div>
+                        <span className="font-semibold text-gray-800">Posted by:</span> {ad.organizer?.firstName || 'Seller'}
+                    </div>
+                </div>
 
+                <div className="mt-8">
+                    <button
+                        onClick={() => router.push(`/?Ad=${ad.id}`)}
+                        className="bg-emerald-600 hover:bg-emerald-700 text-white font-semibold px-6 py-3 rounded-lg shadow transition"
+                    >
+                        View Full Listing
+                    </button>
+                </div>
+            </div>
         </main>
     );
 };
