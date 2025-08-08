@@ -62,14 +62,14 @@ import {
   CarouselNext,
   CarouselPrevious,
 } from "../ui/carousel";
-import SellerProfile from "./SellerProfile";
+
 import SellOutlinedIcon from "@mui/icons-material/SellOutlined";
 
 import Head from "next/head";
 import ChatButton from "./ChatButton";
 import ShareAd from "./ShareAd";
 import { useToast } from "../ui/use-toast";
-import SellerProfileCard from "./SellerProfileCard";
+//import SellerProfileCard from "./SellerProfileCard";
 import { updateabused, updateview } from "@/lib/actions/dynamicAd.actions";
 import DescriptionComponent from "./DescriptionComponent";
 import StreetmapOfice from "./StreetmapOffice";
@@ -1463,7 +1463,7 @@ export default function AdsDetials({ ad, user, userId, userImage, userName, isMa
               </div>
               <div className="mt-3">
                 <div className="flex flex-col">
-                  <SellerProfileCard
+                  {/*  <SellerProfileCard
                     userId={userId}
                     ad={ad}
                     titleId={"Ad"}
@@ -1472,7 +1472,7 @@ export default function AdsDetials({ ad, user, userId, userImage, userName, isMa
                     userName={userName}
                     handleOpenReview={handleOpenReview}
                     handleOpenShop={handleOpenShop}
-                    handlePay={handlePay} />
+                    handlePay={handlePay} />*/}
                 </div>
               </div>
 
@@ -1940,6 +1940,7 @@ export default function AdsDetials({ ad, user, userId, userImage, userName, isMa
         <div className="p-1 lg:p-0">
           <div className="mt-3">
             <div className="flex flex-col">
+              {/* 
               <SellerProfileCard
                 userId={userId}
                 ad={ad}
@@ -1949,7 +1950,7 @@ export default function AdsDetials({ ad, user, userId, userImage, userName, isMa
                 userName={userName}
                 handleOpenReview={handleOpenReview}
                 handleOpenShop={handleOpenShop}
-                handlePay={handlePay} />
+                handlePay={handlePay} />*/}
             </div>
           </div>
 
