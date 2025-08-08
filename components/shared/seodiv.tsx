@@ -63,7 +63,7 @@ const Seodiv: React.FC<Props> = ({ ad }) => {
                     <p className="text-gray-600 text-lg mb-6">
                         <span
                             dangerouslySetInnerHTML={{
-                                __html: truncateDescription(ad.adId.data.description ?? "", 200),
+                                __html: truncateDescription(ad.data.description ?? "", 200),
                             }}
                         />
                     </p>
