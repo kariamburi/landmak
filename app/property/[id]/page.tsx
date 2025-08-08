@@ -1,8 +1,10 @@
+import EnhancedaAdViewSeo from '@/components/shared/EnhancedaAdViewSeo';
+import Seodiv from '@/components/shared/seodiv';
 import { getAdById } from '@/lib/actions/dynamicAd.actions';
 import Head from 'next/head';
 import { headers } from 'next/headers';
 import Link from 'next/link';
-import { notFound } from 'next/navigation';
+import { notFound, useRouter } from 'next/navigation';
 
 type Props = {
     params: {
@@ -12,7 +14,7 @@ type Props = {
 
 export default async function PropertyPage({ params: { id } }: Props) {
 
-    let ad: any = null;
+    let ad: any = [];
 
     try {
         ad = await getAdById(id);
@@ -88,22 +90,11 @@ export default async function PropertyPage({ params: { id } }: Props) {
     // Bot-friendly minimal HTML
     return (
         <>
-            {sharedHead}
-            <main>
-                <h1>{displayTitle}</h1>
-                <p>{description}</p>
-                <img src={displayImage} alt={displayTitle} />
-                <p>Price: {price}</p>
-                <p>Location: {location}</p>
-                <p>Posted by: {ad.organizer?.firstName || 'Seller'}</p>
-                <Link href={`/?Ad=${id}`}>
-                    <button className="bg-green-600 text-white px-4 py-2 rounded hover:bg-green-700">
-                        View Full Listing
-                    </button>
-                </Link>
 
-            </main>
+            {sharedHead}
+            <EnhancedaAdViewSeo ad={ad} userId={''} userName={''} userImage={''} user={[]} id={''} />
         </>
+
     );
 
 }

@@ -28,6 +28,7 @@ import Unreadmessages from "./Unreadmessages";
 import StyledBrandName from "./StyledBrandName";
 import { useRouter } from "next/navigation";
 import ProgressPopup from "./ProgressPopup";
+import AdsDetialsSeo from "./AdsDetialsSeo";
 const options = [
   { value: 'both', label: 'Split View', icon: <Squares2X2Icon className="w-5 h-5" /> },
   { value: 'map', label: 'Map View', icon: <MapIcon className="w-5 h-5" /> },
@@ -41,24 +42,7 @@ interface AdsProps {
   ad: any;
   user: any;
   id: string;
-  //onClose: () => void;
-  //handleOpenAbout: () => void;
-  ////handleOpenTerms: () => void;
-  //handleOpenPrivacy: () => void;
-  //handleOpenSafety: () => void;
-  //handleOpenSell: (category?: string, subcategory?: string) => void;
-  //handleOpenPlan: () => void;
-  //handleOpenChat: () => void;
-  //handleOpenBook: () => void;
-  //handleAdView: (ad: any) => void;
-  //handleAdEdit: (ad: any) => void;
-  //handlePay: (id: string) => void;
-  //handleSubCategory: (category: string, subcategory: string) => void;
-  //handleOpenReview: (value: any) => void;
-  //handleOpenShop: (value: any) => void;
-  //handleOpenChatId: (value: any) => void;
-  //handleOpenSettings: () => void;
-  //handleOpenPerfomance: () => void;
+
 }
 
 export default function EnhancedaAdViewSeo({
@@ -68,24 +52,7 @@ export default function EnhancedaAdViewSeo({
   user,
   ad,
   id,
-  //onClose,
-  //handleOpenSell,
-  //handleOpenBook,
-  //handleOpenChat,
-  //handleOpenPlan,
-  //handleAdView,
-  //handleAdEdit,
-  //handleSubCategory,
-  //handleOpenAbout,
-  //handleOpenTerms,
-  //handleOpenPrivacy,
-  //handleOpenSafety,
-  //handleOpenReview,
-  //handleOpenShop,
-  //handleOpenChatId,
-  //handleOpenSettings,
-  //handleOpenPerfomance,
-  //handlePay,
+
 }: AdsProps) {
 
   const [showList, setShowList] = useState(true);
@@ -272,71 +239,7 @@ export default function EnhancedaAdViewSeo({
 
             </div>
 
-            {/*  <div className="hidden lg:inline">
 
-              <div className="flex flex-wrap justify-between items-center gap-2">
-                <div className="flex">
-                  <div className="mt-2 shadow-sm border text-gray-600 hover:text-green-600 dark:hover:bg-[#3E454A] dark:bg-[#2D3236] dark:hover:text-gray-300 dark:text-gray-500 bg-white py-1 px-2 rounded-full mr-1">
-                    <div
-                      onClick={() => {
-                        setIsOpenP(true);
-                        router.push("/");
-                      }}
-                    >
-                      <div className="flex items-center gap-2 cursor-pointer ">
-                        <p className="text-xs lg:text-sm"> All Ads</p><ArrowForwardIosOutlinedIcon sx={{ fontSize: 14 }} />
-                      </div>
-                    </div>
-                  </div>
-                  <div className="mt-2 shadow-sm border text-gray-600 hover:text-green-600 dark:hover:bg-[#3E454A] dark:bg-[#2D3236] dark:hover:text-gray-300 dark:text-gray-500 bg-white py-1 px-2 rounded-full mr-1">
-                    <div className="flex items-center">
-                      {ad && (
-                        <div
-                          onClick={() => {
-                            handleSubCategory(ad.data.category, '');
-
-
-                          }}
-                          className="flex items-center gap-2 cursor-pointer"
-                        >
-
-                          <p className="text-xs lg:text-sm">{ad.data.category}</p><ArrowForwardIosOutlinedIcon sx={{ fontSize: 14 }} />
-                        </div>
-                      )}
-                    </div>
-                  </div>
-                  <div className="mt-2 shadow-sm border text-gray-600 hover:text-green-600 dark:hover:bg-[#3E454A] dark:bg-[#2D3236] dark:hover:text-gray-300 bg-white dark:text-gray-500 py-1 px-2 rounded-full mr-1">
-                    <div className="flex items-center">
-                      {ad && (
-                        <div
-                          onClick={() => {
-                            handleSubCategory(ad.data.category, ad.data.subcategory);
-                            // setIsOpenP(true);
-                            // router.push("/category=" + ad.data.category+"&subcategory=");
-
-                          }}
-                          className="flex items-center gap-2 cursor-pointer"
-                        >
-
-                          <p className="text-xs lg:text-sm">{ad.data.subcategory}</p><ArrowForwardIosOutlinedIcon sx={{ fontSize: 14 }} />
-                        </div>
-                      )}
-                    </div>
-                  </div>
-                  <div className="mt-2 shadow-sm border text-gray-800 dark:bg-[#2D3236] dark:text-gray-300 bg-white py-1 px-2 rounded-full">
-                    <div className="flex items-center">
-
-                      {ad && <p className="text-xs truncate w-full max-w-full lg:text-sm">{truncatetitle(ad.data.title, 30)}</p>}
-                    </div>
-                  </div>
-                </div>
-
-
-              </div>
-           
-           
-       </div>
-        */}
             <div className="flex gap-2 items-center">
               <div className="hidden lg:inline">
 
@@ -375,7 +278,7 @@ export default function EnhancedaAdViewSeo({
                       </ul>
                     )}
                   </div>
-                  <SignedIn>
+                  {userId ? (<>
                     <div
                       className="w-8 h-8 flex items-center justify-center rounded-full dark:bg-[#131B1E] dark:hover:bg-[#2D3236] bg-white hover:bg-gray-100 emerald-500 tooltip tooltip-bottom hover:cursor-pointer"
                       data-tip="Messages"
@@ -394,29 +297,6 @@ export default function EnhancedaAdViewSeo({
                         </Tooltip>
                       </TooltipProvider>
                     </div>
-                  </SignedIn>
-                  <SignedOut>
-                    <div
-                      className="w-8 h-8 flex items-center justify-center rounded-full dark:bg-[#131B1E] dark:hover:bg-[#2D3236] bg-white hover:bg-gray-100 tooltip tooltip-bottom hover:cursor-pointer"
-                      data-tip="Messages"
-                      onClick={() => {
-                        setIsOpenP(true);
-                        router.push("/sign-in");
-                      }}
-                    >
-                      <TooltipProvider>
-                        <Tooltip>
-                          <TooltipTrigger asChild>
-                            <BookmarkIcon sx={{ fontSize: 16 }} />
-                          </TooltipTrigger>
-                          <TooltipContent>
-                            <p>Bookmark</p>
-                          </TooltipContent>
-                        </Tooltip>
-                      </TooltipProvider>
-                    </div>
-                  </SignedOut>
-                  <SignedIn>
                     <div
                       className="w-8 h-8 flex items-center justify-center rounded-full dark:bg-[#131B1E] dark:hover:bg-[#2D3236] bg-white hover:bg-gray-100 tooltip tooltip-bottom hover:cursor-pointer"
                       data-tip="Messages"
@@ -448,9 +328,26 @@ export default function EnhancedaAdViewSeo({
                         </Tooltip>
                       </TooltipProvider>
                     </div>
-                  </SignedIn>
-                  <SignedOut>
+                  </>) : (<>
                     <div
+                      className="w-8 h-8 flex items-center justify-center rounded-full dark:bg-[#131B1E] dark:hover:bg-[#2D3236] bg-white hover:bg-gray-100 tooltip tooltip-bottom hover:cursor-pointer"
+                      data-tip="Messages"
+                      onClick={() => {
+                        setIsOpenP(true);
+                        router.push("/sign-in");
+                      }}
+                    >
+                      <TooltipProvider>
+                        <Tooltip>
+                          <TooltipTrigger asChild>
+                            <BookmarkIcon sx={{ fontSize: 16 }} />
+                          </TooltipTrigger>
+                          <TooltipContent>
+                            <p>Bookmark</p>
+                          </TooltipContent>
+                        </Tooltip>
+                      </TooltipProvider>
+                    </div><div
                       className="w-8 h-8 flex items-center justify-center rounded-full dark:bg-[#131B1E] dark:hover:bg-[#2D3236] bg-white tooltip tooltip-bottom hover:cursor-pointer"
                       data-tip="Messages"
                       onClick={() => {
@@ -469,7 +366,7 @@ export default function EnhancedaAdViewSeo({
                         </Tooltip>
                       </TooltipProvider>
                     </div>
-                  </SignedOut>
+                  </>)}
 
 
                   <div
@@ -492,39 +389,31 @@ export default function EnhancedaAdViewSeo({
                   </div>
 
                   <div>
-                    <SignedIn>
-
+                    {userId ? (
                       <Button onClick={() => {
                         handleOpenSell();
                       }} variant="default" className="flex bg-green-600 hover:bg-green-700 items-center gap-2">
                         <AddOutlinedIcon sx={{ fontSize: 16 }} /> SELL
-                      </Button>
-
-                    </SignedIn>
+                      </Button >
+                    ) : (<Button onClick={() => {
+                      setIsOpenP(true);
+                      router.push("/sign-in");
+                    }} variant="default" className="flex bg-green-600 hover:bg-green-700 items-center gap-2">
+                      <AddOutlinedIcon sx={{ fontSize: 16 }} /> SELL
+                    </Button>)}
 
 
                   </div>
-                  <div>
-                    <SignedOut>
-                      <Button onClick={() => {
-                        setIsOpenP(true);
-                        router.push("/sign-in");
-                      }} variant="default" className="flex bg-green-600 hover:bg-green-700 items-center gap-2">
-                        <AddOutlinedIcon sx={{ fontSize: 16 }} /> SELL
-                      </Button>
 
-
-                    </SignedOut>
-                  </div>
                 </div>
               </div>
 
               <div className="flex gap-2">
-                <SignedIn>
+                {userId && (
                   <div className="w-8 h-8 flex items-center justify-center rounded-full dark:bg-[#131B1E] dark:hover:bg-[#2D3236] bg-white tooltip tooltip-bottom hover:cursor-pointer">
                     <UserButton afterSignOutUrl="/" />
                   </div>
-                </SignedIn>
+                )}
 
                 <MobileNav userstatus={user?.status ?? "User"} userId={userId ?? null} user={user ?? []}
                   popup={"sell"}
@@ -579,7 +468,7 @@ export default function EnhancedaAdViewSeo({
       }
     }
   `}</style>
-                <AdsDetials
+                <AdsDetialsSeo
                   ad={ad}
                   user={user}
                   userId={userId || ""}
@@ -659,7 +548,7 @@ export default function EnhancedaAdViewSeo({
 
       </main>
       <ProgressPopup isOpen={isOpenP} onClose={handleCloseP} />
-    </div>
+    </div >
   );
 }
 

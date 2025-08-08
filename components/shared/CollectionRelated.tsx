@@ -2,7 +2,6 @@
 import { IAd } from "@/lib/database/models/ad.model";
 import React, { useEffect, useRef, useState } from "react";
 import Pagination from "./Pagination";
-import { SignedIn, SignedOut } from "@clerk/nextjs";
 import FloatingChatIcon from "./FloatingChatIcon";
 import ChatWindow from "./ChatWindow";
 import Image from "next/image";
