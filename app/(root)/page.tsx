@@ -16,8 +16,7 @@ export const revalidate = 60;
 export default async function Home({ searchParams }: SearchParamProps) {
   // Correctly detect Googlebot and other crawlers using the User-Agent header
   const userAgent = headers().get('user-agent') || '';
-  const isBot = /googlebot|bingbot|yandex|duckduckbot/i.test(userAgent);
-
+  const isBot = /(googlebot|bingbot|yandex|duckduckbot|slurp|baiduspider|facebookexternalhit|twitterbot|applebot)/i.test(userAgent);
 
   let user: any = [];
   let myloans: any = [];
@@ -85,40 +84,41 @@ export default async function Home({ searchParams }: SearchParamProps) {
         </main>
       </>
     );
-  }
+  } else {
 
-  return (
-    <>
-      <Head>
-        <title>Buy or Rent Properties in Kenya | mapa.co.ke</title>
-        <meta name="description" content="Discover properties for sale and rent across Kenya. mapa.co.ke offers homes, land, rentals, and more!" />
-        <meta name="robots" content="index, follow" />
-        <meta property="og:title" content="Properties in Kenya - mapa.co.ke" />
-        <meta property="og:description" content="Explore homes, land, rentals, and commercial properties in Kenya." />
-        <meta property="og:image" content="/og-image.jpg" />
-        <meta property="og:url" content="https://mapa.co.ke/" />
-        <link rel="canonical" href="https://mapa.co.ke/" />
-      </Head>
-      <main>
-        <MainView
-          emptyTitle="No Ads Found"
-          emptyStateSubtext="Come back later"
-          collectionType="All_Ads"
-          limit={20}
-          userprofile={user}
-          userId={userId}
-          userName={userName}
-          userImage={userImage}
-          queryObject={queryObject}
-          categoryList={categoryList}
-          subcategoryList={subcategoryList}
-          packagesList={packagesList}
-          AdsCountPerRegion={AdsCountPerRegion}
-          loans={loans}
-          myloans={myloans}
-        />
-        <Toaster />
-      </main>
-    </>
-  );
+    return (
+      <>
+        <Head>
+          <title>Buy or Rent Properties in Kenya | mapa.co.ke</title>
+          <meta name="description" content="Discover properties for sale and rent across Kenya. mapa.co.ke offers homes, land, rentals, and more!" />
+          <meta name="robots" content="index, follow" />
+          <meta property="og:title" content="Properties in Kenya - mapa.co.ke" />
+          <meta property="og:description" content="Explore homes, land, rentals, and commercial properties in Kenya." />
+          <meta property="og:image" content="/og-image.jpg" />
+          <meta property="og:url" content="https://mapa.co.ke/" />
+          <link rel="canonical" href="https://mapa.co.ke/" />
+        </Head>
+        <main>
+          <MainView
+            emptyTitle="No Ads Found"
+            emptyStateSubtext="Come back later"
+            collectionType="All_Ads"
+            limit={20}
+            userprofile={user}
+            userId={userId}
+            userName={userName}
+            userImage={userImage}
+            queryObject={queryObject}
+            categoryList={categoryList}
+            subcategoryList={subcategoryList}
+            packagesList={packagesList}
+            AdsCountPerRegion={AdsCountPerRegion}
+            loans={loans}
+            myloans={myloans}
+          />
+          <Toaster />
+        </main>
+      </>
+    );
+  }
 }

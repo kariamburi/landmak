@@ -104,13 +104,13 @@ export default async function PropertyPage({ params: { id } }: Props) {
             </>
         );
     }
-
-    // 👇 Human version (with dynamic component)
-    return (
-        <>
-            {sharedHead}
-            <main className="px-0 py-0">
-                <EnhancedaAdViewSeo
+    else {
+        // 👇 Human version (with dynamic component)
+        return (
+            <>
+                {sharedHead}
+                <main className="px-0 py-0">
+                    {/**   <EnhancedaAdViewSeo
                     ad={ad}
                     user={user}
                     userId={user?.id || ''}
@@ -118,8 +118,17 @@ export default async function PropertyPage({ params: { id } }: Props) {
                     userImage={user?.image || ''}
                     id={_id}
                 />
-                <Toaster />
-            </main>
-        </>
-    );
+                <Toaster />*/}
+
+                    <h1>{ad.title}</h1>
+                    <p>{ad.description}</p>
+                    <img src={ad.images?.[0] || displayImage} alt={ad.title} />
+                    <p>Price: {ad.price}</p>
+                    <p>Location: {ad.location}</p>
+                    <p>Posted by: {ad.organizer?.firstName || 'Seller'}</p>
+
+                </main>
+            </>
+        );
+    }
 }
