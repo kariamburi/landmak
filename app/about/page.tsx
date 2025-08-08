@@ -1,7 +1,10 @@
-// pages/about.tsx
+"use client"
 import Head from "next/head";
+import Link from "next/link";
+import { useRouter } from "next/navigation";
 
 export default function About() {
+    const router = useRouter();
     return (
         <>
             <Head>
@@ -21,17 +24,25 @@ export default function About() {
                     content="At mapa.co.ke, we offer a seamless, transparent, and secure platform to buy and sell properties and products across Kenya. Discover land, houses, and advanced property mapping for easy location."
                 />
                 <meta property="og:image" content="/logo.png" />
-                <meta property="og:url" content="https://mapa.co.ke?about=about" />
+                <meta property="og:url" content="https://mapa.co.ke/about" />
                 <meta property="og:type" content="website" />
                 <meta
                     name="keywords"
                     content="mapa, buy properties, sell land, houses, real estate, Kenya marketplace"
                 />
                 <meta name="author" content="mapa" />
-                <link rel="canonical" href="https://www.mapa.co.ke?about=about" />
+                <link rel="canonical" href="https://www.mapa.co.ke/about" />
             </Head>
 
             <main> <div className="flex-1">
+                <header className="flex justify-between items-center p-4 bg-white shadow">
+                    <button onClick={() => {
+                        router.push('/');
+                    }}
+                        className="bg-green-600 hover:bg-green-700 text-white font-semibold px-4 py-2 rounded">
+                        Home
+                    </button>
+                </header>
                 <div className="border rounded-lg dark:bg-[#2D3236] bg-white max-w-6xl mx-auto lg:flex-row mt-0 p-1 justify-center">
                     <div className="max-w-4xl mx-auto p-8">
                         <h1 className="text-3xl font-bold dark:text-gray-400 text-gray-800 mb-6 text-center">
