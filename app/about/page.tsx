@@ -20,14 +20,15 @@ export default function About() {
                     property="og:description"
                     content="At mapa.co.ke, we offer a seamless, transparent, and secure platform to buy and sell properties and products across Kenya. Discover land, houses, and advanced property mapping for easy location."
                 />
-                <meta property="og:image" content="/assets/images/logo.png" />
-                <meta property="og:url" content="https://mapa.co.ke/about" />
+                <meta property="og:image" content="/logo.png" />
+                <meta property="og:url" content="https://mapa.co.ke?about=about" />
                 <meta property="og:type" content="website" />
                 <meta
                     name="keywords"
                     content="mapa, buy properties, sell land, houses, real estate, Kenya marketplace"
                 />
                 <meta name="author" content="mapa" />
+                <link rel="canonical" href="https://www.mapa.co.ke?about=about" />
             </Head>
 
             <main> <div className="flex-1">

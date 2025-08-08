@@ -1,9 +1,7 @@
 import { getAdById } from '@/lib/actions/dynamicAd.actions';
-import { notFound } from 'next/navigation';
 import Head from 'next/head';
-import EnhancedaAdViewSeo from '@/components/shared/EnhancedaAdViewSeo';
-import { Toaster } from '@/components/ui/toaster';
 import { headers } from 'next/headers';
+import { notFound } from 'next/navigation';
 
 type Props = {
     params: {
@@ -13,10 +11,9 @@ type Props = {
 
 export default async function PropertyPage({ params: { id } }: Props) {
     const userAgent = headers().get('user-agent') || '';
-    const isHuman = !/bot|crawler|spider|crawl|slurp|facebookexternalhit|embed|preview/i.test(userAgent);
+    const isBot = /googlebot|bingbot|yandex|duckduckbot/i.test(userAgent);
 
-    let ad: any = [];
-    let user: any = [];
+    let ad: any = null;
 
     try {
         ad = await getAdById(id);
@@ -51,6 +48,7 @@ export default async function PropertyPage({ params: { id } }: Props) {
     const displayImage = imageUrl[0] || '/fallback.jpg';
     const displayTitle = title || 'Property Details';
     const location = propertyadrea.myaddress || 'Kenya';
+    const url = `https://mapa.co.ke/?Ad=${_id}`;
 
     const sharedHead = (
         <Head>
@@ -60,8 +58,8 @@ export default async function PropertyPage({ params: { id } }: Props) {
             <meta property="og:title" content={displayTitle} />
             <meta property="og:description" content={description} />
             <meta property="og:image" content={displayImage} />
-            <meta property="og:url" content={`https://mapa.co.ke/property/${_id}`} />
-            <link rel="canonical" href={`https://mapa.co.ke/property/${_id}`} />
+            <meta property="og:url" content={url} />
+            <link rel="canonical" href={url} />
             <script
                 type="application/ld+json"
                 dangerouslySetInnerHTML={{
@@ -87,50 +85,37 @@ export default async function PropertyPage({ params: { id } }: Props) {
         </Head>
     );
 
-    if (!isHuman) {
+    // Bot-friendly minimal HTML
+    if (isBot) {
         return (
             <>
                 {sharedHead}
                 <main>
-                    <h1>{ad.title}</h1>
-                    <p>{ad.description}</p>
-                    <img src={ad.images?.[0] || displayImage} alt={ad.title} />
-                    <p>Price: {ad.price}</p>
-                    <p>Location: {ad.location}</p>
+                    <h1>{displayTitle}</h1>
+                    <p>{description}</p>
+                    <img src={displayImage} alt={displayTitle} />
+                    <p>Price: {price}</p>
+                    <p>Location: {location}</p>
                     <p>Posted by: {ad.organizer?.firstName || 'Seller'}</p>
                 </main>
             </>
         );
     }
 
-    // 👇 Human version: Render EnhancedaAdViewSeo with try-catch
-    let enhancedContent = null;
-    try {
-        enhancedContent = (
-            <EnhancedaAdViewSeo
-                ad={ad}
-                user={user}
-                userId={user?.id || ''}
-                userName={user?.name || ''}
-                userImage={user?.image || ''}
-                id={_id}
-            />
-        );
-    } catch (err) {
-        console.error('Failed to render EnhancedaAdViewSeo:', err);
-    }
+    // Human users should be redirected to /
+    if (!isBot) {
+        if (typeof window !== 'undefined') {
+            window.location.href = `/?Ad=${_id}`;
+        }
 
-    return (
-        <>
-            {sharedHead}
-            <main className="px-0 py-0">
-                {enhancedContent || (
-                    <div className="p-4 text-red-600">
-                        Failed to load property view.
-                    </div>
-                )}
-                <Toaster />
-            </main>
-        </>
-    );
+        return (
+            <>
+                {sharedHead}
+                <main className="p-6 text-center">
+                    <h1 className="text-2xl font-bold">Redirecting...</h1>
+                    <p>If not redirected, <a href={`/?Ad=${_id}`} className="text-green-600 underline">click here</a>.</p>
+                </main>
+            </>
+        );
+    }
 }

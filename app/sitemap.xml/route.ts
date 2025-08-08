@@ -20,7 +20,13 @@ export async function GET() {
       changefreq: 'monthly',
       priority: '0.5',
     },
+    {
+      loc: `${baseUrl}/google-home`,
+      changefreq: 'monthly',
+      priority: '0.7',
+    },
   ];
+
 
   // Fetch dynamic ads
   const ads = await getAllAds();

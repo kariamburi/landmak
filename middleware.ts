@@ -1,19 +1,26 @@
+// middleware.ts
+import { NextResponse } from 'next/server';
 import { clerkMiddleware, createRouteMatcher } from '@clerk/nextjs/server';
 
-// ✅ Define only the **protected routes**
-const isProtectedRoute = createRouteMatcher([
-  '/home(.*)',
-]);
+const isProtectedRoute = createRouteMatcher(['/home(.*)']);
 
 export default clerkMiddleware((auth, req) => {
+  const ua = req.headers.get('user-agent') || '';
+  const isBot = /(googlebot|bingbot|yandex|duckduckbot|slurp|baiduspider|facebookexternalhit|twitterbot|applebot)/i.test(ua);
+
+  if (isBot && req.nextUrl.pathname === '/') {
+    const url = req.nextUrl.clone();
+    url.pathname = '/google-home';
+    return NextResponse.redirect(url);
+  }
+
   if (isProtectedRoute(req)) auth().protect();
 });
 
-// ✅ Match middleware to these routes
 export const config = {
   matcher: [
-    '/((?!.+\\.[\\w]+$|_next).*)', // all routes except static files and _next
+    '/((?!.+\\.[\\w]+$|_next).*)',
     '/',
-    '/(api|trpc|property)(.*)',   // include routes like /api, /trpc, /property/:id
+    '/(api|trpc|property)(.*)',
   ],
 };

@@ -24,7 +24,7 @@ export default function About() {
                     content="Understand the terms and conditions for using mapa.co.ke, your trusted real estate marketplace in Kenya."
                 />
                 <meta property="og:type" content="website" />
-                <meta property="og:url" content="https://www.mapa.co.ke/terms" />
+                <meta property="og:url" content="https://www.mapa.co.ke?terms=terms" />
                 <meta
                     property="og:image"
                     content="https://www.mapa.co.ke/assets/images/terms-and-conditions-cover.jpg"
@@ -42,7 +42,7 @@ export default function About() {
                     name="twitter:image"
                     content="https://www.mapa.co.ke/assets/images/terms-and-conditions-cover.jpg"
                 />
-                <link rel="canonical" href="https://www.mapa.co.ke/terms" />
+                <link rel="canonical" href="https://www.mapa.co.ke?terms=terms" />
             </Head>
             <main><div className="flex-1">
                 <div className="border rounded-lg dark:bg-[#2D3236] bg-white max-w-6xl mx-auto lg:flex-row mt-0 p-1 justify-center">
