@@ -70,6 +70,7 @@ export default async function Home({ searchParams }: SearchParamProps) {
         <link rel="canonical" href="https://mapa.co.ke/" />
       </Head>
       <main>
+
         <MainView
           emptyTitle="No Ads Found"
           emptyStateSubtext="Come back later"

@@ -159,7 +159,7 @@ const SellerProfileCard = ({ ad, fee, userId, userImage, userName, titleId, hand
 
   const [copied, setCopied] = useState(false);
 
-  const adUrl = process.env.NEXT_PUBLIC_DOMAIN_URL + "/property/" + ad._id;
+  const adUrl = process.env.NEXT_PUBLIC_DOMAIN_URL + "property/" + ad._id;
   const handleCopy = () => {
     navigator.clipboard.writeText(adUrl).then(() => {
       setCopied(true);
